@@ -4,6 +4,7 @@ export const shahed136: DefenseSystem = {
   slug: "shahed-136",
   name: "Shahed-136",
   designation: "HESA Shahed-136 — « Geran-2 »",
+  reference: "PNP-DR-003",
   category: "drone",
   droneClass: "munition-rodeuse",
   classLabel: "Munition rôdeuse",

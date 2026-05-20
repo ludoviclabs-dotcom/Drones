@@ -12,7 +12,11 @@ import {
   SpecsPanel,
 } from "@/components/fiche-sections";
 import { Narrative } from "@/components/narrative";
-import { SectionMarker, Tag } from "@/components/primitives";
+import { SectionMarker } from "@/components/primitives";
+import { SystemSchematic } from "@/components/system-schematic";
+import { RegistrationMarks } from "@/components/registration-marks";
+import { Stamp } from "@/components/stamp";
+import { ScoreProfile } from "@/components/score-profile";
 
 export function generateStaticParams() {
   return getSystemSlugs().map((slug) => ({ slug }));
@@ -55,17 +59,30 @@ export default async function SystemPage({
         ← Tous les systèmes
       </Link>
 
-      <header className="reveal mt-6">
-        <div className="flex items-center justify-between border-y border-line py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-faint">
-          <span>Dossier système</span>
-          <span>OSINT · Mise à jour {system.updated}</span>
+      {/* Couverture de dossier */}
+      <header className="reveal relative mt-5 border border-line-bright bg-panel">
+        <RegistrationMarks />
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line px-5 py-2.5">
+          <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-accent">
+            {system.reference}
+          </span>
+          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-faint">
+            Dossier système · Mise à jour {system.updated}
+          </span>
         </div>
-        <div className="mt-8 grid gap-8 lg:grid-cols-[1.5fr_1fr]">
-          <div>
-            <span className="font-mono text-xs uppercase tracking-[0.18em] text-accent">
+
+        <div className="grid md:grid-cols-[300px_1fr]">
+          <div className="flex items-center justify-center border-b border-line p-8 md:border-b-0 md:border-r">
+            <SystemSchematic
+              slug={system.slug}
+              className="h-52 w-52 text-accent"
+            />
+          </div>
+          <div className="p-7">
+            <span className="font-mono text-xs uppercase tracking-[0.18em] text-ink-dim">
               {system.classLabel}
             </span>
-            <h1 className="mt-3 font-serif text-5xl leading-none tracking-tight text-ink sm:text-6xl">
+            <h1 className="mt-3 font-serif text-5xl leading-[0.98] tracking-tight text-ink sm:text-6xl">
               {system.name}
             </h1>
             {system.designation ? (
@@ -76,30 +93,34 @@ export default async function SystemPage({
             <p className="mt-5 max-w-xl font-serif text-xl italic leading-snug text-ink-dim">
               {system.tagline}
             </p>
-            <div className="mt-6 flex flex-wrap gap-2">
-              {system.acquisitionModes.map((mode) => (
-                <Tag key={mode} tone="accent">
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              {system.acquisitionModes.map((mode, i) => (
+                <Stamp key={mode} tone="ink" rotate={i % 2 === 0 ? -3 : 2}>
                   {MODE_LABELS[mode].short}
-                </Tag>
+                </Stamp>
               ))}
+              <Stamp tone="accent" rotate={3}>
+                OSINT
+              </Stamp>
             </div>
           </div>
-          <dl className="self-start border border-line bg-panel">
-            {identity.map((row) => (
-              <div
-                key={row.label}
-                className="flex items-baseline justify-between gap-4 border-b border-line px-4 py-2.5 last:border-0"
-              >
-                <dt className="shrink-0 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
-                  {row.label}
-                </dt>
-                <dd className="text-right font-mono text-xs text-ink">
-                  {row.value}
-                </dd>
-              </div>
-            ))}
-          </dl>
         </div>
+
+        <dl className="grid border-t border-line sm:grid-cols-3 lg:grid-cols-5">
+          {identity.map((row, i) => (
+            <div
+              key={row.label}
+              className={`border-line px-4 py-3 ${
+                i < identity.length - 1 ? "border-b sm:border-b-0 sm:border-r" : ""
+              }`}
+            >
+              <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
+                {row.label}
+              </dt>
+              <dd className="mt-1 font-mono text-xs text-ink">{row.value}</dd>
+            </div>
+          ))}
+        </dl>
       </header>
 
       <section className="mt-16">
@@ -134,7 +155,13 @@ export default async function SystemPage({
           label="Évaluation"
           blurb="Six paliers, de A (excellent) à E (critique). Chacun est argumenté — aucun n'est un score chiffré."
         />
-        <div className="mt-6">
+        <div className="mt-6 border border-line bg-panel p-6">
+          <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-faint">
+            Profil d'évaluation
+          </p>
+          <ScoreProfile scores={system.scores} />
+        </div>
+        <div className="mt-4">
           <ScoreGrid scores={system.scores} />
         </div>
       </section>

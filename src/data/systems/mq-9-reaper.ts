@@ -4,6 +4,7 @@ export const mq9Reaper: DefenseSystem = {
   slug: "mq-9-reaper",
   name: "MQ-9 Reaper",
   designation: "MQ-9A",
+  reference: "PNP-DR-001",
   category: "drone",
   droneClass: "MALE",
   classLabel: "Drone MALE",

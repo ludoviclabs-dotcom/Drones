@@ -1,25 +1,36 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #0a0b0d;
-  --color-surface: #0f1216;
-  --color-surface-2: #161a20;
-  --color-panel: #12151a;
-  --color-line: #242a32;
-  --color-line-bright: #39424e;
+  /* Chemise du dossier — graphite chaud olivé */
+  --color-bg: #16150f;
+  --color-surface: #1e1d14;
+  --color-surface-2: #272517;
+  --color-panel: #1a1912;
 
-  --color-ink: #e8e5dd;
-  --color-ink-dim: #969ca5;
-  --color-ink-faint: #5c626c;
+  /* Surface papier — inserts document */
+  --color-paper: #d8cfb5;
+  --color-paper-shade: #ccc2a4;
+  --color-ink-paper: #201d14;
+  --color-ink-paper-dim: #595139;
+  --color-line-paper: #ada27e;
 
-  --color-accent: #e0a44a;
-  --color-accent-deep: #a8772a;
+  --color-line: #33301f;
+  --color-line-bright: #4c4731;
 
-  --color-grade-a: #6fa583;
-  --color-grade-b: #9aad5b;
-  --color-grade-c: #e0a44a;
-  --color-grade-d: #d0814a;
-  --color-grade-e: #c65c51;
+  --color-ink: #ece6d5;
+  --color-ink-dim: #9c9783;
+  --color-ink-faint: #6b6553;
+
+  /* Encres */
+  --color-accent: #c2502a;
+  --color-accent-deep: #8f3a1d;
+  --color-stamp: #5e7686;
+
+  --color-grade-a: #61805a;
+  --color-grade-b: #888a48;
+  --color-grade-c: #b3823a;
+  --color-grade-d: #b9602e;
+  --color-grade-e: #a83a2c;
 
   --font-serif: var(--font-newsreader), Georgia, "Times New Roman", serif;
   --font-mono: var(--font-plex-mono), ui-monospace, "SF Mono", Menlo, monospace;
@@ -45,22 +56,12 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  background-image:
-    repeating-linear-gradient(
-      to right,
-      color-mix(in srgb, var(--color-line) 32%, transparent) 0 1px,
-      transparent 1px 96px
-    ),
-    radial-gradient(
-      130% 80% at 50% -10%,
-      color-mix(in srgb, var(--color-accent) 6%, transparent),
-      transparent 62%
-    );
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
   background-attachment: fixed;
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--color-accent) 32%, transparent);
+  background: color-mix(in srgb, var(--color-accent) 34%, transparent);
   color: var(--color-ink);
 }
 
@@ -74,7 +75,6 @@ body {
 ::-webkit-scrollbar-thumb {
   background: var(--color-line-bright);
   border: 3px solid var(--color-bg);
-  border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-ink-faint);

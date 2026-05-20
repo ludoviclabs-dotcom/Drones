@@ -4,6 +4,7 @@ export const bayraktarTb2: DefenseSystem = {
   slug: "bayraktar-tb2",
   name: "Bayraktar TB2",
   designation: "TB2",
+  reference: "PNP-DR-002",
   category: "drone",
   droneClass: "MALE",
   classLabel: "Drone MALE tactique",

@@ -47,12 +47,12 @@ export default function RootLayout({
 
         <header className="sticky top-0 z-40 border-b border-line bg-bg/90 backdrop-blur">
           <div className="mx-auto flex h-16 max-w-[1180px] items-center justify-between px-5">
-            <Link href="/" className="flex items-baseline gap-2.5">
+            <Link href="/" className="flex items-baseline gap-3">
               <span className="font-serif text-2xl leading-none tracking-tight text-ink">
                 Panoplie
               </span>
-              <span className="border border-line-bright px-1.5 py-0.5 text-[9px] uppercase tracking-[0.18em] text-accent">
-                Béta
+              <span className="hidden font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint sm:inline">
+                Renseignement open source
               </span>
             </Link>
             <nav className="flex items-center">

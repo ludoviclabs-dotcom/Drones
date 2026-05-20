@@ -4,6 +4,7 @@ import type { ScoreKey } from "@/data/types";
 import { systems } from "@/data/systems";
 import { MODE_LABELS, SCORE_LABELS } from "@/data/labels";
 import { GradeBadge, SectionMarker } from "@/components/primitives";
+import { ScoreProfile } from "@/components/score-profile";
 
 export const metadata: Metadata = {
   title: "Comparateur",
@@ -111,6 +112,22 @@ export default function ComparateurPage() {
               ))}
 
               <GroupRow label="Évaluation — paliers A à E" />
+              <tr>
+                <th
+                  scope="row"
+                  className="border border-line bg-surface px-4 py-3 text-left align-top font-mono text-[11px] uppercase tracking-[0.1em] text-ink-dim"
+                >
+                  Profil
+                </th>
+                {systems.map((system) => (
+                  <td
+                    key={system.slug}
+                    className="border border-line bg-panel px-4 py-3"
+                  >
+                    <ScoreProfile scores={system.scores} showLabels={false} />
+                  </td>
+                ))}
+              </tr>
               {SCORE_KEYS.map((key) => (
                 <tr key={key}>
                   <th

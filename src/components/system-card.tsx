@@ -1,31 +1,36 @@
 import Link from "next/link";
 import type { DefenseSystem } from "@/data/types";
 import { GradeBadge } from "./primitives";
+import { SystemSchematic } from "./system-schematic";
+import { RegistrationMarks } from "./registration-marks";
 
-export function SystemCard({
-  system,
-  index,
-}: {
-  system: DefenseSystem;
-  index: number;
-}) {
+export function SystemCard({ system }: { system: DefenseSystem }) {
   return (
     <Link
       href={`/systemes/${system.slug}`}
-      className="group flex flex-col border border-line bg-panel transition-colors hover:border-line-bright"
+      className="group relative flex flex-col border border-line bg-panel transition-colors hover:border-line-bright"
     >
+      <RegistrationMarks />
+
       <div className="flex items-center justify-between border-b border-line px-5 py-2.5">
-        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-faint">
-          Dossier {String(index + 1).padStart(3, "0")}
+        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-accent">
+          {system.reference}
         </span>
-        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-dim">
+        <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
           {system.classLabel}
         </span>
       </div>
 
+      <div className="flex items-center justify-center border-b border-line py-7">
+        <SystemSchematic
+          slug={system.slug}
+          className="h-28 w-28 text-ink-faint transition-colors duration-300 group-hover:text-accent"
+        />
+      </div>
+
       <div className="flex-1 p-5">
         <div className="flex items-baseline gap-2">
-          <span className="text-lg leading-none">{system.flag}</span>
+          <span className="text-base leading-none">{system.flag}</span>
           <h3 className="font-serif text-2xl leading-tight text-ink transition-colors group-hover:text-accent">
             {system.name}
           </h3>

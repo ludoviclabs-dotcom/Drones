@@ -76,6 +76,7 @@ export interface DefenseSystem {
   slug: string;
   name: string;
   designation?: string;
+  reference: string;
   category: SystemCategory;
   droneClass: DroneClass;
   classLabel: string;

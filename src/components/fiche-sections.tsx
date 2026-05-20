@@ -1,0 +1,237 @@
+import type {
+  Brick,
+  EditorialBlocks,
+  Indicator,
+  Score,
+  SourceRef,
+} from "@/data/types";
+import {
+  BRICK_BLURBS,
+  BRICK_LABELS,
+  RELIABILITY_LABELS,
+  SCORE_LABELS,
+  SOURCE_TYPE_LABELS,
+} from "@/data/labels";
+import { ORGANISMS_BY_SLUG } from "@/data/organisms";
+import { ConfidenceMark, GradeBadge, SectionMarker } from "./primitives";
+import { Narrative } from "./narrative";
+
+export function IndicatorPanel({
+  indicators,
+  title = "Indicateurs",
+}: {
+  indicators: Indicator[];
+  title?: string;
+}) {
+  return (
+    <div className="border border-line bg-surface">
+      <div className="border-b border-line px-4 py-2.5">
+        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-faint">
+          {title}
+        </span>
+      </div>
+      <dl>
+        {indicators.map((ind) => (
+          <div
+            key={ind.label}
+            className="border-b border-line px-4 py-3 last:border-0"
+          >
+            <div className="flex items-baseline justify-between gap-3">
+              <dt className="font-mono text-xs text-ink-dim">{ind.label}</dt>
+              <ConfidenceMark confidence={ind.confidence} />
+            </div>
+            <dd className="mt-1 font-mono text-sm text-ink">{ind.value}</dd>
+            {ind.note ? (
+              <p className="mt-1.5 font-serif text-xs italic leading-snug text-ink-faint">
+                {ind.note}
+              </p>
+            ) : null}
+          </div>
+        ))}
+      </dl>
+    </div>
+  );
+}
+
+function OrganismRefs({ slugs }: { slugs: string[] }) {
+  const items = slugs
+    .map((slug) => ORGANISMS_BY_SLUG[slug])
+    .filter(Boolean);
+  if (items.length === 0) return null;
+  return (
+    <div className="mt-3 border border-line bg-surface">
+      <div className="border-b border-line px-4 py-2.5">
+        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-faint">
+          Cadres &amp; organismes
+        </span>
+      </div>
+      <ul>
+        {items.map((org) => (
+          <li key={org.slug} className="border-b border-line last:border-0">
+            <a
+              href={`/glossaire#org-${org.slug}`}
+              className="block px-4 py-2.5 transition-colors hover:bg-surface-2"
+            >
+              <span className="font-mono text-xs text-accent">
+                {org.acronym ?? org.name}
+              </span>
+              <span className="ml-2 font-mono text-[11px] text-ink-faint">
+                {org.scope}
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export function BrickSection({
+  brick,
+  index,
+}: {
+  brick: Brick;
+  index: string;
+}) {
+  return (
+    <section className="border-t border-line pt-8">
+      <SectionMarker
+        index={index}
+        label={BRICK_LABELS[brick.key]}
+        blurb={BRICK_BLURBS[brick.key]}
+      />
+      <div className="mt-6 grid gap-8 lg:grid-cols-[1.55fr_1fr]">
+        <Narrative text={brick.narrative} />
+        <div>
+          <IndicatorPanel indicators={brick.indicators} />
+          {brick.organisms && brick.organisms.length > 0 ? (
+            <OrganismRefs slugs={brick.organisms} />
+          ) : null}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function ScoreGrid({ scores }: { scores: Score[] }) {
+  return (
+    <div className="grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
+      {scores.map((score) => (
+        <div key={score.key} className="bg-panel p-5">
+          <div className="flex items-start justify-between gap-3">
+            <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-dim">
+              {SCORE_LABELS[score.key]}
+            </span>
+            <GradeBadge grade={score.grade} />
+          </div>
+          <p className="mt-3 font-serif text-sm leading-relaxed text-ink-dim">
+            {score.rationale}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function EditorialTriptych({
+  editorial,
+}: {
+  editorial: EditorialBlocks;
+}) {
+  const blocks = [
+    { label: "Mythe vs réalité", text: editorial.mythVsReality },
+    { label: "Meilleur emploi", text: editorial.bestUseCase },
+    { label: "Point faible", text: editorial.weakPoint },
+  ].filter((b) => b.text);
+  return (
+    <div className="grid gap-px border border-line bg-line md:grid-cols-3">
+      {blocks.map((block) => (
+        <div key={block.label} className="bg-panel p-5">
+          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-accent">
+            {block.label}
+          </span>
+          <p className="mt-3 font-serif text-[0.95rem] leading-relaxed text-ink/90">
+            {block.text}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function AnalystNote({ note }: { note: string }) {
+  return (
+    <figure className="border-l-2 border-accent bg-surface px-6 py-5">
+      <figcaption className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-faint">
+        Note d'analyste
+      </figcaption>
+      <blockquote className="mt-3 font-serif text-lg italic leading-relaxed text-ink">
+        {note}
+      </blockquote>
+    </figure>
+  );
+}
+
+export function SpecsPanel({ specs }: { specs: Indicator[] }) {
+  return (
+    <div className="grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
+      {specs.map((spec) => (
+        <div key={spec.label} className="bg-panel p-4">
+          <div className="flex items-baseline justify-between gap-2">
+            <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
+              {spec.label}
+            </span>
+            <ConfidenceMark confidence={spec.confidence} />
+          </div>
+          <p className="mt-1.5 font-mono text-sm text-ink">{spec.value}</p>
+          {spec.note ? (
+            <p className="mt-1 font-serif text-xs italic leading-snug text-ink-faint">
+              {spec.note}
+            </p>
+          ) : null}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function SourceList({ sources }: { sources: SourceRef[] }) {
+  return (
+    <ol className="border border-line">
+      {sources.map((src, i) => (
+        <li
+          key={src.id}
+          className="flex items-start gap-4 border-b border-line px-4 py-3 last:border-0"
+        >
+          <span className="font-mono text-xs text-ink-faint">
+            {String(i + 1).padStart(2, "0")}
+          </span>
+          <div className="flex-1">
+            <p className="font-serif text-sm text-ink">{src.title}</p>
+            <p className="mt-0.5 font-mono text-[11px] text-ink-faint">
+              {src.publisher} · {SOURCE_TYPE_LABELS[src.type]}
+              {src.date ? ` · ${src.date}` : ""}
+            </p>
+          </div>
+          <span
+            className="shrink-0 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-dim"
+            title={`Fiabilité ${src.reliability} — ${RELIABILITY_LABELS[src.reliability]}`}
+          >
+            Fiab. {src.reliability}
+          </span>
+          {src.url ? (
+            <a
+              href={src.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="shrink-0 font-mono text-xs text-accent transition-colors hover:text-ink"
+              aria-label={`Ouvrir la source : ${src.title}`}
+            >
+              ↗
+            </a>
+          ) : null}
+        </li>
+      ))}
+    </ol>
+  );
+}

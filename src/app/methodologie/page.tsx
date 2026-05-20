@@ -1,0 +1,205 @@
+import type { Metadata } from "next";
+import type { Grade, Reliability } from "@/data/types";
+import {
+  BRICK_BLURBS,
+  BRICK_LABELS,
+  BRICK_ORDER,
+  CONFIDENCE_META,
+  GRADE_META,
+  MODE_LABELS,
+  RELIABILITY_LABELS,
+  SCORE_LABELS,
+} from "@/data/labels";
+import { ConfidenceMark, GradeBadge, SectionMarker } from "@/components/primitives";
+
+export const metadata: Metadata = {
+  title: "Méthodologie",
+  description:
+    "Comment Panoplie évalue, score et source les systèmes de défense — paliers, confiance des données, fiabilité des sources, cadre éthique.",
+};
+
+const GRADES: Grade[] = ["A", "B", "C", "D", "E"];
+const RELIABILITIES: Reliability[] = ["A", "B", "C", "D"];
+const CONFIDENCES = ["haute", "moyenne", "faible"] as const;
+
+export default function MethodologiePage() {
+  return (
+    <div className="mx-auto max-w-[880px] px-5 py-12">
+      <header className="reveal">
+        <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-accent">
+          Référence
+        </p>
+        <h1 className="mt-4 font-serif text-5xl tracking-tight text-ink">
+          Méthodologie
+        </h1>
+        <p className="mt-5 max-w-2xl font-serif text-lg leading-relaxed text-ink-dim">
+          Comment Panoplie évalue, note et source chaque système — et ce que la
+          plateforme ne prétend pas faire.
+        </p>
+      </header>
+
+      <section className="mt-14">
+        <SectionMarker index="01" label="Le projet" />
+        <div className="mt-5 space-y-4 font-serif text-[1.05rem] leading-[1.75] text-ink/90">
+          <p>
+            Panoplie analyse les systèmes de défense à partir du renseignement
+            de sources ouvertes. La plateforme ne vise pas l'exhaustivité d'un
+            catalogue, mais la clarté : peu de systèmes, documentés en
+            profondeur, comparables entre eux.
+          </p>
+          <p>
+            Son principe directeur est l'honnêteté sur l'incertitude. Dans le
+            domaine de la défense, les données sont souvent incomplètes,
+            estimées ou contradictoires. Plutôt que de masquer ce flou derrière
+            des chiffres faussement précis, Panoplie l'affiche.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-14">
+        <SectionMarker
+          index="02"
+          label="La grille des cinq briques"
+          blurb="Chaque système est lu à travers les mêmes cinq dimensions."
+        />
+        <div className="mt-5 grid gap-px border border-line bg-line sm:grid-cols-2">
+          {BRICK_ORDER.map((key, i) => (
+            <div key={key} className="bg-panel p-5">
+              <span className="font-mono text-xs text-accent">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <h3 className="mt-1.5 font-mono text-sm uppercase tracking-[0.1em] text-ink">
+                {BRICK_LABELS[key]}
+              </h3>
+              <p className="mt-2 font-serif text-sm leading-relaxed text-ink-dim">
+                {BRICK_BLURBS[key]}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-14">
+        <SectionMarker index="03" label="Les paliers d'évaluation" />
+        <div className="mt-5 space-y-4 font-serif text-[1.05rem] leading-[1.75] text-ink/90">
+          <p>
+            Chaque système reçoit six évaluations, exprimées en paliers de A à E
+            — jamais en score chiffré. Un « 82 sur 100 » suggère une précision
+            que les données ne permettent pas. Un palier, accompagné de son
+            raisonnement, est plus honnête.
+          </p>
+        </div>
+        <div className="mt-5 grid gap-px border border-line bg-line sm:grid-cols-5">
+          {GRADES.map((grade) => (
+            <div key={grade} className="flex flex-col items-center bg-panel p-4">
+              <GradeBadge grade={grade} />
+              <p className="mt-2 text-center font-mono text-[10px] uppercase tracking-[0.1em] text-ink-dim">
+                {GRADE_META[grade].label}
+              </p>
+            </div>
+          ))}
+        </div>
+        <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.16em] text-ink-faint">
+          Les six dimensions évaluées
+        </p>
+        <ul className="mt-3 grid gap-px border border-line bg-line sm:grid-cols-2">
+          {Object.values(SCORE_LABELS).map((label) => (
+            <li
+              key={label}
+              className="bg-panel px-4 py-2.5 font-mono text-xs text-ink-dim"
+            >
+              {label}
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="mt-14">
+        <SectionMarker index="04" label="La confiance des données" />
+        <p className="mt-5 font-serif text-[1.05rem] leading-[1.75] text-ink/90">
+          Chaque indicateur chiffré porte un niveau de confiance, signalé par
+          trois barres. Il distingue ce qui est établi de ce qui reste estimé.
+        </p>
+        <div className="mt-5 grid gap-px border border-line bg-line sm:grid-cols-3">
+          {CONFIDENCES.map((confidence) => (
+            <div key={confidence} className="bg-panel p-4">
+              <ConfidenceMark confidence={confidence} />
+              <p className="mt-2 font-mono text-xs text-ink">
+                {CONFIDENCE_META[confidence].label}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-14">
+        <SectionMarker index="05" label="La fiabilité des sources" />
+        <p className="mt-5 font-serif text-[1.05rem] leading-[1.75] text-ink/90">
+          Chaque source est notée de A à D, selon une échelle inspirée des
+          usages du renseignement — du document fiable à la source douteuse à
+          recouper.
+        </p>
+        <ul className="mt-5 grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+          {RELIABILITIES.map((reliability) => (
+            <li key={reliability} className="bg-panel p-4">
+              <span className="font-mono text-lg text-accent">
+                {reliability}
+              </span>
+              <p className="mt-1 font-mono text-xs text-ink-dim">
+                {RELIABILITY_LABELS[reliability]}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="mt-14">
+        <SectionMarker
+          index="06"
+          label="Les modes d'acquisition"
+          blurb="Un système ne s'acquiert pas d'une seule manière — et chaque voie a ses conséquences."
+        />
+        <ul className="mt-5 space-y-px border border-line bg-line">
+          {Object.values(MODE_LABELS).map((mode) => (
+            <li key={mode.short} className="bg-panel p-4">
+              <p className="font-mono text-sm text-ink">{mode.short}</p>
+              <p className="mt-1 font-serif text-sm leading-relaxed text-ink-dim">
+                {mode.full}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="mt-14">
+        <SectionMarker index="07" label="Limites &amp; cadre éthique" />
+        <div className="mt-5 space-y-4 font-serif text-[1.05rem] leading-[1.75] text-ink/90">
+          <p>
+            Panoplie est un outil d'analyse stratégique, industrielle et
+            financière. Ce qu'il n'est pas :
+          </p>
+        </div>
+        <ul className="mt-4 space-y-2">
+          {[
+            "une aide au ciblage ou à la conduite d'opérations militaires ;",
+            "une source de données techniques opérationnelles exploitables ;",
+            "un catalogue commercial ou une place de marché.",
+          ].map((item) => (
+            <li
+              key={item}
+              className="flex gap-3 font-serif text-[1.05rem] leading-relaxed text-ink-dim"
+            >
+              <span className="text-accent">—</span>
+              {item}
+            </li>
+          ))}
+        </ul>
+        <p className="mt-5 font-serif text-[1.05rem] leading-[1.75] text-ink/90">
+          Les données publiées sont des estimations issues de sources ouvertes,
+          datées et susceptibles d'être révisées. Les corrections sourcées sont
+          les bienvenues.
+        </p>
+      </section>
+    </div>
+  );
+}

@@ -29,8 +29,15 @@ export const metadata: Metadata = {
 const NAV = [
   { href: "/#catalogue", label: "Systèmes" },
   { href: "/comparateur", label: "Comparateur" },
+  { href: "/console", label: "Console" },
   { href: "/methodologie", label: "Méthodologie" },
   { href: "/glossaire", label: "Glossaire" },
+];
+
+const FOOTER_LINKS = [
+  ...NAV,
+  { href: "/roadmap", label: "Roadmap" },
+  { href: "/changelog", label: "Changelog" },
 ];
 
 export default function RootLayout({
@@ -86,7 +93,7 @@ export default function RootLayout({
                 Naviguer
               </p>
               <ul className="mt-3 space-y-1.5">
-                {NAV.map((i) => (
+                {FOOTER_LINKS.map((i) => (
                   <li key={i.href}>
                     <Link
                       href={i.href}

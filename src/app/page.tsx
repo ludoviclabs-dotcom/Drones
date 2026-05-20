@@ -6,8 +6,18 @@ import { SectionMarker } from "@/components/primitives";
 import { SystemSchematic } from "@/components/system-schematic";
 import { RegistrationMarks } from "@/components/registration-marks";
 import { Stamp } from "@/components/stamp";
+import { StatGrid, type Stat } from "@/components/stat-cards";
+import { getEvidenceStats } from "@/lib/claims";
 
 export default function Home() {
+  const stats = getEvidenceStats();
+  const observatory: Stat[] = [
+    { label: "Systèmes documentés", value: stats.systems },
+    { label: "Sources indexées", value: stats.sources },
+    { label: "Affirmations tracées", value: stats.claims },
+    { label: "Affirmations vérifiées", value: stats.byStatus.verifie },
+  ];
+
   return (
     <div className="mx-auto max-w-[1180px] px-5">
       <section className="reveal py-14">
@@ -91,6 +101,25 @@ export default function Home() {
               </ul>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="border-t border-line py-14">
+        <SectionMarker
+          index="—"
+          label="L'observatoire en chiffres"
+          blurb="Compteurs dérivés du registre de preuves — aucun n'est saisi à la main."
+        />
+        <div className="mt-8">
+          <StatGrid stats={observatory} />
+        </div>
+        <div className="mt-5">
+          <Link
+            href="/console"
+            className="font-mono text-[11px] uppercase tracking-[0.16em] text-accent transition-colors hover:text-ink"
+          >
+            Ouvrir la Console OSINT →
+          </Link>
         </div>
       </section>
 

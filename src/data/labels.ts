@@ -1,9 +1,11 @@
 import type {
   AcquisitionMode,
   BrickKey,
+  ClaimStatus,
   Confidence,
   Grade,
   Reliability,
+  RoadmapHorizon,
   ScoreKey,
   SourceRef,
 } from "./types";
@@ -90,4 +92,16 @@ export const SOURCE_TYPE_LABELS: Record<SourceRef["type"], string> = {
   "think-tank": "Think tank",
   presse: "Presse spécialisée",
   officiel: "Document officiel",
+};
+
+export const STATUS_LABELS: Record<ClaimStatus, string> = {
+  verifie: "Vérifié",
+  "a-recouper": "À recouper",
+  variable: "Variable",
+};
+
+export const ROADMAP_HORIZON_LABELS: Record<RoadmapHorizon, string> = {
+  "en-cours": "En cours",
+  prochain: "Prochain",
+  exploratoire: "À l'étude",
 };

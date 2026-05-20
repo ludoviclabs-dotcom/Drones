@@ -18,6 +18,9 @@ export type Reliability = "A" | "B" | "C" | "D";
 /** Palier d'évaluation — pas de score chiffré, pour ne pas surjouer la précision. */
 export type Grade = "A" | "B" | "C" | "D" | "E";
 
+/** Statut d'une affirmation dans le registre de preuves. */
+export type ClaimStatus = "verifie" | "a-recouper" | "variable";
+
 export type BrickKey =
   | "finance"
   | "cout"
@@ -48,6 +51,8 @@ export interface Indicator {
   label: string;
   value: string;
   confidence: Confidence;
+  /** Override explicite ; sinon dérivé de la confiance dans le registre. */
+  status?: ClaimStatus;
   note?: string;
   sources?: string[];
 }
@@ -113,4 +118,18 @@ export interface Organism {
   scope: string;
   type: "controle-export" | "acquisition" | "programme" | "norme";
   role: string;
+}
+
+export interface ChangelogEntry {
+  date: string;
+  title: string;
+  items: string[];
+}
+
+export type RoadmapHorizon = "en-cours" | "prochain" | "exploratoire";
+
+export interface RoadmapItem {
+  title: string;
+  detail: string;
+  horizon: RoadmapHorizon;
 }

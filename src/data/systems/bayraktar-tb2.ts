@@ -53,9 +53,9 @@ export const bayraktarTb2: DefenseSystem = {
       indicators: [
         {
           label: "Coût unitaire (vecteur)",
-          value: "≈ 1–2 M$",
+          value: "≈ 1–5 M$",
           confidence: "faible",
-          note: "Estimations de presse, non confirmées par le constructeur.",
+          note: "Estimations de presse divergentes, non confirmées par le constructeur.",
         },
         {
           label: "Coût d'un système",
@@ -260,6 +260,15 @@ export const bayraktarTb2: DefenseSystem = {
       type: "think-tank",
       reliability: "B",
       url: "https://www.rusi.org",
+    },
+    {
+      id: "defensenews-tb2",
+      title:
+        "Canadian block on drone parts shows Turkey's defense industry still not independent",
+      publisher: "Defense News",
+      type: "presse",
+      reliability: "B",
+      url: "https://www.defensenews.com/global/europe/2020/10/13/canadian-block-on-drone-parts-shows-turkeys-defense-industry-still-not-independent/",
     },
   ],
   updated: "2026-05-20",

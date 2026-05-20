@@ -59,9 +59,9 @@ export const mq9Reaper: DefenseSystem = {
         },
         {
           label: "Coût d'un système",
-          value: "56–100+ M$",
+          value: "≈ 56–121 M$",
           confidence: "faible",
-          note: "Quatre vecteurs, stations sol, capteurs et liaisons.",
+          note: "Quatre vecteurs, stations sol, capteurs et liaisons — estimations américaines.",
         },
         {
           label: "Coût horaire de vol",
@@ -228,6 +228,14 @@ export const mq9Reaper: DefenseSystem = {
       type: "constructeur",
       reliability: "B",
       url: "https://www.ga-asi.com",
+    },
+    {
+      id: "usaf-factsheet",
+      title: "MQ-9 Reaper — Fact Sheet",
+      publisher: "U.S. Air Force",
+      type: "officiel",
+      reliability: "A",
+      url: "https://www.af.mil/About-Us/Fact-Sheets/Display/Article/104470/mq-9-reaper/",
     },
     {
       id: "sipri-at",

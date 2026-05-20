@@ -49,18 +49,25 @@ export const shahed136: DefenseSystem = {
     {
       key: "cout",
       narrative:
-        "Le Shahed inverse l'économie de la frappe. Son coût unitaire — estimé à quelques dizaines de milliers de dollars — est sans commune mesure avec celui d'un missile de croisière.\n\nLa donnée reste très incertaine : les estimations varient d'un facteur important selon les sources, et le coût grimpe avec la production russe localisée. L'essentiel n'est pas le chiffre exact, mais le ratio : faire dépenser au défenseur un intercepteur bien plus cher que la cible.",
+        "Le Shahed inverse l'économie de la frappe — mais son coût réel est l'une des données les plus disputées du conflit. Trois chiffres coexistent : un coût de fabrication estimé à quelques dizaines de milliers de dollars, un coût de production russe à Alabuga de l'ordre de 70 000 à 80 000 $, et un prix de cession Iran-Russie bien supérieur — environ 190 000 à 300 000 $ par appareil selon des documents ayant fuité.\n\nL'essentiel n'est pas le chiffre exact mais le ratio : même à 80 000 $, le Shahed reste sans commune mesure avec l'intercepteur sol-air — souvent dix à trente fois plus cher — qu'il force le défenseur à tirer.",
       indicators: [
         {
-          label: "Coût unitaire estimé",
+          label: "Coût de fabrication estimé",
           value: "≈ 20 000–50 000 $",
           confidence: "faible",
-          note: "Fourchette ouverte ; les estimations divergent fortement.",
+          note: "Estimation d'experts ; coût matériel, hors marge.",
         },
         {
-          label: "Coût en production russe",
-          value: "Supérieur — localisation et montée en cadence",
+          label: "Coût de production (Alabuga)",
+          value: "≈ 70 000–80 000 $",
           confidence: "faible",
+          note: "Production russe localisée — estimations 2024.",
+        },
+        {
+          label: "Prix de cession Iran-Russie",
+          value: "≈ 190 000–300 000 $",
+          confidence: "faible",
+          note: "Prix payé par la Russie en 2022-2023, selon documents ayant fuité.",
         },
         {
           label: "Logique de coût",
@@ -243,11 +250,12 @@ export const shahed136: DefenseSystem = {
       reliability: "A",
     },
     {
-      id: "osint-loitering",
-      title: "Suivi OSINT de l'emploi des munitions rôdeuses",
-      publisher: "Sources OSINT recoupées",
-      type: "presse",
-      reliability: "C",
+      id: "csis-cost",
+      title: "Calculating the Cost-Effectiveness of Russia's Drone Strikes",
+      publisher: "CSIS",
+      type: "think-tank",
+      reliability: "B",
+      url: "https://www.csis.org/analysis/calculating-cost-effectiveness-russias-drone-strikes",
     },
   ],
   updated: "2026-05-20",

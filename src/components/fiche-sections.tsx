@@ -161,11 +161,11 @@ export function EditorialTriptych({
 
 export function AnalystNote({ note }: { note: string }) {
   return (
-    <figure className="border-l-2 border-accent bg-surface px-6 py-5">
-      <figcaption className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-faint">
+    <figure className="border-l-2 border-accent bg-paper px-7 py-6">
+      <figcaption className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-paper-dim">
         Note d'analyste
       </figcaption>
-      <blockquote className="mt-3 font-serif text-lg italic leading-relaxed text-ink">
+      <blockquote className="mt-3 font-serif text-lg italic leading-relaxed text-ink-paper">
         {note}
       </blockquote>
     </figure>

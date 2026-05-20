@@ -17,11 +17,10 @@ export function GradeBadge({
         : "h-10 w-10 text-lg";
   return (
     <span
-      className={`inline-flex items-center justify-center border-2 font-mono font-semibold ${dims}`}
+      className={`inline-flex items-center justify-center border-2 font-mono font-semibold text-ink ${dims}`}
       style={{
-        color: meta.token,
         borderColor: meta.token,
-        backgroundColor: `color-mix(in srgb, ${meta.token} 9%, transparent)`,
+        backgroundColor: `color-mix(in srgb, ${meta.token} 24%, transparent)`,
       }}
       title={`Palier ${grade} — ${meta.label}`}
     >

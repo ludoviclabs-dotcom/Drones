@@ -36,10 +36,7 @@ export function ScoreProfile({
                 />
               ))}
             </div>
-            <span
-              className="w-4 shrink-0 text-center font-mono text-xs font-semibold"
-              style={{ color: meta.token }}
-            >
+            <span className="w-4 shrink-0 text-center font-mono text-xs font-semibold text-ink-dim">
               {score.grade}
             </span>
           </div>

@@ -11,6 +11,7 @@ import type {
 import { MODE_LABELS, SCORE_LABELS } from "@/data/labels";
 import { GradeBadge } from "./primitives";
 import { ScoreProfile } from "./score-profile";
+import { ScoreRadar } from "./score-radar";
 import { SystemSchematic } from "./system-schematic";
 
 // Forme allégée — le comparateur n'a besoin que de l'identité, des modes
@@ -38,6 +39,9 @@ const SCORE_KEYS: ScoreKey[] = [
 
 const MIN_SELECTION = 2;
 const MAX_SELECTION = 3;
+
+// Couleurs de série du diagramme radar — accent, bleu tampon, vert palier A.
+const SERIES_COLORS = ["#d2683c", "#6d8a9a", "#61805a"];
 
 function GroupRow({ label, span }: { label: string; span: number }) {
   return (
@@ -228,6 +232,23 @@ export function ComparateurTool({ systems }: { systems: ComparableSystem[] }) {
               ))}
 
               <GroupRow label="Évaluation — paliers A à E" span={span} />
+              <tr>
+                <th scope="row" className={`${ROW_HEAD} align-top`}>
+                  Radar
+                </th>
+                <td
+                  colSpan={chosen.length}
+                  className="border border-line bg-panel px-4 py-5"
+                >
+                  <ScoreRadar
+                    series={chosen.map((system, i) => ({
+                      name: system.name,
+                      color: SERIES_COLORS[i % SERIES_COLORS.length],
+                      scores: system.scores,
+                    }))}
+                  />
+                </td>
+              </tr>
               <tr>
                 <th
                   scope="row"

@@ -259,6 +259,13 @@ export const harop: DefenseSystem = {
     "Corée du Sud",
   ],
   theatres: ["Haut-Karabakh", "Syrie", "Asie du Sud"],
+  timeline: [
+    { date: "2005", label: "Entrée en service du Harop, héritier du Harpy.", kind: "jalon" },
+    { date: "2009", label: "Commande indienne — environ 100 M$ pour 10 systèmes Harop.", kind: "export" },
+    { date: "2016", label: "Premier emploi par l'Azerbaïdjan au Haut-Karabakh.", kind: "emploi" },
+    { date: "2020", label: "Emploi par l'Azerbaïdjan au Haut-Karabakh, pesant sur l'issue du conflit.", kind: "emploi" },
+    { date: "2025-05", label: "Frappes indiennes revendiquées sur des sites pakistanais — épisode récent à recouper.", kind: "emploi" },
+  ],
   sources: [
     {
       id: "iai-harop",

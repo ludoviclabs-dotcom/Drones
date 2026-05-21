@@ -251,6 +251,12 @@ export const mq9Reaper: DefenseSystem = {
     "Inde (MQ-9B)",
   ],
   theatres: ["Afghanistan", "Irak", "Syrie", "Libye", "Sahel", "Yémen"],
+  timeline: [
+    { date: "2007", label: "Entrée en service du MQ-9 Reaper, successeur armé du Predator.", kind: "jalon" },
+    { date: "2019", label: "Appareils perdus au combat, notamment au Yémen et au-dessus de la mer Noire.", kind: "emploi" },
+    { date: "2020", label: "Réinterprétation unilatérale par les États-Unis de la catégorie I du MTCR pour les drones lents.", kind: "debat" },
+    { date: "2020", label: "Assouplissement de la doctrine d'exportation pour enrayer la perte d'influence face à la Turquie et la Chine.", kind: "export" },
+  ],
   sources: [
     {
       id: "ga-asi",

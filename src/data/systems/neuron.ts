@@ -255,6 +255,12 @@ export const neuron: DefenseSystem = {
     "Aucun — essais en vol (Istres, Salto di Quirra, Vidsel)",
     "Tests de pénétration contre le porte-avions Charles de Gaulle (2016)",
   ],
+  timeline: [
+    { date: "2006-02", label: "Contrat principal de démonstrateur (≈ 405 M€) notifié à Dassault par la DGA.", kind: "jalon" },
+    { date: "2012-12", label: "Premier vol du nEUROn.", kind: "jalon" },
+    { date: "2016", label: "Tests de pénétration furtive contre le porte-avions Charles de Gaulle.", kind: "emploi" },
+    { date: "2024-10", label: "Annonce du futur drone de combat furtif accompagnant le Rafale F5.", kind: "jalon" },
+  ],
   sources: [
     {
       id: "dassault-neuron",

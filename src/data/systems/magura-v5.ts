@@ -253,6 +253,13 @@ export const maguraV5: DefenseSystem = {
     "Ukraine — 385e brigade USV",
   ],
   theatres: ["Mer Noire"],
+  timeline: [
+    { date: "2022", label: "Premières unités financées par souscription publique United24 — plus de 30 drones fin 2022.", kind: "jalon" },
+    { date: "2023", label: "Mise en service du Magura ; éprouvé au combat en mer Noire dès cette date.", kind: "emploi" },
+    { date: "2025-05", label: "Destruction revendiquée de deux Su-30 russes — déclaration de belligérant à recouper.", kind: "emploi" },
+    { date: "2025-09", label: "Un Magura V5 retrouvé échoué sur la côte turque, près de Trabzon.", kind: "emploi" },
+    { date: "2025-09", label: "Le président Zelensky évoque l'exportation de surplus militaires, drones navals compris.", kind: "export" },
+  ],
   sources: [
     {
       id: "usni-proc",

@@ -89,6 +89,16 @@ export interface EditorialBlocks {
   analystNote?: string;
 }
 
+/** Nature d'un repère de la frise : jalon, emploi, exportation, débat. */
+export type TimelineKind = "jalon" | "emploi" | "export" | "debat";
+
+export interface TimelineEvent {
+  /** Année ou mois — « 2012 », « 2024-10 ». Tri lexicographique = chronologique. */
+  date: string;
+  label: string;
+  kind: TimelineKind;
+}
+
 export interface DefenseSystem {
   slug: string;
   name: string;
@@ -111,6 +121,7 @@ export interface DefenseSystem {
   editorial: EditorialBlocks;
   operators: string[];
   theatres: string[];
+  timeline?: TimelineEvent[];
   sources: SourceRef[];
   updated: string;
 }

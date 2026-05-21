@@ -17,6 +17,10 @@ import { SystemSchematic } from "@/components/system-schematic";
 import { RegistrationMarks } from "@/components/registration-marks";
 import { Stamp } from "@/components/stamp";
 import { ScoreProfile } from "@/components/score-profile";
+import { Tilt } from "@/components/tilt";
+import { GlitchText } from "@/components/glitch-text";
+import { ReadingProgress } from "@/components/reading-progress";
+import { Timeline } from "@/components/timeline";
 
 export function generateStaticParams() {
   return getSystemSlugs().map((slug) => ({ slug }));
@@ -52,6 +56,7 @@ export default async function SystemPage({
 
   return (
     <article className="mx-auto max-w-[1100px] px-5 py-10">
+      <ReadingProgress />
       <Link
         href="/"
         className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-dim transition-colors hover:text-accent"
@@ -73,18 +78,20 @@ export default async function SystemPage({
 
         <div className="grid md:grid-cols-[300px_1fr]">
           <div className="flex items-center justify-center border-b border-line p-8 md:border-b-0 md:border-r">
-            <SystemSchematic
-              slug={system.slug}
-              live
-              className="h-52 w-52 text-accent"
-            />
+            <Tilt>
+              <SystemSchematic
+                slug={system.slug}
+                live
+                className="h-52 w-52 text-accent"
+              />
+            </Tilt>
           </div>
           <div className="p-7">
             <span className="font-mono text-xs uppercase tracking-[0.18em] text-ink-dim">
               {system.classLabel}
             </span>
             <h1 className="mt-3 font-serif text-5xl leading-[0.98] tracking-tight text-ink sm:text-6xl">
-              {system.name}
+              <GlitchText>{system.name}</GlitchText>
             </h1>
             {system.designation ? (
               <p className="mt-3 font-mono text-sm text-ink-faint">
@@ -216,9 +223,22 @@ export default async function SystemPage({
         </div>
       </section>
 
+      {system.timeline && system.timeline.length > 0 ? (
+        <section className="mt-16">
+          <SectionMarker
+            index="13"
+            label="Trajectoire"
+            blurb="Jalons, emplois, exportations et débats — repères datés tirés du dossier."
+          />
+          <div className="mt-6 max-w-2xl">
+            <Timeline events={system.timeline} />
+          </div>
+        </section>
+      ) : null}
+
       <section className="mt-16">
         <SectionMarker
-          index="13"
+          index="14"
           label="Sources"
           blurb="Chaque source est notée de A (fiable) à D (douteuse). Les données restent des estimations open source."
         />

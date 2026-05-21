@@ -2,6 +2,8 @@ import Link from "next/link";
 import { systems } from "@/data/systems";
 import { BRICK_BLURBS, BRICK_LABELS, BRICK_ORDER } from "@/data/labels";
 import { SystemCard } from "@/components/system-card";
+import { CatalogueFilter } from "@/components/catalogue-filter";
+import { RadarSweep } from "@/components/radar-sweep";
 import { SectionMarker } from "@/components/primitives";
 import { SystemSchematic } from "@/components/system-schematic";
 import { RegistrationMarks } from "@/components/registration-marks";
@@ -146,16 +148,27 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="catalogue" className="scroll-mt-24 border-t border-line py-16">
-        <SectionMarker
-          index="—"
-          label="Catalogue des systèmes"
-          blurb={`${systems.length} systèmes contrastés — du drone MALE à la munition rôdeuse, du HALE stratégique au drone naval.`}
-        />
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {systems.map((system) => (
-            <SystemCard key={system.slug} system={system} />
-          ))}
+      <section
+        id="catalogue"
+        className="relative scroll-mt-24 overflow-hidden border-t border-line py-16"
+      >
+        <RadarSweep className="pointer-events-none absolute -right-40 -top-32 h-[660px] w-[660px] opacity-[0.55]" />
+        <div className="relative z-10">
+          <SectionMarker
+            index="—"
+            label="Catalogue des systèmes"
+            blurb={`${systems.length} systèmes contrastés — du drone MALE à la munition rôdeuse, du HALE stratégique au drone naval.`}
+          />
+          <div className="mt-8">
+            <CatalogueFilter
+              entries={systems.map((system) => ({
+                slug: system.slug,
+                haystack:
+                  `${system.name} ${system.country} ${system.manufacturer} ${system.classLabel}`.toLowerCase(),
+                card: <SystemCard system={system} />,
+              }))}
+            />
+          </div>
         </div>
       </section>
 

@@ -12,6 +12,13 @@ export function SystemCard({ system }: { system: DefenseSystem }) {
     >
       <RegistrationMarks />
 
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute right-3 top-[4.5rem] z-10 -rotate-[18deg] scale-90 border-[1.5px] border-accent/0 px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-accent/0 transition-all duration-300 ease-out group-hover:-rotate-[9deg] group-hover:scale-100 group-hover:border-accent/40 group-hover:text-accent/70"
+      >
+        Déclassifié
+      </span>
+
       <div className="flex items-center justify-between border-b border-line px-5 py-2.5">
         <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-accent">
           {system.reference}

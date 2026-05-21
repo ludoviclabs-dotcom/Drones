@@ -8,6 +8,12 @@ import { mq25Stingray } from "./systems/mq-25-stingray";
 import { wingLoong2 } from "./systems/wing-loong-2";
 import { maguraV5 } from "./systems/magura-v5";
 import { harop } from "./systems/harop";
+import { aarok } from "./systems/aarok";
+import { eurodrone } from "./systems/eurodrone";
+import { switchblade600 } from "./systems/switchblade-600";
+import { heronTp } from "./systems/heron-tp";
+import { hermes900 } from "./systems/hermes-900";
+import { liutyi } from "./systems/liutyi";
 
 export const systems: DefenseSystem[] = [
   mq9Reaper,
@@ -19,6 +25,12 @@ export const systems: DefenseSystem[] = [
   wingLoong2,
   maguraV5,
   harop,
+  aarok,
+  eurodrone,
+  switchblade600,
+  heronTp,
+  hermes900,
+  liutyi,
 ];
 
 export const SYSTEMS_BY_SLUG: Record<string, DefenseSystem> = Object.fromEntries(

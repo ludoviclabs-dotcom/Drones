@@ -156,6 +156,122 @@ body {
   animation: transmission 2.4s ease-in-out infinite;
 }
 
+/* === Grain de film — texture vivante sur toute la surface ===
+   Calque fixe plein écran ; le bruit saute par pas pour un fourmillement
+   filmique discret. Inactif sans .motion-ready. */
+.film-grain {
+  position: fixed;
+  inset: -60%;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+.motion-ready .film-grain {
+  opacity: 0.05;
+  animation: grain 0.5s steps(1) infinite;
+}
+@keyframes grain {
+  0% {
+    transform: translate(0, 0);
+  }
+  12% {
+    transform: translate(-6%, 4%);
+  }
+  25% {
+    transform: translate(5%, -7%);
+  }
+  37% {
+    transform: translate(-4%, -3%);
+  }
+  50% {
+    transform: translate(7%, 6%);
+  }
+  62% {
+    transform: translate(-7%, 2%);
+  }
+  75% {
+    transform: translate(3%, -5%);
+  }
+  87% {
+    transform: translate(-2%, 7%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* === Balayage scanline — révélation des blocs ===
+   Une ligne d'accent parcourt le bloc de haut en bas à son entrée à l'écran,
+   comme un scanner de document. S'ajoute au fondu de .reveal. */
+.motion-ready .reveal {
+  position: relative;
+}
+.motion-ready .reveal::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-accent) 18%,
+    var(--color-accent) 82%,
+    transparent
+  );
+  box-shadow: 0 0 10px 1px color-mix(in srgb, var(--color-accent) 45%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 30;
+}
+.motion-ready .reveal.in-view::after {
+  animation: scan-sweep 1.05s cubic-bezier(0.45, 0, 0.2, 1) 0.05s;
+}
+@keyframes scan-sweep {
+  0% {
+    opacity: 0;
+    top: 0;
+  }
+  12% {
+    opacity: 0.95;
+  }
+  88% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0;
+    top: 100%;
+  }
+}
+
+/* === Radar — balayage rotatif ===
+   Le groupe .radar-beam tourne en continu sous le contenu du catalogue. */
+@keyframes radar-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.radar-beam {
+  transform-box: view-box;
+  transform-origin: 200px 200px;
+}
+.motion-ready .radar-beam {
+  animation: radar-rotate 6s linear infinite;
+}
+
+/* === Tilt — schématique inclinable au survol ===
+   Le composant client pose les variables ; le repos ramène à plat. */
+.tilt-stage {
+  perspective: 900px;
+}
+.tilt-stage > * {
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transform-style: preserve-3d;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

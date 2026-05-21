@@ -8,6 +8,7 @@ import type {
   RoadmapHorizon,
   ScoreKey,
   SourceRef,
+  TimelineKind,
 } from "./types";
 
 export const BRICK_LABELS: Record<BrickKey, string> = {
@@ -108,4 +109,11 @@ export const ROADMAP_HORIZON_LABELS: Record<RoadmapHorizon, string> = {
   "en-cours": "En cours",
   prochain: "Prochain",
   exploratoire: "À l'étude",
+};
+
+export const TIMELINE_KIND_LABELS: Record<TimelineKind, string> = {
+  jalon: "Jalon",
+  emploi: "Emploi",
+  export: "Export",
+  debat: "Débat",
 };

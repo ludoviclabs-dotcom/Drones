@@ -250,6 +250,13 @@ export const mq25Stingray: DefenseSystem = {
   },
   operators: ["États-Unis (US Navy)"],
   theatres: ["Aucun — phase d'essais"],
+  timeline: [
+    { date: "2018", label: "Contrat initial de développement — 4 vecteurs EDM pour environ 805 M$.", kind: "jalon" },
+    { date: "2024", label: "Ouverture près de Saint-Louis d'une usine dédiée d'environ 27 870 m² (≈ 200 M$).", kind: "jalon" },
+    { date: "2024", label: "Emport de deux missiles AGM-158C LRASM démontré — capacité de frappe à l'étude.", kind: "emploi" },
+    { date: "2025", label: "GAO : acquisition unitaire chiffrée vers 209 M$, coût total du programme près de 15,9 Md$.", kind: "jalon" },
+    { date: "2027", label: "Capacité opérationnelle initiale (IOC) glissée à la fin de l'exercice FY2027.", kind: "jalon" },
+  ],
   sources: [
     {
       id: "boeing-mq25",

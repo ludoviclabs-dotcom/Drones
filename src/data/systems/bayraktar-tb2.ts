@@ -252,6 +252,12 @@ export const bayraktarTb2: DefenseSystem = {
     "Kirghizistan",
   ],
   theatres: ["Syrie (Idlib)", "Libye", "Haut-Karabakh", "Ukraine", "Éthiopie"],
+  timeline: [
+    { date: "2014", label: "Entrée en service du Bayraktar TB2 ; emploi sur plusieurs théâtres depuis cette date.", kind: "jalon" },
+    { date: "2020", label: "Emploi médiatisé au Haut-Karabakh, révélant le drone au grand public.", kind: "emploi" },
+    { date: "2020", label: "Le Canada suspend l'exportation de sa boule optronique vers la Turquie après le Haut-Karabakh.", kind: "debat" },
+    { date: "2022", label: "Pertes nombreuses en Ukraine dès que la défense sol-air adverse se densifie.", kind: "emploi" },
+  ],
   sources: [
     {
       id: "baykar",

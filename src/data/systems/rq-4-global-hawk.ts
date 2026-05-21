@@ -280,6 +280,15 @@ export const rq4GlobalHawk: DefenseSystem = {
     "Pacifique occidental",
     "Détroit d'Ormuz",
   ],
+  timeline: [
+    { date: "1994", label: "Lancement du programme ; cellule annoncée autour de 10 M$.", kind: "jalon" },
+    { date: "2001", label: "Entrée en service du RQ-4 Global Hawk.", kind: "jalon" },
+    { date: "2012", label: "Programme OTAN AGS — 5 RQ-4D, contrat d'environ 1,7 Md$.", kind: "export" },
+    { date: "2014", label: "Contrat export pour la Corée du Sud — 4 vecteurs, environ 657 M$.", kind: "export" },
+    { date: "2018", label: "Contrat export pour le Japon — 3 vecteurs et 2 stations sol, environ 490 M$.", kind: "export" },
+    { date: "2019-06", label: "RQ-4A abattu par l'Iran le 20 juin au-dessus du détroit d'Ormuz.", kind: "emploi" },
+    { date: "2027", label: "Retrait planifié des derniers Block 40 par l'US Air Force.", kind: "jalon" },
+  ],
   sources: [
     {
       id: "ng-rq4",

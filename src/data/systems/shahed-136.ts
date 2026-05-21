@@ -251,6 +251,13 @@ export const shahed136: DefenseSystem = {
   },
   operators: ["Iran", "Russie (sous la désignation « Geran-2 »)"],
   theatres: ["Ukraine", "Moyen-Orient"],
+  timeline: [
+    { date: "2021", label: "Conception en Iran de la munition rôdeuse Shahed-136.", kind: "jalon" },
+    { date: "2022", label: "Emploi en masse et en continu par la Russie contre l'Ukraine.", kind: "emploi" },
+    { date: "2022", label: "Prix de cession Iran-Russie de 190 000 à 300 000 $ par appareil, selon documents ayant fuité.", kind: "export" },
+    { date: "2022", label: "Transfert jugé contraire aux engagements ONU pesant sur l'Iran par plusieurs États.", kind: "debat" },
+    { date: "2024", label: "Production russe localisée à Alabuga, estimée à 70 000-80 000 $ l'unité.", kind: "jalon" },
+  ],
   sources: [
     {
       id: "car-shahed",

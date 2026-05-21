@@ -4,6 +4,18 @@ import type { ChangelogEntry } from "./types";
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-05-21",
+    title: "Quinze systèmes, quatre outils, un dossier vivant",
+    items: [
+      "Six nouveaux dossiers — Aarok, Eurodrone, Switchblade 600, Heron TP, Hermes 900, Liutyi : le catalogue passe à quinze systèmes.",
+      "Matrice stratégique : positionnement des systèmes sur deux axes dérivés des paliers.",
+      "Simulateur d'arbitrage : pondérer ses priorités et lire les points de vigilance — jamais un avis d'achat.",
+      "Glossaire contextuel : définitions au survol des termes, dans le fil de lecture des fiches.",
+      "Trajectoire : une frise datée — jalons, emplois, exportations, débats — sur chaque dossier.",
+      "Couche de mouvement : grain de film, balayage de révélation, radar du catalogue, schématiques inclinables.",
+    ],
+  },
+  {
+    date: "2026-05-21",
     title: "Le catalogue passe à neuf systèmes",
     items: [
       "Six nouveaux dossiers : nEUROn, RQ-4 Global Hawk, MQ-25 Stingray, Wing Loong II, Magura V5, Harop.",

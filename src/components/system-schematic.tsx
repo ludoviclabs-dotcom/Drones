@@ -122,6 +122,82 @@ const SCHEMATICS: Record<string, ReactNode> = {
       <path d="M129 188 L142 208" />
     </>
   ),
+  aarok: (
+    <>
+      <line x1="120" y1="20" x2="120" y2="228" strokeWidth="1" strokeDasharray="2 5" />
+      <rect x="110" y="32" width="20" height="178" rx="10" />
+      <circle cx="120" cy="44" r="10" />
+      <path d="M18 104 L110 96 L110 114 L20 122 Z" />
+      <path d="M222 104 L130 96 L130 114 L220 122 Z" />
+      <path d="M112 196 L86 224" />
+      <path d="M128 196 L154 224" />
+      <ellipse cx="120" cy="212" rx="22" ry="4" />
+    </>
+  ),
+  eurodrone: (
+    <>
+      <line x1="120" y1="20" x2="120" y2="226" strokeWidth="1" strokeDasharray="2 5" />
+      <rect x="111" y="34" width="18" height="172" rx="9" />
+      <circle cx="120" cy="45" r="9" />
+      <path d="M26 106 L111 98 L111 114 L28 122 Z" />
+      <path d="M214 106 L129 98 L129 114 L212 122 Z" />
+      <rect x="70" y="99" width="13" height="26" rx="3" />
+      <rect x="157" y="99" width="13" height="26" rx="3" />
+      <path d="M112 192 L88 218" />
+      <path d="M128 192 L152 218" />
+      <ellipse cx="120" cy="208" rx="20" ry="4" />
+    </>
+  ),
+  "switchblade-600": (
+    <>
+      <line x1="120" y1="30" x2="120" y2="210" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 36 L128 62 L128 186 L112 186 L112 62 Z" />
+      <path d="M52 128 L112 120 L112 134 L54 140 Z" />
+      <path d="M188 128 L128 120 L128 134 L186 140 Z" />
+      <path d="M88 72 L112 78 L112 88 L90 84 Z" />
+      <path d="M152 72 L128 78 L128 88 L150 84 Z" />
+      <path d="M104 186 L94 206" />
+      <path d="M136 186 L146 206" />
+    </>
+  ),
+  "heron-tp": (
+    <>
+      <line x1="120" y1="18" x2="120" y2="226" strokeWidth="1" strokeDasharray="2 5" />
+      <rect x="112" y="30" width="16" height="118" rx="8" />
+      <circle cx="120" cy="40" r="8" />
+      <path d="M14 96 L112 88 L112 104 L16 112 Z" />
+      <path d="M226 96 L128 88 L128 104 L224 112 Z" />
+      <line x1="97" y1="103" x2="97" y2="206" strokeWidth="1.4" />
+      <line x1="143" y1="103" x2="143" y2="206" strokeWidth="1.4" />
+      <line x1="90" y1="206" x2="150" y2="206" strokeWidth="1.4" />
+      <path d="M97 206 L89 224" />
+      <path d="M143 206 L151 224" />
+    </>
+  ),
+  "hermes-900": (
+    <>
+      <line x1="120" y1="22" x2="120" y2="222" strokeWidth="1" strokeDasharray="2 5" />
+      <rect x="112" y="36" width="16" height="158" rx="8" />
+      <circle cx="120" cy="48" r="8" />
+      <path d="M30 108 L112 100 L112 116 L32 124 Z" />
+      <path d="M210 108 L128 100 L128 116 L208 124 Z" />
+      <path d="M113 194 L92 214" />
+      <path d="M127 194 L148 214" />
+      <ellipse cx="120" cy="198" rx="11" ry="3.5" />
+    </>
+  ),
+  liutyi: (
+    <>
+      <line x1="120" y1="20" x2="120" y2="222" strokeWidth="1" strokeDasharray="2 5" />
+      <rect x="113" y="40" width="14" height="158" rx="7" />
+      <circle cx="120" cy="34" r="7" />
+      <line x1="111" y1="29" x2="129" y2="29" strokeWidth="1" />
+      <path d="M34 112 L113 106 L113 120 L36 126 Z" />
+      <path d="M206 112 L127 106 L127 120 L204 126 Z" />
+      <path d="M80 196 L113 192 L113 202 L82 206 Z" />
+      <path d="M160 196 L127 192 L127 202 L158 206 Z" />
+    </>
+  ),
 };
 
 export function SystemSchematic({

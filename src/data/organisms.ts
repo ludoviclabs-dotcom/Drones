@@ -56,6 +56,14 @@ export const organisms: Organism[] = [
     role: "Agence française responsable de la conduite des programmes d'armement, des essais et du soutien aux exportations de défense.",
   },
   {
+    slug: "occar",
+    name: "Organisation conjointe de coopération en matière d'armement",
+    acronym: "OCCAr",
+    scope: "Europe — six États membres",
+    type: "acquisition",
+    role: "Organisation intergouvernementale qui passe et gère les programmes d'armement coopératifs européens — dont l'Eurodrone — pour le compte des États participants : contractualisation, suivi industriel et calendaire.",
+  },
+  {
     slug: "deca",
     name: "Defense Export Controls Agency",
     acronym: "DECA",

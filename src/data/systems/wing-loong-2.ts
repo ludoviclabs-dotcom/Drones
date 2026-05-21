@@ -259,6 +259,12 @@ export const wingLoong2: DefenseSystem = {
     "Turkménistan",
   ],
   theatres: ["Libye", "Yémen", "Sinaï", "Nigeria"],
+  timeline: [
+    { date: "2004", label: "La Chine devient observateur du MTCR ; sa demande d'adhésion sera rejetée.", kind: "debat" },
+    { date: "2018", label: "Entrée en service du Wing Loong II, exporté massivement.", kind: "jalon" },
+    { date: "2020-01", label: "Frappe meurtrière contre une académie militaire de Tripoli par des Wing Loong II opérés en Libye.", kind: "emploi" },
+    { date: "2020", label: "Transfert via les Émirats documenté comme une violation de l'embargo de l'ONU sur la Libye.", kind: "debat" },
+  ],
   sources: [
     {
       id: "catic",

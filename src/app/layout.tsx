@@ -31,6 +31,8 @@ export const metadata: Metadata = {
 const NAV = [
   { href: "/#catalogue", label: "Systèmes" },
   { href: "/comparateur", label: "Comparateur" },
+  { href: "/matrice", label: "Matrice" },
+  { href: "/simulateur", label: "Simulateur" },
   { href: "/console", label: "Console" },
   { href: "/methodologie", label: "Méthodologie" },
   { href: "/glossaire", label: "Glossaire" },
@@ -59,6 +61,7 @@ export default function RootLayout({
           }}
         />
         <MotionController />
+        <div className="film-grain" aria-hidden="true" />
         <div className="border-b border-line">
           <div className="mx-auto flex max-w-[1180px] items-center gap-2.5 px-5 py-1.5">
             <span

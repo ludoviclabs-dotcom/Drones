@@ -4,43 +4,37 @@ export const roadmap: RoadmapItem[] = [
   {
     title: "Durcissement éditorial du contenu",
     detail:
-      "Vérification ligne à ligne des fiches et élargissement progressif du registre de sources.",
+      "Vérification ligne à ligne des fiches et élargissement continu du registre de sources.",
     horizon: "en-cours",
   },
   {
     title: "Élargir le catalogue",
     detail:
-      "Le catalogue s'enrichit en continu : après les classes HALE, UCAV et navale, documenter les drones FPV militarisés et de nouveaux théâtres d'emploi.",
+      "Quinze systèmes documentés. Prochaines cibles : drones FPV militarisés, HALE et UCAV furtifs chinois, drone naval à voilure tournante.",
     horizon: "en-cours",
   },
   {
-    title: "Matrice stratégique",
+    title: "Veille des conflits actifs",
     detail:
-      "Une visualisation à deux axes positionnant les systèmes : coût contre effet, autonomie industrielle contre dépendance géopolitique.",
+      "Révision périodique des fiches engagées en Ukraine, au Moyen-Orient et en Indo-Pacifique, là où les données changent vite.",
+    horizon: "en-cours",
+  },
+  {
+    title: "Cartographie des opérateurs",
+    detail:
+      "Une carte mondiale reliant chaque système à ses pays opérateurs et à ses théâtres d'emploi documentés.",
     horizon: "prochain",
   },
   {
-    title: "Timeline géopolitique",
+    title: "Fiches d'échec industriel",
     detail:
-      "Une frise par système : mise en service, exportations, théâtres d'emploi, débats sur l'export.",
+      "Documenter aussi les programmes ratés ou contestés — pour que le catalogue ne raconte pas seulement des réussites.",
     horizon: "prochain",
-  },
-  {
-    title: "Glossaire contextuel",
-    detail:
-      "Définitions au survol des termes, directement dans le fil de lecture des fiches.",
-    horizon: "prochain",
-  },
-  {
-    title: "Simulateur d'arbitrage d'acquisition",
-    detail:
-      "Un outil de pondération non opérationnel : priorités de l'acheteur en entrée, profil d'acquisition et points de vigilance en sortie — jamais une recommandation d'achat.",
-    horizon: "exploratoire",
   },
   {
     title: "Au-delà des drones",
     detail:
-      "Étendre le modèle d'analyse aux avions de chasse, à l'artillerie et aux radars.",
+      "Étendre le modèle d'analyse aux systèmes sol-air et aux missiles, puis aux avions de combat — à grille de lecture constante.",
     horizon: "exploratoire",
   },
 ];

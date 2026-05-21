@@ -10,8 +10,8 @@ export const roadmap: RoadmapItem[] = [
   {
     title: "Élargir le catalogue",
     detail:
-      "Documenter de nouveaux drones — munitions rôdeuses, FPV militarisés, drones HALE.",
-    horizon: "prochain",
+      "Le catalogue s'enrichit en continu : après les classes HALE, UCAV et navale, documenter les drones FPV militarisés et de nouveaux théâtres d'emploi.",
+    horizon: "en-cours",
   },
   {
     title: "Matrice stratégique",

@@ -1,39 +1,30 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import type { ScoreKey } from "@/data/types";
 import { systems } from "@/data/systems";
-import { MODE_LABELS, SCORE_LABELS } from "@/data/labels";
-import { GradeBadge, SectionMarker } from "@/components/primitives";
-import { ScoreProfile } from "@/components/score-profile";
+import { SectionMarker } from "@/components/primitives";
+import {
+  ComparateurTool,
+  type ComparableSystem,
+} from "@/components/comparateur-tool";
 
 export const metadata: Metadata = {
   title: "Comparateur",
   description:
-    "Confronter les systèmes de défense côte à côte — identité, modes d'acquisition et évaluation par paliers.",
+    "Confronter les systèmes de défense — sélection de deux à trois dossiers : identité, modes d'acquisition et évaluation par paliers.",
 };
 
-const SCORE_KEYS: ScoreKey[] = [
-  "efficacite-cout",
-  "survivabilite",
-  "exportabilite",
-  "risque-industriel",
-  "maturite",
-  "confiance-donnees",
-];
-
-function GroupRow({ label }: { label: string }) {
-  return (
-    <tr>
-      <th
-        colSpan={1 + systems.length}
-        scope="colgroup"
-        className="border border-line bg-surface-2 px-4 py-2 text-left font-mono text-[10px] uppercase tracking-[0.2em] text-accent"
-      >
-        {label}
-      </th>
-    </tr>
-  );
-}
+// Forme allégée passée au composant client : seuls les champs comparés.
+const comparable: ComparableSystem[] = systems.map((s) => ({
+  slug: s.slug,
+  name: s.name,
+  flag: s.flag,
+  classLabel: s.classLabel,
+  country: s.country,
+  manufacturer: s.manufacturer,
+  acquisitionModes: s.acquisitionModes,
+  scores: s.scores,
+  editorial: s.editorial,
+}));
 
 export default function ComparateurPage() {
   return (
@@ -46,145 +37,14 @@ export default function ComparateurPage() {
           Comparateur
         </h1>
         <p className="mt-5 max-w-2xl font-serif text-lg leading-relaxed text-ink-dim">
-          Les trois systèmes documentés, confrontés côte à côte. La V1 compare
-          l'ensemble du catalogue ; la sélection viendra avec le volume.
+          {`${comparable.length} systèmes au catalogue. Choisissez-en deux ou trois pour les confronter dossier contre dossier — identité, modes d'acquisition et évaluation par paliers.`}
         </p>
       </header>
 
       <section className="mt-12">
-        <SectionMarker index="—" label="Tableau comparatif" />
-        <div className="mt-6 overflow-x-auto">
-          <table className="w-full min-w-[760px] border-collapse">
-            <thead>
-              <tr>
-                <td className="w-[200px] border border-line bg-bg" />
-                {systems.map((system) => (
-                  <th
-                    key={system.slug}
-                    scope="col"
-                    className="border border-line bg-panel px-4 py-4 text-left align-bottom"
-                  >
-                    <span className="text-lg">{system.flag}</span>
-                    <Link
-                      href={`/systemes/${system.slug}`}
-                      className="mt-1 block font-serif text-xl text-ink transition-colors hover:text-accent"
-                    >
-                      {system.name}
-                    </Link>
-                    <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
-                      {system.classLabel}
-                    </span>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              <GroupRow label="Identité" />
-              {(
-                [
-                  ["Pays", (s: (typeof systems)[number]) => s.country],
-                  ["Constructeur", (s: (typeof systems)[number]) => s.manufacturer],
-                  [
-                    "Acquisition",
-                    (s: (typeof systems)[number]) =>
-                      s.acquisitionModes
-                        .map((m) => MODE_LABELS[m].short)
-                        .join(" · "),
-                  ],
-                ] as const
-              ).map(([label, accessor]) => (
-                <tr key={label}>
-                  <th
-                    scope="row"
-                    className="border border-line bg-surface px-4 py-3 text-left font-mono text-[11px] uppercase tracking-[0.1em] text-ink-dim"
-                  >
-                    {label}
-                  </th>
-                  {systems.map((system) => (
-                    <td
-                      key={system.slug}
-                      className="border border-line bg-panel px-4 py-3 font-mono text-xs text-ink"
-                    >
-                      {accessor(system)}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-
-              <GroupRow label="Évaluation — paliers A à E" />
-              <tr>
-                <th
-                  scope="row"
-                  className="border border-line bg-surface px-4 py-3 text-left align-top font-mono text-[11px] uppercase tracking-[0.1em] text-ink-dim"
-                >
-                  Profil
-                </th>
-                {systems.map((system) => (
-                  <td
-                    key={system.slug}
-                    className="border border-line bg-panel px-4 py-3"
-                  >
-                    <ScoreProfile scores={system.scores} showLabels={false} />
-                  </td>
-                ))}
-              </tr>
-              {SCORE_KEYS.map((key) => (
-                <tr key={key}>
-                  <th
-                    scope="row"
-                    className="border border-line bg-surface px-4 py-3 text-left font-mono text-[11px] uppercase tracking-[0.1em] text-ink-dim"
-                  >
-                    {SCORE_LABELS[key]}
-                  </th>
-                  {systems.map((system) => {
-                    const score = system.scores.find((s) => s.key === key);
-                    return (
-                      <td
-                        key={system.slug}
-                        className="border border-line bg-panel px-4 py-3 align-top"
-                      >
-                        {score ? (
-                          <div className="flex items-start gap-3">
-                            <GradeBadge grade={score.grade} size="sm" />
-                            <span className="font-serif text-xs leading-relaxed text-ink-dim">
-                              {score.rationale}
-                            </span>
-                          </div>
-                        ) : (
-                          "—"
-                        )}
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
-
-              <GroupRow label="Lecture" />
-              {(
-                [
-                  ["Meilleur emploi", "bestUseCase"],
-                  ["Point faible", "weakPoint"],
-                ] as const
-              ).map(([label, field]) => (
-                <tr key={field}>
-                  <th
-                    scope="row"
-                    className="border border-line bg-surface px-4 py-3 text-left font-mono text-[11px] uppercase tracking-[0.1em] text-ink-dim"
-                  >
-                    {label}
-                  </th>
-                  {systems.map((system) => (
-                    <td
-                      key={system.slug}
-                      className="border border-line bg-panel px-4 py-3 align-top font-serif text-sm leading-relaxed text-ink-dim"
-                    >
-                      {system.editorial[field] ?? "—"}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <SectionMarker index="—" label="Sélection et tableau comparatif" />
+        <div className="mt-6">
+          <ComparateurTool systems={comparable} />
         </div>
       </section>
 

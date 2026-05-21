@@ -10,6 +10,37 @@ export const glossary: GlossaryTerm[] = [
       "Moyenne Altitude, Longue Endurance. Drone capable de voler plus de 24 h à altitude moyenne, conçu pour la surveillance persistante et, souvent, la frappe.",
   },
   {
+    slug: "ucav",
+    term: "Drone de combat",
+    acronym: "UCAV",
+    category: "technique",
+    definition:
+      "Unmanned Combat Aerial Vehicle. Drone conçu pour la mission de combat — frappe ou pénétration en zone défendue — par opposition aux drones de pure surveillance. Souvent furtif, avec armement en soute interne.",
+  },
+  {
+    slug: "hale",
+    term: "Drone HALE",
+    acronym: "HALE",
+    category: "technique",
+    definition:
+      "Haute Altitude, Longue Endurance. Drone volant au-delà de 15 000 m pendant plus de 24 h, dédié à la surveillance stratégique de vastes zones — plus grand, plus endurant et plus coûteux qu'un MALE.",
+  },
+  {
+    slug: "usv",
+    term: "Drone de surface",
+    acronym: "USV",
+    category: "technique",
+    definition:
+      "Unmanned Surface Vehicle. Engin naval sans équipage évoluant à la surface de l'eau. Employé pour la reconnaissance ou, sous forme de USV explosif, la frappe contre des navires et des infrastructures.",
+  },
+  {
+    slug: "ravitaillement-en-vol",
+    term: "Ravitaillement en vol",
+    category: "technique",
+    definition:
+      "Transfert de carburant d'un avion-citerne vers un aéronef en vol, qui étend son rayon d'action et son endurance. Sa version embarquée et autonome — assurée par un drone depuis un porte-avions — est une capacité émergente.",
+  },
+  {
     slug: "munition-rodeuse",
     term: "Munition rôdeuse",
     category: "technique",
@@ -23,6 +54,14 @@ export const glossary: GlossaryTerm[] = [
     category: "doctrine",
     definition:
       "Renseignement, Surveillance, Reconnaissance. Ensemble des missions de collecte d'information — la fonction première de la plupart des drones militaires.",
+  },
+  {
+    slug: "sead",
+    term: "Suppression des défenses aériennes",
+    acronym: "SEAD",
+    category: "doctrine",
+    definition:
+      "Suppression of Enemy Air Defenses. Ensemble des actions visant à neutraliser radars et systèmes sol-air adverses pour ouvrir un couloir à l'aviation. Mission de prédilection des munitions rôdeuses anti-radar comme le Harop.",
   },
   {
     slug: "los",

@@ -150,7 +150,7 @@ export default function Home() {
         <SectionMarker
           index="—"
           label="Catalogue des systèmes"
-          blurb="Trois drones contrastés, choisis pour illustrer trois modèles d'acquisition différents."
+          blurb={`${systems.length} systèmes contrastés — du drone MALE à la munition rôdeuse, du HALE stratégique au drone naval.`}
         />
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {systems.map((system) => (
@@ -168,9 +168,10 @@ export default function Home() {
                 Comparer vaut mieux que décrire.
               </h2>
               <p className="mt-3 max-w-xl font-serif text-base leading-relaxed text-ink-dim">
-                Le comparateur confronte les systèmes côte à côte, brique par
-                brique. La page Méthodologie explique comment les paliers sont
-                attribués et comment lire le niveau de confiance des données.
+                Le comparateur confronte deux à trois systèmes côte à côte —
+                identité, paliers d'évaluation et lecture critique. La page
+                Méthodologie explique comment les paliers sont attribués et
+                comment lire le niveau de confiance des données.
               </p>
             </div>
             <div className="flex flex-col gap-3">

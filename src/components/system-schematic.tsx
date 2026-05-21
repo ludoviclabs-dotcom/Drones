@@ -60,6 +60,68 @@ const SCHEMATICS: Record<string, ReactNode> = {
       <ellipse cx="120" cy="203" rx="13" ry="3.5" />
     </>
   ),
+  neuron: (
+    <>
+      <line x1="120" y1="24" x2="120" y2="190" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 34 L214 158 L150 158 L120 180 L90 158 L26 158 Z" />
+      <line x1="120" y1="38" x2="120" y2="156" strokeWidth="1" />
+      <circle cx="120" cy="66" r="7" />
+    </>
+  ),
+  "rq-4-global-hawk": (
+    <>
+      <line x1="120" y1="14" x2="120" y2="226" strokeWidth="1" strokeDasharray="2 5" />
+      <circle cx="120" cy="40" r="16" />
+      <path d="M111 52 L111 190 C111 202 115 206 120 206 C125 206 129 202 129 190 L129 52 Z" />
+      <path d="M16 110 L111 101 L111 117 L18 119 Z" />
+      <path d="M224 110 L129 101 L129 117 L222 119 Z" />
+      <path d="M111 188 L80 216" />
+      <path d="M129 188 L160 216" />
+      <line x1="16" y1="103" x2="16" y2="126" strokeWidth="1" />
+      <line x1="224" y1="103" x2="224" y2="126" strokeWidth="1" />
+    </>
+  ),
+  "mq-25-stingray": (
+    <>
+      <line x1="120" y1="20" x2="120" y2="210" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 28 L138 72 L206 150 L150 158 L132 196 L108 196 L90 158 L34 150 L102 72 Z" />
+      <circle cx="120" cy="80" r="6" />
+      <line x1="106" y1="124" x2="134" y2="124" strokeWidth="1" />
+    </>
+  ),
+  "wing-loong-2": (
+    <>
+      <line x1="120" y1="22" x2="120" y2="226" strokeWidth="1" strokeDasharray="2 5" />
+      <rect x="111" y="36" width="18" height="170" rx="9" />
+      <circle cx="120" cy="47" r="9" />
+      <path d="M26 108 L111 100 L111 116 L28 118 Z" />
+      <path d="M214 108 L129 100 L129 116 L212 118 Z" />
+      <path d="M111 192 L84 214" />
+      <path d="M129 192 L156 214" />
+      <ellipse cx="120" cy="210" rx="20" ry="4" />
+    </>
+  ),
+  "magura-v5": (
+    <>
+      <line x1="120" y1="22" x2="120" y2="212" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 26 C132 34 138 64 138 96 L138 198 L102 198 L102 96 C102 64 108 34 120 26 Z" />
+      <rect x="108" y="120" width="24" height="42" />
+      <circle cx="120" cy="92" r="5" />
+      <line x1="102" y1="198" x2="138" y2="198" strokeWidth="1" />
+    </>
+  ),
+  harop: (
+    <>
+      <line x1="120" y1="18" x2="120" y2="216" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 24 C126 30 129 46 129 70 L129 188 C129 200 125 208 120 208 C115 208 111 200 111 188 L111 70 C111 46 114 30 120 24 Z" />
+      <path d="M44 150 L111 122 L111 138 L46 156 Z" />
+      <path d="M196 150 L129 122 L129 138 L194 156 Z" />
+      <path d="M88 72 L111 80 L111 90 L90 86 Z" />
+      <path d="M152 72 L129 80 L129 90 L150 86 Z" />
+      <path d="M111 188 L98 208" />
+      <path d="M129 188 L142 208" />
+    </>
+  ),
 };
 
 export function SystemSchematic({

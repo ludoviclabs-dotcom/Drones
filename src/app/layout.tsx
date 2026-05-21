@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Newsreader, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { MotionController } from "@/components/motion-controller";
+import { systems } from "@/data/systems";
 
 const newsreader = Newsreader({
   subsets: ["latin"],
@@ -135,7 +136,7 @@ export default function RootLayout({
           </div>
           <div className="border-t border-line">
             <p className="mx-auto max-w-[1180px] px-5 py-4 text-[10px] uppercase tracking-[0.18em] text-ink-faint">
-              © 2026 Panoplie — version MVP · 3 systèmes documentés
+              © 2026 Panoplie — version MVP · {systems.length} systèmes documentés
             </p>
           </div>
         </footer>

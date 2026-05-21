@@ -5,10 +5,22 @@
 
 export type SystemCategory = "drone";
 
-export type DroneClass = "MALE" | "munition-rodeuse" | "ISR" | "kamikaze";
+export type DroneClass =
+  | "MALE"
+  | "HALE"
+  | "UCAV"
+  | "ISR"
+  | "munition-rodeuse"
+  | "kamikaze"
+  | "ravitailleur"
+  | "USV";
 
 /** Modes d'acquisition — la grille de lecture qui relie les cinq briques. */
-export type AcquisitionMode = "FMS" | "DCS" | "production-nationale";
+export type AcquisitionMode =
+  | "FMS"
+  | "DCS"
+  | "production-nationale"
+  | "cooperatif";
 
 export type Confidence = "haute" | "moyenne" | "faible";
 

@@ -68,6 +68,10 @@ export const MODE_LABELS: Record<
     short: "Production nationale",
     full: "Production nationale ou sous licence",
   },
+  cooperatif: {
+    short: "Coopératif",
+    full: "Programme coopératif multinational",
+  },
 };
 
 export const CONFIDENCE_META: Record<

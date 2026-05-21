@@ -3,6 +3,15 @@ import type { ChangelogEntry } from "./types";
 // Du plus récent au plus ancien.
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-05-21",
+    title: "Le catalogue passe à neuf systèmes",
+    items: [
+      "Six nouveaux dossiers : nEUROn, RQ-4 Global Hawk, MQ-25 Stingray, Wing Loong II, Magura V5, Harop.",
+      "Modèle d'analyse étendu : classes UCAV, HALE, ravitailleur et drone de surface (USV).",
+      "Comparateur repensé en mode sélection — confronter deux à trois systèmes.",
+    ],
+  },
+  {
     date: "2026-05-20",
     title: "Console OSINT",
     items: [

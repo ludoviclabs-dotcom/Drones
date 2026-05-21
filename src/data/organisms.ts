@@ -56,6 +56,14 @@ export const organisms: Organism[] = [
     role: "Agence française responsable de la conduite des programmes d'armement, des essais et du soutien aux exportations de défense.",
   },
   {
+    slug: "deca",
+    name: "Defense Export Controls Agency",
+    acronym: "DECA",
+    scope: "Israël",
+    type: "controle-export",
+    role: "Agence du ministère israélien de la Défense qui autorise et encadre les exportations d'armement, dont les munitions rôdeuses. Israël applique volontairement les critères du MTCR sans en être membre.",
+  },
+  {
     slug: "unscr-2231",
     name: "Résolution 2231 du Conseil de sécurité",
     acronym: "RCSNU 2231",

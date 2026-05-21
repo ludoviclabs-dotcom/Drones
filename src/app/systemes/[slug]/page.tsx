@@ -75,6 +75,7 @@ export default async function SystemPage({
           <div className="flex items-center justify-center border-b border-line p-8 md:border-b-0 md:border-r">
             <SystemSchematic
               slug={system.slug}
+              live
               className="h-52 w-52 text-accent"
             />
           </div>

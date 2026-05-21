@@ -85,27 +85,78 @@ body {
   outline-offset: 2px;
 }
 
-@keyframes rise-in {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* === Mouvement — « le dossier vivant » ===
+   Amélioration progressive : actif uniquement quand .motion-ready est posée
+   sur <html> (par un script en ligne, si prefers-reduced-motion est absent).
+   Sans .motion-ready, tout le contenu est visible et statique. */
+
+.motion-ready .reveal {
+  opacity: 0;
+  transform: translateY(14px);
+}
+.motion-ready .reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.reveal {
+/* Schématiques — tracé progressif au scroll */
+.motion-ready [data-draw] path {
+  stroke-dasharray: 800;
+  stroke-dashoffset: 800;
+}
+.motion-ready [data-draw].in-view path {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.motion-ready [data-draw] :is(rect, circle, ellipse, line) {
   opacity: 0;
-  animation: rise-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.motion-ready [data-draw].in-view :is(rect, circle, ellipse, line) {
+  opacity: 1;
+  transition: opacity 0.5s ease 0.55s;
+}
+
+/* Schématiques — loiter : le drone patrouille */
+@keyframes loiter {
+  from {
+    transform: translateY(-2.5px) rotate(-0.6deg);
+  }
+  to {
+    transform: translateY(2.5px) rotate(0.6deg);
+  }
+}
+.motion-ready .schematic-live {
+  animation: loiter 7s ease-in-out infinite alternate;
+}
+
+/* Barres de paliers — remplissage à la révélation */
+.motion-ready [data-fill] .score-bar {
+  transform: scaleX(0);
+  transform-origin: left;
+}
+.motion-ready [data-fill].in-view .score-bar {
+  transform: scaleX(1);
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Pouls « transmission » */
+@keyframes transmission {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.motion-ready .transmission-dot {
+  animation: transmission 2.4s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .reveal {
-    animation: none;
-    opacity: 1;
-  }
   html {
     scroll-behavior: auto;
   }

@@ -13,8 +13,8 @@ export function ScoreProfile({
   showLabels?: boolean;
 }) {
   return (
-    <div className="space-y-1.5">
-      {scores.map((score) => {
+    <div className="space-y-1.5" data-fill="">
+      {scores.map((score, i) => {
         const level = GRADE_LEVEL[score.grade];
         const meta = GRADE_META[score.grade];
         return (
@@ -24,7 +24,10 @@ export function ScoreProfile({
                 {SCORE_LABELS[score.key]}
               </span>
             ) : null}
-            <div className="flex flex-1 gap-[3px]">
+            <div
+              className="score-bar flex flex-1 gap-[3px]"
+              style={{ transitionDelay: `${i * 80}ms` }}
+            >
               {[1, 2, 3, 4, 5].map((n) => (
                 <span
                   key={n}

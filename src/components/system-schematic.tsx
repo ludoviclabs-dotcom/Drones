@@ -65,9 +65,11 @@ const SCHEMATICS: Record<string, ReactNode> = {
 export function SystemSchematic({
   slug,
   className = "",
+  live = false,
 }: {
   slug: string;
   className?: string;
+  live?: boolean;
 }) {
   const content = SCHEMATICS[slug];
   if (!content) return null;
@@ -79,8 +81,9 @@ export function SystemSchematic({
       strokeWidth="1.6"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={className}
+      className={live ? `${className} schematic-live` : className}
       aria-hidden="true"
+      data-draw={live ? "" : undefined}
     >
       {content}
     </svg>

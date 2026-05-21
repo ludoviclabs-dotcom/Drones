@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Newsreader, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
+import { MotionController } from "@/components/motion-controller";
 
 const newsreader = Newsreader({
   subsets: ["latin"],
@@ -44,12 +45,29 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="fr" className={`${newsreader.variable} ${plexMono.variable}`}>
+    <html
+      lang="fr"
+      suppressHydrationWarning
+      className={`${newsreader.variable} ${plexMono.variable}`}
+    >
       <body className="flex min-h-dvh flex-col">
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if(!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('motion-ready')}}catch(e){}",
+          }}
+        />
+        <MotionController />
         <div className="border-b border-line">
-          <p className="mx-auto max-w-[1180px] px-5 py-1.5 text-[10px] uppercase tracking-[0.24em] text-ink-faint">
-            OSINT · Sources ouvertes · Analyse stratégique — aucun usage opérationnel
-          </p>
+          <div className="mx-auto flex max-w-[1180px] items-center gap-2.5 px-5 py-1.5">
+            <span
+              className="transmission-dot h-1.5 w-1.5 shrink-0 bg-accent"
+              aria-hidden="true"
+            />
+            <p className="text-[10px] uppercase tracking-[0.24em] text-ink-faint">
+              OSINT · Sources ouvertes · Analyse stratégique — aucun usage opérationnel
+            </p>
+          </div>
         </div>
 
         <header className="sticky top-0 z-40 border-b border-line bg-bg/90 backdrop-blur">

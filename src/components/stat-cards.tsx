@@ -9,7 +9,12 @@ export function StatGrid({ stats }: { stats: Stat[] }) {
     <div className="grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
       {stats.map((stat) => (
         <div key={stat.label} className="bg-panel p-5">
-          <div className="font-mono text-3xl leading-none text-ink">
+          <div
+            className="font-mono text-3xl leading-none text-ink"
+            data-countup={
+              typeof stat.value === "number" ? stat.value : undefined
+            }
+          >
             {stat.value}
           </div>
           <div className="mt-2 font-mono text-[10px] uppercase tracking-[0.16em] text-ink-faint">

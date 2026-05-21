@@ -24,6 +24,7 @@ export function SystemCard({ system }: { system: DefenseSystem }) {
       <div className="flex items-center justify-center border-b border-line py-7">
         <SystemSchematic
           slug={system.slug}
+          live
           className="h-28 w-28 text-ink-faint transition-colors duration-300 group-hover:text-accent"
         />
       </div>

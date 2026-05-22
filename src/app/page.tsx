@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { systems } from "@/data/systems";
+import type { SystemCategory } from "@/data/types";
 import { BRICK_BLURBS, BRICK_LABELS, BRICK_ORDER } from "@/data/labels";
+import { DomainEmblem } from "@/components/domain-emblem";
 import { SystemCard } from "@/components/system-card";
 import { CatalogueFilter } from "@/components/catalogue-filter";
 import { RadarSweep } from "@/components/radar-sweep";
@@ -21,10 +23,18 @@ export default function Home() {
 
   // Index par domaine — le catalogue complet vit dans sa propre section,
   // plus bas ; le hero n'en donne que la structure.
-  const domains = [
+  const domains: {
+    label: string;
+    count: number;
+    category: SystemCategory;
+    href: string;
+    cta: string;
+    blurb: string;
+  }[] = [
     {
       label: "Drones & munitions rôdeuses",
       count: systems.filter((s) => s.category === "drone").length,
+      category: "drone",
       href: "#catalogue",
       cta: "Parcourir le catalogue",
       blurb:
@@ -33,6 +43,7 @@ export default function Home() {
     {
       label: "Énergie dirigée",
       count: systems.filter((s) => s.category === "directed-energy").length,
+      category: "directed-energy",
       href: "/energie-dirigee",
       cta: "Ouvrir le domaine",
       blurb:
@@ -99,22 +110,26 @@ export default function Home() {
                   <Link
                     key={domain.href}
                     href={domain.href}
-                    className="group block bg-panel p-5 transition-colors hover:bg-surface-2"
+                    className="group flex items-center gap-4 bg-panel p-5 transition-colors hover:bg-surface-2"
                   >
-                    <div className="flex items-baseline justify-between gap-3">
-                      <span className="font-mono text-xs uppercase tracking-[0.16em] text-accent">
+                    <DomainEmblem
+                      category={domain.category}
+                      className="h-14 w-14 shrink-0 text-ink-faint transition-colors group-hover:text-accent"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <p className="font-mono text-xs uppercase tracking-[0.16em] text-accent">
                         {domain.label}
-                      </span>
-                      <span className="shrink-0 font-mono text-[11px] text-ink-faint">
-                        {domain.count} dossiers
+                      </p>
+                      <p className="mt-1 font-mono text-[11px] text-ink-faint">
+                        {domain.count} dossiers documentés
+                      </p>
+                      <p className="mt-2.5 font-serif text-[0.95rem] leading-relaxed text-ink-dim">
+                        {domain.blurb}
+                      </p>
+                      <span className="mt-3 inline-block font-mono text-[10px] uppercase tracking-[0.16em] text-ink-faint transition-colors group-hover:text-accent">
+                        {domain.cta} →
                       </span>
                     </div>
-                    <p className="mt-2.5 font-serif text-[0.95rem] leading-relaxed text-ink-dim">
-                      {domain.blurb}
-                    </p>
-                    <span className="mt-3 inline-block font-mono text-[10px] uppercase tracking-[0.16em] text-ink-faint transition-colors group-hover:text-accent">
-                      {domain.cta} →
-                    </span>
                   </Link>
                 ))}
               </div>

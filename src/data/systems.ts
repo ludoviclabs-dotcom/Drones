@@ -14,6 +14,14 @@ import { switchblade600 } from "./systems/switchblade-600";
 import { heronTp } from "./systems/heron-tp";
 import { hermes900 } from "./systems/hermes-900";
 import { liutyi } from "./systems/liutyi";
+import { helmaP } from "./systems/helma-p";
+import { ironBeam } from "./systems/iron-beam";
+import { dragonfire } from "./systems/dragonfire";
+import { deMShorad } from "./systems/de-m-shorad";
+import { ifpcHel } from "./systems/ifpc-hel";
+import { skyranger30Hel } from "./systems/skyranger-30-hel";
+import { laserNavalAllemand } from "./systems/laser-naval-mbda-rheinmetall";
+import { helios } from "./systems/helios";
 
 export const systems: DefenseSystem[] = [
   mq9Reaper,
@@ -31,6 +39,14 @@ export const systems: DefenseSystem[] = [
   heronTp,
   hermes900,
   liutyi,
+  helmaP,
+  ironBeam,
+  dragonfire,
+  deMShorad,
+  ifpcHel,
+  skyranger30Hel,
+  laserNavalAllemand,
+  helios,
 ];
 
 export const SYSTEMS_BY_SLUG: Record<string, DefenseSystem> = Object.fromEntries(

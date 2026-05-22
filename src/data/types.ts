@@ -1,9 +1,9 @@
 // Modèle de données — plateforme d'intelligence sur les systèmes de défense.
-// L'entité de base est un « système » doté d'une catégorie : le MVP ne couvre
-// que les drones, mais le modèle reste générique pour l'extension future
-// (avions de chasse, artillerie, radars).
+// L'entité de base est un « système » doté d'une catégorie. Le catalogue couvre
+// les drones et l'énergie dirigée ; le modèle reste générique pour l'extension
+// future (systèmes sol-air, missiles, avions de combat).
 
-export type SystemCategory = "drone";
+export type SystemCategory = "drone" | "directed-energy";
 
 export type DroneClass =
   | "MALE"
@@ -14,6 +14,9 @@ export type DroneClass =
   | "kamikaze"
   | "ravitailleur"
   | "USV";
+
+/** Classe d'un système d'énergie dirigée. */
+export type DirectedEnergyClass = "HEL" | "HPM" | "SHORAD-hybride";
 
 /** Modes d'acquisition — la grille de lecture qui relie les cinq briques. */
 export type AcquisitionMode =
@@ -105,7 +108,10 @@ export interface DefenseSystem {
   designation?: string;
   reference: string;
   category: SystemCategory;
-  droneClass: DroneClass;
+  /** Classe de drone — renseignée pour le domaine « drone ». */
+  droneClass?: DroneClass;
+  /** Classe d'énergie dirigée — renseignée pour le domaine « directed-energy ». */
+  directedEnergyClass?: DirectedEnergyClass;
   classLabel: string;
   country: string;
   flag: string;
@@ -117,8 +123,12 @@ export interface DefenseSystem {
   summary: string;
   keySpecs: Indicator[];
   bricks: Brick[];
+  /** Bloc transversal des contraintes physiques — propre à l'énergie dirigée. */
+  physicalConstraints?: Indicator[];
   scores: Score[];
   editorial: EditorialBlocks;
+  /** Encadré juridique permanent — ex. Protocole IV de la CCW pour les lasers. */
+  legalNote?: string;
   operators: string[];
   theatres: string[];
   timeline?: TimelineEvent[];

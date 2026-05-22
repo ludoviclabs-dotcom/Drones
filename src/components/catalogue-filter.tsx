@@ -1,32 +1,40 @@
 "use client";
 
 import { useMemo, useState, type ReactNode } from "react";
+import type { SystemCategory } from "@/data/types";
+import { DomainChips, type DomainValue } from "./domain-filter";
 
 // Une entrée du catalogue : la carte déjà rendue côté serveur, plus le texte
-// indexable qui sert au filtre.
+// indexable et le domaine qui servent au filtre.
 export interface CatalogueEntry {
   slug: string;
+  category: SystemCategory;
   haystack: string;
   card: ReactNode;
 }
 
 /**
- * Filtre type-ahead du catalogue. Les cartes restent montées — les non
- * concordantes sont seulement masquées — pour préserver le tracé des
- * schématiques déjà révélées.
+ * Filtre du catalogue — domaine et recherche type-ahead. Les cartes restent
+ * montées (les non concordantes sont seulement masquées) pour préserver le
+ * tracé des schématiques déjà révélées.
  */
 export function CatalogueFilter({ entries }: { entries: CatalogueEntry[] }) {
   const [query, setQuery] = useState("");
+  const [domain, setDomain] = useState<DomainValue>("all");
   const norm = query.trim().toLowerCase();
 
   const visible = useMemo(
     () =>
       new Set(
         entries
-          .filter((entry) => norm === "" || entry.haystack.includes(norm))
+          .filter(
+            (entry) =>
+              (domain === "all" || entry.category === domain) &&
+              (norm === "" || entry.haystack.includes(norm)),
+          )
           .map((entry) => entry.slug),
       ),
-    [entries, norm],
+    [entries, norm, domain],
   );
 
   return (
@@ -35,6 +43,7 @@ export function CatalogueFilter({ entries }: { entries: CatalogueEntry[] }) {
         <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-accent">
           Filtrer
         </span>
+        <DomainChips value={domain} onChange={setDomain} />
         <input
           type="search"
           value={query}
@@ -61,7 +70,7 @@ export function CatalogueFilter({ entries }: { entries: CatalogueEntry[] }) {
 
       {visible.size === 0 ? (
         <p className="mt-6 border border-dashed border-line-bright bg-panel/40 px-6 py-12 text-center font-mono text-xs uppercase tracking-[0.16em] text-ink-faint">
-          Aucun système ne correspond à « {query} »
+          Aucun système ne correspond à ces filtres
         </p>
       ) : null}
     </div>

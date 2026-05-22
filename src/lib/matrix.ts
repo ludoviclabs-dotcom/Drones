@@ -1,4 +1,9 @@
-import type { AcquisitionMode, Grade, ScoreKey } from "@/data/types";
+import type {
+  AcquisitionMode,
+  Grade,
+  ScoreKey,
+  SystemCategory,
+} from "@/data/types";
 import { systems } from "@/data/systems";
 
 // Matrice stratégique — projection des systèmes sur deux axes. Tout est
@@ -19,6 +24,7 @@ export interface MatrixPoint {
   name: string;
   flag: string;
   classLabel: string;
+  category: SystemCategory;
   /** 0 = autonomie industrielle · 100 = dépendance géopolitique. */
   x: number;
   /** 0 = effet/coût faible · 100 = effet/coût élevé. */
@@ -53,6 +59,7 @@ export function getMatrixPoints(): MatrixPoint[] {
       name: system.name,
       flag: system.flag,
       classLabel: system.classLabel,
+      category: system.category,
       x,
       y,
     };

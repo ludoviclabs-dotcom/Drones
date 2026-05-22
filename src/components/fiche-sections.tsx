@@ -172,6 +172,22 @@ export function AnalystNote({ note }: { note: string }) {
   );
 }
 
+export function LegalNote({ note }: { note: string }) {
+  return (
+    <figure
+      className="border-l-2 bg-paper px-7 py-6"
+      style={{ borderColor: "var(--color-stamp)" }}
+    >
+      <figcaption className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-paper-dim">
+        Cadre juridique
+      </figcaption>
+      <p className="mt-3 font-serif text-base leading-relaxed text-ink-paper">
+        {note}
+      </p>
+    </figure>
+  );
+}
+
 export function SpecsPanel({ specs }: { specs: Indicator[] }) {
   return (
     <div className="grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">

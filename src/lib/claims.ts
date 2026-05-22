@@ -3,16 +3,18 @@ import type {
   ClaimStatus,
   Confidence,
   SourceRef,
+  SystemCategory,
 } from "@/data/types";
 import { systems } from "@/data/systems";
 
-export type ClaimScope = BrickKey | "specs";
+export type ClaimScope = BrickKey | "specs" | "contraintes";
 
 /** Une affirmation atomique du registre de preuves. */
 export interface Claim {
   systemSlug: string;
   systemName: string;
   systemReference: string;
+  category: SystemCategory;
   scope: ClaimScope;
   label: string;
   value: string;
@@ -43,6 +45,7 @@ export function getAllClaims(): Claim[] {
       systemSlug: system.slug,
       systemName: system.name,
       systemReference: system.reference,
+      category: system.category,
       date: system.updated,
     };
 
@@ -71,6 +74,18 @@ export function getAllClaims(): Claim[] {
           sources: resolve(indicator.sources),
         });
       }
+    }
+    for (const indicator of system.physicalConstraints ?? []) {
+      claims.push({
+        ...base,
+        scope: "contraintes",
+        label: indicator.label,
+        value: indicator.value,
+        note: indicator.note,
+        confidence: indicator.confidence,
+        status: statusOf(indicator.confidence, indicator.status),
+        sources: resolve(indicator.sources),
+      });
     }
   }
   return claims;

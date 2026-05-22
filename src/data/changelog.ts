@@ -3,6 +3,16 @@ import type { ChangelogEntry } from "./types";
 // Du plus récent au plus ancien.
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-05-22",
+    title: "Ouverture du domaine énergie dirigée",
+    items: [
+      "Huit dossiers laser — HELMA-P, Iron Beam, DragonFire, DE M-SHORAD, IFPC-HEL, Skyranger 30 HEL, laser naval MBDA-Rheinmetall, HELIOS.",
+      "Nouveau domaine « Énergie dirigée » : page d'introduction, bloc contraintes physiques et encadré juridique sur chaque fiche laser.",
+      "Filtre de domaine sur le catalogue, la Console OSINT, le Comparateur et la Matrice.",
+      "Glossaire étendu : DEW, HEL, HPM, C-UAS, C-RAM, SHORAD, dwell time, beam director, thermal blooming, SWaP-C, Protocole IV.",
+    ],
+  },
+  {
     date: "2026-05-21",
     title: "Quinze systèmes, quatre outils, un dossier vivant",
     items: [

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { systems } from "@/data/systems";
+import type { DefenseSystem } from "@/data/types";
 import { BRICK_BLURBS, BRICK_LABELS, BRICK_ORDER } from "@/data/labels";
 import { SystemCard } from "@/components/system-card";
 import { CatalogueFilter } from "@/components/catalogue-filter";
@@ -10,6 +11,53 @@ import { RegistrationMarks } from "@/components/registration-marks";
 import { Stamp } from "@/components/stamp";
 import { StatGrid, type Stat } from "@/components/stat-cards";
 import { getEvidenceStats } from "@/lib/claims";
+
+// Un groupe du sommaire — les dossiers d'un même domaine.
+function SommaireGroup({
+  title,
+  items,
+}: {
+  title: string;
+  items: DefenseSystem[];
+}) {
+  if (items.length === 0) return null;
+  return (
+    <div>
+      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-accent">
+        {title}
+      </p>
+      <ul className="mt-2 border-y border-line">
+        {items.map((system) => (
+          <li key={system.slug} className="border-b border-line last:border-0">
+            <Link
+              href={`/systemes/${system.slug}`}
+              className="group flex items-center gap-4 py-3"
+            >
+              <SystemSchematic
+                slug={system.slug}
+                className="h-12 w-12 shrink-0 text-ink-faint transition-colors group-hover:text-accent"
+              />
+              <span className="flex-1">
+                <span className="block font-mono text-[10px] uppercase tracking-[0.14em] text-accent">
+                  {system.reference}
+                </span>
+                <span className="block font-serif text-lg text-ink transition-colors group-hover:text-accent">
+                  {system.name}
+                </span>
+                <span className="block font-mono text-[10px] text-ink-faint">
+                  {system.classLabel}
+                </span>
+              </span>
+              <span className="font-mono text-ink-faint transition-colors group-hover:text-accent">
+                →
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 export default function Home() {
   const stats = getEvidenceStats();
@@ -42,10 +90,11 @@ export default function Home() {
                 <span className="italic text-accent">simple achat</span>.
               </h1>
               <p className="mt-7 max-w-xl font-serif text-lg leading-relaxed text-ink-dim">
-                Derrière chaque drone : un coût réel, un financement, une chaîne
-                industrielle, une dépendance géopolitique, un régime d'export.
-                Panoplie rend cette réalité lisible à partir de sources
-                ouvertes — peu de dossiers, mais documentés et comparables.
+                Derrière chaque système de défense : un coût réel, un
+                financement, une chaîne industrielle, une dépendance
+                géopolitique, un régime d'export. Panoplie rend cette réalité
+                lisible à partir de sources ouvertes — drones et énergie
+                dirigée, documentés et comparables.
               </p>
               <div className="mt-7 flex flex-wrap items-center gap-4">
                 <Stamp tone="accent" rotate={-3}>
@@ -72,35 +121,18 @@ export default function Home() {
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-faint">
                 Sommaire — {systems.length} dossiers
               </p>
-              <ul className="mt-3 border-y border-line">
-                {systems.map((system) => (
-                  <li key={system.slug} className="border-b border-line last:border-0">
-                    <Link
-                      href={`/systemes/${system.slug}`}
-                      className="group flex items-center gap-4 py-3"
-                    >
-                      <SystemSchematic
-                        slug={system.slug}
-                        className="h-12 w-12 shrink-0 text-ink-faint transition-colors group-hover:text-accent"
-                      />
-                      <span className="flex-1">
-                        <span className="block font-mono text-[10px] uppercase tracking-[0.14em] text-accent">
-                          {system.reference}
-                        </span>
-                        <span className="block font-serif text-lg text-ink transition-colors group-hover:text-accent">
-                          {system.name}
-                        </span>
-                        <span className="block font-mono text-[10px] text-ink-faint">
-                          {system.classLabel}
-                        </span>
-                      </span>
-                      <span className="font-mono text-ink-faint transition-colors group-hover:text-accent">
-                        →
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+              <div className="mt-4 space-y-6">
+                <SommaireGroup
+                  title="Drones & munitions rôdeuses"
+                  items={systems.filter((s) => s.category === "drone")}
+                />
+                <SommaireGroup
+                  title="Énergie dirigée"
+                  items={systems.filter(
+                    (s) => s.category === "directed-energy",
+                  )}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -148,6 +180,37 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="border-t border-line py-16">
+        <div className="relative border border-line bg-panel p-8 sm:p-10">
+          <RegistrationMarks />
+          <div className="grid gap-8 md:grid-cols-[1.6fr_1fr] md:items-center">
+            <div>
+              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
+                Nouveau domaine
+              </span>
+              <h2 className="mt-3 font-serif text-3xl leading-tight text-ink">
+                Énergie dirigée
+              </h2>
+              <p className="mt-3 max-w-xl font-serif text-base leading-relaxed text-ink-dim">
+                Les lasers haute énergie promettent un coût marginal par tir
+                très faible face aux drones et aux menaces saturantes. Panoplie
+                les analyse comme des effecteurs de défense multicouche —
+                puissants, mais dépendants de la météo, de la ligne de visée,
+                de l'énergie disponible et de leur intégration.
+              </p>
+            </div>
+            <div>
+              <Link
+                href="/energie-dirigee"
+                className="inline-flex h-11 items-center justify-center border border-accent px-5 font-mono text-xs uppercase tracking-[0.16em] text-accent transition-colors hover:bg-accent hover:text-bg"
+              >
+                Ouvrir le domaine →
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section
         id="catalogue"
         className="relative scroll-mt-24 overflow-hidden border-t border-line py-16"
@@ -157,12 +220,13 @@ export default function Home() {
           <SectionMarker
             index="—"
             label="Catalogue des systèmes"
-            blurb={`${systems.length} systèmes contrastés — du drone MALE à la munition rôdeuse, du HALE stratégique au drone naval.`}
+            blurb={`${systems.length} systèmes contrastés — du drone MALE à la munition rôdeuse, du laser haute énergie au SHORAD hybride.`}
           />
           <div className="mt-8">
             <CatalogueFilter
               entries={systems.map((system) => ({
                 slug: system.slug,
+                category: system.category,
                 haystack:
                   `${system.name} ${system.country} ${system.manufacturer} ${system.classLabel}`.toLowerCase(),
                 card: <SystemCard system={system} />,

@@ -7,6 +7,7 @@ import {
   AnalystNote,
   BrickSection,
   EditorialTriptych,
+  LegalNote,
   ScoreGrid,
   SourceList,
   SpecsPanel,
@@ -53,6 +54,30 @@ export default async function SystemPage({
     { label: "Mise en service", value: system.introduced ?? "—" },
     { label: "Statut", value: system.status },
   ];
+
+  // Numérotation dérivée — les sections optionnelles (contraintes physiques,
+  // cadre juridique, note d'analyste, trajectoire) n'apparaissent que si elles
+  // existent, sans trou dans la séquence.
+  let counter = 0;
+  const nextIndex = () => String(++counter).padStart(2, "0");
+
+  const hasConstraints =
+    !!system.physicalConstraints && system.physicalConstraints.length > 0;
+  const hasTimeline = !!system.timeline && system.timeline.length > 0;
+
+  const idxSummary = nextIndex();
+  const idxQuickRead = nextIndex();
+  const brickBase = counter;
+  counter += system.bricks.length;
+  const idxConstraints = hasConstraints ? nextIndex() : null;
+  const idxLegal = system.legalNote ? nextIndex() : null;
+  const idxEval = nextIndex();
+  const idxAnalyst = system.editorial.analystNote ? nextIndex() : null;
+  const idxSpecs = nextIndex();
+  const idxOperators = nextIndex();
+  const idxTheatres = nextIndex();
+  const idxTimeline = hasTimeline ? nextIndex() : null;
+  const idxSources = nextIndex();
 
   return (
     <article className="mx-auto max-w-[1100px] px-5 py-10">
@@ -132,13 +157,13 @@ export default async function SystemPage({
       </header>
 
       <section className="mt-16">
-        <SectionMarker index="01" label="Résumé exécutif" />
+        <SectionMarker index={idxSummary} label="Résumé exécutif" />
         <Narrative text={system.summary} className="mt-6 max-w-3xl" />
       </section>
 
       <section className="mt-16">
         <SectionMarker
-          index="02"
+          index={idxQuickRead}
           label="Lecture rapide"
           blurb="Ce qu'il faut retenir avant d'entrer dans le détail."
         />
@@ -152,14 +177,36 @@ export default async function SystemPage({
           <BrickSection
             key={brick.key}
             brick={brick}
-            index={String(i + 3).padStart(2, "0")}
+            index={String(brickBase + i + 1).padStart(2, "0")}
           />
         ))}
       </div>
 
+      {idxConstraints && system.physicalConstraints ? (
+        <section className="mt-16">
+          <SectionMarker
+            index={idxConstraints}
+            label="Contraintes physiques"
+            blurb="Ce qui borne un effecteur à énergie dirigée — ligne de visée, atmosphère, refroidissement, énergie disponible."
+          />
+          <div className="mt-6">
+            <SpecsPanel specs={system.physicalConstraints} />
+          </div>
+        </section>
+      ) : null}
+
+      {idxLegal && system.legalNote ? (
+        <section className="mt-16">
+          <SectionMarker index={idxLegal} label="Cadre juridique" />
+          <div className="mt-6">
+            <LegalNote note={system.legalNote} />
+          </div>
+        </section>
+      ) : null}
+
       <section className="mt-16">
         <SectionMarker
-          index="08"
+          index={idxEval}
           label="Évaluation"
           blurb="Six paliers, de A (excellent) à E (critique). Chacun est argumenté — aucun n'est un score chiffré."
         />
@@ -174,9 +221,9 @@ export default async function SystemPage({
         </div>
       </section>
 
-      {system.editorial.analystNote ? (
+      {idxAnalyst && system.editorial.analystNote ? (
         <section className="mt-16">
-          <SectionMarker index="09" label="Note d'analyste" />
+          <SectionMarker index={idxAnalyst} label="Note d'analyste" />
           <div className="mt-6">
             <AnalystNote note={system.editorial.analystNote} />
           </div>
@@ -185,7 +232,7 @@ export default async function SystemPage({
 
       <section className="mt-16">
         <SectionMarker
-          index="10"
+          index={idxSpecs}
           label="Caractéristiques"
           blurb="Données techniques de référence — en appui de l'analyse, non comme finalité."
         />
@@ -196,7 +243,7 @@ export default async function SystemPage({
 
       <section className="mt-16 grid gap-10 md:grid-cols-2">
         <div>
-          <SectionMarker index="11" label="Opérateurs" />
+          <SectionMarker index={idxOperators} label="Opérateurs" />
           <ul className="mt-6 flex flex-wrap gap-2">
             {system.operators.map((operator) => (
               <li
@@ -209,7 +256,7 @@ export default async function SystemPage({
           </ul>
         </div>
         <div>
-          <SectionMarker index="12" label="Théâtres d'emploi" />
+          <SectionMarker index={idxTheatres} label="Théâtres d'emploi" />
           <ul className="mt-6 flex flex-wrap gap-2">
             {system.theatres.map((theatre) => (
               <li
@@ -223,10 +270,10 @@ export default async function SystemPage({
         </div>
       </section>
 
-      {system.timeline && system.timeline.length > 0 ? (
+      {idxTimeline && system.timeline ? (
         <section className="mt-16">
           <SectionMarker
-            index="13"
+            index={idxTimeline}
             label="Trajectoire"
             blurb="Jalons, emplois, exportations et débats — repères datés tirés du dossier."
           />
@@ -238,7 +285,7 @@ export default async function SystemPage({
 
       <section className="mt-16">
         <SectionMarker
-          index="14"
+          index={idxSources}
           label="Sources"
           blurb="Chaque source est notée de A (fiable) à D (douteuse). Les données restent des estimations open source."
         />

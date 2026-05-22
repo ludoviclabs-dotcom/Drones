@@ -8,6 +8,7 @@ import type {
   RoadmapHorizon,
   ScoreKey,
   SourceRef,
+  SystemCategory,
   TimelineKind,
 } from "./types";
 
@@ -38,6 +39,11 @@ export const BRICK_ORDER: BrickKey[] = [
   "geopolitique",
   "export",
 ];
+
+export const CATEGORY_LABELS: Record<SystemCategory, string> = {
+  drone: "Drones",
+  "directed-energy": "Énergie dirigée",
+};
 
 export const SCORE_LABELS: Record<ScoreKey, string> = {
   "efficacite-cout": "Efficacité / coût",

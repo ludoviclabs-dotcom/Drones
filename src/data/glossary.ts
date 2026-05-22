@@ -160,6 +160,112 @@ export const glossary: GlossaryTerm[] = [
     definition:
       "Frappe simultanée par un grand nombre de vecteurs visant à dépasser la capacité de traitement des défenses adverses. Tactique centrale de l'emploi massif des drones bon marché.",
   },
+  {
+    slug: "dew",
+    term: "Arme à énergie dirigée",
+    acronym: "DEW",
+    category: "technique",
+    definition:
+      "Directed Energy Weapon. Système qui agit par un faisceau — laser ou micro-ondes — plutôt que par un projectile.",
+  },
+  {
+    slug: "hel",
+    term: "Laser haute énergie",
+    acronym: "HEL",
+    category: "technique",
+    definition:
+      "High Energy Laser. Laser concentrant assez de puissance pour produire un effet thermique ou destructeur sur sa cible.",
+  },
+  {
+    slug: "hpm",
+    term: "Micro-ondes haute puissance",
+    acronym: "HPM",
+    category: "technique",
+    definition:
+      "High Power Microwave. Arme à énergie dirigée distincte du laser, agissant sur l'électronique de la cible plutôt que par effet thermique localisé.",
+  },
+  {
+    slug: "c-uas",
+    term: "Lutte anti-drone",
+    acronym: "C-UAS",
+    category: "doctrine",
+    definition:
+      "Counter-UAS. Ensemble des moyens de détection, d'identification et de neutralisation des drones, notamment les petits drones.",
+  },
+  {
+    slug: "c-ram",
+    term: "Lutte anti-roquettes et mortiers",
+    acronym: "C-RAM",
+    category: "doctrine",
+    definition:
+      "Counter-Rocket, Artillery and Mortar. Défense contre les roquettes, les obus d'artillerie et les obus de mortier.",
+  },
+  {
+    slug: "shorad",
+    term: "Défense aérienne courte portée",
+    acronym: "SHORAD",
+    category: "doctrine",
+    definition:
+      "Short-Range Air Defense. Couche de défense antiaérienne traitant les menaces à courte portée — drones, hélicoptères, munitions.",
+  },
+  {
+    slug: "vshorad",
+    term: "Défense aérienne très courte portée",
+    acronym: "VSHORAD",
+    category: "doctrine",
+    definition:
+      "Very Short-Range Air Defense. La frange la plus rapprochée de la défense antiaérienne, en deçà du SHORAD.",
+  },
+  {
+    slug: "dwell-time",
+    term: "Dwell time",
+    category: "technique",
+    definition:
+      "Temps pendant lequel le faisceau d'un laser doit rester sur la cible pour la neutraliser — il croît avec la distance et la robustesse de la cible.",
+  },
+  {
+    slug: "beam-director",
+    term: "Beam director",
+    category: "technique",
+    definition:
+      "Ensemble optomécanique qui oriente et stabilise le faisceau laser vers la cible, et le maintient pendant toute la durée du tir.",
+  },
+  {
+    slug: "thermal-blooming",
+    term: "Thermal blooming",
+    category: "technique",
+    definition:
+      "Dégradation du faisceau laser causée par l'échauffement de l'air qu'il traverse — un effet qui s'aggrave avec la puissance émise.",
+  },
+  {
+    slug: "swap-c",
+    term: "SWaP-C",
+    acronym: "SWaP-C",
+    category: "technique",
+    definition:
+      "Size, Weight, Power and Cooling — masse, volume, puissance et refroidissement : les contraintes d'intégration d'un système, déterminantes pour un laser.",
+  },
+  {
+    slug: "magazine-profond",
+    term: "Magazine profond",
+    category: "doctrine",
+    definition:
+      "Capacité à enchaîner les tirs tant que l'énergie et le refroidissement le permettent — un atout propre aux effecteurs laser face aux munitions en nombre limité.",
+  },
+  {
+    slug: "cout-marginal-tir",
+    term: "Coût marginal par tir",
+    category: "commerce",
+    definition:
+      "Coût immédiat d'un engagement — pour un laser, quelques unités d'énergie. À distinguer du coût complet de possession du système.",
+  },
+  {
+    slug: "protocole-iv",
+    term: "Protocole IV",
+    category: "juridique",
+    definition:
+      "Protocole de la Convention sur certaines armes classiques interdisant les armes laser spécifiquement conçues pour provoquer une cécité permanente.",
+  },
 ];
 
 export const GLOSSARY_BY_SLUG: Record<string, GlossaryTerm> = Object.fromEntries(

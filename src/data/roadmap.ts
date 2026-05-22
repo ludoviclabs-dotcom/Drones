@@ -20,6 +20,12 @@ export const roadmap: RoadmapItem[] = [
     horizon: "en-cours",
   },
   {
+    title: "Consolider le domaine énergie dirigée",
+    detail:
+      "Huit dossiers laser ouverts. Prochaines pistes : suivi des programmes, micro-ondes haute puissance (HPM) et nouveaux effecteurs.",
+    horizon: "en-cours",
+  },
+  {
     title: "Cartographie des opérateurs",
     detail:
       "Une carte mondiale reliant chaque système à ses pays opérateurs et à ses théâtres d'emploi documentés.",
@@ -34,7 +40,7 @@ export const roadmap: RoadmapItem[] = [
   {
     title: "Au-delà des drones",
     detail:
-      "Étendre le modèle d'analyse aux systèmes sol-air et aux missiles, puis aux avions de combat — à grille de lecture constante.",
+      "Le domaine énergie dirigée est ouvert. Étendre ensuite le modèle aux systèmes sol-air et aux missiles, puis aux avions de combat — à grille de lecture constante.",
     horizon: "exploratoire",
   },
 ];

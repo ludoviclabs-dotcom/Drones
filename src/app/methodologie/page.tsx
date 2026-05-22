@@ -172,7 +172,30 @@ export default function MethodologiePage() {
       </section>
 
       <section className="mt-14">
-        <SectionMarker index="07" label="Limites &amp; cadre éthique" />
+        <SectionMarker
+          index="07"
+          label="Le domaine énergie dirigée"
+          blurb="Les lasers sont lus à la même grille — avec deux ajouts et une vigilance."
+        />
+        <div className="mt-5 space-y-4 font-serif text-[1.05rem] leading-[1.75] text-ink/90">
+          <p>
+            Les systèmes à énergie dirigée passent par les mêmes cinq briques et
+            les mêmes six paliers que les drones. Deux éléments s'y ajoutent : un
+            bloc « contraintes physiques » — ligne de visée, atmosphère,
+            refroidissement, énergie disponible — et un encadré juridique
+            rappelant le cadre du Protocole IV.
+          </p>
+          <p>
+            Une vigilance particulière porte sur la confiance des données. Le
+            sujet laser est saturé d'annonces industrielles : la différence
+            entre testé, livré, déployé et opérationnel est critique. Le palier
+            de maturité la reflète sans complaisance.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-14">
+        <SectionMarker index="08" label="Limites &amp; cadre éthique" />
         <div className="mt-5 space-y-4 font-serif text-[1.05rem] leading-[1.75] text-ink/90">
           <p>
             Panoplie est un outil d'analyse stratégique, industrielle et

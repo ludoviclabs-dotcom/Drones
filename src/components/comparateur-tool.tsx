@@ -7,8 +7,10 @@ import type {
   EditorialBlocks,
   Score,
   ScoreKey,
+  SystemCategory,
 } from "@/data/types";
 import { MODE_LABELS, SCORE_LABELS } from "@/data/labels";
+import { DomainChips, type DomainValue } from "./domain-filter";
 import { GradeBadge } from "./primitives";
 import { ScoreProfile } from "./score-profile";
 import { ScoreRadar } from "./score-radar";
@@ -21,6 +23,7 @@ export interface ComparableSystem {
   name: string;
   flag: string;
   classLabel: string;
+  category: SystemCategory;
   country: string;
   manufacturer: string;
   acquisitionModes: AcquisitionMode[];
@@ -64,7 +67,15 @@ export function ComparateurTool({ systems }: { systems: ComparableSystem[] }) {
   const [selected, setSelected] = useState<string[]>(() =>
     systems.slice(0, MIN_SELECTION).map((s) => s.slug),
   );
+  const [domain, setDomain] = useState<DomainValue>("all");
   const tableRef = useRef<HTMLDivElement>(null);
+
+  // Le filtre de domaine ne restreint que la grille de sélection — les
+  // systèmes déjà choisis restent confrontés, fût-ce d'un domaine à l'autre.
+  const visibleSystems = useMemo(
+    () => systems.filter((s) => domain === "all" || s.category === domain),
+    [systems, domain],
+  );
 
   // Colonnes en ordre de catalogue — les colonnes ne se déplacent pas quand
   // on coche ou décoche un système.
@@ -104,8 +115,11 @@ export function ComparateurTool({ systems }: { systems: ComparableSystem[] }) {
             {selected.length} / {MAX_SELECTION}
           </span>
         </div>
+        <div className="mt-3">
+          <DomainChips value={domain} onChange={setDomain} />
+        </div>
         <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
-          {systems.map((system) => {
+          {visibleSystems.map((system) => {
             const isSelected = selected.includes(system.slug);
             const isDisabled =
               !isSelected && selected.length >= MAX_SELECTION;

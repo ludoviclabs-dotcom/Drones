@@ -19,6 +19,7 @@ const comparable: ComparableSystem[] = systems.map((s) => ({
   name: s.name,
   flag: s.flag,
   classLabel: s.classLabel,
+  category: s.category,
   country: s.country,
   manufacturer: s.manufacturer,
   acquisitionModes: s.acquisitionModes,

@@ -3,12 +3,13 @@
 import { useMemo, useState } from "react";
 import type { Claim, ClaimScope } from "@/lib/claims";
 import type { ClaimStatus } from "@/data/types";
-import { BRICK_LABELS, STATUS_LABELS } from "@/data/labels";
+import { BRICK_LABELS, CATEGORY_LABELS, STATUS_LABELS } from "@/data/labels";
 import { ConfidenceMark } from "./primitives";
 
 const SCOPE_LABELS: Record<ClaimScope, string> = {
   ...BRICK_LABELS,
   specs: "Caractéristiques",
+  contraintes: "Contraintes physiques",
 };
 
 const STATUS_TOKEN: Record<ClaimStatus, string> = {
@@ -58,6 +59,7 @@ function Field({
 }
 
 export function ConsoleTable({ claims }: { claims: Claim[] }) {
+  const [domain, setDomain] = useState("all");
   const [system, setSystem] = useState("all");
   const [scope, setScope] = useState("all");
   const [confidence, setConfidence] = useState("all");
@@ -72,17 +74,30 @@ export function ConsoleTable({ claims }: { claims: Claim[] }) {
     () =>
       claims.filter(
         (claim) =>
+          (domain === "all" || claim.category === domain) &&
           (system === "all" || claim.systemName === system) &&
           (scope === "all" || claim.scope === scope) &&
           (confidence === "all" || claim.confidence === confidence) &&
           (status === "all" || claim.status === status),
       ),
-    [claims, system, scope, confidence, status],
+    [claims, domain, system, scope, confidence, status],
   );
 
   return (
     <div>
       <div className="flex flex-wrap items-center gap-4 border border-line bg-panel p-4">
+        <Field
+          label="Domaine"
+          value={domain}
+          onChange={setDomain}
+          options={[
+            { value: "all", label: "Tous" },
+            ...Object.entries(CATEGORY_LABELS).map(([value, label]) => ({
+              value,
+              label,
+            })),
+          ]}
+        />
         <Field
           label="Système"
           value={system}

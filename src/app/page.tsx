@@ -1,63 +1,14 @@
 import Link from "next/link";
 import { systems } from "@/data/systems";
-import type { DefenseSystem } from "@/data/types";
 import { BRICK_BLURBS, BRICK_LABELS, BRICK_ORDER } from "@/data/labels";
 import { SystemCard } from "@/components/system-card";
 import { CatalogueFilter } from "@/components/catalogue-filter";
 import { RadarSweep } from "@/components/radar-sweep";
 import { SectionMarker } from "@/components/primitives";
-import { SystemSchematic } from "@/components/system-schematic";
 import { RegistrationMarks } from "@/components/registration-marks";
 import { Stamp } from "@/components/stamp";
 import { StatGrid, type Stat } from "@/components/stat-cards";
 import { getEvidenceStats } from "@/lib/claims";
-
-// Un groupe du sommaire — les dossiers d'un même domaine.
-function SommaireGroup({
-  title,
-  items,
-}: {
-  title: string;
-  items: DefenseSystem[];
-}) {
-  if (items.length === 0) return null;
-  return (
-    <div>
-      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-accent">
-        {title}
-      </p>
-      <ul className="mt-2 border-y border-line">
-        {items.map((system) => (
-          <li key={system.slug} className="border-b border-line last:border-0">
-            <Link
-              href={`/systemes/${system.slug}`}
-              className="group flex items-center gap-4 py-3"
-            >
-              <SystemSchematic
-                slug={system.slug}
-                className="h-12 w-12 shrink-0 text-ink-faint transition-colors group-hover:text-accent"
-              />
-              <span className="flex-1">
-                <span className="block font-mono text-[10px] uppercase tracking-[0.14em] text-accent">
-                  {system.reference}
-                </span>
-                <span className="block font-serif text-lg text-ink transition-colors group-hover:text-accent">
-                  {system.name}
-                </span>
-                <span className="block font-mono text-[10px] text-ink-faint">
-                  {system.classLabel}
-                </span>
-              </span>
-              <span className="font-mono text-ink-faint transition-colors group-hover:text-accent">
-                →
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
 
 export default function Home() {
   const stats = getEvidenceStats();
@@ -66,6 +17,27 @@ export default function Home() {
     { label: "Sources indexées", value: stats.sources },
     { label: "Affirmations tracées", value: stats.claims },
     { label: "Affirmations vérifiées", value: stats.byStatus.verifie },
+  ];
+
+  // Index par domaine — le catalogue complet vit dans sa propre section,
+  // plus bas ; le hero n'en donne que la structure.
+  const domains = [
+    {
+      label: "Drones & munitions rôdeuses",
+      count: systems.filter((s) => s.category === "drone").length,
+      href: "#catalogue",
+      cta: "Parcourir le catalogue",
+      blurb:
+        "Du drone MALE au drone naval, de la munition rôdeuse au HALE stratégique.",
+    },
+    {
+      label: "Énergie dirigée",
+      count: systems.filter((s) => s.category === "directed-energy").length,
+      href: "/energie-dirigee",
+      cta: "Ouvrir le domaine",
+      blurb:
+        "Lasers haute énergie — missions C-UAS, C-RAM, SHORAD et défense multicouche.",
+    },
   ];
 
   return (
@@ -117,21 +89,34 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="p-6 sm:p-8">
+            <div className="flex flex-col justify-center gap-4 p-6 sm:p-8">
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-faint">
-                Sommaire — {systems.length} dossiers
+                Au sommaire — {systems.length} dossiers, {domains.length}{" "}
+                domaines
               </p>
-              <div className="mt-4 space-y-6">
-                <SommaireGroup
-                  title="Drones & munitions rôdeuses"
-                  items={systems.filter((s) => s.category === "drone")}
-                />
-                <SommaireGroup
-                  title="Énergie dirigée"
-                  items={systems.filter(
-                    (s) => s.category === "directed-energy",
-                  )}
-                />
+              <div className="grid gap-px border border-line bg-line">
+                {domains.map((domain) => (
+                  <Link
+                    key={domain.href}
+                    href={domain.href}
+                    className="group block bg-panel p-5 transition-colors hover:bg-surface-2"
+                  >
+                    <div className="flex items-baseline justify-between gap-3">
+                      <span className="font-mono text-xs uppercase tracking-[0.16em] text-accent">
+                        {domain.label}
+                      </span>
+                      <span className="shrink-0 font-mono text-[11px] text-ink-faint">
+                        {domain.count} dossiers
+                      </span>
+                    </div>
+                    <p className="mt-2.5 font-serif text-[0.95rem] leading-relaxed text-ink-dim">
+                      {domain.blurb}
+                    </p>
+                    <span className="mt-3 inline-block font-mono text-[10px] uppercase tracking-[0.16em] text-ink-faint transition-colors group-hover:text-accent">
+                      {domain.cta} →
+                    </span>
+                  </Link>
+                ))}
               </div>
             </div>
           </div>

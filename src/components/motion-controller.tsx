@@ -45,7 +45,10 @@ export function MotionController() {
           observer.unobserve(el);
         }
       },
-      { threshold: 0.25, rootMargin: "0px 0px -8% 0px" },
+      // Seuil 0 : on révèle dès qu'un bloc entre dans le cadre, quelle que
+      // soit sa hauteur. Un seuil non nul échoue sur les blocs plus hauts
+      // que ~4x le viewport, qui n'en couvrent jamais le pourcentage requis.
+      { threshold: 0, rootMargin: "0px 0px -8% 0px" },
     );
 
     document

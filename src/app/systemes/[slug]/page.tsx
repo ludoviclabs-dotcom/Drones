@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getSystem, getSystemSlugs } from "@/data/systems";
-import { MODE_LABELS } from "@/data/labels";
+import { GENERATION_LABELS, MODE_LABELS } from "@/data/labels";
 import {
   AnalystNote,
   BrickSection,
@@ -51,7 +51,21 @@ export default async function SystemPage({
     { label: "Pays d'origine", value: `${system.flag} ${system.country}` },
     { label: "Constructeur", value: system.manufacturer },
     { label: "Classe", value: system.classLabel },
+    ...(system.claimedGeneration
+      ? [{ label: "Génération revendiquée", value: system.claimedGeneration }]
+      : []),
+    ...(system.combatAircraftClass
+      ? [
+          {
+            label: "Génération — lecture Panoplie",
+            value: GENERATION_LABELS[system.combatAircraftClass],
+          },
+        ]
+      : []),
     { label: "Mise en service", value: system.introduced ?? "—" },
+    ...(system.naval
+      ? [{ label: "Navalisation", value: system.naval }]
+      : []),
     { label: "Statut", value: system.status },
   ];
 
@@ -63,10 +77,12 @@ export default async function SystemPage({
 
   const hasConstraints =
     !!system.physicalConstraints && system.physicalConstraints.length > 0;
+  const hasVariants = !!system.variants && system.variants.length > 0;
   const hasTimeline = !!system.timeline && system.timeline.length > 0;
 
   const idxSummary = nextIndex();
   const idxQuickRead = nextIndex();
+  const idxVariants = hasVariants ? nextIndex() : null;
   const brickBase = counter;
   counter += system.bricks.length;
   const idxConstraints = hasConstraints ? nextIndex() : null;
@@ -171,6 +187,19 @@ export default async function SystemPage({
           <EditorialTriptych editorial={system.editorial} />
         </div>
       </section>
+
+      {idxVariants && system.variants ? (
+        <section className="mt-16">
+          <SectionMarker
+            index={idxVariants}
+            label="Versions & standards"
+            blurb="Sous un même nom, des appareils distincts — variantes, standards logiciels, déclinaisons navales."
+          />
+          <div className="mt-6">
+            <SpecsPanel specs={system.variants} />
+          </div>
+        </section>
+      ) : null}
 
       <div className="mt-16 space-y-12">
         {system.bricks.map((brick, i) => (

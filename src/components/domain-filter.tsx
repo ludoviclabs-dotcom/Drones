@@ -9,9 +9,10 @@ const OPTIONS: { value: DomainValue; label: string }[] = [
   { value: "all", label: "Tous les domaines" },
   { value: "drone", label: CATEGORY_LABELS.drone },
   { value: "directed-energy", label: CATEGORY_LABELS["directed-energy"] },
+  { value: "combat-aircraft", label: CATEGORY_LABELS["combat-aircraft"] },
 ];
 
-/** Jeu de puces de filtrage par domaine — drones, énergie dirigée. */
+/** Jeu de puces de filtrage par domaine — drones, énergie dirigée, aviation. */
 export function DomainChips({
   value,
   onChange,

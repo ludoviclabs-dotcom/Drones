@@ -2,6 +2,7 @@ import type {
   AcquisitionMode,
   BrickKey,
   ClaimStatus,
+  CombatAircraftClass,
   Confidence,
   Grade,
   Reliability,
@@ -43,6 +44,14 @@ export const BRICK_ORDER: BrickKey[] = [
 export const CATEGORY_LABELS: Record<SystemCategory, string> = {
   drone: "Drones",
   "directed-energy": "Énergie dirigée",
+  "combat-aircraft": "Aviation de combat",
+};
+
+export const GENERATION_LABELS: Record<CombatAircraftClass, string> = {
+  "gen-4": "4e génération modernisée",
+  "gen-4-5": "4.5e génération",
+  "gen-5": "5e génération",
+  "gen-6": "6e génération",
 };
 
 export const SCORE_LABELS: Record<ScoreKey, string> = {

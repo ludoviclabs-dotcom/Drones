@@ -266,6 +266,119 @@ export const glossary: GlossaryTerm[] = [
     definition:
       "Protocole de la Convention sur certaines armes classiques interdisant les armes laser spécifiquement conçues pour provoquer une cécité permanente.",
   },
+  {
+    slug: "aesa",
+    term: "Radar AESA",
+    acronym: "AESA",
+    category: "technique",
+    definition:
+      "Active Electronically Scanned Array. Radar dont le faisceau est orienté électroniquement par des centaines de modules émetteurs-récepteurs, sans pièce mobile — plus rapide, plus discret et plus résistant au brouillage qu'un radar à antenne mécanique.",
+  },
+  {
+    slug: "irst",
+    term: "IRST",
+    acronym: "IRST",
+    category: "technique",
+    definition:
+      "Infrared Search and Track. Capteur passif qui détecte et piste un aéronef à sa signature thermique, sans émettre d'onde radar — il permet de suivre une cible sans être soi-même repéré.",
+  },
+  {
+    slug: "fusion-de-capteurs",
+    term: "Fusion de capteurs",
+    category: "technique",
+    definition:
+      "Agrégation en temps réel des données de tous les capteurs de l'appareil — radar, IRST, guerre électronique, liaisons — en une image tactique unique. Trait distinctif des chasseurs de 5e génération.",
+  },
+  {
+    slug: "datalink",
+    term: "Datalink",
+    category: "technique",
+    definition:
+      "Liaison de données tactique reliant aéronefs, navires et centres de commandement. Elle autorise le partage de la situation tactique et l'engagement coopératif — un appareil tirant sur une cible désignée par un autre.",
+  },
+  {
+    slug: "rcs",
+    term: "Surface équivalente radar",
+    acronym: "RCS",
+    category: "technique",
+    definition:
+      "Radar Cross Section. Mesure de la détectabilité d'un aéronef au radar — plus elle est faible, plus l'appareil est repéré tard. La furtivité vise à la réduire de plusieurs ordres de grandeur.",
+  },
+  {
+    slug: "vlo",
+    term: "Très faible observabilité",
+    acronym: "VLO",
+    category: "technique",
+    definition:
+      "Very Low Observable. Niveau de furtivité le plus poussé : une cellule conçue pour minimiser à la fois ses signatures radar, infrarouge et visuelle. Capacité revendiquée des chasseurs de 5e génération.",
+  },
+  {
+    slug: "supercroisiere",
+    term: "Supercroisière",
+    category: "technique",
+    definition:
+      "Capacité à voler en régime supersonique de façon prolongée sans recourir à la postcombustion — donc sans la surconsommation de carburant et la signature thermique que celle-ci entraîne.",
+  },
+  {
+    slug: "omnirole",
+    term: "Omnirôle",
+    category: "doctrine",
+    definition:
+      "Doctrine d'un chasseur conçu pour assurer l'ensemble des missions — supériorité aérienne, frappe, reconnaissance, dissuasion — sur un même appareil. Terme revendiqué par Dassault pour le Rafale.",
+  },
+  {
+    slug: "swing-role",
+    term: "Swing-role",
+    category: "doctrine",
+    definition:
+      "Capacité d'un chasseur à basculer d'une mission à une autre — air-air, air-sol — au cours d'un même vol, sans reconfiguration au sol.",
+  },
+  {
+    slug: "catobar",
+    term: "CATOBAR",
+    acronym: "CATOBAR",
+    category: "technique",
+    definition:
+      "Catapult Assisted Take-Off But Arrested Recovery. Mise en œuvre embarquée où l'avion est lancé par catapulte et récupéré au brin d'arrêt — elle autorise des appareils plus lourds que le décollage court.",
+  },
+  {
+    slug: "stovl",
+    term: "STOVL",
+    acronym: "STOVL",
+    category: "technique",
+    definition:
+      "Short Take-Off and Vertical Landing. Décollage court et atterrissage vertical — capacité du F-35B, qui ouvre l'emploi depuis des porte-aéronefs sans catapulte ou des terrains sommaires.",
+  },
+  {
+    slug: "block-standard",
+    term: "Block / standard",
+    category: "technique",
+    definition:
+      "Désignation d'un palier de configuration matérielle et logicielle d'un appareil. Sous un même nom — F-35 Block 4, Rafale F4 — coexistent des avions aux capacités distinctes.",
+  },
+  {
+    slug: "mco",
+    term: "Maintien en condition opérationnelle",
+    acronym: "MCO",
+    category: "commerce",
+    definition:
+      "Ensemble des activités — maintenance, pièces, mises à jour — qui gardent une flotte apte au vol. Sur trois à quatre décennies, c'est le premier poste du coût complet d'un avion de combat.",
+  },
+  {
+    slug: "cca",
+    term: "Avion de combat collaboratif",
+    acronym: "CCA",
+    category: "technique",
+    definition:
+      "Collaborative Combat Aircraft. Drone de combat conçu pour opérer en équipe avec un chasseur habité — l'« ailier fidèle » qui démultiplie capteurs et armement sans exposer de pilote.",
+  },
+  {
+    slug: "combat-cloud",
+    term: "Combat cloud",
+    category: "doctrine",
+    definition:
+      "Nuage de combat. Architecture en réseau où chaque plateforme — chasseur, drone, satellite, navire — partage capteurs et effecteurs par liaisons de données. Concept structurant des programmes de 6e génération.",
+  },
 ];
 
 export const GLOSSARY_BY_SLUG: Record<string, GlossaryTerm> = Object.fromEntries(

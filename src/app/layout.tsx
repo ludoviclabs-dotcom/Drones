@@ -29,8 +29,7 @@ export const metadata: Metadata = {
 };
 
 const NAV = [
-  { href: "/#catalogue", label: "Systèmes" },
-  { href: "/energie-dirigee", label: "Énergie dirigée" },
+  { href: "/domaines", label: "Domaines" },
   { href: "/comparateur", label: "Comparateur" },
   { href: "/matrice", label: "Matrice" },
   { href: "/simulateur", label: "Simulateur" },

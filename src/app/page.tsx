@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { systems } from "@/data/systems";
-import type { SystemCategory } from "@/data/types";
+import { DOMAINS } from "@/data/domains";
 import { BRICK_BLURBS, BRICK_LABELS, BRICK_ORDER } from "@/data/labels";
 import { DomainEmblem } from "@/components/domain-emblem";
 import { SystemCard } from "@/components/system-card";
@@ -22,34 +22,11 @@ export default function Home() {
   ];
 
   // Index par domaine — le catalogue complet vit dans sa propre section,
-  // plus bas ; le hero n'en donne que la structure.
-  const domains: {
-    label: string;
-    count: number;
-    category: SystemCategory;
-    href: string;
-    cta: string;
-    blurb: string;
-  }[] = [
-    {
-      label: "Drones & munitions rôdeuses",
-      count: systems.filter((s) => s.category === "drone").length,
-      category: "drone",
-      href: "#catalogue",
-      cta: "Parcourir le catalogue",
-      blurb:
-        "Du drone MALE au drone naval, de la munition rôdeuse au HALE stratégique.",
-    },
-    {
-      label: "Énergie dirigée",
-      count: systems.filter((s) => s.category === "directed-energy").length,
-      category: "directed-energy",
-      href: "/energie-dirigee",
-      cta: "Ouvrir le domaine",
-      blurb:
-        "Lasers haute énergie — missions C-UAS, C-RAM, SHORAD et défense multicouche.",
-    },
-  ];
+  // plus bas ; le hero n'en donne que la structure. Source : data/domains.
+  const domains = DOMAINS.map((domain) => ({
+    ...domain,
+    count: systems.filter((s) => s.category === domain.category).length,
+  }));
 
   return (
     <div className="mx-auto max-w-[1180px] px-5">
@@ -76,8 +53,8 @@ export default function Home() {
                 Derrière chaque système de défense : un coût réel, un
                 financement, une chaîne industrielle, une dépendance
                 géopolitique, un régime d'export. Panoplie rend cette réalité
-                lisible à partir de sources ouvertes — drones et énergie
-                dirigée, documentés et comparables.
+                lisible à partir de sources ouvertes — drones, énergie dirigée
+                et aviation de combat, documentés et comparables.
               </p>
               <div className="mt-7 flex flex-wrap items-center gap-4">
                 <Stamp tone="accent" rotate={-3}>
@@ -220,7 +197,7 @@ export default function Home() {
           <SectionMarker
             index="—"
             label="Catalogue des systèmes"
-            blurb={`${systems.length} systèmes contrastés — du drone MALE à la munition rôdeuse, du laser haute énergie au SHORAD hybride.`}
+            blurb={`${systems.length} systèmes contrastés — du drone MALE à la munition rôdeuse, du laser haute énergie au chasseur de combat.`}
           />
           <div className="mt-8">
             <CatalogueFilter

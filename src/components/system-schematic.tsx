@@ -319,6 +319,189 @@ const SCHEMATICS: Record<string, ReactNode> = {
       <circle cx="214" cy="46" r="2.5" />
     </>
   ),
+  rafale: (
+    <>
+      <line x1="120" y1="28" x2="120" y2="212" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 28 L131 84 L131 188 L120 210 L109 188 L109 84 Z" />
+      <path d="M114 48 L126 48 L123 66 L117 66 Z" />
+      <path d="M109 92 L74 104 L80 112 L109 106 Z" />
+      <path d="M131 92 L166 104 L160 112 L131 106 Z" />
+      <path d="M109 116 L44 176 L58 182 L109 150 Z" />
+      <path d="M131 116 L196 176 L182 182 L131 150 Z" />
+      <path d="M116 178 L120 206 L124 178 Z" />
+      <line x1="110" y1="210" x2="130" y2="210" strokeWidth="1" />
+    </>
+  ),
+  "mirage-2000": (
+    <>
+      <line x1="120" y1="30" x2="120" y2="212" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 30 L129 90 L129 184 L120 208 L111 184 L111 90 Z" />
+      <path d="M114 50 L126 50 L123 70 L117 70 Z" />
+      <path d="M111 104 L46 182 L66 186 L111 158 Z" />
+      <path d="M129 104 L194 182 L174 186 L129 158 Z" />
+      <path d="M115 176 L120 204 L125 176 Z" />
+      <ellipse cx="120" cy="206" rx="9" ry="3" />
+    </>
+  ),
+  "f-22-raptor": (
+    <>
+      <line x1="120" y1="26" x2="120" y2="214" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 26 L138 78 L138 176 L126 210 L114 210 L102 176 L102 78 Z" />
+      <path d="M114 46 L126 46 L124 64 L116 64 Z" />
+      <path d="M102 96 L36 150 L52 158 L102 138 Z" />
+      <path d="M138 96 L204 150 L188 158 L138 138 Z" />
+      <path d="M104 150 L78 196 L96 190 L110 162 Z" />
+      <path d="M136 150 L162 196 L144 190 L130 162 Z" />
+      <line x1="112" y1="210" x2="118" y2="210" strokeWidth="1" />
+      <line x1="122" y1="210" x2="128" y2="210" strokeWidth="1" />
+    </>
+  ),
+  "f-35": (
+    <>
+      <line x1="120" y1="28" x2="120" y2="212" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 28 L134 80 L136 172 L120 208 L104 172 L106 80 Z" />
+      <path d="M114 48 L126 48 L124 66 L116 66 Z" />
+      <path d="M106 104 L48 150 L62 158 L106 140 Z" />
+      <path d="M134 104 L192 150 L178 158 L134 140 Z" />
+      <path d="M108 156 L86 196 L102 190 L114 166 Z" />
+      <path d="M132 156 L154 196 L138 190 L126 166 Z" />
+      <ellipse cx="120" cy="206" rx="11" ry="3.5" />
+    </>
+  ),
+  "f-15ex": (
+    <>
+      <line x1="120" y1="24" x2="120" y2="216" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 24 L132 76 L132 188 L120 212 L108 188 L108 76 Z" />
+      <path d="M114 44 L126 44 L124 62 L116 62 Z" />
+      <path d="M108 96 L34 150 L40 160 L108 134 Z" />
+      <path d="M132 96 L206 150 L200 160 L132 134 Z" />
+      <path d="M112 168 L92 206 L104 200 L116 176 Z" />
+      <path d="M128 168 L148 206 L136 200 L124 176 Z" />
+      <line x1="110" y1="212" x2="118" y2="212" strokeWidth="1" />
+      <line x1="122" y1="212" x2="130" y2="212" strokeWidth="1" />
+    </>
+  ),
+  "super-hornet": (
+    <>
+      <line x1="120" y1="28" x2="120" y2="212" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 28 L130 72 L134 96 L134 178 L120 208 L106 178 L106 96 L110 72 Z" />
+      <path d="M114 46 L126 46 L124 64 L116 64 Z" />
+      <path d="M106 110 L52 150 L66 158 L106 140 Z" />
+      <path d="M134 110 L188 150 L174 158 L134 140 Z" />
+      <path d="M110 160 L88 198 L102 192 L116 168 Z" />
+      <path d="M130 160 L152 198 L138 192 L124 168 Z" />
+      <line x1="110" y1="208" x2="118" y2="208" strokeWidth="1" />
+      <line x1="122" y1="208" x2="130" y2="208" strokeWidth="1" />
+    </>
+  ),
+  "ea-18g-growler": (
+    <>
+      <line x1="120" y1="28" x2="120" y2="212" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 28 L130 72 L134 96 L134 178 L120 208 L106 178 L106 96 L110 72 Z" />
+      <path d="M114 46 L126 46 L124 64 L116 64 Z" />
+      <path d="M106 110 L52 150 L66 158 L106 140 Z" />
+      <path d="M134 110 L188 150 L174 158 L134 140 Z" />
+      <rect x="44" y="146" width="14" height="20" rx="3" />
+      <rect x="182" y="146" width="14" height="20" rx="3" />
+      <path d="M110 160 L88 198 L102 192 L116 168 Z" />
+      <path d="M130 160 L152 198 L138 192 L124 168 Z" />
+      <line x1="110" y1="208" x2="118" y2="208" strokeWidth="1" />
+      <line x1="122" y1="208" x2="130" y2="208" strokeWidth="1" />
+    </>
+  ),
+  gripen: (
+    <>
+      <line x1="120" y1="34" x2="120" y2="208" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 34 L128 86 L128 178 L120 202 L112 178 L112 86 Z" />
+      <path d="M115 52 L125 52 L123 68 L117 68 Z" />
+      <path d="M112 96 L84 106 L89 113 L112 108 Z" />
+      <path d="M128 96 L156 106 L151 113 L128 108 Z" />
+      <path d="M112 120 L60 172 L72 177 L112 154 Z" />
+      <path d="M128 120 L180 172 L168 177 L128 154 Z" />
+      <path d="M116 170 L120 198 L124 170 Z" />
+      <ellipse cx="120" cy="200" rx="8" ry="3" />
+    </>
+  ),
+  "eurofighter-typhoon": (
+    <>
+      <line x1="120" y1="26" x2="120" y2="212" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 26 L130 80 L130 186 L120 208 L110 186 L110 80 Z" />
+      <path d="M114 44 L126 44 L124 60 L116 60 Z" />
+      <path d="M110 64 L72 80 L78 88 L110 82 Z" />
+      <path d="M130 64 L168 80 L162 88 L130 82 Z" />
+      <path d="M110 118 L46 178 L60 184 L110 156 Z" />
+      <path d="M130 118 L194 178 L180 184 L130 156 Z" />
+      <path d="M116 178 L120 204 L124 178 Z" />
+      <line x1="110" y1="208" x2="130" y2="208" strokeWidth="1" />
+    </>
+  ),
+  "j-20": (
+    <>
+      <line x1="120" y1="22" x2="120" y2="220" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 22 L132 84 L132 196 L120 216 L108 196 L108 84 Z" />
+      <path d="M114 42 L126 42 L124 60 L116 60 Z" />
+      <path d="M108 92 L70 106 L76 114 L108 106 Z" />
+      <path d="M132 92 L170 106 L164 114 L132 106 Z" />
+      <path d="M108 124 L40 188 L54 194 L108 164 Z" />
+      <path d="M132 124 L200 188 L186 194 L132 164 Z" />
+      <path d="M110 186 L92 212 L104 206 L116 188 Z" />
+      <path d="M130 186 L148 212 L136 206 L124 188 Z" />
+      <line x1="112" y1="216" x2="128" y2="216" strokeWidth="1" />
+    </>
+  ),
+  "j-35": (
+    <>
+      <line x1="120" y1="30" x2="120" y2="210" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 30 L133 82 L133 174 L120 206 L107 174 L107 82 Z" />
+      <path d="M114 50 L126 50 L124 66 L116 66 Z" />
+      <path d="M107 102 L52 150 L66 157 L107 136 Z" />
+      <path d="M133 102 L188 150 L174 157 L133 136 Z" />
+      <path d="M109 158 L88 196 L102 190 L115 166 Z" />
+      <path d="M131 158 L152 196 L138 190 L125 166 Z" />
+      <line x1="110" y1="206" x2="118" y2="206" strokeWidth="1" />
+      <line x1="122" y1="206" x2="130" y2="206" strokeWidth="1" />
+    </>
+  ),
+  kaan: (
+    <>
+      <line x1="120" y1="26" x2="120" y2="214" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 26 L132 86 L132 184 L120 212 L108 184 L108 86 Z" />
+      <path d="M114 46 L126 46 L124 64 L116 64 Z" />
+      <path d="M108 104 L46 156 L58 164 L108 140 Z" />
+      <path d="M132 104 L194 156 L182 164 L132 140 Z" />
+      <path d="M110 166 L90 204 L104 198 L116 174 Z" />
+      <path d="M130 166 L150 204 L136 198 L124 174 Z" />
+      <line x1="111" y1="212" x2="119" y2="212" strokeWidth="1" />
+      <line x1="121" y1="212" x2="129" y2="212" strokeWidth="1" />
+    </>
+  ),
+  "f-47": (
+    <>
+      <line x1="120" y1="24" x2="120" y2="206" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 24 L132 96 L196 188 L120 200 L44 188 L108 96 Z" />
+      <path d="M114 44 L126 44 L124 64 L116 64 Z" />
+      <path d="M110 88 L78 98 L83 105 L110 100 Z" />
+      <path d="M130 88 L162 98 L157 105 L130 100 Z" />
+      <line x1="120" y1="96" x2="120" y2="196" strokeWidth="1" />
+    </>
+  ),
+  "scaf-fcas": (
+    <>
+      <line x1="120" y1="28" x2="120" y2="204" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 28 L188 150 L120 198 L52 150 Z" />
+      <path d="M114 56 L126 56 L124 76 L116 76 Z" />
+      <line x1="120" y1="40" x2="120" y2="190" strokeWidth="1" />
+      <path d="M120 96 L74 138 M120 96 L166 138" strokeWidth="1" />
+    </>
+  ),
+  "gcap-tempest": (
+    <>
+      <line x1="120" y1="30" x2="120" y2="202" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 30 L134 108 L210 150 L188 168 L130 158 L120 196 L110 158 L52 168 L30 150 L106 108 Z" />
+      <path d="M114 52 L126 52 L124 72 L116 72 Z" />
+      <line x1="120" y1="108" x2="120" y2="190" strokeWidth="1" />
+    </>
+  ),
 };
 
 export function SystemSchematic({

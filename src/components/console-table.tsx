@@ -10,6 +10,7 @@ const SCOPE_LABELS: Record<ClaimScope, string> = {
   ...BRICK_LABELS,
   specs: "Caractéristiques",
   contraintes: "Contraintes physiques",
+  versions: "Versions & standards",
 };
 
 const STATUS_TOKEN: Record<ClaimStatus, string> = {

@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import type { SystemCategory } from "@/data/types";
 
 // Emblèmes filaires de domaine — au trait, comme les schématiques système :
-// un drone vu de dessus, un effecteur à énergie dirigée et son faisceau.
+// un drone vu de dessus, un effecteur à énergie dirigée, un avion de combat.
 const EMBLEMS: Record<SystemCategory, ReactNode> = {
   drone: (
     <>
@@ -42,6 +42,24 @@ const EMBLEMS: Record<SystemCategory, ReactNode> = {
         d="M84 4 L84 8 M84 16 L84 20 M76 12 L80 12 M88 12 L92 12"
         strokeWidth="1"
       />
+    </>
+  ),
+  "combat-aircraft": (
+    <>
+      <line
+        x1="50"
+        y1="12"
+        x2="50"
+        y2="84"
+        strokeWidth="1"
+        strokeDasharray="2 4"
+      />
+      <path d="M50 12 L55 36 L55 74 L50 84 L45 74 L45 36 Z" />
+      <circle cx="50" cy="27" r="3" />
+      <path d="M45 40 L14 68 L21 71 L45 57 Z" />
+      <path d="M55 40 L86 68 L79 71 L55 57 Z" />
+      <path d="M46 71 L31 84 L37 84 L48 76 Z" />
+      <path d="M54 71 L69 84 L63 84 L52 76 Z" />
     </>
   ),
 };

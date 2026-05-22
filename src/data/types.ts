@@ -1,9 +1,9 @@
 // Modèle de données — plateforme d'intelligence sur les systèmes de défense.
 // L'entité de base est un « système » doté d'une catégorie. Le catalogue couvre
-// les drones et l'énergie dirigée ; le modèle reste générique pour l'extension
-// future (systèmes sol-air, missiles, avions de combat).
+// les drones, l'énergie dirigée et l'aviation de combat ; le modèle reste
+// générique pour l'extension future (systèmes sol-air, missiles).
 
-export type SystemCategory = "drone" | "directed-energy";
+export type SystemCategory = "drone" | "directed-energy" | "combat-aircraft";
 
 export type DroneClass =
   | "MALE"
@@ -17,6 +17,9 @@ export type DroneClass =
 
 /** Classe d'un système d'énergie dirigée. */
 export type DirectedEnergyClass = "HEL" | "HPM" | "SHORAD-hybride";
+
+/** Génération d'un avion de combat — lecture évaluée par Panoplie. */
+export type CombatAircraftClass = "gen-4" | "gen-4-5" | "gen-5" | "gen-6";
 
 /** Modes d'acquisition — la grille de lecture qui relie les cinq briques. */
 export type AcquisitionMode =
@@ -112,12 +115,18 @@ export interface DefenseSystem {
   droneClass?: DroneClass;
   /** Classe d'énergie dirigée — renseignée pour le domaine « directed-energy ». */
   directedEnergyClass?: DirectedEnergyClass;
+  /** Génération évaluée — renseignée pour le domaine « combat-aircraft ». */
+  combatAircraftClass?: CombatAircraftClass;
+  /** Génération revendiquée par l'industriel ou la nation, si elle diffère. */
+  claimedGeneration?: string;
   classLabel: string;
   country: string;
   flag: string;
   manufacturer: string;
   introduced?: string;
   status: string;
+  /** Capacité d'appontage — note ; renseignée pour le domaine « combat-aircraft ». */
+  naval?: string;
   acquisitionModes: AcquisitionMode[];
   tagline: string;
   summary: string;
@@ -125,6 +134,8 @@ export interface DefenseSystem {
   bricks: Brick[];
   /** Bloc transversal des contraintes physiques — propre à l'énergie dirigée. */
   physicalConstraints?: Indicator[];
+  /** Versions & standards — propre au domaine « combat-aircraft ». */
+  variants?: Indicator[];
   scores: Score[];
   editorial: EditorialBlocks;
   /** Encadré juridique permanent — ex. Protocole IV de la CCW pour les lasers. */

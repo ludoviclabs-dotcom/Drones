@@ -195,7 +195,39 @@ export default function MethodologiePage() {
       </section>
 
       <section className="mt-14">
-        <SectionMarker index="08" label="Limites &amp; cadre éthique" />
+        <SectionMarker
+          index="08"
+          label="Le domaine aviation de combat"
+          blurb="Les chasseurs suivent la même grille — avec une lecture des générations qui sépare le revendiqué de l'évalué."
+        />
+        <div className="mt-5 space-y-4 font-serif text-[1.05rem] leading-[1.75] text-ink/90">
+          <p>
+            Les avions de combat passent par les mêmes cinq briques et les mêmes
+            six paliers que les autres systèmes. S'y ajoute un cadre de lecture
+            des générations, de la 4e modernisée à la 6e. Panoplie y distingue
+            deux niveaux : la génération revendiquée — celle qu'avancent
+            l'industriel ou la nation d'origine — et la génération telle que la
+            plateforme la lit, à capacités constatées. L'écart entre les deux
+            est, en soi, une information.
+          </p>
+          <p>
+            La brique « coût » se lit ici en couches : coût unitaire de
+            production, coût d'acquisition complet, coût du programme, et
+            surtout maintien en condition opérationnelle sur trois à quatre
+            décennies — le poste qui domine le coût de possession. Le prix
+            d'achat affiché n'en est que la part visible.
+          </p>
+          <p>
+            Les programmes de 6e génération — F-47, SCAF, GCAP — ne volent pas
+            encore. Le modèle impose pourtant six paliers : les dimensions non
+            démontrables y reçoivent une note prudente, dont le raisonnement
+            indique explicitement qu'il s'agit d'une évaluation indicative.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-14">
+        <SectionMarker index="09" label="Limites &amp; cadre éthique" />
         <div className="mt-5 space-y-4 font-serif text-[1.05rem] leading-[1.75] text-ink/90">
           <p>
             Panoplie est un outil d'analyse stratégique, industrielle et

@@ -7,7 +7,7 @@ import type {
 } from "@/data/types";
 import { systems } from "@/data/systems";
 
-export type ClaimScope = BrickKey | "specs" | "contraintes";
+export type ClaimScope = BrickKey | "specs" | "contraintes" | "versions";
 
 /** Une affirmation atomique du registre de preuves. */
 export interface Claim {
@@ -79,6 +79,18 @@ export function getAllClaims(): Claim[] {
       claims.push({
         ...base,
         scope: "contraintes",
+        label: indicator.label,
+        value: indicator.value,
+        note: indicator.note,
+        confidence: indicator.confidence,
+        status: statusOf(indicator.confidence, indicator.status),
+        sources: resolve(indicator.sources),
+      });
+    }
+    for (const indicator of system.variants ?? []) {
+      claims.push({
+        ...base,
+        scope: "versions",
         label: indicator.label,
         value: indicator.value,
         note: indicator.note,

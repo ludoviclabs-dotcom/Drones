@@ -26,6 +26,12 @@ export const roadmap: RoadmapItem[] = [
     horizon: "en-cours",
   },
   {
+    title: "Consolider le domaine aviation de combat",
+    detail:
+      "Quinze chasseurs ouverts, des 4.5e génération aux programmes de 6e. Prochaines pistes : drones de combat collaboratifs (CCA) et standards à venir.",
+    horizon: "en-cours",
+  },
+  {
     title: "Cartographie des opérateurs",
     detail:
       "Une carte mondiale reliant chaque système à ses pays opérateurs et à ses théâtres d'emploi documentés.",
@@ -40,7 +46,7 @@ export const roadmap: RoadmapItem[] = [
   {
     title: "Au-delà des drones",
     detail:
-      "Le domaine énergie dirigée est ouvert. Étendre ensuite le modèle aux systèmes sol-air et aux missiles, puis aux avions de combat — à grille de lecture constante.",
+      "Les domaines énergie dirigée et aviation de combat sont ouverts. Étendre ensuite le modèle aux systèmes sol-air et aux missiles — à grille de lecture constante.",
     horizon: "exploratoire",
   },
 ];

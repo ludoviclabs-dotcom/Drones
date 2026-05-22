@@ -4,6 +4,17 @@ import type { ChangelogEntry } from "./types";
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-05-22",
+    title: "Ouverture du domaine aviation de combat",
+    items: [
+      "Quinze dossiers chasseurs — Rafale, Mirage 2000, F-22, F-35, F-15EX, Super Hornet, Growler, Gripen, Eurofighter, J-20, J-35, KAAN, F-47, SCAF, GCAP.",
+      "Nouveau domaine « Aviation de combat » : page d'introduction, frise des générations, bloc « versions & standards » et lecture revendiquée vs évaluée sur chaque fiche.",
+      "Navigation regroupée : les trois domaines réunis sous une entrée « Domaines » et une page d'index dédiée.",
+      "Comparateur étendu : groupe de confrontation propre aux avions — générations et navalisation.",
+      "Glossaire étendu : AESA, IRST, VLO, RCS, supercroisière, fusion de capteurs, datalink, CATOBAR, STOVL, MCO, CCA, nuage de combat.",
+    ],
+  },
+  {
+    date: "2026-05-22",
     title: "Ouverture du domaine énergie dirigée",
     items: [
       "Huit dossiers laser — HELMA-P, Iron Beam, DragonFire, DE M-SHORAD, IFPC-HEL, Skyranger 30 HEL, laser naval MBDA-Rheinmetall, HELIOS.",

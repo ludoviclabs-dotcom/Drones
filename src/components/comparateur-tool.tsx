@@ -4,12 +4,13 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import type {
   AcquisitionMode,
+  CombatAircraftClass,
   EditorialBlocks,
   Score,
   ScoreKey,
   SystemCategory,
 } from "@/data/types";
-import { MODE_LABELS, SCORE_LABELS } from "@/data/labels";
+import { GENERATION_LABELS, MODE_LABELS, SCORE_LABELS } from "@/data/labels";
 import { DomainChips, type DomainValue } from "./domain-filter";
 import { GradeBadge } from "./primitives";
 import { ScoreProfile } from "./score-profile";
@@ -24,6 +25,9 @@ export interface ComparableSystem {
   flag: string;
   classLabel: string;
   category: SystemCategory;
+  combatAircraftClass?: CombatAircraftClass;
+  claimedGeneration?: string;
+  naval?: string;
   country: string;
   manufacturer: string;
   acquisitionModes: AcquisitionMode[];
@@ -103,6 +107,11 @@ export function ComparateurTool({ systems }: { systems: ComparableSystem[] }) {
   }
 
   const span = 1 + chosen.length;
+  // Le groupe « aviation de combat » ne s'affiche que si tous les systèmes
+  // confrontés relèvent du domaine — sinon ses lignes seraient vides.
+  const allAircraft =
+    chosen.length > 0 &&
+    chosen.every((s) => s.category === "combat-aircraft");
 
   return (
     <div>
@@ -244,6 +253,46 @@ export function ComparateurTool({ systems }: { systems: ComparableSystem[] }) {
                   ))}
                 </tr>
               ))}
+
+              {allAircraft ? (
+                <>
+                  <GroupRow label="Aviation de combat" span={span} />
+                  {(
+                    [
+                      [
+                        "Génération revendiquée",
+                        (s: ComparableSystem) =>
+                          s.claimedGeneration ?? "—",
+                      ],
+                      [
+                        "Génération — lecture Panoplie",
+                        (s: ComparableSystem) =>
+                          s.combatAircraftClass
+                            ? GENERATION_LABELS[s.combatAircraftClass]
+                            : "—",
+                      ],
+                      [
+                        "Navalisation",
+                        (s: ComparableSystem) => s.naval ?? "—",
+                      ],
+                    ] as const
+                  ).map(([label, accessor]) => (
+                    <tr key={label}>
+                      <th scope="row" className={`${ROW_HEAD} align-top`}>
+                        {label}
+                      </th>
+                      {chosen.map((system) => (
+                        <td
+                          key={system.slug}
+                          className="border border-line bg-panel px-4 py-3 font-serif text-sm leading-relaxed text-ink-dim"
+                        >
+                          {accessor(system)}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </>
+              ) : null}
 
               <GroupRow label="Évaluation — paliers A à E" span={span} />
               <tr>

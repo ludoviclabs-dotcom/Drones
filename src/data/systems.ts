@@ -22,6 +22,21 @@ import { ifpcHel } from "./systems/ifpc-hel";
 import { skyranger30Hel } from "./systems/skyranger-30-hel";
 import { laserNavalAllemand } from "./systems/laser-naval-mbda-rheinmetall";
 import { helios } from "./systems/helios";
+import { rafale } from "./systems/rafale";
+import { mirage2000 } from "./systems/mirage-2000";
+import { f22Raptor } from "./systems/f-22-raptor";
+import { f35 } from "./systems/f-35";
+import { f15ex } from "./systems/f-15ex";
+import { superHornet } from "./systems/super-hornet";
+import { ea18gGrowler } from "./systems/ea-18g-growler";
+import { gripen } from "./systems/gripen";
+import { eurofighterTyphoon } from "./systems/eurofighter-typhoon";
+import { j20 } from "./systems/j-20";
+import { j35 } from "./systems/j-35";
+import { kaan } from "./systems/kaan";
+import { f47 } from "./systems/f-47";
+import { scafFcas } from "./systems/scaf-fcas";
+import { gcapTempest } from "./systems/gcap-tempest";
 
 export const systems: DefenseSystem[] = [
   mq9Reaper,
@@ -47,6 +62,21 @@ export const systems: DefenseSystem[] = [
   skyranger30Hel,
   laserNavalAllemand,
   helios,
+  rafale,
+  mirage2000,
+  f22Raptor,
+  f35,
+  f15ex,
+  superHornet,
+  ea18gGrowler,
+  gripen,
+  eurofighterTyphoon,
+  j20,
+  j35,
+  kaan,
+  f47,
+  scafFcas,
+  gcapTempest,
 ];
 
 export const SYSTEMS_BY_SLUG: Record<string, DefenseSystem> = Object.fromEntries(

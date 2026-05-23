@@ -75,8 +75,8 @@ export default function RootLayout({
         </div>
 
         <header className="sticky top-0 z-40 border-b border-line bg-bg/90 backdrop-blur">
-          <div className="mx-auto flex h-16 max-w-[1180px] items-center justify-between px-5">
-            <Link href="/" className="flex items-baseline gap-3">
+          <div className="mx-auto flex min-h-16 max-w-[1180px] flex-wrap items-center justify-between gap-x-4 gap-y-1 px-5 py-2 sm:flex-nowrap">
+            <Link href="/" className="flex shrink-0 items-baseline gap-3">
               <span className="font-serif text-2xl leading-none tracking-tight text-ink">
                 Panoplie
               </span>
@@ -84,12 +84,12 @@ export default function RootLayout({
                 Renseignement open source
               </span>
             </Link>
-            <nav className="flex items-center">
+            <nav className="-mx-2 flex w-full min-w-0 flex-1 items-center overflow-x-auto pb-1 sm:mx-0 sm:w-auto sm:justify-end sm:pb-0">
               {NAV.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="px-3 py-2 text-[11px] uppercase tracking-[0.15em] text-ink-dim transition-colors hover:text-ink"
+                  className="shrink-0 px-2 py-2 text-[11px] uppercase tracking-[0.15em] text-ink-dim transition-colors hover:text-ink sm:px-3"
                 >
                   {item.label}
                 </Link>

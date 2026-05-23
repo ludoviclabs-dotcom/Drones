@@ -152,6 +152,14 @@ export default async function SystemPage({
                 OSINT
               </Stamp>
             </div>
+            <div className="mt-7">
+              <Link
+                href={`/systemes/${system.slug}/xray`}
+                className="inline-flex h-11 items-center border border-accent px-5 font-mono text-xs uppercase tracking-[0.16em] text-accent transition-colors hover:bg-accent hover:text-bg"
+              >
+                Ouvrir le System X-Ray →
+              </Link>
+            </div>
           </div>
         </div>
 
@@ -324,6 +332,12 @@ export default async function SystemPage({
       </section>
 
       <nav className="mt-16 flex flex-wrap gap-6 border-t border-line pt-6">
+        <Link
+          href={`/systemes/${system.slug}/xray`}
+          className="font-mono text-xs uppercase tracking-[0.16em] text-accent transition-colors hover:text-ink"
+        >
+          Ouvrir le System X-Ray →
+        </Link>
         <Link
           href="/comparateur"
           className="font-mono text-xs uppercase tracking-[0.16em] text-accent transition-colors hover:text-ink"

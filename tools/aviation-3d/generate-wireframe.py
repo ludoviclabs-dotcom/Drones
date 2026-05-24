@@ -244,18 +244,27 @@ def build_verriere_bubble(sections: list, n_pts: int = 10) -> bpy.types.Object:
 
 
 def build_engine_nozzle(name: str, sign: int) -> bpy.types.Object:
-    """Tuyère moteur évasée à l'arrière (3 cercles)."""
+    """
+    Tuyère moteur abstraite — Rafale bi-réacteur (M88 ×2).
+
+    Géométrie : 4 cercles concentriques (entrée → col → évasement → sortie).
+    Écartement : centres à x=±0.075, rayons max 0.038 → 2 tuyères clairement
+    séparées (gap visuel ≈0.075 entre bords intérieurs), dépassant légèrement
+    du fuselage à l'arrière comme sur un Rafale réel.
+    """
     mesh = bpy.data.meshes.new(name)
     obj = bpy.data.objects.new(name, mesh)
     bpy.context.scene.collection.objects.link(obj)
     bm = bmesh.new()
 
-    n = 12
-    x_offset = sign * 0.04
+    n = 14
+    x_offset = sign * 0.075  # ±0.075 → distance entre centres = 0.15
     sections = [
-        (-0.78, 0.045, -0.025),
-        (-0.92, 0.053, -0.030),
-        (-1.02, 0.040, -0.030),
+        # (y, r, z_center) — entrée, col, évasement, sortie
+        (-0.78, 0.034, -0.028),
+        (-0.88, 0.030, -0.028),
+        (-0.97, 0.038, -0.030),
+        (-1.06, 0.032, -0.030),
     ]
     rings = []
     for y, r, z0 in sections:
@@ -273,10 +282,18 @@ def build_engine_nozzle(name: str, sign: int) -> bpy.types.Object:
             jn = (j + 1) % n
             bm.faces.new([a[j], a[jn], b[jn], b[j]])
 
-    center = bm.verts.new((x_offset, sections[-1][0], sections[-1][2]))
+    # Fond de tuyère ouvert (anneau plat noir abstrait, pas de cône intérieur)
+    inner_r = 0.020
+    inner_ring = []
+    y_back, _, z_back = sections[-1]
+    for i in range(n):
+        angle = 2 * math.pi * i / n
+        ix = x_offset + inner_r * math.cos(angle)
+        iz = z_back + inner_r * math.sin(angle)
+        inner_ring.append(bm.verts.new((ix, y_back, iz)))
     for j in range(n):
         jn = (j + 1) % n
-        bm.faces.new([rings[-1][jn], rings[-1][j], center])
+        bm.faces.new([rings[-1][jn], rings[-1][j], inner_ring[j], inner_ring[jn]])
 
     bm.normal_update()
     bm.to_mesh(mesh)

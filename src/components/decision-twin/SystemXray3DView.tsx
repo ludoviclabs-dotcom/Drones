@@ -9,6 +9,7 @@ import { OrbitControls, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import type { DecisionTwinNode } from "@/data/decision-twin/types";
 import type { Wireframe3DSpec } from "@/data/aviation-3d/types";
+import { PanoplieXrayBackdrop } from "./PanoplieXrayBackdrop";
 
 // ---------------------------------------------------------------------------
 // Wireframe procédural (fallback — données générées en JS sans asset externe)
@@ -134,7 +135,11 @@ export function SystemXray3DView({
   return (
     <div className="relative aspect-square w-full overflow-hidden border border-line bg-surface">
       <Canvas camera={{ position: [2.2, 1.8, 2.4], fov: 38 }}>
+        <color attach="background" args={["#16150f"]} />
         <ambientLight intensity={0.7} />
+
+        {/* Fond OSINT abstrait — grille radar + constellation de sources */}
+        <PanoplieXrayBackdrop />
 
         {glbPath ? (
           <Suspense fallback={spec ? <ProceduralWireframe spec={spec} /> : null}>

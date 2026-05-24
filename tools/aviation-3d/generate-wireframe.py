@@ -257,14 +257,18 @@ def build_engine_nozzle(name: str, sign: int) -> bpy.types.Object:
     bpy.context.scene.collection.objects.link(obj)
     bm = bmesh.new()
 
-    n = 14
-    x_offset = sign * 0.075  # ±0.075 → distance entre centres = 0.15
+    n = 16
+    x_offset = sign * 0.082  # ±0.082 → distance entre centres = 0.164
+    # 5 sections : entrée → diffuseur → col → évasement PC → anneau sortie.
+    # Tuyères proéminentes dépassant nettement du fuselage (jusqu'à y=-1.14),
+    # rayon max 0.052 → diamètre 0.104 (gap entre bords ≈0.060, bien visible).
     sections = [
-        # (y, r, z_center) — entrée, col, évasement, sortie
-        (-0.78, 0.034, -0.028),
-        (-0.88, 0.030, -0.028),
-        (-0.97, 0.038, -0.030),
-        (-1.06, 0.032, -0.030),
+        # (y, r, z_center)
+        (-0.72, 0.042, -0.028),   # entrée canalisée
+        (-0.86, 0.046, -0.030),   # diffuseur
+        (-0.98, 0.052, -0.032),   # évasement maximum (zone PC)
+        (-1.08, 0.050, -0.032),   # anneau de sortie
+        (-1.14, 0.046, -0.032),   # lèvre arrière effilée
     ]
     rings = []
     for y, r, z0 in sections:
@@ -398,24 +402,28 @@ def build_rafale() -> list:
     """
     objects = []
 
-    # FUSELAGE — 14 sections : ogive avant douce, volume max marqué, queue effilée.
-    # Le nez démarre à r=0.022 (au lieu de 0.005) pour éviter la pointe acérée :
-    # l'ogive obtenue est lisible sans détail technique.
+    # FUSELAGE — 16 sections.
+    # Nez plus effilé (pointe r=0.012 + ogive Sears-Haack progressive) inspiré
+    # des photos de référence : cône radar fin, transition douce vers le maître-couple.
+    # Queue élargie en X (boattail aplati à -1.10) pour englober la base des deux
+    # tuyères latérales, comme le carrossage central entre les M88 sur un Rafale réel.
     objects.append(build_fuselage_sections([
-        (+1.00, 0.022, 0.024, 0.005),   # pointe nez douce — ogive
-        (+0.94, 0.045, 0.048, 0.008),
-        (+0.86, 0.072, 0.078, 0.012),
-        (+0.74, 0.098, 0.098, 0.018),   # raccord cockpit
-        (+0.58, 0.118, 0.110, 0.020),   # volume avant charnu
-        (+0.40, 0.132, 0.116, 0.018),
-        (+0.20, 0.138, 0.118, 0.014),   # maître-couple
-        (+0.00, 0.138, 0.116, 0.008),
-        (-0.20, 0.132, 0.110, -0.002),
-        (-0.40, 0.122, 0.100, -0.012),
-        (-0.60, 0.108, 0.088, -0.022),
-        (-0.78, 0.090, 0.075, -0.030),
-        (-0.93, 0.075, 0.065, -0.032),
-        (-1.00, 0.060, 0.055, -0.032),
+        (+1.06, 0.012, 0.015, 0.000),   # pointe nez fine (cône radar)
+        (+0.98, 0.030, 0.034, 0.005),   # ogive avant
+        (+0.88, 0.058, 0.062, 0.010),
+        (+0.76, 0.088, 0.090, 0.016),   # raccord cockpit
+        (+0.60, 0.115, 0.108, 0.020),   # volume avant charnu
+        (+0.42, 0.130, 0.116, 0.020),
+        (+0.22, 0.138, 0.118, 0.016),   # maître-couple
+        (+0.02, 0.140, 0.118, 0.010),
+        (-0.18, 0.135, 0.114, 0.000),
+        (-0.38, 0.124, 0.106, -0.010),
+        (-0.58, 0.110, 0.094, -0.020),
+        (-0.76, 0.094, 0.082, -0.028),
+        (-0.90, 0.084, 0.072, -0.032),
+        (-1.00, 0.085, 0.060, -0.032),  # début boattail — X préservé
+        (-1.08, 0.095, 0.045, -0.034),  # boattail aplati englobant les tuyères
+        (-1.14, 0.075, 0.035, -0.034),  # queue effilée
     ]))
 
     # VOILURE DELTA — root plus avant (zone 38–82%), tip étendu à x=0.71 (envergure réelle).
@@ -446,17 +454,21 @@ def build_rafale() -> list:
     # DERIVE — montée à z=0.58 (hauteur sol→sommet ≈ 0.70 cible), flèche arrière marquée
     objects.append(build_vertical_fin(thickness=0.018))
 
-    # VERRIERE — bulle plus haute (hh=0.090) en forme de goutte allongée,
-    # fairing dorsal qui meurt progressivement. Zone cockpit 18–32%.
+    # VERRIERE — bulle franchement plus bombée (hh=0.112 vs 0.090) en goutte
+    # allongée, inspirée des photos de référence. La hauteur max se déplace
+    # légèrement en avant pour évoquer un cockpit relevé. Le fairing dorsal
+    # se prolonge plus loin en arrière (jusqu'à y=-0.32) pour le profil
+    # caractéristique du Rafale.
     objects.append(build_verriere_bubble([
-        (+0.52, 0.008, 0.030, 0.108),   # pointe avant
-        (+0.44, 0.034, 0.068, 0.108),
-        (+0.36, 0.054, 0.088, 0.112),   # apex bulle
-        (+0.26, 0.060, 0.090, 0.112),   # max hauteur — goutte
-        (+0.14, 0.055, 0.076, 0.112),
-        (+0.00, 0.045, 0.054, 0.110),
-        (-0.14, 0.030, 0.030, 0.108),
-        (-0.28, 0.015, 0.010, 0.105),   # fairing dorsal qui s'efface
+        (+0.56, 0.012, 0.032, 0.108),   # pointe avant cadre verrière
+        (+0.48, 0.042, 0.080, 0.110),
+        (+0.40, 0.060, 0.108, 0.114),   # apex bulle — max hauteur
+        (+0.30, 0.066, 0.112, 0.116),   # plateau max (cockpit relevé)
+        (+0.18, 0.060, 0.096, 0.116),
+        (+0.04, 0.050, 0.070, 0.112),
+        (-0.10, 0.038, 0.044, 0.110),
+        (-0.22, 0.024, 0.022, 0.108),
+        (-0.32, 0.012, 0.008, 0.105),   # fairing dorsal allongé
     ]))
 
     # MOTEURS — tuyères évasées

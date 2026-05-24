@@ -215,10 +215,16 @@ def build_vertical_fin(thickness: float) -> bpy.types.Object:
     return obj
 
 
-def build_verriere_bubble(sections: list, n_pts: int = 10) -> bpy.types.Object:
-    """Verrière bulle effilée — demi-sections en Z+ uniquement."""
-    mesh = bpy.data.meshes.new("Verriere")
-    obj = bpy.data.objects.new("Verriere", mesh)
+def build_verriere_bubble(sections: list, n_pts: int = 10,
+                           name: str = "Verriere") -> bpy.types.Object:
+    """
+    Verrière bulle effilée — demi-sections en Z+ uniquement.
+    Le nom par défaut "Verriere" reste détecté par le composant Three.js
+    (matériau fumé) ; passer name="F35A_Canopy" ou autre est aussi détecté
+    via la substring "canopy".
+    """
+    mesh = bpy.data.meshes.new(name)
+    obj = bpy.data.objects.new(name, mesh)
     bpy.context.scene.collection.objects.link(obj)
     bm = bmesh.new()
 
@@ -367,6 +373,266 @@ def build_pylon(name: str, x: float, y: float, length=0.08, width=0.012, height=
     return obj
 
 
+# ---------------------------------------------------------------------------
+# Composants spécifiques aux silhouettes furtives (F-35, J-20…)
+# ---------------------------------------------------------------------------
+
+def build_faceted_fuselage(name: str, sections: list, n_pts: int = 6) -> bpy.types.Object:
+    """
+    Fuselage à sections polygonales (hexagonales par défaut) pour les silhouettes
+    furtives anguleuses (style F-35). À la différence du fuselage Rafale en
+    sections elliptiques continues, on a ici des facettes alignées plutôt qu'une
+    courbe douce — c'est ce qui donne le look "stealth" plutôt qu'"aéronautique".
+
+    sections : liste de (y, halfwidth, halfheight, z_center).
+               halfwidth ≠ halfheight pour aplatir la section (chine plate).
+    """
+    mesh = bpy.data.meshes.new(name)
+    obj = bpy.data.objects.new(name, mesh)
+    bpy.context.scene.collection.objects.link(obj)
+    bm = bmesh.new()
+
+    rings = []
+    for y, hw, hh, z0 in sections:
+        ring = []
+        for i in range(n_pts):
+            # Section polygonale aplatie : on étire X (hw) plus que Z (hh)
+            # → silhouette furtive avec "chine" latérale plate.
+            angle = 2 * math.pi * i / n_pts + math.pi / n_pts  # rotation pour avoir 2 faces plates haut/bas
+            x = hw * math.cos(angle)
+            z = z0 + hh * math.sin(angle) * (0.7 if math.sin(angle) < 0 else 1.0)
+            ring.append(bm.verts.new((x, y, z)))
+        rings.append(ring)
+
+    for i in range(len(rings) - 1):
+        a, b = rings[i], rings[i + 1]
+        for j in range(n_pts):
+            k = (j + 1) % n_pts
+            bm.faces.new([a[j], a[k], b[k], b[j]])
+
+    # Bouchon nez (plat polygonal — pas de pointe acérée, look "chined")
+    front = bm.verts.new((0, sections[0][0], sections[0][3]))
+    for j in range(n_pts):
+        k = (j + 1) % n_pts
+        bm.faces.new([rings[0][j], rings[0][k], front])
+    # Bouchon arrière (ouvert au nozzle — on bouche pour valider GLTF)
+    back = bm.verts.new((0, sections[-1][0], sections[-1][3]))
+    for j in range(n_pts):
+        k = (j + 1) % n_pts
+        bm.faces.new([rings[-1][k], rings[-1][j], back])
+
+    bm.normal_update()
+    bm.to_mesh(mesh)
+    bm.free()
+    return obj
+
+
+def build_trapezoidal_wing(name: str, sign: int, vertices: dict) -> bpy.types.Object:
+    """
+    Aile trapézoïdale (style F-35, sans canards). Même topologie que la voilure
+    delta mais avec un tip plus large (pas en pointe) et un bord de fuite cassé.
+    Réutilise la fonction build_delta_wing — la différence se joue dans les
+    vertices_dict passés en argument.
+    """
+    return build_delta_wing(name, sign, vertices)
+
+
+def build_canted_fin(name: str, sign: int, cant_deg: float, x_offset: float,
+                     y_base: float, y_tip: float, height: float,
+                     chord_base: float, chord_tip: float, thickness: float) -> bpy.types.Object:
+    """
+    Dérive verticale inclinée vers l'extérieur (style F-35, F-22, F/A-18).
+    L'inclinaison `cant_deg` donne la signature visuelle furtive — la dérive
+    n'est plus parallèle au plan ZY mais s'écarte vers l'extérieur en montant.
+    """
+    mesh = bpy.data.meshes.new(name)
+    obj = bpy.data.objects.new(name, mesh)
+    bpy.context.scene.collection.objects.link(obj)
+    bm = bmesh.new()
+
+    cant = math.radians(cant_deg) * sign
+    # Vecteur d'élévation incliné : combiné Z (vertical) + X (latéral)
+    dx = math.sin(cant) * height
+    dz = math.cos(cant) * height
+
+    base_le = (sign * x_offset, y_base, 0)
+    base_te = (sign * x_offset, y_base - chord_base, 0)
+    tip_le = (sign * x_offset + dx, y_tip, dz)
+    tip_te = (sign * x_offset + dx, y_tip - chord_tip, dz)
+
+    # 2 surfaces inclinées (recto/verso) + bord arrondi sommet
+    t = thickness
+    nx = -math.cos(cant) * sign * t  # normale au plan dérive, vers l'intérieur
+    nz = math.sin(cant) * sign * t
+
+    def shift(p, s):
+        return (p[0] + s * nx, p[1], p[2] + s * nz)
+
+    pts = {
+        "ble_i": bm.verts.new(shift(base_le, -1)),
+        "ble_o": bm.verts.new(shift(base_le, +1)),
+        "bte_i": bm.verts.new(shift(base_te, -1)),
+        "bte_o": bm.verts.new(shift(base_te, +1)),
+        "tle_i": bm.verts.new(shift(tip_le, -1)),
+        "tle_o": bm.verts.new(shift(tip_le, +1)),
+        "tte_i": bm.verts.new(shift(tip_te, -1)),
+        "tte_o": bm.verts.new(shift(tip_te, +1)),
+    }
+
+    def quad(a, b, c, d):
+        if sign > 0:
+            bm.faces.new([a, b, c, d])
+        else:
+            bm.faces.new([d, c, b, a])
+
+    quad(pts["ble_o"], pts["tle_o"], pts["tte_o"], pts["bte_o"])    # face extérieure
+    quad(pts["bte_i"], pts["tte_i"], pts["tle_i"], pts["ble_i"])    # face intérieure
+    quad(pts["ble_i"], pts["tle_i"], pts["tle_o"], pts["ble_o"])    # bord d'attaque
+    quad(pts["bte_o"], pts["tte_o"], pts["tte_i"], pts["bte_i"])    # bord de fuite
+    quad(pts["tle_o"], pts["tle_i"], pts["tte_i"], pts["tte_o"])    # sommet
+    quad(pts["ble_i"], pts["ble_o"], pts["bte_o"], pts["bte_i"])    # base
+
+    bm.normal_update()
+    bm.to_mesh(mesh)
+    bm.free()
+    return obj
+
+
+def build_central_nozzle(name: str) -> bpy.types.Object:
+    """
+    Nozzle moteur central unique (style F-35 monomoteur F135).
+    Plus large et plus court que les tuyères Rafale — 1 seul mesh au centre.
+    """
+    mesh = bpy.data.meshes.new(name)
+    obj = bpy.data.objects.new(name, mesh)
+    bpy.context.scene.collection.objects.link(obj)
+    bm = bmesh.new()
+
+    n = 18
+    sections = [
+        # (y, r, z_center) — entrée (raccord fuselage) → col → évasement → sortie
+        (-0.78, 0.090, -0.020),
+        (-0.88, 0.078, -0.022),
+        (-0.96, 0.085, -0.024),
+        (-1.04, 0.080, -0.024),  # sortie
+    ]
+    rings = []
+    for y, r, z0 in sections:
+        ring = []
+        for i in range(n):
+            angle = 2 * math.pi * i / n
+            x = r * math.cos(angle)
+            z = z0 + r * math.sin(angle)
+            ring.append(bm.verts.new((x, y, z)))
+        rings.append(ring)
+
+    for k in range(len(rings) - 1):
+        a, b = rings[k], rings[k + 1]
+        for j in range(n):
+            jn = (j + 1) % n
+            bm.faces.new([a[j], a[jn], b[jn], b[j]])
+
+    # Anneau de sortie (fond ouvert sombre)
+    inner_r = 0.055
+    inner_ring = []
+    y_back, _, z_back = sections[-1]
+    for i in range(n):
+        angle = 2 * math.pi * i / n
+        ix = inner_r * math.cos(angle)
+        iz = z_back + inner_r * math.sin(angle)
+        inner_ring.append(bm.verts.new((ix, y_back, iz)))
+    for j in range(n):
+        jn = (j + 1) % n
+        bm.faces.new([rings[-1][jn], rings[-1][j], inner_ring[j], inner_ring[jn]])
+
+    bm.normal_update()
+    bm.to_mesh(mesh)
+    bm.free()
+    return obj
+
+
+def build_eots_bump(name: str, y_pos: float, x_half: float = 0.060,
+                    z_top: float = -0.020, z_bot: float = -0.070,
+                    length: float = 0.18) -> bpy.types.Object:
+    """
+    Bump EOTS facetté sous le nez (Electro-Optical Targeting System).
+    Petit volume polygonal asymétrique typique du F-35, sans détail interne.
+    """
+    mesh = bpy.data.meshes.new(name)
+    obj = bpy.data.objects.new(name, mesh)
+    bpy.context.scene.collection.objects.link(obj)
+    bm = bmesh.new()
+
+    y_f = y_pos + length / 2
+    y_b = y_pos - length / 2
+
+    # 8 vertices : 4 en haut (raccord fuselage), 4 en bas (apex bump)
+    top_pts = [
+        bm.verts.new((-x_half * 0.6, y_f, z_top)),  # 0 top front L
+        bm.verts.new((+x_half * 0.6, y_f, z_top)),  # 1 top front R
+        bm.verts.new((+x_half * 0.9, y_b, z_top)),  # 2 top back R
+        bm.verts.new((-x_half * 0.9, y_b, z_top)),  # 3 top back L
+    ]
+    bot_pts = [
+        bm.verts.new((-x_half * 0.4, y_f, z_top)),       # 4 nose-merge L
+        bm.verts.new((+x_half * 0.4, y_f, z_top)),       # 5 nose-merge R
+        bm.verts.new((+x_half * 0.7, y_b * 0.7 + y_f * 0.3, z_bot)),  # 6 apex back R
+        bm.verts.new((-x_half * 0.7, y_b * 0.7 + y_f * 0.3, z_bot)),  # 7 apex back L
+    ]
+
+    # Faces du dessous (apex facetté)
+    bm.faces.new([bot_pts[0], bot_pts[1], bot_pts[2], bot_pts[3]])  # apex flat
+    bm.faces.new([top_pts[0], bot_pts[0], bot_pts[3], top_pts[3]])  # left flank
+    bm.faces.new([top_pts[1], top_pts[2], bot_pts[2], bot_pts[1]])  # right flank
+    bm.faces.new([top_pts[0], top_pts[1], bot_pts[1], bot_pts[0]])  # front facet
+    bm.faces.new([top_pts[3], bot_pts[3], bot_pts[2], top_pts[2]])  # back facet
+    # Pas de face top (volume collé sous fuselage)
+    bm.faces.new([top_pts[0], top_pts[3], top_pts[2], top_pts[1]])  # top closing (intérieur)
+
+    bm.normal_update()
+    bm.to_mesh(mesh)
+    bm.free()
+    return obj
+
+
+def build_lateral_intake(name: str, sign: int, y_front: float, y_back: float,
+                         x_in: float, x_out: float, z_top: float, z_bot: float) -> bpy.types.Object:
+    """
+    Prise d'air latérale angulaire (style F-35 : forme trapézoïdale, lèvre
+    déportée vers l'arrière, pas d'entrée ventrale).
+    Distincte de build_air_intake qui faisait des prises rectangulaires plus
+    discrètes — ici la lèvre est marquée et la forme plus prononcée.
+    """
+    mesh = bpy.data.meshes.new(name)
+    obj = bpy.data.objects.new(name, mesh)
+    bpy.context.scene.collection.objects.link(obj)
+    bm = bmesh.new()
+    s = sign
+
+    p = {}
+    for y, ky in [(y_front, "F"), (y_back, "B")]:
+        for x, kx in [(x_in, "i"), (x_out, "o")]:
+            for z, kz in [(z_top, "T"), (z_bot, "B")]:
+                p[ky + kx + kz] = bm.verts.new((s * x, y, z))
+
+    def quad(a, b, c, d):
+        if sign > 0:
+            bm.faces.new([a, b, c, d])
+        else:
+            bm.faces.new([d, c, b, a])
+
+    quad(p["FiT"], p["FoT"], p["BoT"], p["BiT"])    # top
+    quad(p["FiB"], p["BiB"], p["BoB"], p["FoB"])    # bot
+    quad(p["FoT"], p["FoB"], p["BoB"], p["BoT"])    # outer
+    quad(p["FiT"], p["FiB"], p["FoB"], p["FoT"])    # front lip
+    quad(p["BiT"], p["BoT"], p["BoB"], p["BiB"])    # back
+
+    bm.normal_update()
+    bm.to_mesh(mesh)
+    bm.free()
+    return obj
+
+
 def build_landing_gear(name: str, x: float, y: float, length=0.10) -> bpy.types.Object:
     """Train d'atterrissage simplifié (cylindre fin)."""
     bpy.ops.mesh.primitive_cylinder_add(
@@ -498,9 +764,126 @@ def build_rafale() -> list:
 # Registry des chasseurs supportés (extensible)
 # ---------------------------------------------------------------------------
 
+def build_f35a() -> list:
+    """
+    Construit l'ensemble du mesh F-35A Lightning II (chasseur furtif monomoteur).
+
+    Échelle : 1 unité Blender = 7.85 m (modèle de longueur 2.0 unités → 15.7 m).
+    Ratios cibles (gabarit public F-35A) :
+        envergure / longueur  = 0.68  → halfSpan ±0.68
+        hauteur / longueur    = 0.28  → 0.56 du train au sommet de la dérive
+
+    Marqueurs visuels distinctifs vs Rafale :
+        - PAS de canards
+        - Fuselage hexagonal facetté (vs elliptique aéronautique)
+        - Ailes trapézoïdales (vs delta)
+        - 2 dérives inclinées vers l'extérieur (vs 1 dérive centrale verticale)
+        - 1 seul nozzle central (vs 2 latéraux)
+        - Bump EOTS facetté sous le nez
+
+    Naming des objets : F35A_<Component> (cf. brief, distinct du naming Rafale).
+    """
+    objects = []
+
+    # FUSELAGE MAIN — sections hexagonales, plus volumineux et chined.
+    # Aplatissement marqué (hw > hh) sur la zone cockpit pour la chine plate.
+    objects.append(build_faceted_fuselage("F35A_Fuselage_Main", [
+        (+0.96, 0.025, 0.022, 0.015),    # début nez
+        (+0.78, 0.085, 0.062, 0.018),    # transition
+        (+0.60, 0.135, 0.085, 0.018),    # chine cockpit (hw >> hh)
+        (+0.38, 0.155, 0.105, 0.012),    # maître-couple chined
+        (+0.18, 0.158, 0.110, 0.005),    # max volume
+        (-0.04, 0.155, 0.108, -0.005),
+        (-0.26, 0.140, 0.100, -0.012),
+        (-0.48, 0.122, 0.090, -0.018),
+        (-0.68, 0.105, 0.078, -0.020),
+        (-0.78, 0.090, 0.070, -0.020),   # raccord nozzle
+    ], n_pts=6))
+
+    # NOSE CHINED — chine plate avant qui dépasse latéralement.
+    # Réalisée par un mesh fin séparé qui prolonge le nez avec aplatissement extrême.
+    objects.append(build_faceted_fuselage("F35A_Nose_Chined", [
+        (+1.04, 0.005, 0.005, 0.018),    # pointe nez courte et arrondie
+        (+1.00, 0.018, 0.015, 0.018),
+        (+0.96, 0.025, 0.022, 0.015),    # raccord fuselage
+    ], n_pts=6))
+
+    # EOTS — bump facetté sous le nez (Electro-Optical Targeting System)
+    objects.append(build_eots_bump("F35A_EOTS_UnderNose",
+                                    y_pos=+0.74,
+                                    x_half=0.050,
+                                    z_top=-0.005,
+                                    z_bot=-0.055,
+                                    length=0.22))
+
+    # CANOPY — verrière monoplace bombée haute, position cockpit 18-32%
+    objects.append(build_verriere_bubble([
+        (+0.62, 0.012, 0.028, 0.105),
+        (+0.54, 0.044, 0.082, 0.108),
+        (+0.46, 0.060, 0.108, 0.112),   # apex bulle bombée
+        (+0.36, 0.063, 0.112, 0.114),   # max hauteur
+        (+0.24, 0.058, 0.092, 0.114),
+        (+0.10, 0.045, 0.060, 0.110),
+        (-0.04, 0.030, 0.032, 0.108),
+        (-0.16, 0.015, 0.012, 0.105),
+    ], name="F35A_Canopy"))
+
+    # INTAKES LATÉRAUX — angulaires, derrière le cockpit, pas d'entrée ventrale
+    objects.append(build_lateral_intake("F35A_Intake_Left", -1,
+                                         y_front=+0.30, y_back=+0.04,
+                                         x_in=0.110, x_out=0.180,
+                                         z_top=0.020, z_bot=-0.080))
+    objects.append(build_lateral_intake("F35A_Intake_Right", +1,
+                                         y_front=+0.30, y_back=+0.04,
+                                         x_in=0.110, x_out=0.180,
+                                         z_top=0.020, z_bot=-0.080))
+
+    # AILES TRAPÉZOÏDALES — bord d'attaque flèche 35°, tip large (pas en pointe)
+    wing_verts = {
+        "root_le": (0.15, +0.10, 0.012, -0.012),    # racine LE
+        "root_te": (0.15, -0.50, 0.012, -0.012),
+        "mid_le":  (0.40, -0.10, 0.010, -0.010),
+        "mid_te":  (0.40, -0.45, 0.008, -0.008),
+        "tip_le":  (0.68, -0.28, 0.006, -0.006),    # tip à envergure cible
+        "tip_te":  (0.68, -0.42, 0.006, -0.006),    # tip large (trapézoïdal)
+    }
+    objects.append(build_trapezoidal_wing("F35A_Wing_Left", -1, wing_verts))
+    objects.append(build_trapezoidal_wing("F35A_Wing_Right", +1, wing_verts))
+
+    # DÉRIVES VERTICALES INCLINÉES — signature F-35 (cant 25°)
+    objects.append(build_canted_fin("F35A_Tail_Vertical_Left", -1,
+                                     cant_deg=25, x_offset=0.110,
+                                     y_base=-0.50, y_tip=-0.78,
+                                     height=0.36, chord_base=0.34, chord_tip=0.16,
+                                     thickness=0.012))
+    objects.append(build_canted_fin("F35A_Tail_Vertical_Right", +1,
+                                     cant_deg=25, x_offset=0.110,
+                                     y_base=-0.50, y_tip=-0.78,
+                                     height=0.36, chord_base=0.34, chord_tip=0.16,
+                                     thickness=0.012))
+
+    # EMPENNAGES HORIZONTAUX — plans arrière inclinés, plus petits que les ailes
+    tail_verts = {
+        "root_le": (0.10, -0.62, 0.005, -0.005),
+        "root_te": (0.10, -0.94, 0.005, -0.005),
+        "mid_le":  (0.22, -0.72, 0.005, -0.005),
+        "mid_te":  (0.22, -0.92, 0.005, -0.005),
+        "tip_le":  (0.34, -0.82, 0.004, -0.004),
+        "tip_te":  (0.34, -0.92, 0.004, -0.004),
+    }
+    objects.append(build_trapezoidal_wing("F35A_Tailplane_Left", -1, tail_verts))
+    objects.append(build_trapezoidal_wing("F35A_Tailplane_Right", +1, tail_verts))
+
+    # NOZZLE MOTEUR — 1 seul, central, large (F135 monomoteur)
+    objects.append(build_central_nozzle("F35A_Engine_Nozzle"))
+
+    return objects
+
+
 AIRCRAFT_BUILDERS = {
     "rafale": build_rafale,
-    # Ajouter ici : "mirage2000": build_mirage2000, "f-35": build_f35, etc.
+    "f-35": build_f35a,
+    # Ajouter ici : "mirage2000": build_mirage2000, "j-20": build_j20, etc.
 }
 
 

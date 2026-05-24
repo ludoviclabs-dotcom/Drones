@@ -27,36 +27,94 @@ function ProceduralWireframe({ spec }: { spec: Wireframe3DSpec }) {
 
   return (
     <lineSegments geometry={geometry}>
-      <lineBasicMaterial color="#d8cfb5" />
+      <lineBasicMaterial color="#d8ded9" />
     </lineSegments>
   );
 }
 
 // ---------------------------------------------------------------------------
-// Wireframe GLB (Blender export — lignes ou mesh en mode wireframe)
+// Wireframe GLB (Blender export) — rendu « X-Ray premium »
+//
+// Stratégie double-matériau : pour chaque mesh source, on superpose
+//   1. une coque solide gris-bleu semi-transparente (matière aéronautique)
+//   2. un overlay edges blanc cassé (lecture wireframe pédagogique préservée)
+//
+// Le cockpit (mesh nommé "Verriere" / "Canopy") reçoit un matériau distinct
+// fumé bleu-noir pour ressortir comme zone abstraite non détaillée.
 // ---------------------------------------------------------------------------
+
+// Palette Rafale OSINT — alignée sur les vars CSS du design system
+const RAFALE = {
+  bodyColor: "#8f9a9d", // bluegrey — coque gris-bleu aéronautique
+  edgeColor: "#d8ded9", // light-edge — overlay arêtes blanc cassé
+  canopyColor: "#172022", // cockpit-smoke — verrière fumée
+} as const;
 
 function GlbWireframe({ path }: { path: string }) {
   const { scene } = useGLTF(path);
 
-  const wireframeScene = useMemo(() => {
+  const styledScene = useMemo(() => {
     const clone = scene.clone(true);
+    // Collecte des paires (mesh source → edges overlay) à ajouter en post-traversal
+    // pour éviter de muter l'arbre pendant qu'on l'itère.
+    const edgeOverlays: Array<{ parent: THREE.Object3D; line: THREE.LineSegments }> = [];
+
     clone.traverse((child) => {
       if (child instanceof THREE.Mesh) {
-        // Mesh solide : passer en wireframe filaire (compatible matériau existant)
-        child.material = new THREE.MeshBasicMaterial({
-          color: "#d8cfb5",
-          wireframe: true,
-        });
+        const name = child.name.toLowerCase();
+        const isCanopy = name.includes("verriere") || name.includes("canopy");
+
+        // 1. Coque solide
+        child.material = isCanopy
+          ? new THREE.MeshPhysicalMaterial({
+              color: RAFALE.canopyColor,
+              roughness: 0.25,
+              metalness: 0.1,
+              transmission: 0.55, // léger effet verre fumé
+              transparent: true,
+              opacity: 0.7,
+              depthWrite: false,
+            })
+          : new THREE.MeshStandardMaterial({
+              color: RAFALE.bodyColor,
+              roughness: 0.65,
+              metalness: 0.2,
+              transparent: true,
+              opacity: 0.45, // X-Ray : on voit le wireframe à travers
+              depthWrite: false,
+              side: THREE.DoubleSide,
+            });
+
+        // 2. Overlay arêtes (skip pour la verrière — on garde le verre lisse)
+        if (!isCanopy && child.geometry) {
+          const edges = new THREE.EdgesGeometry(child.geometry, 25); // angle seuil 25°
+          const line = new THREE.LineSegments(
+            edges,
+            new THREE.LineBasicMaterial({
+              color: RAFALE.edgeColor,
+              transparent: true,
+              opacity: 0.85,
+            }),
+          );
+          line.position.copy(child.position);
+          line.rotation.copy(child.rotation);
+          line.scale.copy(child.scale);
+          edgeOverlays.push({ parent: child.parent ?? clone, line });
+        }
       } else if (child instanceof THREE.LineSegments || child instanceof THREE.Line) {
-        // Lignes exportées depuis Blender (edge-only mesh)
-        child.material = new THREE.LineBasicMaterial({ color: "#d8cfb5" });
+        child.material = new THREE.LineBasicMaterial({ color: RAFALE.edgeColor });
       }
     });
+
+    // Ajout des overlays edges en dehors de la traversée
+    for (const { parent, line } of edgeOverlays) {
+      parent.add(line);
+    }
+
     return clone;
   }, [scene]);
 
-  return <primitive object={wireframeScene} />;
+  return <primitive object={styledScene} />;
 }
 
 // ---------------------------------------------------------------------------
@@ -74,8 +132,9 @@ function Hotspot({
 }) {
   const [hovered, setHovered] = useState(false);
   const pos = node.position3d ?? { x: 0, y: 0, z: 0 };
-  const color = isSelected ? "#d2683c" : hovered ? "#e8a875" : "#8a8a82";
-  const scale = isSelected ? 1.25 : hovered ? 1.1 : 1;
+  // Palette Panoplie : ambre actif, ambre clair au survol, gris-bleu au repos
+  const color = isSelected ? "#c8793f" : hovered ? "#e8a875" : "#8f9a9d";
+  const scale = isSelected ? 1.3 : hovered ? 1.12 : 1;
 
   const handleClick = (event: ThreeEvent<MouseEvent>) => {
     event.stopPropagation();
@@ -136,7 +195,14 @@ export function SystemXray3DView({
     <div className="relative aspect-square w-full overflow-hidden border border-line bg-surface">
       <Canvas camera={{ position: [2.2, 1.8, 2.4], fov: 38 }}>
         <color attach="background" args={["#16150f"]} />
-        <ambientLight intensity={0.7} />
+
+        {/* Éclairage X-Ray premium :
+            - ambient froid : remplit les zones d'ombre sans écraser
+            - key light haut-droite : modèle la coque gris-bleu
+            - rim ambre rasant gauche : détache la silhouette du fond OSINT */}
+        <ambientLight intensity={0.55} color="#9fb0b8" />
+        <directionalLight position={[4, 5, 3]} intensity={0.9} color="#e8e6dc" />
+        <directionalLight position={[-3, 1.5, -2]} intensity={0.55} color="#c8793f" />
 
         {/* Fond OSINT abstrait — grille radar + constellation de sources */}
         <PanoplieXrayBackdrop />

@@ -32,6 +32,21 @@
   --color-grade-d: #b9602e;
   --color-grade-e: #a83a2c;
 
+  /* Palette « Rafale X-Ray premium » — utilisée par le viewer 3D et les
+     silhouettes SVG. Référencée en dur côté Three.js (les matériaux R3F
+     ne lisent pas les CSS vars), exposée ici pour cohérence + futurs
+     overlays SVG / hotspots HTML. */
+  --rafale-graphite: #5f6769;
+  --rafale-bluegrey: #8f9a9d;
+  --rafale-light-edge: #d8ded9;
+  --rafale-shadow: #252b2b;
+  --rafale-cockpit-smoke: #172022;
+  --panoplie-amber: #c8793f;
+  --panoplie-amber-soft: rgba(200, 121, 63, 0.35);
+  --french-blue-muted: #263b68;
+  --french-white-muted: #e8e6dc;
+  --french-red-muted: #743030;
+
   --font-serif: var(--font-newsreader), Georgia, "Times New Roman", serif;
   --font-mono: var(--font-plex-mono), ui-monospace, "SF Mono", Menlo, monospace;
 }

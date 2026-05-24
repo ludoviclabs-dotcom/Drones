@@ -193,7 +193,10 @@ export function SystemXray3DView({
 }) {
   return (
     <div className="relative aspect-square w-full overflow-hidden border border-line bg-surface">
-      <Canvas camera={{ position: [2.2, 1.8, 2.4], fov: 38 }}>
+      {/* fov réduit (~110mm équivalent) : focale longue → moins de distorsion
+          du nez, silhouette plus proche d'une vue plan-trois-quart industrielle.
+          Caméra reculée en conséquence pour conserver le cadrage. */}
+      <Canvas camera={{ position: [3.8, 2.6, 4.1], fov: 22 }}>
         <color attach="background" args={["#16150f"]} />
 
         {/* Éclairage X-Ray premium :
@@ -226,8 +229,8 @@ export function SystemXray3DView({
 
         <OrbitControls
           enablePan={false}
-          minDistance={1.6}
-          maxDistance={6}
+          minDistance={3.5}
+          maxDistance={10}
           enableDamping
           dampingFactor={0.1}
         />

@@ -170,18 +170,20 @@ def build_delta_wing(name: str, sign: int, vertices: dict) -> bpy.types.Object:
 
 
 def build_vertical_fin(thickness: float) -> bpy.types.Object:
-    """Dérive verticale avec fairing à la base (3 sections)."""
+    """Dérive verticale avec fairing à la base (3 sections), flèche arrière marquée."""
     mesh = bpy.data.meshes.new("Derive")
     obj = bpy.data.objects.new("Derive", mesh)
     bpy.context.scene.collection.objects.link(obj)
     bm = bmesh.new()
 
     t = thickness
+    # Hauteur cible : sol (z=-0.115) à sommet → 0.70 → tip à z≈0.585.
+    # Flèche arrière : le bord d'attaque recule de y=-0.10 (base) à y=-0.45 (tip).
     levels = [
         # (z, half_t, le_y, te_y) — base, mid, tip
-        (0.025, t * 1.2, -0.05, -0.75),
-        (0.180, t * 1.0, -0.18, -0.65),
-        (0.450, t * 0.5, -0.40, -0.55),
+        (0.025, t * 1.2, -0.10, -0.78),
+        (0.260, t * 0.9, -0.25, -0.70),
+        (0.580, t * 0.4, -0.45, -0.60),
     ]
     rings = []
     for z, ht, le_y, te_y in levels:
@@ -242,18 +244,27 @@ def build_verriere_bubble(sections: list, n_pts: int = 10) -> bpy.types.Object:
 
 
 def build_engine_nozzle(name: str, sign: int) -> bpy.types.Object:
-    """Tuyère moteur évasée à l'arrière (3 cercles)."""
+    """
+    Tuyère moteur abstraite — Rafale bi-réacteur (M88 ×2).
+
+    Géométrie : 4 cercles concentriques (entrée → col → évasement → sortie).
+    Écartement : centres à x=±0.075, rayons max 0.038 → 2 tuyères clairement
+    séparées (gap visuel ≈0.075 entre bords intérieurs), dépassant légèrement
+    du fuselage à l'arrière comme sur un Rafale réel.
+    """
     mesh = bpy.data.meshes.new(name)
     obj = bpy.data.objects.new(name, mesh)
     bpy.context.scene.collection.objects.link(obj)
     bm = bmesh.new()
 
-    n = 12
-    x_offset = sign * 0.04
+    n = 14
+    x_offset = sign * 0.075  # ±0.075 → distance entre centres = 0.15
     sections = [
-        (-0.78, 0.045, -0.025),
-        (-0.92, 0.053, -0.030),
-        (-1.02, 0.040, -0.030),
+        # (y, r, z_center) — entrée, col, évasement, sortie
+        (-0.78, 0.034, -0.028),
+        (-0.88, 0.030, -0.028),
+        (-0.97, 0.038, -0.030),
+        (-1.06, 0.032, -0.030),
     ]
     rings = []
     for y, r, z0 in sections:
@@ -271,10 +282,18 @@ def build_engine_nozzle(name: str, sign: int) -> bpy.types.Object:
             jn = (j + 1) % n
             bm.faces.new([a[j], a[jn], b[jn], b[j]])
 
-    center = bm.verts.new((x_offset, sections[-1][0], sections[-1][2]))
+    # Fond de tuyère ouvert (anneau plat noir abstrait, pas de cône intérieur)
+    inner_r = 0.020
+    inner_ring = []
+    y_back, _, z_back = sections[-1]
+    for i in range(n):
+        angle = 2 * math.pi * i / n
+        ix = x_offset + inner_r * math.cos(angle)
+        iz = z_back + inner_r * math.sin(angle)
+        inner_ring.append(bm.verts.new((ix, y_back, iz)))
     for j in range(n):
         jn = (j + 1) % n
-        bm.faces.new([rings[-1][jn], rings[-1][j], center])
+        bm.faces.new([rings[-1][jn], rings[-1][j], inner_ring[j], inner_ring[jn]])
 
     bm.normal_update()
     bm.to_mesh(mesh)
@@ -361,61 +380,83 @@ def build_landing_gear(name: str, x: float, y: float, length=0.10) -> bpy.types.
 # ---------------------------------------------------------------------------
 
 def build_rafale() -> list:
-    """Construit l'ensemble du mesh Rafale et retourne la liste des objets."""
+    """
+    Construit l'ensemble du mesh Rafale (delta-canard bimoteur).
+
+    Échelle : 1 unité Blender = 7.65 m (modèle de longueur 2.0 unités → 15.30 m).
+    Ratios cibles (gabarit public Rafale) :
+        envergure / longueur  = 0.71  → halfSpan ±0.71
+        hauteur / longueur    = 0.35  → 0.70 du train au sommet de la dérive
+
+    Zones fonctionnelles (% de la longueur, y=+1 au nez à y=-1 à la tuyère) :
+        nose         0–18%   → y > +0.64
+        cockpit      18–32%  → +0.36 à +0.64
+        canard       30–40%  → +0.20 à +0.40
+        main wing    38–82%  → +0.24 à -0.64
+        tail         68–92%  → -0.36 à -0.84
+        exhaust      90–100% → y < -0.80
+    """
     objects = []
 
-    # FUSELAGE — 12 sections du nez à la tuyère
+    # FUSELAGE — 14 sections : ogive avant douce, volume max marqué, queue effilée.
+    # Le nez démarre à r=0.022 (au lieu de 0.005) pour éviter la pointe acérée :
+    # l'ogive obtenue est lisible sans détail technique.
     objects.append(build_fuselage_sections([
-        (+1.00, 0.005, 0.005, 0.0),
-        (+0.92, 0.015, 0.020, 0.0),
-        (+0.80, 0.035, 0.045, 0.005),
-        (+0.60, 0.060, 0.075, 0.012),
-        (+0.45, 0.080, 0.095, 0.020),
-        (+0.25, 0.105, 0.110, 0.020),
-        (+0.00, 0.130, 0.115, 0.010),
-        (-0.25, 0.135, 0.105, 0.000),
-        (-0.55, 0.115, 0.085, -0.020),
+        (+1.00, 0.022, 0.024, 0.005),   # pointe nez douce — ogive
+        (+0.94, 0.045, 0.048, 0.008),
+        (+0.86, 0.072, 0.078, 0.012),
+        (+0.74, 0.098, 0.098, 0.018),   # raccord cockpit
+        (+0.58, 0.118, 0.110, 0.020),   # volume avant charnu
+        (+0.40, 0.132, 0.116, 0.018),
+        (+0.20, 0.138, 0.118, 0.014),   # maître-couple
+        (+0.00, 0.138, 0.116, 0.008),
+        (-0.20, 0.132, 0.110, -0.002),
+        (-0.40, 0.122, 0.100, -0.012),
+        (-0.60, 0.108, 0.088, -0.022),
         (-0.78, 0.090, 0.075, -0.030),
-        (-0.93, 0.075, 0.065, -0.030),
-        (-1.00, 0.060, 0.055, -0.030),
+        (-0.93, 0.075, 0.065, -0.032),
+        (-1.00, 0.060, 0.055, -0.032),
     ]))
 
-    # VOILURE DELTA — vertices_dict commun aux deux ailes (x absolu, sign appliqué après)
+    # VOILURE DELTA — root plus avant (zone 38–82%), tip étendu à x=0.71 (envergure réelle).
     wing_verts = {
-        "root_le": (0.08, +0.05, 0.012, -0.012),
-        "root_te": (0.08, -0.55, 0.012, -0.012),
-        "mid_le":  (0.30, -0.20, 0.012, -0.012),
-        "mid_te":  (0.30, -0.52, 0.008, -0.008),
-        "tip_le":  (0.55, -0.42, 0.005, -0.005),
-        "tip_te":  (0.55, -0.50, 0.005, -0.005),
+        "root_le": (0.10, +0.24, 0.012, -0.012),   # bord d'attaque racine avancé
+        "root_te": (0.10, -0.62, 0.012, -0.012),   # bord de fuite reculé
+        "mid_le":  (0.38, -0.10, 0.012, -0.012),   # mi-aile : bord d'attaque marqué
+        "mid_te":  (0.38, -0.58, 0.009, -0.009),
+        "tip_le":  (0.71, -0.40, 0.005, -0.005),   # tip à l'envergure cible
+        "tip_te":  (0.71, -0.50, 0.005, -0.005),
     }
     objects.append(build_delta_wing("Aile_G", -1, wing_verts))
     objects.append(build_delta_wing("Aile_D", +1, wing_verts))
 
-    # CANARDS — delta inversés, devant la verrière, surélevés
+    # CANARDS — petits plans triangulaires, devant l'aile, bien séparés.
+    # Zone 30–40% : y entre +0.20 et +0.40. Surélevés (z ~0.07) pour rester visibles.
     canard_verts = {
-        "root_le": (0.07, +0.42, 0.078, 0.052),
-        "root_te": (0.07, +0.22, 0.078, 0.052),
-        "mid_le":  (0.155, +0.37, 0.072, 0.048),
-        "mid_te":  (0.155, +0.23, 0.068, 0.046),
-        "tip_le":  (0.24, +0.32, 0.066, 0.044),
-        "tip_te":  (0.24, +0.24, 0.066, 0.044),
+        "root_le": (0.10, +0.40, 0.078, 0.058),
+        "root_te": (0.10, +0.22, 0.078, 0.058),
+        "mid_le":  (0.22, +0.36, 0.074, 0.054),
+        "mid_te":  (0.22, +0.24, 0.070, 0.052),
+        "tip_le":  (0.33, +0.32, 0.068, 0.050),    # tip étendu (+38% vs ancien)
+        "tip_te":  (0.33, +0.26, 0.068, 0.050),
     }
     objects.append(build_delta_wing("Canard_G", -1, canard_verts))
     objects.append(build_delta_wing("Canard_D", +1, canard_verts))
 
-    # DERIVE verticale unique
-    objects.append(build_vertical_fin(thickness=0.015))
+    # DERIVE — montée à z=0.58 (hauteur sol→sommet ≈ 0.70 cible), flèche arrière marquée
+    objects.append(build_vertical_fin(thickness=0.018))
 
-    # VERRIERE bulle + fairing dorsal
+    # VERRIERE — bulle plus haute (hh=0.090) en forme de goutte allongée,
+    # fairing dorsal qui meurt progressivement. Zone cockpit 18–32%.
     objects.append(build_verriere_bubble([
-        (+0.50, 0.005, 0.020, 0.10),
-        (+0.42, 0.025, 0.045, 0.10),
-        (+0.32, 0.040, 0.060, 0.10),
-        (+0.22, 0.045, 0.058, 0.10),
-        (+0.10, 0.045, 0.040, 0.10),
-        (-0.05, 0.030, 0.020, 0.10),
-        (-0.20, 0.015, 0.005, 0.10),
+        (+0.52, 0.008, 0.030, 0.108),   # pointe avant
+        (+0.44, 0.034, 0.068, 0.108),
+        (+0.36, 0.054, 0.088, 0.112),   # apex bulle
+        (+0.26, 0.060, 0.090, 0.112),   # max hauteur — goutte
+        (+0.14, 0.055, 0.076, 0.112),
+        (+0.00, 0.045, 0.054, 0.110),
+        (-0.14, 0.030, 0.030, 0.108),
+        (-0.28, 0.015, 0.010, 0.105),   # fairing dorsal qui s'efface
     ]))
 
     # MOTEURS — tuyères évasées

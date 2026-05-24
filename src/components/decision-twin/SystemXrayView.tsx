@@ -1,8 +1,10 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useMemo, useState } from "react";
 import type { PanoplieXrayScenario } from "@/data/decision-twin/types";
 import type { DefenseSystem } from "@/data/types";
+import { WIREFRAME_3D_SPECS, GLB_AVAILABLE_SLUGS } from "@/data/aviation-3d";
 import { SectionMarker } from "@/components/primitives";
 import { RegistrationMarks } from "@/components/registration-marks";
 import { Stamp } from "@/components/stamp";
@@ -10,6 +12,20 @@ import { EvidenceDrawer } from "./EvidenceDrawer";
 import { ExportEvidencePackButton } from "./ExportEvidencePackButton";
 import { type ActiveLayer, LayerFilter } from "./LayerFilter";
 import { SystemXraySchematic } from "./SystemXraySchematic";
+
+const SystemXray3DView = dynamic(
+  () => import("./SystemXray3DView").then((m) => m.SystemXray3DView),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex aspect-square w-full items-center justify-center border border-line bg-surface font-mono text-xs uppercase tracking-[0.18em] text-ink-faint">
+        chargement 3D…
+      </div>
+    ),
+  },
+);
+
+type ViewMode = "2d" | "3d";
 
 export function SystemXrayView({
   system,
@@ -22,6 +38,11 @@ export function SystemXrayView({
   const [selectedNodeId, setSelectedNodeId] = useState(
     scenario.nodes[0]?.id ?? "",
   );
+  const [viewMode, setViewMode] = useState<ViewMode>("2d");
+
+  const wireframeSpec = WIREFRAME_3D_SPECS[system.slug];
+  const hasGlb = GLB_AVAILABLE_SLUGS.has(system.slug);
+  const has3D = Boolean(wireframeSpec);
 
   const filteredNodes = useMemo(() => {
     if (activeLayer === "all") return scenario.nodes;
@@ -93,18 +114,52 @@ export function SystemXrayView({
           blurb="La silhouette reste volontairement pedagogique: elle sert a naviguer dans les preuves, pas a decrire un systeme exploitable."
         />
         <div className="mt-6 flex flex-col gap-4">
-          <LayerFilter
-            layers={scenario.layers}
-            activeLayer={activeLayer}
-            onChange={setActiveLayer}
-          />
-          <div className="grid gap-6 lg:grid-cols-[1.45fr_0.9fr]">
-            <SystemXraySchematic
-              slug={system.slug}
-              nodes={filteredNodes}
-              selectedNodeId={selectedNode?.id}
-              onSelectNode={(node) => setSelectedNodeId(node.id)}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <LayerFilter
+              layers={scenario.layers}
+              activeLayer={activeLayer}
+              onChange={setActiveLayer}
             />
+            {has3D && (
+              <div
+                role="group"
+                aria-label="Mode d'affichage"
+                className="inline-flex border border-line-bright bg-panel"
+              >
+                {(["2d", "3d"] as const).map((mode) => (
+                  <button
+                    key={mode}
+                    type="button"
+                    onClick={() => setViewMode(mode)}
+                    className={`px-3 py-2 font-mono text-[10px] uppercase tracking-[0.18em] transition-colors ${
+                      viewMode === mode
+                        ? "bg-accent text-panel"
+                        : "text-ink-dim hover:bg-surface"
+                    }`}
+                  >
+                    {mode === "2d" ? "Schématique 2D" : "Vue 3D"}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="grid gap-6 lg:grid-cols-[1.45fr_0.9fr]">
+            {has3D && viewMode === "3d" ? (
+              <SystemXray3DView
+                spec={wireframeSpec}
+                glbPath={hasGlb ? `/models/aviation/${system.slug}.glb` : undefined}
+                nodes={filteredNodes}
+                selectedNodeId={selectedNode?.id}
+                onSelectNode={(node) => setSelectedNodeId(node.id)}
+              />
+            ) : (
+              <SystemXraySchematic
+                slug={system.slug}
+                nodes={filteredNodes}
+                selectedNodeId={selectedNode?.id}
+                onSelectNode={(node) => setSelectedNodeId(node.id)}
+              />
+            )}
             <EvidenceDrawer node={selectedNode} />
           </div>
         </div>

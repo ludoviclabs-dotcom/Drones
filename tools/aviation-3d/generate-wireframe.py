@@ -509,12 +509,14 @@ def build_central_nozzle(name: str) -> bpy.types.Object:
     bm = bmesh.new()
 
     n = 18
+    # Sections plus petites (rayon max 0.075 vs 0.090) et reculées (y=-0.92 à -1.12)
+    # pour s'intégrer à la queue fuselage qui s'amincit → fini la "boule disproportionnée".
     sections = [
         # (y, r, z_center) — entrée (raccord fuselage) → col → évasement → sortie
-        (-0.78, 0.090, -0.020),
-        (-0.88, 0.078, -0.022),
-        (-0.96, 0.085, -0.024),
-        (-1.04, 0.080, -0.024),  # sortie
+        (-0.92, 0.072, -0.022),
+        (-1.00, 0.065, -0.024),
+        (-1.06, 0.075, -0.026),
+        (-1.12, 0.068, -0.026),  # sortie
     ]
     rings = []
     for y, r, z0 in sections:
@@ -533,7 +535,7 @@ def build_central_nozzle(name: str) -> bpy.types.Object:
             bm.faces.new([a[j], a[jn], b[jn], b[j]])
 
     # Anneau de sortie (fond ouvert sombre)
-    inner_r = 0.055
+    inner_r = 0.045
     inner_ring = []
     y_back, _, z_back = sections[-1]
     for i in range(n):
@@ -785,96 +787,128 @@ def build_f35a() -> list:
     """
     objects = []
 
-    # FUSELAGE MAIN — sections hexagonales, plus volumineux et chined.
-    # Aplatissement marqué (hw > hh) sur la zone cockpit pour la chine plate.
+    # ------------------------------------------------------------------
+    # FUSELAGE MAIN — refonte v2 : massif, intégré, chine continue
+    # ------------------------------------------------------------------
+    # Largeurs (hw) revues à la hausse pour donner le corps "massif" du F-35.
+    # La zone cockpit-intakes (y +0.55 à +0.10) atteint hw=0.225 pour englober
+    # visuellement les intakes plutôt que les laisser flotter à côté.
+    # La queue (y < -0.40) s'amincit progressivement vers le nozzle.
     objects.append(build_faceted_fuselage("F35A_Fuselage_Main", [
-        (+0.96, 0.025, 0.022, 0.015),    # début nez
-        (+0.78, 0.085, 0.062, 0.018),    # transition
-        (+0.60, 0.135, 0.085, 0.018),    # chine cockpit (hw >> hh)
-        (+0.38, 0.155, 0.105, 0.012),    # maître-couple chined
-        (+0.18, 0.158, 0.110, 0.005),    # max volume
-        (-0.04, 0.155, 0.108, -0.005),
-        (-0.26, 0.140, 0.100, -0.012),
-        (-0.48, 0.122, 0.090, -0.018),
-        (-0.68, 0.105, 0.078, -0.020),
-        (-0.78, 0.090, 0.070, -0.020),   # raccord nozzle
+        (+0.96, 0.048, 0.045, 0.012),    # raccord nez (large)
+        (+0.82, 0.115, 0.075, 0.012),    # base cockpit
+        (+0.64, 0.175, 0.092, 0.008),    # chine cockpit (hw >> hh = facette plate)
+        (+0.42, 0.220, 0.108, 0.000),    # maître-couple intakes intégrés
+        (+0.18, 0.230, 0.115, -0.005),   # max volume corps
+        (-0.06, 0.225, 0.115, -0.012),
+        (-0.30, 0.205, 0.108, -0.020),   # début amincissement
+        (-0.52, 0.175, 0.095, -0.024),
+        (-0.72, 0.140, 0.082, -0.026),   # tail booms
+        (-0.88, 0.105, 0.068, -0.027),
+        (-0.96, 0.080, 0.058, -0.028),   # raccord nozzle
     ], n_pts=6))
 
-    # NOSE CHINED — chine plate avant qui dépasse latéralement.
-    # Réalisée par un mesh fin séparé qui prolonge le nez avec aplatissement extrême.
+    # ------------------------------------------------------------------
+    # NOSE CHINED — contenu dans la silhouette fuselage (ne dépasse plus)
+    # ------------------------------------------------------------------
+    # 3 sections progressives, hw max = 0.048 (matche le raccord fuselage),
+    # pointe ramassée 0.012. Pas de dépassement latéral du fuselage main.
     objects.append(build_faceted_fuselage("F35A_Nose_Chined", [
-        (+1.04, 0.005, 0.005, 0.018),    # pointe nez courte et arrondie
-        (+1.00, 0.018, 0.015, 0.018),
-        (+0.96, 0.025, 0.022, 0.015),    # raccord fuselage
+        (+1.06, 0.012, 0.010, 0.015),    # pointe nez courte et arrondie
+        (+1.02, 0.028, 0.026, 0.014),
+        (+0.96, 0.048, 0.045, 0.012),    # raccord parfait avec fuselage main
     ], n_pts=6))
 
-    # EOTS — bump facetté sous le nez (Electro-Optical Targeting System)
+    # ------------------------------------------------------------------
+    # EOTS — bump facetté sous le nez (zone cockpit)
+    # ------------------------------------------------------------------
     objects.append(build_eots_bump("F35A_EOTS_UnderNose",
-                                    y_pos=+0.74,
-                                    x_half=0.050,
-                                    z_top=-0.005,
-                                    z_bot=-0.055,
-                                    length=0.22))
+                                    y_pos=+0.86,
+                                    x_half=0.055,
+                                    z_top=0.000,
+                                    z_bot=-0.060,
+                                    length=0.20))
 
-    # CANOPY — verrière monoplace bombée haute, position cockpit 18-32%
+    # ------------------------------------------------------------------
+    # CANOPY — bulle assise sur le fuselage élargi (z plus bas)
+    # ------------------------------------------------------------------
+    # z des sections réduit de 0.108 → 0.080 : la bulle pose plus bas sur le
+    # fuselage massif, sans paraître flotter en l'air.
     objects.append(build_verriere_bubble([
-        (+0.62, 0.012, 0.028, 0.105),
-        (+0.54, 0.044, 0.082, 0.108),
-        (+0.46, 0.060, 0.108, 0.112),   # apex bulle bombée
-        (+0.36, 0.063, 0.112, 0.114),   # max hauteur
-        (+0.24, 0.058, 0.092, 0.114),
-        (+0.10, 0.045, 0.060, 0.110),
-        (-0.04, 0.030, 0.032, 0.108),
-        (-0.16, 0.015, 0.012, 0.105),
+        (+0.78, 0.020, 0.028, 0.075),    # cadre verrière avant
+        (+0.70, 0.052, 0.078, 0.078),
+        (+0.62, 0.068, 0.104, 0.082),    # apex bulle
+        (+0.52, 0.072, 0.112, 0.084),    # max hauteur
+        (+0.42, 0.068, 0.098, 0.082),
+        (+0.30, 0.054, 0.072, 0.078),
+        (+0.16, 0.034, 0.040, 0.073),
+        (+0.02, 0.016, 0.014, 0.070),    # fairing dorsal qui meurt sur le fuselage
     ], name="F35A_Canopy"))
 
-    # INTAKES LATÉRAUX — angulaires, derrière le cockpit, pas d'entrée ventrale
+    # ------------------------------------------------------------------
+    # INTAKES — collés contre le flanc du fuselage massif
+    # ------------------------------------------------------------------
+    # x_in matche hw du fuselage à la zone intake (≈ 0.205-0.230) pour qu'ils
+    # paraissent intégrés au flanc, pas suspendus en orbite.
     objects.append(build_lateral_intake("F35A_Intake_Left", -1,
-                                         y_front=+0.30, y_back=+0.04,
-                                         x_in=0.110, x_out=0.180,
-                                         z_top=0.020, z_bot=-0.080))
+                                         y_front=+0.48, y_back=+0.16,
+                                         x_in=0.195, x_out=0.265,
+                                         z_top=0.030, z_bot=-0.060))
     objects.append(build_lateral_intake("F35A_Intake_Right", +1,
-                                         y_front=+0.30, y_back=+0.04,
-                                         x_in=0.110, x_out=0.180,
-                                         z_top=0.020, z_bot=-0.080))
+                                         y_front=+0.48, y_back=+0.16,
+                                         x_in=0.195, x_out=0.265,
+                                         z_top=0.030, z_bot=-0.060))
 
-    # AILES TRAPÉZOÏDALES — bord d'attaque flèche 35°, tip large (pas en pointe)
+    # ------------------------------------------------------------------
+    # AILES TRAPÉZOÏDALES — root collée au flanc fuselage élargi
+    # ------------------------------------------------------------------
+    # root_le à x=0.225 (matche hw fuselage à y=+0.10). Tip à x=0.71 → envergure
+    # 10.7 m respectée.
     wing_verts = {
-        "root_le": (0.15, +0.10, 0.012, -0.012),    # racine LE
-        "root_te": (0.15, -0.50, 0.012, -0.012),
-        "mid_le":  (0.40, -0.10, 0.010, -0.010),
-        "mid_te":  (0.40, -0.45, 0.008, -0.008),
-        "tip_le":  (0.68, -0.28, 0.006, -0.006),    # tip à envergure cible
-        "tip_te":  (0.68, -0.42, 0.006, -0.006),    # tip large (trapézoïdal)
+        "root_le": (0.225, +0.10, 0.010, -0.010),
+        "root_te": (0.225, -0.52, 0.010, -0.010),
+        "mid_le":  (0.450, -0.10, 0.008, -0.008),
+        "mid_te":  (0.450, -0.46, 0.007, -0.007),
+        "tip_le":  (0.710, -0.30, 0.005, -0.005),
+        "tip_te":  (0.710, -0.42, 0.005, -0.005),
     }
     objects.append(build_trapezoidal_wing("F35A_Wing_Left", -1, wing_verts))
     objects.append(build_trapezoidal_wing("F35A_Wing_Right", +1, wing_verts))
 
-    # DÉRIVES VERTICALES INCLINÉES — signature F-35 (cant 25°)
+    # ------------------------------------------------------------------
+    # DÉRIVES VERTICALES INCLINÉES (cant 25°) — ancrées sur tail booms
+    # ------------------------------------------------------------------
+    # x_offset = 0.140 matche hw fuselage à y=-0.55 (tail boom). Hauteur 0.46
+    # pour respecter le ratio hauteur/longueur 0.28 (apex z ≈ 0.44, soit 3.4 m
+    # au-dessus du fuselage central + dépassement latéral du cant).
     objects.append(build_canted_fin("F35A_Tail_Vertical_Left", -1,
-                                     cant_deg=25, x_offset=0.110,
-                                     y_base=-0.50, y_tip=-0.78,
-                                     height=0.36, chord_base=0.34, chord_tip=0.16,
+                                     cant_deg=25, x_offset=0.140,
+                                     y_base=-0.42, y_tip=-0.74,
+                                     height=0.46, chord_base=0.40, chord_tip=0.15,
                                      thickness=0.012))
     objects.append(build_canted_fin("F35A_Tail_Vertical_Right", +1,
-                                     cant_deg=25, x_offset=0.110,
-                                     y_base=-0.50, y_tip=-0.78,
-                                     height=0.36, chord_base=0.34, chord_tip=0.16,
+                                     cant_deg=25, x_offset=0.140,
+                                     y_base=-0.42, y_tip=-0.74,
+                                     height=0.46, chord_base=0.40, chord_tip=0.15,
                                      thickness=0.012))
 
-    # EMPENNAGES HORIZONTAUX — plans arrière inclinés, plus petits que les ailes
+    # ------------------------------------------------------------------
+    # EMPENNAGES HORIZONTAUX — tip à x=0.44 → 6.86 m (cible brief)
+    # ------------------------------------------------------------------
     tail_verts = {
-        "root_le": (0.10, -0.62, 0.005, -0.005),
-        "root_te": (0.10, -0.94, 0.005, -0.005),
-        "mid_le":  (0.22, -0.72, 0.005, -0.005),
-        "mid_te":  (0.22, -0.92, 0.005, -0.005),
-        "tip_le":  (0.34, -0.82, 0.004, -0.004),
-        "tip_te":  (0.34, -0.92, 0.004, -0.004),
+        "root_le": (0.115, -0.58, 0.005, -0.005),
+        "root_te": (0.115, -0.92, 0.005, -0.005),
+        "mid_le":  (0.290, -0.70, 0.005, -0.005),
+        "mid_te":  (0.290, -0.88, 0.005, -0.005),
+        "tip_le":  (0.440, -0.78, 0.004, -0.004),
+        "tip_te":  (0.440, -0.86, 0.004, -0.004),
     }
     objects.append(build_trapezoidal_wing("F35A_Tailplane_Left", -1, tail_verts))
     objects.append(build_trapezoidal_wing("F35A_Tailplane_Right", +1, tail_verts))
 
-    # NOZZLE MOTEUR — 1 seul, central, large (F135 monomoteur)
+    # ------------------------------------------------------------------
+    # NOZZLE MOTEUR — central, proportionné (r max 0.075, sortie y=-1.12)
+    # ------------------------------------------------------------------
     objects.append(build_central_nozzle("F35A_Engine_Nozzle"))
 
     return objects

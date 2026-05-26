@@ -599,6 +599,85 @@ const SCHEMATICS: Record<string, ReactNode> = {
       <line x1="116" y1="34" x2="124" y2="34" strokeWidth="1" />
     </>
   ),
+  "aim-9x": (
+    <>
+      <line x1="120" y1="36" x2="120" y2="216" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 40 L130 70 L130 196 L120 212 L110 196 L110 70 Z" />
+      <path d="M110 102 L96 100 L110 112 Z" />
+      <path d="M130 102 L144 100 L130 112 Z" />
+      <path d="M110 190 L84 210 L114 204 Z" />
+      <path d="M130 190 L156 210 L126 204 Z" />
+      <circle cx="120" cy="50" r="2.4" />
+    </>
+  ),
+  "mica-ng": (
+    <>
+      <line x1="120" y1="28" x2="120" y2="220" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 32 L128 64 L128 200 L120 216 L112 200 L112 64 Z" />
+      <path d="M112 112 L98 114 L112 124 Z" />
+      <path d="M128 112 L142 114 L128 124 Z" />
+      <path d="M112 196 L82 214 L116 208 Z" />
+      <path d="M128 196 L158 214 L124 208 Z" />
+      <circle cx="120" cy="44" r="2.2" />
+    </>
+  ),
+  nsm: (
+    <>
+      <line x1="120" y1="34" x2="120" y2="216" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 38 L134 72 L134 196 L120 212 L106 196 L106 72 Z" />
+      <path d="M106 110 L26 122 L26 134 L106 142 Z" />
+      <path d="M134 110 L214 122 L214 134 L134 142 Z" />
+      <path d="M112 190 L120 208 L128 190 Z" />
+      <line x1="110" y1="212" x2="130" y2="212" strokeWidth="1" />
+      <path d="M114 56 L126 56 L122 70 L118 70 Z" />
+    </>
+  ),
+  gmlrs: (
+    <>
+      <line x1="120" y1="22" x2="120" y2="220" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 26 L130 56 L130 198 L120 216 L110 198 L110 56 Z" />
+      <path d="M110 76 L98 80 L110 88 Z" />
+      <path d="M130 76 L142 80 L130 88 Z" />
+      <rect x="104" y="190" width="32" height="14" />
+      <line x1="108" y1="190" x2="108" y2="204" strokeWidth="1" />
+      <line x1="116" y1="190" x2="116" y2="204" strokeWidth="1" />
+      <line x1="124" y1="190" x2="124" y2="204" strokeWidth="1" />
+      <line x1="132" y1="190" x2="132" y2="204" strokeWidth="1" />
+    </>
+  ),
+  camm: (
+    <>
+      <line x1="120" y1="18" x2="120" y2="220" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 22 L126 56 L126 198 L120 214 L114 198 L114 56 Z" />
+      <path d="M114 188 L96 210 L118 204 Z" />
+      <path d="M126 188 L144 210 L122 204 Z" />
+      <rect x="106" y="206" width="28" height="14" strokeDasharray="2 3" />
+      <circle cx="120" cy="34" r="2" />
+    </>
+  ),
+  "iris-t-slm": (
+    <>
+      <line x1="120" y1="22" x2="120" y2="220" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 26 L130 58 L130 198 L120 214 L110 198 L110 58 Z" />
+      <path d="M110 124 L94 128 L110 138 Z" />
+      <path d="M130 124 L146 128 L130 138 Z" />
+      <path d="M110 200 L100 214 L120 208 L140 214 L130 200 Z" />
+      <circle cx="120" cy="38" r="2.4" />
+    </>
+  ),
+  thaad: (
+    <>
+      <line x1="120" y1="10" x2="120" y2="228" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 14 L126 36 L126 78 L120 88 L114 78 L114 36 Z" />
+      <line x1="114" y1="92" x2="126" y2="92" strokeWidth="2" strokeDasharray="2 3" />
+      <path d="M114 96 L114 200 L120 220 L126 200 L126 96 Z" />
+      <path d="M114 132 L98 138 L114 146 Z" />
+      <path d="M126 132 L142 138 L126 146 Z" />
+      <path d="M114 192 L82 218 L118 210 Z" />
+      <path d="M126 192 L158 218 L122 210 Z" />
+      <circle cx="120" cy="22" r="2" />
+    </>
+  ),
 };
 
 export function SystemSchematic({

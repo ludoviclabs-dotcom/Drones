@@ -5,6 +5,7 @@ import type {
   CombatAircraftClass,
   Confidence,
   Grade,
+  MissileRole,
   Reliability,
   RoadmapHorizon,
   ScoreKey,
@@ -45,6 +46,7 @@ export const CATEGORY_LABELS: Record<SystemCategory, string> = {
   drone: "Drones",
   "directed-energy": "Énergie dirigée",
   "combat-aircraft": "Aviation de combat",
+  missile: "Missiles",
 };
 
 export const GENERATION_LABELS: Record<CombatAircraftClass, string> = {
@@ -52,6 +54,22 @@ export const GENERATION_LABELS: Record<CombatAircraftClass, string> = {
   "gen-4-5": "4.5e génération",
   "gen-5": "5e génération",
   "gen-6": "6e génération",
+};
+
+export const MISSILE_ROLE_LABELS: Record<MissileRole, string> = {
+  AAM: "Air-air",
+  ASM: "Air-surface",
+  SSM: "Surface-surface",
+  SAM: "Surface-air",
+  ARM: "Anti-radiation · SEAD",
+};
+
+export const MISSILE_ROLE_BLURBS: Record<MissileRole, string> = {
+  AAM: "Engagement de cibles aériennes — supériorité aérienne et défense de point.",
+  ASM: "Frappe sur cibles terrestres ou navales — précision, standoff, deep strike.",
+  SSM: "Tir sol-sol — roquettes guidées, tactiques, balistiques, anti-navire.",
+  SAM: "Défense aérienne et antimissile — couches courte, moyenne et longue portée.",
+  ARM: "Neutralisation des défenses aériennes — SEAD / DEAD anti-radar.",
 };
 
 export const SCORE_LABELS: Record<ScoreKey, string> = {

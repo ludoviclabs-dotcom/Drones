@@ -62,6 +62,29 @@ const EMBLEMS: Record<SystemCategory, ReactNode> = {
       <path d="M54 71 L69 84 L63 84 L52 76 Z" />
     </>
   ),
+  // Missile vu de face — corps cylindrique vertical, ogive conique, ailerons
+  // cruciformes en bas, sortie tuyère, rampe de tir au sol.
+  missile: (
+    <>
+      <line
+        x1="50"
+        y1="6"
+        x2="50"
+        y2="90"
+        strokeWidth="1"
+        strokeDasharray="2 4"
+      />
+      <path d="M50 8 L56 24 L56 68 L50 78 L44 68 L44 24 Z" />
+      <circle cx="50" cy="20" r="2.4" />
+      <line x1="44" y1="48" x2="56" y2="48" strokeWidth="1" />
+      <path d="M44 60 L30 72 L44 70 Z" />
+      <path d="M56 60 L70 72 L56 70 Z" />
+      <path d="M47 76 L43 86 L50 82 L57 86 L53 76 Z" />
+      <line x1="22" y1="90" x2="78" y2="90" strokeWidth="1" />
+      <line x1="30" y1="86" x2="36" y2="90" strokeWidth="1" />
+      <line x1="70" y1="86" x2="64" y2="90" strokeWidth="1" />
+    </>
+  ),
 };
 
 export function DomainEmblem({

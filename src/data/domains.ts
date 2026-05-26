@@ -34,4 +34,12 @@ export const DOMAINS: DomainInfo[] = [
     blurb:
       "Chasseurs 4.5e, 5e et 6e génération — lus comme des architectures de puissance aérienne.",
   },
+  {
+    category: "missile",
+    label: "Missiles",
+    href: "/missiles",
+    cta: "Ouvrir le domaine",
+    blurb:
+      "Air-air, air-surface, surface-surface, surface-air et SEAD — un objet technique, industriel et de contrôle.",
+  },
 ];

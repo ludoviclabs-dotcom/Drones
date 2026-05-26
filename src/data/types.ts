@@ -1,9 +1,13 @@
 // Modèle de données — plateforme d'intelligence sur les systèmes de défense.
 // L'entité de base est un « système » doté d'une catégorie. Le catalogue couvre
-// les drones, l'énergie dirigée et l'aviation de combat ; le modèle reste
-// générique pour l'extension future (systèmes sol-air, missiles).
+// drones, énergie dirigée, aviation de combat et missiles ; le modèle reste
+// générique pour l'extension future (sol-air, sous-marins, spatial).
 
-export type SystemCategory = "drone" | "directed-energy" | "combat-aircraft";
+export type SystemCategory =
+  | "drone"
+  | "directed-energy"
+  | "combat-aircraft"
+  | "missile";
 
 export type DroneClass =
   | "MALE"
@@ -20,6 +24,14 @@ export type DirectedEnergyClass = "HEL" | "HPM" | "SHORAD-hybride";
 
 /** Génération d'un avion de combat — lecture évaluée par Panoplie. */
 export type CombatAircraftClass = "gen-4" | "gen-4-5" | "gen-5" | "gen-6";
+
+/**
+ * Rôle d'un missile — air-air, air-surface, surface-surface, surface-air,
+ * anti-radiation (SEAD). Pour les missiles vraiment dual-use (MICA NG en
+ * air-air et VL, AMRAAM en NASAMS), le rôle principal porte la fiche ; le
+ * tagline et l'éditorial portent la lecture multi-emploi.
+ */
+export type MissileRole = "AAM" | "ASM" | "SSM" | "SAM" | "ARM";
 
 /** Modes d'acquisition — la grille de lecture qui relie les cinq briques. */
 export type AcquisitionMode =
@@ -117,6 +129,8 @@ export interface DefenseSystem {
   directedEnergyClass?: DirectedEnergyClass;
   /** Génération évaluée — renseignée pour le domaine « combat-aircraft ». */
   combatAircraftClass?: CombatAircraftClass;
+  /** Rôle principal — renseigné pour le domaine « missile ». */
+  missileRole?: MissileRole;
   /** Génération revendiquée par l'industriel ou la nation, si elle diffère. */
   claimedGeneration?: string;
   classLabel: string;

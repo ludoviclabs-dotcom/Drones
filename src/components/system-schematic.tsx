@@ -502,6 +502,103 @@ const SCHEMATICS: Record<string, ReactNode> = {
       <line x1="120" y1="108" x2="120" y2="190" strokeWidth="1" />
     </>
   ),
+  // Missiles — silhouettes en profil, nez en haut. Les éléments distinctifs
+  // (intakes ramjet du Meteor, ailes déployées du SCALP, jets de divert
+  // du PAC-3) donnent à chaque silhouette son visage.
+  meteor: (
+    <>
+      <line x1="120" y1="14" x2="120" y2="226" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 18 L130 50 L130 196 L120 220 L110 196 L110 50 Z" />
+      <path d="M110 110 L86 116 L86 156 L110 162 Z" />
+      <path d="M130 110 L154 116 L154 156 L130 162 Z" />
+      <path d="M110 70 L94 78 L110 84 Z" />
+      <path d="M130 70 L146 78 L130 84 Z" />
+      <path d="M110 188 L70 218 L114 208 Z" />
+      <path d="M130 188 L170 218 L126 208 Z" />
+      <line x1="116" y1="218" x2="124" y2="218" strokeWidth="1" />
+    </>
+  ),
+  "aim-120-amraam": (
+    <>
+      <line x1="120" y1="16" x2="120" y2="224" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 22 L128 56 L128 200 L120 218 L112 200 L112 56 Z" />
+      <path d="M112 120 L94 122 L112 134 Z" />
+      <path d="M128 120 L146 122 L128 134 Z" />
+      <path d="M112 196 L78 216 L116 208 Z" />
+      <path d="M128 196 L162 216 L124 208 Z" />
+      <circle cx="120" cy="34" r="2.4" />
+    </>
+  ),
+  "scalp-storm-shadow": (
+    <>
+      <line x1="120" y1="22" x2="120" y2="222" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 30 L132 70 L132 192 L120 216 L108 192 L108 70 Z" />
+      <path d="M108 108 L26 118 L26 132 L108 138 Z" />
+      <path d="M132 108 L214 118 L214 132 L132 138 Z" />
+      <path d="M108 168 L96 178 L96 188 L108 184 Z" />
+      <path d="M132 168 L144 178 L144 188 L132 184 Z" />
+      <path d="M114 192 L120 212 L126 192 Z" />
+      <line x1="112" y1="216" x2="128" y2="216" strokeWidth="1" />
+    </>
+  ),
+  jagm: (
+    <>
+      <line x1="120" y1="40" x2="120" y2="216" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 44 L130 76 L130 190 L120 210 L110 190 L110 76 Z" />
+      <path d="M110 182 L86 208 L114 200 Z" />
+      <path d="M130 182 L154 208 L126 200 Z" />
+      <line x1="106" y1="192" x2="134" y2="192" strokeWidth="1" />
+      <circle cx="120" cy="60" r="2.6" />
+    </>
+  ),
+  prsm: (
+    <>
+      <line x1="120" y1="16" x2="120" y2="226" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 22 L134 64 L134 204 L120 222 L106 204 L106 64 Z" />
+      <path d="M106 200 L86 220 L112 214 Z" />
+      <path d="M134 200 L154 220 L128 214 Z" />
+      <line x1="106" y1="100" x2="134" y2="100" strokeWidth="1" />
+      <line x1="106" y1="160" x2="134" y2="160" strokeWidth="1" />
+    </>
+  ),
+  "aster-30-b1nt": (
+    <>
+      <line x1="120" y1="14" x2="120" y2="226" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 20 L128 46 L128 116 L120 126 L112 116 L112 46 Z" />
+      <line x1="112" y1="124" x2="128" y2="124" strokeWidth="2" strokeDasharray="2 3" />
+      <path d="M112 128 L112 200 L120 218 L128 200 L128 128 Z" />
+      <path d="M112 84 L100 92 L112 96 Z" />
+      <path d="M128 84 L140 92 L128 96 Z" />
+      <path d="M112 184 L72 214 L116 206 Z" />
+      <path d="M128 184 L168 214 L124 206 Z" />
+      <circle cx="120" cy="32" r="2.4" />
+    </>
+  ),
+  "pac-3-mse": (
+    <>
+      <line x1="120" y1="14" x2="120" y2="222" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 18 L130 48 L130 200 L120 216 L110 200 L110 48 Z" />
+      <rect x="100" y="108" width="10" height="8" />
+      <rect x="130" y="108" width="10" height="8" />
+      <rect x="100" y="130" width="10" height="8" />
+      <rect x="130" y="130" width="10" height="8" />
+      <path d="M110 196 L88 214 L114 208 Z" />
+      <path d="M130 196 L152 214 L126 208 Z" />
+      <circle cx="120" cy="30" r="2.6" />
+    </>
+  ),
+  "aargm-er": (
+    <>
+      <line x1="120" y1="16" x2="120" y2="222" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 22 L130 58 L130 200 L120 216 L110 200 L110 58 Z" />
+      <path d="M110 78 L88 78 L110 92 Z" />
+      <path d="M130 78 L152 78 L130 92 Z" />
+      <path d="M110 188 L78 212 L114 206 Z" />
+      <path d="M130 188 L162 212 L126 206 Z" />
+      <circle cx="120" cy="34" r="2.6" />
+      <line x1="116" y1="34" x2="124" y2="34" strokeWidth="1" />
+    </>
+  ),
 };
 
 export function SystemSchematic({

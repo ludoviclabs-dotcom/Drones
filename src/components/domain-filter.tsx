@@ -10,6 +10,7 @@ const OPTIONS: { value: DomainValue; label: string }[] = [
   { value: "drone", label: CATEGORY_LABELS.drone },
   { value: "directed-energy", label: CATEGORY_LABELS["directed-energy"] },
   { value: "combat-aircraft", label: CATEGORY_LABELS["combat-aircraft"] },
+  { value: "missile", label: CATEGORY_LABELS.missile },
 ];
 
 /** Jeu de puces de filtrage par domaine — drones, énergie dirigée, aviation. */

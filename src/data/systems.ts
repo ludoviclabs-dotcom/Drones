@@ -37,6 +37,21 @@ import { kaan } from "./systems/kaan";
 import { f47 } from "./systems/f-47";
 import { scafFcas } from "./systems/scaf-fcas";
 import { gcapTempest } from "./systems/gcap-tempest";
+import { meteor } from "./systems/meteor";
+import { aim120Amraam } from "./systems/aim-120-amraam";
+import { scalpStormShadow } from "./systems/scalp-storm-shadow";
+import { jagm } from "./systems/jagm";
+import { prsm } from "./systems/prsm";
+import { aster30B1nt } from "./systems/aster-30-b1nt";
+import { pac3Mse } from "./systems/pac-3-mse";
+import { aargmEr } from "./systems/aargm-er";
+import { aim9x } from "./systems/aim-9x";
+import { micaNg } from "./systems/mica-ng";
+import { nsm } from "./systems/nsm";
+import { gmlrs } from "./systems/gmlrs";
+import { camm } from "./systems/camm";
+import { irisTSlm } from "./systems/iris-t-slm";
+import { thaad } from "./systems/thaad";
 
 export const systems: DefenseSystem[] = [
   mq9Reaper,
@@ -77,6 +92,21 @@ export const systems: DefenseSystem[] = [
   f47,
   scafFcas,
   gcapTempest,
+  meteor,
+  aim120Amraam,
+  scalpStormShadow,
+  jagm,
+  prsm,
+  aster30B1nt,
+  pac3Mse,
+  aargmEr,
+  aim9x,
+  micaNg,
+  nsm,
+  gmlrs,
+  camm,
+  irisTSlm,
+  thaad,
 ];
 
 export const SYSTEMS_BY_SLUG: Record<string, DefenseSystem> = Object.fromEntries(

@@ -42,4 +42,12 @@ export const DOMAINS: DomainInfo[] = [
     blurb:
       "Air-air, air-surface, surface-surface, surface-air et SEAD — un objet technique, industriel et de contrôle.",
   },
+  {
+    category: "radar",
+    label: "Radars",
+    href: "/radars",
+    cta: "Ouvrir le domaine",
+    blurb:
+      "Alerte avancée, multi-mission, naval, BMD, aéroporté, C-UAS — des capteurs lus comme des nœuds de réseau, pas comme des produits.",
+  },
 ];

@@ -6,6 +6,7 @@ import type {
   Confidence,
   Grade,
   MissileRole,
+  RadarRole,
   Reliability,
   RoadmapHorizon,
   ScoreKey,
@@ -47,6 +48,7 @@ export const CATEGORY_LABELS: Record<SystemCategory, string> = {
   "directed-energy": "Énergie dirigée",
   "combat-aircraft": "Aviation de combat",
   missile: "Missiles",
+  radar: "Radars",
 };
 
 export const GENERATION_LABELS: Record<CombatAircraftClass, string> = {
@@ -70,6 +72,28 @@ export const MISSILE_ROLE_BLURBS: Record<MissileRole, string> = {
   SSM: "Tir sol-sol — roquettes guidées, tactiques, balistiques, anti-navire.",
   SAM: "Défense aérienne et antimissile — couches courte, moyenne et longue portée.",
   ARM: "Neutralisation des défenses aériennes — SEAD / DEAD anti-radar.",
+};
+
+export const RADAR_ROLE_LABELS: Record<RadarRole, string> = {
+  "alerte-avancee": "Alerte avancée",
+  "multi-mission": "Multi-mission GBAD",
+  "naval-mfr": "Naval multifonction",
+  bmd: "Antimissile balistique",
+  "aeroporte-aesa": "Aéroporté AESA",
+  cuas: "C-UAS",
+};
+
+export const RADAR_ROLE_BLURBS: Record<RadarRole, string> = {
+  "alerte-avancee":
+    "Veille longue portée — détection précoce d'aéronefs, missiles balistiques et menaces basse observabilité.",
+  "multi-mission":
+    "Surveillance, acquisition et engagement quality — la colonne vertébrale des défenses sol-air modernes.",
+  "naval-mfr":
+    "Radars navals à panneaux fixes — conduite de tir, guidage missile et auto-défense de flotte.",
+  bmd: "Détection, suivi et discrimination des menaces balistiques — capteurs sensibles, faiblement exportables.",
+  "aeroporte-aesa":
+    "AESA de chasse, AEW&C et SAR/GMTI — fusion capteurs, EW/EA et désignation d'objectif.",
+  cuas: "Détection de petites cibles et drones — résolution élevée, cadence de revisite forte.",
 };
 
 export const SCORE_LABELS: Record<ScoreKey, string> = {

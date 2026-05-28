@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import { SYSTEMS_BY_SLUG } from "@/data/systems";
+import type { RadarRole } from "@/data/types";
 
 // Schématiques filaires — vue de dessus, dessin au trait. Stylisées, non
 // cotées : elles donnent un visage au système, pas une référence technique.
@@ -680,6 +682,174 @@ const SCHEMATICS: Record<string, ReactNode> = {
   ),
 };
 
+// Silhouettes par rôle radar — appliquées en repli quand la fiche n'a pas de
+// schématique dédiée. Chaque archétype représente l'allure typique du capteur
+// (panneau, mât, plateforme), pas une géométrie précise — le détail viendra
+// par fiche dans une seconde vague.
+const RADAR_ROLE_SCHEMATICS: Record<RadarRole, ReactNode> = {
+  // Alerte avancée : grande antenne plane sur mât, base véhicule, faisceau
+  // dirigé loin vers le ciel — symbolise le scan longue portée.
+  "alerte-avancee": (
+    <>
+      <line
+        x1="120"
+        y1="14"
+        x2="120"
+        y2="228"
+        strokeWidth="1"
+        strokeDasharray="2 5"
+      />
+      <path d="M70 30 L170 24 L166 90 L74 96 Z" />
+      <line x1="80" y1="42" x2="160" y2="36" strokeWidth="1" />
+      <line x1="80" y1="56" x2="160" y2="50" strokeWidth="1" />
+      <line x1="80" y1="70" x2="160" y2="64" strokeWidth="1" />
+      <line x1="80" y1="82" x2="160" y2="76" strokeWidth="1" />
+      <path d="M120 96 L120 156" strokeWidth="2" />
+      <path d="M178 28 A60 60 0 0 1 188 70" strokeDasharray="3 5" />
+      <path d="M188 22 A72 72 0 0 1 200 78" strokeDasharray="3 5" />
+      <path d="M198 16 A86 86 0 0 1 212 86" strokeDasharray="3 5" />
+      <rect x="80" y="156" width="80" height="36" rx="3" />
+      <line x1="80" y1="170" x2="160" y2="170" strokeWidth="1" />
+      <circle cx="98" cy="200" r="7" />
+      <circle cx="142" cy="200" r="7" />
+      <line x1="40" y1="210" x2="200" y2="210" strokeWidth="1" />
+    </>
+  ),
+  // Multi-mission GBAD : panneau incliné sur mât rotatif court, plateforme
+  // tactique 4x4 — agile, déployable, anti-aérienne tous azimuts.
+  "multi-mission": (
+    <>
+      <line
+        x1="120"
+        y1="20"
+        x2="120"
+        y2="228"
+        strokeWidth="1"
+        strokeDasharray="2 5"
+      />
+      <path d="M86 32 L154 26 L162 70 L78 76 Z" />
+      <line x1="92" y1="44" x2="148" y2="40" strokeWidth="1" />
+      <line x1="92" y1="54" x2="150" y2="50" strokeWidth="1" />
+      <line x1="92" y1="64" x2="152" y2="60" strokeWidth="1" />
+      <path d="M120 76 L120 122" strokeWidth="2" />
+      <path d="M168 30 A48 48 0 0 1 178 64" strokeDasharray="3 5" />
+      <path d="M178 24 A60 60 0 0 1 192 72" strokeDasharray="3 5" />
+      <rect x="56" y="124" width="128" height="46" rx="3" />
+      <line x1="56" y1="146" x2="184" y2="146" strokeWidth="1" />
+      <path d="M70 170 L70 188" strokeWidth="1" />
+      <path d="M170 170 L170 188" strokeWidth="1" />
+      <circle cx="80" cy="200" r="10" />
+      <circle cx="120" cy="200" r="10" />
+      <circle cx="160" cy="200" r="10" />
+      <line x1="40" y1="216" x2="200" y2="216" strokeWidth="1" />
+    </>
+  ),
+  // Naval multifonction : panneau AESA fixe vertical, base superstructure de
+  // navire — quatre faces stylisées par le retour de l'antenne sur les côtés.
+  "naval-mfr": (
+    <>
+      <line
+        x1="120"
+        y1="14"
+        x2="120"
+        y2="228"
+        strokeWidth="1"
+        strokeDasharray="2 5"
+      />
+      <path d="M60 50 L180 50 L180 130 L60 130 Z" />
+      <path d="M70 60 L170 60" strokeWidth="1" />
+      <path d="M70 76 L170 76" strokeWidth="1" />
+      <path d="M70 92 L170 92" strokeWidth="1" />
+      <path d="M70 108 L170 108" strokeWidth="1" />
+      <path d="M70 124 L170 124" strokeWidth="1" />
+      <path d="M60 50 L40 70 L40 130 L60 130 Z" strokeDasharray="2 3" />
+      <path d="M180 50 L200 70 L200 130 L180 130 Z" strokeDasharray="2 3" />
+      <path d="M70 130 L70 162 L170 162 L170 130" />
+      <path d="M40 162 L200 162 L210 186 L30 186 Z" />
+      <path d="M30 186 L40 210 L200 210 L210 186" />
+      <line x1="60" y1="186" x2="60" y2="210" strokeWidth="1" />
+      <line x1="180" y1="186" x2="180" y2="210" strokeWidth="1" />
+    </>
+  ),
+  // BMD : bloc rectangulaire massif sur remorque longue, antenne plate
+  // inclinée — silhouette caractéristique des radars antimissiles déployés.
+  bmd: (
+    <>
+      <line
+        x1="120"
+        y1="14"
+        x2="120"
+        y2="228"
+        strokeWidth="1"
+        strokeDasharray="2 5"
+      />
+      <path d="M52 38 L188 24 L196 122 L60 136 Z" />
+      <line x1="64" y1="54" x2="184" y2="42" strokeWidth="1" />
+      <line x1="66" y1="70" x2="186" y2="58" strokeWidth="1" />
+      <line x1="68" y1="86" x2="188" y2="74" strokeWidth="1" />
+      <line x1="70" y1="102" x2="190" y2="90" strokeWidth="1" />
+      <line x1="72" y1="118" x2="192" y2="106" strokeWidth="1" />
+      <path d="M52 138 L196 124 L210 168 L40 184 Z" />
+      <rect x="40" y="184" width="170" height="22" />
+      <circle cx="60" cy="216" r="6" />
+      <circle cx="90" cy="216" r="6" />
+      <circle cx="160" cy="216" r="6" />
+      <circle cx="190" cy="216" r="6" />
+      <line x1="34" y1="222" x2="216" y2="222" strokeWidth="1" />
+    </>
+  ),
+  // Aéroporté AESA : nez d'avion stylisé vu de dessus, antenne disque
+  // visible derrière le radôme — silhouette de chasse / AEW&C.
+  "aeroporte-aesa": (
+    <>
+      <line
+        x1="120"
+        y1="14"
+        x2="120"
+        y2="228"
+        strokeWidth="1"
+        strokeDasharray="2 5"
+      />
+      <path d="M120 22 L142 78 L142 184 L120 224 L98 184 L98 78 Z" />
+      <path d="M98 80 L142 80" strokeWidth="1" strokeDasharray="2 3" />
+      <ellipse cx="120" cy="56" rx="14" ry="22" />
+      <line x1="106" y1="56" x2="134" y2="56" strokeWidth="1" />
+      <line x1="120" y1="36" x2="120" y2="76" strokeWidth="1" strokeDasharray="2 2" />
+      <path d="M98 100 L22 160 L34 168 L98 132 Z" />
+      <path d="M142 100 L218 160 L206 168 L142 132 Z" />
+      <path d="M98 184 L72 220 L92 218 L106 198 Z" />
+      <path d="M142 184 L168 220 L148 218 L134 198 Z" />
+      <circle cx="120" cy="92" r="3" />
+    </>
+  ),
+  // C-UAS : petit panneau compact, faisceau étroit balayant l'horizon,
+  // monté sur véhicule léger ou shelter — détection drone à courte portée.
+  cuas: (
+    <>
+      <line
+        x1="120"
+        y1="22"
+        x2="120"
+        y2="228"
+        strokeWidth="1"
+        strokeDasharray="2 5"
+      />
+      <path d="M100 36 L140 32 L144 80 L96 84 Z" />
+      <line x1="104" y1="48" x2="138" y2="44" strokeWidth="1" />
+      <line x1="104" y1="60" x2="139" y2="56" strokeWidth="1" />
+      <line x1="104" y1="72" x2="140" y2="68" strokeWidth="1" />
+      <path d="M150 30 A40 40 0 0 1 158 60" strokeDasharray="3 4" />
+      <path d="M158 24 A52 52 0 0 1 170 64" strokeDasharray="3 4" />
+      <path d="M120 84 L120 130" strokeWidth="2" />
+      <rect x="68" y="132" width="104" height="44" rx="4" />
+      <line x1="68" y1="154" x2="172" y2="154" strokeWidth="1" />
+      <circle cx="88" cy="190" r="10" />
+      <circle cx="152" cy="190" r="10" />
+      <line x1="60" y1="208" x2="180" y2="208" strokeWidth="1" />
+    </>
+  ),
+};
+
 export function SystemSchematic({
   slug,
   className = "",
@@ -689,7 +859,15 @@ export function SystemSchematic({
   className?: string;
   live?: boolean;
 }) {
-  const content = SCHEMATICS[slug];
+  let content = SCHEMATICS[slug];
+  if (!content) {
+    // Repli par rôle radar — évite un rendu vide sur la X-Ray quand la
+    // schématique fiche n'a pas encore été dessinée.
+    const system = SYSTEMS_BY_SLUG[slug];
+    if (system?.category === "radar" && system.radarRole) {
+      content = RADAR_ROLE_SCHEMATICS[system.radarRole];
+    }
+  }
   if (!content) return null;
   return (
     <svg

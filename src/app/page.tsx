@@ -53,8 +53,9 @@ export default function Home() {
                 Derrière chaque système de défense : un coût réel, un
                 financement, une chaîne industrielle, une dépendance
                 géopolitique, un régime d'export. Panoplie rend cette réalité
-                lisible à partir de sources ouvertes — drones, énergie dirigée
-                et aviation de combat, documentés et comparables.
+                lisible à partir de sources ouvertes — drones, énergie dirigée,
+                aviation de combat, missiles et radars, documentés et
+                comparables.
               </p>
               <div className="mt-7 flex flex-wrap items-center gap-4">
                 <Stamp tone="accent" rotate={-3}>

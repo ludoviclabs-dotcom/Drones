@@ -1,13 +1,14 @@
 // Modèle de données — plateforme d'intelligence sur les systèmes de défense.
 // L'entité de base est un « système » doté d'une catégorie. Le catalogue couvre
-// drones, énergie dirigée, aviation de combat et missiles ; le modèle reste
-// générique pour l'extension future (sol-air, sous-marins, spatial).
+// drones, énergie dirigée, aviation de combat, missiles et radars ; le modèle
+// reste générique pour l'extension future (sous-marins, spatial).
 
 export type SystemCategory =
   | "drone"
   | "directed-energy"
   | "combat-aircraft"
-  | "missile";
+  | "missile"
+  | "radar";
 
 export type DroneClass =
   | "MALE"
@@ -32,6 +33,24 @@ export type CombatAircraftClass = "gen-4" | "gen-4-5" | "gen-5" | "gen-6";
  * tagline et l'éditorial portent la lecture multi-emploi.
  */
 export type MissileRole = "AAM" | "ASM" | "SSM" | "SAM" | "ARM";
+
+/**
+ * Rôle d'un radar — la grille Panoplie. « Alerte avancée » couvre la veille
+ * stratégique longue portée ; « multi-mission » couvre la surveillance GBAD
+ * fusionnant détection, suivi et engagement quality ; « naval-mfr » désigne
+ * les radars navals multifonctions à panneaux fixes ; « BMD » les capteurs
+ * dédiés à la défense antimissile balistique ; « aéroporté-AESA » les radars
+ * de chasse et d'AEW ; « C-UAS » les radars spécialisés contre drones.
+ * Les radars vraiment multi-capteurs (couplage actif/passif/EO-IR) restent
+ * en multi-mission ; la fusion est décrite dans l'éditorial.
+ */
+export type RadarRole =
+  | "alerte-avancee"
+  | "multi-mission"
+  | "naval-mfr"
+  | "bmd"
+  | "aeroporte-aesa"
+  | "cuas";
 
 /** Modes d'acquisition — la grille de lecture qui relie les cinq briques. */
 export type AcquisitionMode =
@@ -131,6 +150,14 @@ export interface DefenseSystem {
   combatAircraftClass?: CombatAircraftClass;
   /** Rôle principal — renseigné pour le domaine « missile ». */
   missileRole?: MissileRole;
+  /** Rôle radar — renseigné pour le domaine « radar ». */
+  radarRole?: RadarRole;
+  /**
+   * Cadres d'intégration réseau — NATINAMDS, IBCS, NASAMS, SAMP/T, Iron Dome,
+   * Aegis. Champ transversal : un radar y siège comme capteur, un missile
+   * comme effecteur ; permet de rendre la lecture C2 commune au catalogue.
+   */
+  integrationFrameworks?: string[];
   /** Génération revendiquée par l'industriel ou la nation, si elle diffère. */
   claimedGeneration?: string;
   classLabel: string;

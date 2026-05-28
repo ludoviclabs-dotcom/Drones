@@ -85,6 +85,33 @@ const EMBLEMS: Record<SystemCategory, ReactNode> = {
       <line x1="70" y1="86" x2="64" y2="90" strokeWidth="1" />
     </>
   ),
+  // Radar — panneau AESA incliné sur mât, faisceau d'arcs concentriques
+  // partant du panneau, base avec véhicule porteur stylisé. Axe vertical
+  // pointillé comme les autres emblèmes.
+  radar: (
+    <>
+      <line
+        x1="50"
+        y1="6"
+        x2="50"
+        y2="92"
+        strokeWidth="1"
+        strokeDasharray="2 4"
+      />
+      <path d="M30 22 L70 18 L66 50 L34 54 Z" />
+      <line x1="36" y1="28" x2="64" y2="24" strokeWidth="1" />
+      <line x1="36" y1="36" x2="64" y2="32" strokeWidth="1" />
+      <line x1="36" y1="44" x2="64" y2="40" strokeWidth="1" />
+      <path d="M50 54 L50 70" strokeWidth="1.6" />
+      <path d="M76 18 A38 38 0 0 1 80 38" strokeDasharray="3 4" />
+      <path d="M82 14 A48 48 0 0 1 88 42" strokeDasharray="3 4" />
+      <path d="M88 10 A58 58 0 0 1 96 46" strokeDasharray="3 4" />
+      <rect x="32" y="70" width="36" height="14" rx="2" />
+      <circle cx="40" cy="86" r="3" />
+      <circle cx="60" cy="86" r="3" />
+      <line x1="20" y1="92" x2="80" y2="92" strokeWidth="1" />
+    </>
+  ),
 };
 
 export function DomainEmblem({

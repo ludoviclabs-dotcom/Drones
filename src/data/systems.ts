@@ -52,6 +52,21 @@ import { gmlrs } from "./systems/gmlrs";
 import { camm } from "./systems/camm";
 import { irisTSlm } from "./systems/iris-t-slm";
 import { thaad } from "./systems/thaad";
+import { gm200 } from "./systems/gm200";
+import { gm400Alpha } from "./systems/gm400-alpha";
+import { spy6 } from "./systems/spy-6";
+import { anTpy2 } from "./systems/an-tpy-2";
+import { ltamds } from "./systems/ltamds";
+import { elm2084Mmr } from "./systems/elm-2084-mmr";
+import { ecrsMk2 } from "./systems/ecrs-mk2";
+import { giraffe4a } from "./systems/giraffe-4a";
+import { seaFire } from "./systems/sea-fire";
+import { smartLMm } from "./systems/smart-l-mm";
+import { rat31dl } from "./systems/rat-31dl";
+import { greenPine } from "./systems/green-pine";
+import { mfStar } from "./systems/mf-star";
+import { anApg81 } from "./systems/an-apg-81";
+import { kurfs } from "./systems/kurfs";
 
 export const systems: DefenseSystem[] = [
   mq9Reaper,
@@ -107,6 +122,21 @@ export const systems: DefenseSystem[] = [
   camm,
   irisTSlm,
   thaad,
+  gm200,
+  gm400Alpha,
+  spy6,
+  anTpy2,
+  ltamds,
+  elm2084Mmr,
+  ecrsMk2,
+  giraffe4a,
+  seaFire,
+  smartLMm,
+  rat31dl,
+  greenPine,
+  mfStar,
+  anApg81,
+  kurfs,
 ];
 
 export const SYSTEMS_BY_SLUG: Record<string, DefenseSystem> = Object.fromEntries(

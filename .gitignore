@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# captures d'écran de vérification (outils MCP, screenshots ad hoc)
+/.playwright-mcp/
+/*.png

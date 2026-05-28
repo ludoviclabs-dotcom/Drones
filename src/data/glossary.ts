@@ -379,6 +379,77 @@ export const glossary: GlossaryTerm[] = [
     definition:
       "Nuage de combat. Architecture en réseau où chaque plateforme — chasseur, drone, satellite, navire — partage capteurs et effecteurs par liaisons de données. Concept structurant des programmes de 6e génération.",
   },
+  {
+    slug: "iamd",
+    term: "Défense aérienne et antimissile intégrée",
+    acronym: "IAMD",
+    category: "doctrine",
+    definition:
+      "Integrated Air and Missile Defense. Architecture qui fond la défense antiaérienne et antimissile dans un même réseau de capteurs, de commandement et d'effecteurs — un radar ne vaut, dans ce cadre, que par les boucles auxquelles il est connecté.",
+  },
+  {
+    slug: "ibcs",
+    term: "Système de commandement intégré",
+    acronym: "IBCS",
+    category: "doctrine",
+    definition:
+      "Integrated Battle Command System. C2 IAMD de l'US Army — fédère capteurs et tireurs hétérogènes sous une devise « any sensor, best weapon », en s'appuyant sur des nœuds A-Kit / B-Kit reliés à un réseau IFCN. Cœur de la doctrine AIAMD américaine.",
+  },
+  {
+    slug: "natinamds",
+    term: "NATINAMDS",
+    acronym: "NATINAMDS",
+    category: "doctrine",
+    definition:
+      "NATO Integrated Air and Missile Defence System. Cadre OTAN qui fédère les radars, les C2 et les effecteurs sol-air et air-air des alliés sous une même image aérienne reconnue, opérée en permanence depuis les CAOC. Successeur élargi du NATINADS.",
+  },
+  {
+    slug: "lpi",
+    term: "Faible probabilité d'interception",
+    acronym: "LPI",
+    category: "technique",
+    definition:
+      "Low Probability of Intercept. Techniques de forme d'onde et d'agilité de fréquence qui rendent un radar plus difficile à détecter par un récepteur d'alerte. Caractéristique revendiquée des AESA récents — rarement quantifiée publiquement.",
+  },
+  {
+    slug: "eccm",
+    term: "Contre-contre-mesures électroniques",
+    acronym: "ECCM",
+    category: "technique",
+    definition:
+      "Electronic Counter-Counter-Measures. Ensemble des dispositifs qui permettent à un radar de continuer à fonctionner sous brouillage — agilité de fréquence, sauts de PRF, formes d'onde résistantes, traitement Doppler avancé. Paramètres typiquement classifiés.",
+  },
+  {
+    slug: "trm",
+    term: "Module émission-réception",
+    acronym: "TRM",
+    category: "technique",
+    definition:
+      "Transmit-Receive Module. Brique de base d'un radar AESA — chaque module combine amplificateur de puissance, récepteur faible bruit, déphaseur. Le nombre, la technologie (GaAs, GaN) et la finesse de packaging déterminent la performance et le coût du radar.",
+  },
+  {
+    slug: "gan",
+    term: "Nitrure de gallium",
+    acronym: "GaN",
+    category: "technique",
+    definition:
+      "Gallium Nitride. Semiconducteur RF à grand gap, plus efficace et plus tolérant en chaleur que le GaAs traditionnel — meilleur rendement énergétique, puissance crête supérieure, sensibilité accrue. Devenu la référence pour les radars AESA modernes (TRM, EW).",
+  },
+  {
+    slug: "aewc",
+    term: "Alerte aérienne avancée",
+    acronym: "AEW&C",
+    category: "doctrine",
+    definition:
+      "Airborne Early Warning and Control. Plateforme aéroportée combinant radar longue portée, IFF, capteurs passifs et postes de contrôle — étend l'horizon radar bien au-delà de la courbure terrestre, et sert de relais C2 dans l'image aérienne intégrée.",
+  },
+  {
+    slug: "wassenaar",
+    term: "Arrangement de Wassenaar",
+    category: "juridique",
+    definition:
+      "Régime multilatéral de contrôle des exportations d'armes conventionnelles et de biens et technologies à double usage, signé en 1996. Cadre les transferts de radars, capteurs avancés et composants critiques entre 42 États participants — distinct de l'ITAR et du MTCR.",
+  },
 ];
 
 export const GLOSSARY_BY_SLUG: Record<string, GlossaryTerm> = Object.fromEntries(

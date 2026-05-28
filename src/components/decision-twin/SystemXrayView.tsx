@@ -42,7 +42,13 @@ export function SystemXrayView({
 
   const wireframeSpec = WIREFRAME_3D_SPECS[system.slug];
   const hasGlb = GLB_AVAILABLE_SLUGS.has(system.slug);
-  const has3D = Boolean(wireframeSpec);
+  // Le bouton « Vue 3D » apparaît dès qu'une représentation 3D existe — soit
+  // wireframe procédural, soit asset GLB Blender. Les radars n'ont que des GLB.
+  const has3D = Boolean(wireframeSpec) || hasGlb;
+  // Le sous-dossier GLB dépend de la catégorie : aviation de combat dans
+  // /models/aviation, radars dans /models/radars, autres catégories pourront
+  // être ajoutées au fur et à mesure des modèles disponibles.
+  const glbDir = system.category === "radar" ? "radars" : "aviation";
 
   const filteredNodes = useMemo(() => {
     if (activeLayer === "all") return scenario.nodes;
@@ -147,10 +153,11 @@ export function SystemXrayView({
             {has3D && viewMode === "3d" ? (
               <SystemXray3DView
                 spec={wireframeSpec}
-                glbPath={hasGlb ? `/models/aviation/${system.slug}.glb` : undefined}
+                glbPath={hasGlb ? `/models/${glbDir}/${system.slug}.glb` : undefined}
                 nodes={filteredNodes}
                 selectedNodeId={selectedNode?.id}
                 onSelectNode={(node) => setSelectedNodeId(node.id)}
+                modelType={system.category === "radar" ? "radar" : "aircraft"}
               />
             ) : (
               <SystemXraySchematic

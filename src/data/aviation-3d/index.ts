@@ -8,13 +8,15 @@ export const WIREFRAME_3D_SPECS: Record<string, Wireframe3DSpec> = {
 };
 
 /**
- * Slugs pour lesquels un asset GLB Blender est disponible dans
- * public/models/aviation/<slug>.glb.
+ * Slugs pour lesquels un asset GLB Blender est disponible. Le chemin physique
+ * dépend de la catégorie du système : aviation de combat dans
+ * `public/models/aviation/<slug>.glb`, radars dans `public/models/radars/<slug>.glb`.
  * Ajouter ici uniquement après avoir généré et commité le fichier .glb.
  */
 export const GLB_AVAILABLE_SLUGS = new Set<string>([
   "rafale", // public/models/aviation/rafale.glb (~28 KB, Draco)
   "f-35", // public/models/aviation/f-35.glb (15 KB, Draco)
+  "sea-fire", // public/models/radars/sea-fire.glb (~21 KB, Draco)
 ]);
 
 export type { Wireframe3DSpec, Point3D, Segment3D } from "./types";

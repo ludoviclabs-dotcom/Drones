@@ -178,25 +178,37 @@ function Hotspot({
  * L'un des deux doit être fourni ; si glbPath est fourni sans spec,
  * le Suspense affiche un état de chargement neutre.
  */
+// Paramètres caméra par type de modèle. Les chasseurs sont allongés
+// horizontalement (silhouette plan trois-quarts), les radars sont des
+// structures verticales compactes (superstructure + mât) — on recule la
+// caméra et on l'élève légèrement pour cadrer l'ensemble.
+const CAMERA_PRESETS = {
+  aircraft: { position: [3.8, 2.6, 4.1] as [number, number, number], fov: 22, minDist: 3.5, maxDist: 10 },
+  radar: { position: [6.2, 4.2, 6.6] as [number, number, number], fov: 24, minDist: 4.5, maxDist: 14 },
+} as const;
+
 export function SystemXray3DView({
   spec,
   glbPath,
   nodes,
   selectedNodeId,
   onSelectNode,
+  modelType = "aircraft",
 }: {
   spec?: Wireframe3DSpec;
   glbPath?: string;
   nodes: DecisionTwinNode[];
   selectedNodeId?: string;
   onSelectNode: (node: DecisionTwinNode) => void;
+  modelType?: keyof typeof CAMERA_PRESETS;
 }) {
+  const cam = CAMERA_PRESETS[modelType];
   return (
     <div className="relative aspect-square w-full overflow-hidden border border-line bg-surface">
       {/* fov réduit (~110mm équivalent) : focale longue → moins de distorsion
           du nez, silhouette plus proche d'une vue plan-trois-quart industrielle.
           Caméra reculée en conséquence pour conserver le cadrage. */}
-      <Canvas camera={{ position: [3.8, 2.6, 4.1], fov: 22 }}>
+      <Canvas camera={{ position: cam.position, fov: cam.fov }}>
         <color attach="background" args={["#16150f"]} />
 
         {/* Éclairage X-Ray premium :
@@ -229,8 +241,8 @@ export function SystemXray3DView({
 
         <OrbitControls
           enablePan={false}
-          minDistance={3.5}
-          maxDistance={10}
+          minDistance={cam.minDist}
+          maxDistance={cam.maxDist}
           enableDamping
           dampingFactor={0.1}
         />

@@ -17,6 +17,7 @@ export const GLB_AVAILABLE_SLUGS = new Set<string>([
   "rafale", // public/models/aviation/rafale.glb (~28 KB, Draco)
   "f-35", // public/models/aviation/f-35.glb (15 KB, Draco)
   "sea-fire", // public/models/radars/sea-fire.glb (~21 KB, Draco)
+  "gm400-alpha", // public/models/radars/gm400-alpha.glb (~17 KB, Draco)
 ]);
 
 export type { Wireframe3DSpec, Point3D, Segment3D } from "./types";

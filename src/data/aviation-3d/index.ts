@@ -21,6 +21,8 @@ export const GLB_AVAILABLE_SLUGS = new Set<string>([
   "an-tpy-2", // public/models/radars/an-tpy-2.glb (~27 KB, Draco) — BMD X-band
   "giraffe-4a", // public/models/radars/giraffe-4a.glb (~13 KB, Draco) — mât télescopique
   "ltamds", // public/models/radars/ltamds.glb (~20 KB, Draco) — 3 panneaux 360°
+  "meteor", // public/models/missiles/meteor.glb (~13 KB, Draco) — AAM ramjet MBDA
+  "scalp-storm-shadow", // public/models/missiles/scalp-storm-shadow.glb (~7 KB, Draco) — cruise stealth
 ]);
 
 export type { Wireframe3DSpec, Point3D, Segment3D } from "./types";

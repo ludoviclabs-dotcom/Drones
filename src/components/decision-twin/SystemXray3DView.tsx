@@ -180,11 +180,13 @@ function Hotspot({
  */
 // Paramètres caméra par type de modèle. Les chasseurs sont allongés
 // horizontalement (silhouette plan trois-quarts), les radars sont des
-// structures verticales compactes (superstructure + mât) — on recule la
-// caméra et on l'élève légèrement pour cadrer l'ensemble.
+// structures verticales compactes (superstructure + mât), les missiles
+// sont très allongés sur un axe (long et fins) — pour chaque type, on
+// ajuste la position, l'élévation et le fov.
 const CAMERA_PRESETS = {
   aircraft: { position: [3.8, 2.6, 4.1] as [number, number, number], fov: 22, minDist: 3.5, maxDist: 10 },
   radar: { position: [6.2, 4.2, 6.6] as [number, number, number], fov: 24, minDist: 4.5, maxDist: 14 },
+  missile: { position: [3.6, 2.0, 3.6] as [number, number, number], fov: 26, minDist: 3.0, maxDist: 10 },
 } as const;
 
 export function SystemXray3DView({

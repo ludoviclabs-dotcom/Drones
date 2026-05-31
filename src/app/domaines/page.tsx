@@ -7,7 +7,7 @@ import { DomainEmblem } from "@/components/domain-emblem";
 export const metadata: Metadata = {
   title: "Domaines",
   description:
-    "Les domaines d'analyse de Panoplie — drones, énergie dirigée, aviation de combat — à grille de lecture constante.",
+    "Les domaines d'analyse de Panoplie — drones, énergie dirigée, aviation de combat, missiles et bâtiments navals — à grille de lecture constante.",
 };
 
 export default function DomainesPage() {

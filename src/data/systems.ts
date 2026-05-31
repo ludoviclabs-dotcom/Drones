@@ -67,6 +67,12 @@ import { greenPine } from "./systems/green-pine";
 import { mfStar } from "./systems/mf-star";
 import { anApg81 } from "./systems/an-apg-81";
 import { kurfs } from "./systems/kurfs";
+import { charlesDeGaulle } from "./systems/charles-de-gaulle";
+import { fremmFrance } from "./systems/fremm-france";
+import { fdiAmiralRonarch } from "./systems/fdi-amiral-ronarch";
+import { gowindCorvette } from "./systems/gowind-corvette";
+import { scorpene } from "./systems/scorpene";
+import { opv87 } from "./systems/opv-87";
 
 export const systems: DefenseSystem[] = [
   mq9Reaper,
@@ -137,6 +143,12 @@ export const systems: DefenseSystem[] = [
   mfStar,
   anApg81,
   kurfs,
+  charlesDeGaulle,
+  fremmFrance,
+  fdiAmiralRonarch,
+  gowindCorvette,
+  scorpene,
+  opv87,
 ];
 
 export const SYSTEMS_BY_SLUG: Record<string, DefenseSystem> = Object.fromEntries(

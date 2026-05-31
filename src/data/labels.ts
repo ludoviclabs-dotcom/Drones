@@ -7,6 +7,7 @@ import type {
   Grade,
   MissileRole,
   RadarRole,
+  NavalVesselClass,
   Reliability,
   RoadmapHorizon,
   ScoreKey,
@@ -49,6 +50,7 @@ export const CATEGORY_LABELS: Record<SystemCategory, string> = {
   "combat-aircraft": "Aviation de combat",
   missile: "Missiles",
   radar: "Radars",
+  "naval-vessel": "Bâtiments navals",
 };
 
 export const GENERATION_LABELS: Record<CombatAircraftClass, string> = {
@@ -94,6 +96,30 @@ export const RADAR_ROLE_BLURBS: Record<RadarRole, string> = {
   "aeroporte-aesa":
     "AESA de chasse, AEW&C et SAR/GMTI — fusion capteurs, EW/EA et désignation d'objectif.",
   cuas: "Détection de petites cibles et drones — résolution élevée, cadence de revisite forte.",
+};
+
+export const NAVAL_VESSEL_LABELS: Record<NavalVesselClass, string> = {
+  "porte-avions": "Porte-avions",
+  fregate: "Frégate",
+  corvette: "Corvette",
+  "sous-marin": "Sous-marin",
+  patrouilleur: "Patrouilleur",
+  amphibie: "Bâtiment amphibie",
+};
+
+export const NAVAL_VESSEL_BLURBS: Record<NavalVesselClass, string> = {
+  "porte-avions":
+    "Projection aéronavale, C2, groupe aérien embarqué et dépendances MCO lourdes.",
+  fregate:
+    "Escorte de premier rang, ASM/AAW/ASuW, capteurs, CMS, VLS et hélicoptère.",
+  corvette:
+    "Combat littoral et export : format compact, armement dense, endurance bornée.",
+  "sous-marin":
+    "Déni d'accès, discrétion acoustique, capteurs sous-marins, torpilles et missiles.",
+  patrouilleur:
+    "Présence souveraine, police maritime, ZEE et rapport coût/effet en basse intensité.",
+  amphibie:
+    "Projection de forces, commandement, aviation tournante, chalands et missions duales.",
 };
 
 export const SCORE_LABELS: Record<ScoreKey, string> = {

@@ -12,9 +12,10 @@ const OPTIONS: { value: DomainValue; label: string }[] = [
   { value: "combat-aircraft", label: CATEGORY_LABELS["combat-aircraft"] },
   { value: "missile", label: CATEGORY_LABELS.missile },
   { value: "radar", label: CATEGORY_LABELS.radar },
+  { value: "naval-vessel", label: CATEGORY_LABELS["naval-vessel"] },
 ];
 
-/** Jeu de puces de filtrage par domaine — drones, énergie dirigée, aviation. */
+/** Jeu de puces de filtrage par domaine — catalogue Panoplie complet. */
 export function DomainChips({
   value,
   onChange,

@@ -680,6 +680,81 @@ const SCHEMATICS: Record<string, ReactNode> = {
       <circle cx="120" cy="22" r="2" />
     </>
   ),
+  "charles-de-gaulle": (
+    <>
+      <line x1="120" y1="10" x2="120" y2="230" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 12 C146 26 162 70 162 156 C162 196 146 222 120 230 C94 222 78 196 78 156 C78 70 94 26 120 12 Z" />
+      <path d="M93 72 L151 45 L156 72 L112 98 L112 190 L93 190 Z" />
+      <path d="M126 98 L152 112 L152 178 L126 190 Z" />
+      <rect x="134" y="90" width="18" height="46" />
+      <path d="M141 70 L154 86 L132 86 Z" />
+      <line x1="90" y1="118" x2="154" y2="82" strokeWidth="1" />
+      <line x1="94" y1="146" x2="152" y2="112" strokeWidth="1" />
+      <line x1="82" y1="198" x2="158" y2="198" strokeWidth="1" />
+    </>
+  ),
+  "fremm-france": (
+    <>
+      <line x1="120" y1="18" x2="120" y2="224" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 20 C137 34 146 72 146 166 L136 216 L104 216 L94 166 C94 72 103 34 120 20 Z" />
+      <path d="M102 152 L138 152 L134 196 L106 196 Z" />
+      <rect x="102" y="78" width="36" height="34" />
+      <path d="M108 58 L132 58 L138 78 L102 78 Z" />
+      <path d="M114 40 L126 40 L130 58 L110 58 Z" />
+      <line x1="96" y1="128" x2="144" y2="128" strokeWidth="1" />
+      <circle cx="120" cy="176" r="11" />
+    </>
+  ),
+  "fdi-amiral-ronarch": (
+    <>
+      <line x1="120" y1="18" x2="120" y2="224" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 20 C136 34 146 76 146 162 L136 216 L104 216 L94 162 C94 76 104 34 120 20 Z" />
+      <path d="M101 142 L139 142 L133 194 L107 194 Z" />
+      <path d="M102 72 L138 72 L134 114 L106 114 Z" />
+      <path d="M112 42 L128 42 L136 72 L104 72 Z" />
+      <rect x="111" y="82" width="18" height="20" />
+      <path d="M96 118 L144 118" strokeWidth="1" />
+      <path d="M108 54 L132 54 M108 62 L132 62" strokeWidth="1" />
+    </>
+  ),
+  "gowind-corvette": (
+    <>
+      <line x1="120" y1="26" x2="120" y2="216" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 28 C135 42 143 76 143 156 L134 210 L106 210 L97 156 C97 76 105 42 120 28 Z" />
+      <rect x="103" y="84" width="34" height="34" />
+      <path d="M110 62 L130 62 L137 84 L103 84 Z" />
+      <path d="M107 142 L133 142 L130 190 L110 190 Z" />
+      <line x1="100" y1="124" x2="140" y2="124" strokeWidth="1" />
+      <circle cx="120" cy="166" r="9" />
+      <path d="M112 50 L128 50" strokeWidth="1" />
+    </>
+  ),
+  scorpene: (
+    <>
+      <line x1="120" y1="22" x2="120" y2="218" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 24 C137 32 146 72 146 118 C146 164 137 206 120 216 C103 206 94 164 94 118 C94 72 103 32 120 24 Z" />
+      <path d="M108 84 L132 84 L136 116 L104 116 Z" />
+      <path d="M98 132 L70 144 L96 150 Z" />
+      <path d="M142 132 L170 144 L144 150 Z" />
+      <path d="M104 198 L78 216 L112 208 Z" />
+      <path d="M136 198 L162 216 L128 208 Z" />
+      <line x1="108" y1="106" x2="132" y2="106" strokeWidth="1" />
+      <ellipse cx="120" cy="30" rx="9" ry="4" />
+    </>
+  ),
+  "opv-87": (
+    <>
+      <line x1="120" y1="24" x2="120" y2="220" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 26 C134 40 143 78 143 164 L134 214 L106 214 L97 164 C97 78 106 40 120 26 Z" />
+      <path d="M102 142 L138 142 L132 198 L108 198 Z" />
+      <rect x="102" y="86" width="36" height="32" />
+      <path d="M108 66 L132 66 L138 86 L102 86 Z" />
+      <line x1="107" y1="118" x2="133" y2="118" strokeWidth="1" />
+      <path d="M112 52 L128 52 M120 42 L120 66" strokeWidth="1" />
+      <path d="M104 162 L136 162" strokeWidth="1" />
+      <rect x="110" y="174" width="20" height="12" />
+    </>
+  ),
 };
 
 // Silhouettes par rôle radar — appliquées en repli quand la fiche n'a pas de

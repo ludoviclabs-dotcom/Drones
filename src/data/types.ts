@@ -1,14 +1,15 @@
 // Modèle de données — plateforme d'intelligence sur les systèmes de défense.
 // L'entité de base est un « système » doté d'une catégorie. Le catalogue couvre
-// drones, énergie dirigée, aviation de combat, missiles et radars ; le modèle
-// reste générique pour l'extension future (sous-marins, spatial).
+// drones, énergie dirigée, aviation de combat, missiles, radars et bâtiments
+// navals ; le modèle reste générique pour l'extension future (spatial).
 
 export type SystemCategory =
   | "drone"
   | "directed-energy"
   | "combat-aircraft"
   | "missile"
-  | "radar";
+  | "radar"
+  | "naval-vessel";
 
 export type DroneClass =
   | "MALE"
@@ -51,6 +52,15 @@ export type RadarRole =
   | "bmd"
   | "aeroporte-aesa"
   | "cuas";
+
+/** Famille de bâtiment naval — lecture plateforme + mission, pas simple tonnage. */
+export type NavalVesselClass =
+  | "porte-avions"
+  | "fregate"
+  | "corvette"
+  | "sous-marin"
+  | "patrouilleur"
+  | "amphibie";
 
 /** Modes d'acquisition — la grille de lecture qui relie les cinq briques. */
 export type AcquisitionMode =
@@ -158,6 +168,8 @@ export interface DefenseSystem {
    * comme effecteur ; permet de rendre la lecture C2 commune au catalogue.
    */
   integrationFrameworks?: string[];
+  /** Famille navale — renseignée pour le domaine « bâtiments navals ». */
+  navalVesselClass?: NavalVesselClass;
   /** Génération revendiquée par l'industriel ou la nation, si elle diffère. */
   claimedGeneration?: string;
   classLabel: string;

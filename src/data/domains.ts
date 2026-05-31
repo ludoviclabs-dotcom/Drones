@@ -50,4 +50,12 @@ export const DOMAINS: DomainInfo[] = [
     blurb:
       "Alerte avancée, multi-mission, naval, BMD, aéroporté, C-UAS — des capteurs lus comme des nœuds de réseau, pas comme des produits.",
   },
+  {
+    category: "naval-vessel",
+    label: "Bâtiments navals",
+    href: "/batiments-navals",
+    cta: "Ouvrir le domaine",
+    blurb:
+      "Porte-avions, frégates, corvettes, sous-marins et patrouilleurs — des architectures de mission, pas seulement des coques.",
+  },
 ];

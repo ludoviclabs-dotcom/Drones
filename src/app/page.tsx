@@ -54,7 +54,8 @@ export default function Home() {
                 financement, une chaîne industrielle, une dépendance
                 géopolitique, un régime d'export. Panoplie rend cette réalité
                 lisible à partir de sources ouvertes — drones, énergie dirigée,
-                aviation de combat, missiles et radars, documentés et
+                aviation de combat, missiles, radars et bâtiments navals,
+                documentés et
                 comparables.
               </p>
               <div className="mt-7 flex flex-wrap items-center gap-4">
@@ -158,37 +159,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="border-t border-line py-16">
-        <div className="relative border border-line bg-panel p-8 sm:p-10">
-          <RegistrationMarks />
-          <div className="grid gap-8 md:grid-cols-[1.6fr_1fr] md:items-center">
-            <div>
-              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
-                Nouveau domaine
-              </span>
-              <h2 className="mt-3 font-serif text-3xl leading-tight text-ink">
-                Énergie dirigée
-              </h2>
-              <p className="mt-3 max-w-xl font-serif text-base leading-relaxed text-ink-dim">
-                Les lasers haute énergie promettent un coût marginal par tir
-                très faible face aux drones et aux menaces saturantes. Panoplie
-                les analyse comme des effecteurs de défense multicouche —
-                puissants, mais dépendants de la météo, de la ligne de visée,
-                de l'énergie disponible et de leur intégration.
-              </p>
-            </div>
-            <div>
-              <Link
-                href="/energie-dirigee"
-                className="inline-flex h-11 items-center justify-center border border-accent px-5 font-mono text-xs uppercase tracking-[0.16em] text-accent transition-colors hover:bg-accent hover:text-bg"
-              >
-                Ouvrir le domaine →
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <section
         id="catalogue"
         className="relative scroll-mt-24 overflow-hidden border-t border-line py-16"
@@ -198,7 +168,7 @@ export default function Home() {
           <SectionMarker
             index="—"
             label="Catalogue des systèmes"
-            blurb={`${systems.length} systèmes contrastés — du drone MALE à la munition rôdeuse, du laser haute énergie au chasseur de combat.`}
+            blurb={`${systems.length} systèmes contrastés — du drone MALE à la munition rôdeuse, du laser haute énergie au chasseur de combat, du missile au bâtiment naval.`}
           />
           <div className="mt-8">
             <CatalogueFilter

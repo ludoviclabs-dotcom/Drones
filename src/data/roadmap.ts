@@ -10,7 +10,7 @@ export const roadmap: RoadmapItem[] = [
   {
     title: "Élargir le catalogue",
     detail:
-      "Quinze systèmes documentés. Prochaines cibles : drones FPV militarisés, HALE et UCAV furtifs chinois, drone naval à voilure tournante.",
+      "Catalogue élargi aux drones, lasers, aviation, missiles et bâtiments navals. Prochaines cibles : systèmes de combat naval, sol-air et spatial.",
     horizon: "en-cours",
   },
   {
@@ -44,9 +44,9 @@ export const roadmap: RoadmapItem[] = [
     horizon: "prochain",
   },
   {
-    title: "Au-delà des drones",
+    title: "Consolider le domaine naval",
     detail:
-      "Les domaines énergie dirigée et aviation de combat sont ouverts. Étendre ensuite le modèle aux systèmes sol-air et aux missiles — à grille de lecture constante.",
+      "Le socle bâtiments navals est ouvert. Prochaines fiches : destroyers AAW/IAMD, bâtiments amphibies, chasseurs de mines et systèmes Aegis/PAAMS/SETIS.",
     horizon: "exploratoire",
   },
 ];

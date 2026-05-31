@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getSystem, getSystemSlugs } from "@/data/systems";
-import { GENERATION_LABELS, MODE_LABELS } from "@/data/labels";
+import {
+  GENERATION_LABELS,
+  MODE_LABELS,
+  NAVAL_VESSEL_LABELS,
+} from "@/data/labels";
 import {
   AnalystNote,
   BrickSection,
@@ -65,6 +69,14 @@ export default async function SystemPage({
     { label: "Mise en service", value: system.introduced ?? "—" },
     ...(system.naval
       ? [{ label: "Navalisation", value: system.naval }]
+      : []),
+    ...(system.navalVesselClass
+      ? [
+          {
+            label: "Famille navale",
+            value: NAVAL_VESSEL_LABELS[system.navalVesselClass],
+          },
+        ]
       : []),
     { label: "Statut", value: system.status },
   ];

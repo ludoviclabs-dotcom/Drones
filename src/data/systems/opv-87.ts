@@ -19,6 +19,63 @@ export const opv87: DefenseSystem = {
     "Le bâtiment de souveraineté maritime : faible coût relatif, forte présence, mais combat limité.",
   summary:
     "L'OPV 87 représente la partie la moins spectaculaire mais essentielle du domaine naval : présence, police maritime, ZEE, lutte contre trafics, surveillance et assistance. Il est moins armé qu'une corvette, mais plus soutenable pour tenir la mer longtemps.\n\nPanoplie le traite comme une fiche de souveraineté, pas comme une frégate faible. La question centrale est le rapport coût-présence : combien de jours de mer, quelles missions, quel équipage, quel hélicoptère ou drone, quel armement minimal et quel soutien.",
+  navalProfile: {
+    platform: {
+      missions: ["presence"],
+      displacement: "≈ 1 650 t pour la famille OPV 87",
+      crew: "≈ 40 marins selon configuration",
+      endurance: "Patrouille hauturière longue durée",
+      aviation: ["plateforme hélicoptère", "drone ou embarcation selon client"],
+      notes:
+        "Patrouilleur de souveraineté : la valeur est le nombre de jours de mer, pas la densité missile.",
+    },
+    combatSystem: {
+      family: "autre",
+      cms: "Système de surveillance / conduite selon client",
+      tacticalLinks: ["liaisons nationales selon client"],
+      ballisticMissileDefense: false,
+      interoperabilityNotes:
+        "Interopérabilité centrée sur police maritime, ZEE, assistance et présence.",
+    },
+    sensors: {
+      radarPrimary: "Radar de surveillance surface / air selon configuration",
+      optronics: ["capteurs optroniques de surveillance"],
+    },
+    effectors: {
+      navalGuns: ["Canon moyen / léger selon client"],
+      ciws: ["armes légères"],
+      decoys: ["équipements de protection selon standard"],
+    },
+    propulsion: {
+      architecture: "CODAD",
+      primeMovers: ["Diesels"],
+      maxSpeed: "≈ 20+ noeuds selon profil",
+      notes:
+        "Architecture simple privilégiant coût de cycle, endurance et disponibilité.",
+    },
+    industrial: {
+      primeContractor: "Naval Group / Kership",
+      shipyards: ["Lorient", "Concarneau", "chantier client selon contrat"],
+      suppliers: [
+        { subsystem: "Plateforme", supplier: "Kership", country: "France" },
+        { subsystem: "Intégration", supplier: "Naval Group", country: "France" },
+        { subsystem: "Armement", supplier: "configuration client", country: "variable" },
+      ],
+    },
+    export: {
+      regimeSummary:
+        "Produit export de souveraineté maritime, moins sensible qu'une corvette de combat.",
+      itarExposure: "aucune",
+      politicalConstraints:
+        "La sensibilité augmente si le client ajoute missiles, capteurs militaires ou C2 avancé.",
+    },
+    sustainment: {
+      sustainmentNotes:
+        "MCO centré sur disponibilité, équipage réduit, pièces simples et entretien de flotte de présence.",
+      industrialRiskNotes:
+        "Risque principal : soutien local durable et standardisation entre unités.",
+    },
+  },
   keySpecs: [
     {
       label: "Longueur",

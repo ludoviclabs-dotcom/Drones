@@ -23,6 +23,8 @@ const comparable: ComparableSystem[] = systems.map((s) => ({
   combatAircraftClass: s.combatAircraftClass,
   claimedGeneration: s.claimedGeneration,
   naval: s.naval,
+  navalVesselClass: s.navalVesselClass,
+  navalProfile: s.navalProfile,
   country: s.country,
   manufacturer: s.manufacturer,
   acquisitionModes: s.acquisitionModes,

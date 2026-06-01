@@ -11,6 +11,7 @@ const SCOPE_LABELS: Record<ClaimScope, string> = {
   specs: "Caractéristiques",
   contraintes: "Contraintes physiques",
   versions: "Versions & standards",
+  "architecture-navale": "Architecture navale",
 };
 
 const STATUS_TOKEN: Record<ClaimStatus, string> = {

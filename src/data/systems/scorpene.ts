@@ -18,6 +18,64 @@ export const scorpene: DefenseSystem = {
     "Le sous-marin conventionnel qui vend autant de discrétion que de transfert industriel.",
   summary:
     "Le Scorpène est un sous-marin d'attaque conventionnel conçu pour l'export. Sa valeur Panoplie tient moins à une fiche de performances publiques qu'à trois variables : discrétion, système de combat et transfert industriel.\n\nLe sous-marin est un domaine où l'incertitude doit rester visible. Les performances acoustiques, capteurs précis, endurance opérationnelle et tactiques d'emploi ne sont pas des données publiques stables. La fiche privilégie donc les faits sourcés : programmes livrés, architecture générale, armement ouvertement annoncé, soutien et production locale.",
+  navalProfile: {
+    platform: {
+      missions: ["ASW", "ASuW", "presence"],
+      crew: "≈ 30 à 40 marins selon version",
+      endurance: "Endurance conventionnelle dépendante du profil et des options AIP / batteries",
+      notes:
+        "SSK export ; les performances acoustiques précises ne sont pas publiques et doivent rester hors champ.",
+    },
+    combatSystem: {
+      family: "autre",
+      cms: "SUBTICS",
+      tacticalLinks: ["liaisons et C2 selon client"],
+      ballisticMissileDefense: false,
+      interoperabilityNotes:
+        "Intégration dépendante du client, des armes retenues et de l'infrastructure de soutien.",
+    },
+    sensors: {
+      hullSonar: "Suite sonar intégrée selon standard",
+      towedSonar: "Options selon client",
+      esm: ["Mâts optroniques / ESM selon configuration"],
+      optronics: ["Périscopes / mâts optroniques selon standard"],
+    },
+    effectors: {
+      antiShipMissiles: ["Missiles antinavires selon client"],
+      antiSubWeapons: ["Torpilles lourdes"],
+      decoys: ["Leurres sous-marins selon configuration"],
+    },
+    propulsion: {
+      architecture: "diesel-electrique",
+      primeMovers: ["Diesels", "batteries", "AIP selon version"],
+      notes:
+        "La discrétion, les batteries et l'AIP éventuel sont plus déterminants que la vitesse publique.",
+    },
+    industrial: {
+      primeContractor: "Naval Group",
+      shipyards: ["Cherbourg", "chantiers locaux selon contrat"],
+      suppliers: [
+        { subsystem: "Système de combat", supplier: "Naval Group", country: "France" },
+        { subsystem: "Production locale", supplier: "chantier client", country: "variable" },
+        { subsystem: "Armes", supplier: "fournisseurs client", country: "variable" },
+      ],
+      transferOfTechnology:
+        "Transfert de technologie fréquent dans les contrats export Scorpène.",
+    },
+    export: {
+      regimeSummary:
+        "SSK export structurant ; le contrat vend autant la compétence sous-marine que la coque.",
+      itarExposure: "partielle",
+      politicalConstraints:
+        "Armes, batteries, AIP, chantier local et formation conditionnent l'effet réel.",
+    },
+    sustainment: {
+      sustainmentNotes:
+        "Soutien lourd : équipages, simulateurs, batteries, torpilles, grands carénages et infrastructure de base.",
+      industrialRiskNotes:
+        "Risque transféré vers la montée en compétence locale et la tenue du MCO sous-marin.",
+    },
+  },
   keySpecs: [
     {
       label: "Type",

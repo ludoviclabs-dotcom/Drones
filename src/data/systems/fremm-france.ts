@@ -19,6 +19,73 @@ export const fremmFrance: DefenseSystem = {
     "La frégate européenne de référence pour lire l'équilibre ASM, défense aérienne, frappe navale et export.",
   summary:
     "La FREMM française est un excellent cas Panoplie : même famille de plateforme, mais variantes et chargements très différents selon l'emploi. Les unités ASM privilégient la lutte sous-marine avec hélicoptère, sonar et torpilles ; les FREMM DA renforcent la défense aérienne.\n\nLe point analytique central est la cohérence système : Herakles, SETIS, CAPTAS-4, Aster, Exocet, MU90, MdCN selon configuration et soutien naval de premier rang. Une fiche FREMM doit donc distinguer famille, variante et standard.",
+  navalProfile: {
+    platform: {
+      missions: ["ASW", "AAW", "ASuW", "strike", "presence"],
+      displacement: "≈ 6 000 t",
+      crew: "≈ 108 à 145 marins selon standard",
+      endurance: "≈ 45 jours selon sources ouvertes",
+      aviation: ["NH90 Caïman Marine", "hélidrone selon évolutions"],
+      notes:
+        "Famille de frégates lourdes ; les variantes ASM et DA ne doivent pas être confondues.",
+    },
+    combatSystem: {
+      family: "SETIS",
+      cms: "SETIS",
+      tacticalLinks: ["Link 11/16", "liaisons OTAN / nationales selon standard"],
+      ballisticMissileDefense: false,
+      interoperabilityNotes:
+        "Architecture coopérative franco-italienne, adaptée en standards nationaux.",
+    },
+    sensors: {
+      radarPrimary: "Thales Herakles",
+      hullSonar: "Sonar de coque UMS 4110 selon version",
+      towedSonar: "CAPTAS-4",
+      esm: ["Suite guerre électronique selon standard Marine nationale"],
+    },
+    effectors: {
+      vlsType: "Sylver A43/A50/A70 selon unité",
+      vlsCells: "16 à 32 cellules selon variante",
+      sam: ["Aster 15/30"],
+      antiShipMissiles: ["Exocet MM40"],
+      antiSubWeapons: ["MU90", "NH90 Caïman Marine"],
+      navalGuns: ["76 mm"],
+      ciws: ["Narwhal / artillerie légère selon configuration"],
+      aviationWeapons: ["Hélicoptère ASM"],
+    },
+    propulsion: {
+      architecture: "CODLOG",
+      primeMovers: ["Turbine gaz", "diesels", "moteurs électriques"],
+      maxSpeed: "≈ 27 kt",
+      notes:
+        "CODLOG cohérent avec la mission ASM : discrétion électrique et vitesse de transit.",
+    },
+    industrial: {
+      primeContractor: "Naval Group / programme FREMM",
+      shipyards: ["Lorient"],
+      suppliers: [
+        { subsystem: "CMS", supplier: "Naval Group", country: "France" },
+        { subsystem: "Radar", supplier: "Thales", country: "France" },
+        { subsystem: "Sonar", supplier: "Thales", country: "France" },
+        { subsystem: "Missiles", supplier: "MBDA", country: "Europe" },
+      ],
+      localContentNotes:
+        "Programme coopératif initial, puis déclinaisons nationales France / Italie.",
+    },
+    export: {
+      regimeSummary:
+        "Famille exportable, mais chaque vente recompose missiles, capteurs, CMS et soutien.",
+      itarExposure: "partielle",
+      politicalConstraints:
+        "MdCN, Aster, Exocet, guerre électronique et sonar exigent un examen par standard.",
+    },
+    sustainment: {
+      sustainmentNotes:
+        "Soutien lourd de frégate de premier rang : sonar, turbines, missiles, logiciel et aviation embarquée.",
+      industrialRiskNotes:
+        "Variantes ASM/DA et standards export compliquent la comparaison directe.",
+    },
+  },
   keySpecs: [
     {
       label: "Déplacement",

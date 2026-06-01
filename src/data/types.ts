@@ -56,11 +56,130 @@ export type RadarRole =
 /** Famille de bâtiment naval — lecture plateforme + mission, pas simple tonnage. */
 export type NavalVesselClass =
   | "porte-avions"
+  | "destroyer"
   | "fregate"
   | "corvette"
   | "sous-marin"
   | "patrouilleur"
   | "amphibie";
+
+export type NavalMission =
+  | "AAW"
+  | "ASW"
+  | "ASuW"
+  | "strike"
+  | "amphibie"
+  | "projection"
+  | "presence"
+  | "MCM"
+  | "BMD";
+
+export type NavalCombatSystemFamily =
+  | "Aegis"
+  | "COMBATSS-21"
+  | "SETIS"
+  | "SCOMBA"
+  | "TACTICOS"
+  | "SAAM-ESD"
+  | "PAAMS"
+  | "9LV"
+  | "autre";
+
+export type NavalPropulsionArchitecture =
+  | "nucleaire"
+  | "CODAD"
+  | "CODLAG"
+  | "CODLOG"
+  | "IEP"
+  | "diesel-electrique"
+  | "AIP"
+  | "autre";
+
+export interface NavalPlatformProfile {
+  missions: NavalMission[];
+  displacement?: string;
+  crew?: string;
+  endurance?: string;
+  aviation?: string[];
+  notes?: string;
+}
+
+export interface NavalCombatSystemProfile {
+  family: NavalCombatSystemFamily;
+  cms: string;
+  baseline?: string;
+  tacticalLinks?: string[];
+  ballisticMissileDefense?: boolean;
+  interoperabilityNotes?: string;
+}
+
+export interface NavalSensorProfile {
+  radarPrimary?: string;
+  radarSecondary?: string[];
+  hullSonar?: string;
+  towedSonar?: string;
+  esm?: string[];
+  optronics?: string[];
+}
+
+export interface NavalEffectorProfile {
+  vlsType?: string;
+  vlsCells?: string;
+  sam?: string[];
+  antiShipMissiles?: string[];
+  antiSubWeapons?: string[];
+  navalGuns?: string[];
+  ciws?: string[];
+  decoys?: string[];
+  aviationWeapons?: string[];
+}
+
+export interface NavalPropulsionProfile {
+  architecture: NavalPropulsionArchitecture;
+  primeMovers?: string[];
+  maxSpeed?: string;
+  notes?: string;
+}
+
+export interface NavalIndustrialSupplier {
+  subsystem: string;
+  supplier: string;
+  country?: string;
+}
+
+export interface NavalIndustrialProfile {
+  primeContractor: string;
+  shipyards: string[];
+  suppliers?: NavalIndustrialSupplier[];
+  localContentNotes?: string;
+  transferOfTechnology?: string;
+}
+
+export interface NavalExportProfile {
+  regimeSummary?: string;
+  itarExposure?: "aucune" | "partielle" | "elevee";
+  reexportConstraints?: string;
+  politicalConstraints?: string;
+}
+
+export interface NavalSustainmentProfile {
+  unitCost?: string;
+  programCost?: string;
+  sustainmentNotes?: string;
+  refitPrograms?: string[];
+  industrialRiskNotes?: string;
+}
+
+export interface NavalStructuredProfile {
+  platform: NavalPlatformProfile;
+  combatSystem?: NavalCombatSystemProfile;
+  sensors?: NavalSensorProfile;
+  effectors?: NavalEffectorProfile;
+  propulsion?: NavalPropulsionProfile;
+  industrial?: NavalIndustrialProfile;
+  export?: NavalExportProfile;
+  sustainment?: NavalSustainmentProfile;
+}
 
 /** Modes d'acquisition — la grille de lecture qui relie les cinq briques. */
 export type AcquisitionMode =
@@ -170,6 +289,8 @@ export interface DefenseSystem {
   integrationFrameworks?: string[];
   /** Famille navale — renseignée pour le domaine « bâtiments navals ». */
   navalVesselClass?: NavalVesselClass;
+  /** Profil naval structuré — capteurs, CMS, effecteurs, propulsion, MCO et export. */
+  navalProfile?: NavalStructuredProfile;
   /** Génération revendiquée par l'industriel ou la nation, si elle diffère. */
   claimedGeneration?: string;
   classLabel: string;

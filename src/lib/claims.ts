@@ -7,7 +7,12 @@ import type {
 } from "@/data/types";
 import { systems } from "@/data/systems";
 
-export type ClaimScope = BrickKey | "specs" | "contraintes" | "versions";
+export type ClaimScope =
+  | BrickKey
+  | "specs"
+  | "contraintes"
+  | "versions"
+  | "architecture-navale";
 
 /** Une affirmation atomique du registre de preuves. */
 export interface Claim {
@@ -40,6 +45,7 @@ export function getAllClaims(): Claim[] {
       (ids ?? [])
         .map((id) => byId.get(id))
         .filter((s): s is SourceRef => Boolean(s));
+    const allSystemSources = system.sources;
 
     const base = {
       systemSlug: system.slug,
@@ -98,6 +104,55 @@ export function getAllClaims(): Claim[] {
         status: statusOf(indicator.confidence, indicator.status),
         sources: resolve(indicator.sources),
       });
+    }
+    if (system.navalProfile) {
+      const { platform, combatSystem, sensors, effectors, propulsion, industrial, export: exportProfile, sustainment } =
+        system.navalProfile;
+      const addNavalClaim = (label: string, value?: string | null) => {
+        if (!value) return;
+        claims.push({
+          ...base,
+          scope: "architecture-navale",
+          label,
+          value,
+          confidence: "moyenne",
+          status: "a-recouper",
+          sources: allSystemSources,
+        });
+      };
+      addNavalClaim("Mission navale", platform.missions.join(" · "));
+      addNavalClaim("Déplacement naval", platform.displacement);
+      addNavalClaim("CMS naval", combatSystem?.cms);
+      addNavalClaim("Radar principal", sensors?.radarPrimary);
+      addNavalClaim(
+        "Suite sonar",
+        [sensors?.hullSonar, sensors?.towedSonar].filter(Boolean).join(" · "),
+      );
+      addNavalClaim(
+        "Effecteurs navals",
+        [
+          effectors?.vlsCells,
+          effectors?.vlsType,
+          ...(effectors?.sam ?? []),
+          ...(effectors?.antiShipMissiles ?? []),
+          ...(effectors?.antiSubWeapons ?? []),
+        ]
+          .filter(Boolean)
+          .join(" · "),
+      );
+      addNavalClaim(
+        "Propulsion navale",
+        [propulsion?.architecture, ...(propulsion?.primeMovers ?? [])]
+          .filter(Boolean)
+          .join(" · "),
+      );
+      addNavalClaim("Maître d'oeuvre naval", industrial?.primeContractor);
+      addNavalClaim("Chantiers navals", industrial?.shipyards.join(" · "));
+      addNavalClaim("Régime export naval", exportProfile?.regimeSummary);
+      addNavalClaim(
+        "Soutien naval",
+        sustainment?.sustainmentNotes ?? sustainment?.industrialRiskNotes,
+      );
     }
   }
   return claims;

@@ -73,6 +73,16 @@ import { fdiAmiralRonarch } from "./systems/fdi-amiral-ronarch";
 import { gowindCorvette } from "./systems/gowind-corvette";
 import { scorpene } from "./systems/scorpene";
 import { opv87 } from "./systems/opv-87";
+import {
+  arleighBurkeFlightIii,
+  f110Bonifaz,
+  fremmCarloBergamini,
+  geraldRFord,
+  mistralPha,
+  queenElizabethCarrier,
+  type26Frigate,
+  virginiaBlockV,
+} from "./systems/naval-multinational";
 
 export const systems: DefenseSystem[] = [
   mq9Reaper,
@@ -149,6 +159,14 @@ export const systems: DefenseSystem[] = [
   gowindCorvette,
   scorpene,
   opv87,
+  mistralPha,
+  geraldRFord,
+  arleighBurkeFlightIii,
+  virginiaBlockV,
+  queenElizabethCarrier,
+  type26Frigate,
+  fremmCarloBergamini,
+  f110Bonifaz,
 ];
 
 export const SYSTEMS_BY_SLUG: Record<string, DefenseSystem> = Object.fromEntries(

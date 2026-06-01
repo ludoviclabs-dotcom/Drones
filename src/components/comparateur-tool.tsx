@@ -6,11 +6,19 @@ import type {
   AcquisitionMode,
   CombatAircraftClass,
   EditorialBlocks,
+  NavalStructuredProfile,
+  NavalVesselClass,
   Score,
   ScoreKey,
   SystemCategory,
 } from "@/data/types";
-import { GENERATION_LABELS, MODE_LABELS, SCORE_LABELS } from "@/data/labels";
+import {
+  GENERATION_LABELS,
+  MODE_LABELS,
+  NAVAL_MISSION_LABELS,
+  NAVAL_VESSEL_LABELS,
+  SCORE_LABELS,
+} from "@/data/labels";
 import { DomainChips, type DomainValue } from "./domain-filter";
 import { GradeBadge } from "./primitives";
 import { ScoreProfile } from "./score-profile";
@@ -28,6 +36,8 @@ export interface ComparableSystem {
   combatAircraftClass?: CombatAircraftClass;
   claimedGeneration?: string;
   naval?: string;
+  navalVesselClass?: NavalVesselClass;
+  navalProfile?: NavalStructuredProfile;
   country: string;
   manufacturer: string;
   acquisitionModes: AcquisitionMode[];
@@ -112,6 +122,8 @@ export function ComparateurTool({ systems }: { systems: ComparableSystem[] }) {
   const allAircraft =
     chosen.length > 0 &&
     chosen.every((s) => s.category === "combat-aircraft");
+  const allNaval =
+    chosen.length > 0 && chosen.every((s) => s.category === "naval-vessel");
 
   return (
     <div>
@@ -274,6 +286,88 @@ export function ComparateurTool({ systems }: { systems: ComparableSystem[] }) {
                       [
                         "Navalisation",
                         (s: ComparableSystem) => s.naval ?? "—",
+                      ],
+                    ] as const
+                  ).map(([label, accessor]) => (
+                    <tr key={label}>
+                      <th scope="row" className={`${ROW_HEAD} align-top`}>
+                        {label}
+                      </th>
+                      {chosen.map((system) => (
+                        <td
+                          key={system.slug}
+                          className="border border-line bg-panel px-4 py-3 font-serif text-sm leading-relaxed text-ink-dim"
+                        >
+                          {accessor(system)}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </>
+              ) : null}
+
+              {allNaval ? (
+                <>
+                  <GroupRow label="Architecture navale" span={span} />
+                  {(
+                    [
+                      [
+                        "Famille",
+                        (s: ComparableSystem) =>
+                          s.navalVesselClass
+                            ? NAVAL_VESSEL_LABELS[s.navalVesselClass]
+                            : "—",
+                      ],
+                      [
+                        "Mission",
+                        (s: ComparableSystem) =>
+                          s.navalProfile?.platform.missions
+                            .map((mission) => NAVAL_MISSION_LABELS[mission])
+                            .join(" · ") ?? "—",
+                      ],
+                      [
+                        "CMS / réseau",
+                        (s: ComparableSystem) =>
+                          [
+                            s.navalProfile?.combatSystem?.cms,
+                            s.navalProfile?.combatSystem?.baseline,
+                            ...(s.navalProfile?.combatSystem?.tacticalLinks ?? []),
+                          ]
+                            .filter(Boolean)
+                            .join(" · ") || "—",
+                      ],
+                      [
+                        "Capteurs",
+                        (s: ComparableSystem) =>
+                          [
+                            s.navalProfile?.sensors?.radarPrimary,
+                            s.navalProfile?.sensors?.hullSonar,
+                            s.navalProfile?.sensors?.towedSonar,
+                          ]
+                            .filter(Boolean)
+                            .join(" · ") || "—",
+                      ],
+                      [
+                        "Effecteurs",
+                        (s: ComparableSystem) =>
+                          [
+                            s.navalProfile?.effectors?.vlsCells,
+                            ...(s.navalProfile?.effectors?.sam ?? []),
+                            ...(s.navalProfile?.effectors?.antiShipMissiles ?? []),
+                            ...(s.navalProfile?.effectors?.antiSubWeapons ?? []),
+                          ]
+                            .filter(Boolean)
+                            .join(" · ") || "—",
+                      ],
+                      [
+                        "Propulsion / soutien",
+                        (s: ComparableSystem) =>
+                          [
+                            s.navalProfile?.propulsion?.architecture,
+                            s.navalProfile?.sustainment?.sustainmentNotes,
+                          ]
+                            .filter(Boolean)
+                            .join(" · ") || "—",
                       ],
                     ] as const
                   ).map(([label, accessor]) => (

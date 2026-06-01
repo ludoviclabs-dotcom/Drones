@@ -19,6 +19,69 @@ export const fdiAmiralRonarch: DefenseSystem = {
     "Une frégate compacte où la valeur militaire vient du Sea Fire, de SETIS, de la guerre ASM et de l'intégration numérique.",
   summary:
     "La FDI Amiral Ronarc'h est une frégate de défense et d'intervention pensée comme une plateforme compacte, numérisée et exportable. Elle associe le radar Sea Fire, le CMS SETIS, des missiles Aster, Exocet, MU90, des capteurs ASM et des liaisons de données.\n\nPour Panoplie, la FDI est le cas idéal du « moins de tonnage, plus d'intégration ». Elle permet de comparer une frégate moderne par densité de capteurs, automatisation, équipage réduit, export et montée de standard, plutôt que par taille seule.",
+  navalProfile: {
+    platform: {
+      missions: ["AAW", "ASW", "ASuW", "presence"],
+      displacement: "≈ 4 500 t",
+      crew: "≈ 125 marins + capacité passagers",
+      aviation: ["Hélicoptère embarqué", "Drone aérien selon évolution"],
+      notes:
+        "Frégate compacte de premier rang ; la densité capteurs/CMS compense le tonnage contenu.",
+    },
+    combatSystem: {
+      family: "SETIS",
+      cms: "SETIS",
+      tacticalLinks: ["Link 16", "liaisons OTAN / nationales selon standard"],
+      ballisticMissileDefense: false,
+      interoperabilityNotes:
+        "Architecture pensée pour opérations alliées et configurations export, notamment FDI HN.",
+    },
+    sensors: {
+      radarPrimary: "Thales Sea Fire AESA 4 faces",
+      hullSonar: "KingKlip",
+      towedSonar: "CAPTAS-4 Compact selon configuration",
+      esm: ["Suite EW / cyber navale selon standard"],
+      optronics: ["Capteurs optroniques de veille et conduite de tir"],
+    },
+    effectors: {
+      vlsType: "Sylver",
+      vlsCells: "Jusqu'à 32 cellules selon configuration",
+      sam: ["Aster 15/30"],
+      antiShipMissiles: ["Exocet MM40 Block 3C"],
+      antiSubWeapons: ["MU90", "hélicoptère ASM"],
+      navalGuns: ["76 mm"],
+      ciws: ["Artillerie légère / autodéfense selon client"],
+    },
+    propulsion: {
+      architecture: "CODAD",
+      primeMovers: ["Diesels"],
+      notes:
+        "Architecture de frégate compacte optimisée pour disponibilité, coût et endurance.",
+    },
+    industrial: {
+      primeContractor: "Naval Group",
+      shipyards: ["Lorient"],
+      suppliers: [
+        { subsystem: "CMS", supplier: "Naval Group", country: "France" },
+        { subsystem: "Radar", supplier: "Thales", country: "France" },
+        { subsystem: "Missiles", supplier: "MBDA", country: "Europe" },
+        { subsystem: "Sonar", supplier: "Thales", country: "France" },
+      ],
+    },
+    export: {
+      regimeSummary:
+        "Frégate conçue pour export de premier rang ; standard grec déjà structurant.",
+      itarExposure: "partielle",
+      politicalConstraints:
+        "Missiles, sonars, liaisons et soutien logiciel restent à configurer client par client.",
+    },
+    sustainment: {
+      sustainmentNotes:
+        "MCO dominé par logiciel CMS, radar AESA fixe, sonar et stocks de missiles.",
+      industrialRiskNotes:
+        "Montée de cadence Lorient, cyber durci et intégration capteurs à surveiller.",
+    },
+  },
   keySpecs: [
     {
       label: "Déplacement",

@@ -6,8 +6,9 @@ import type {
   Confidence,
   Grade,
   MissileRole,
-  RadarRole,
+  NavalMission,
   NavalVesselClass,
+  RadarRole,
   Reliability,
   RoadmapHorizon,
   ScoreKey,
@@ -100,6 +101,7 @@ export const RADAR_ROLE_BLURBS: Record<RadarRole, string> = {
 
 export const NAVAL_VESSEL_LABELS: Record<NavalVesselClass, string> = {
   "porte-avions": "Porte-avions",
+  destroyer: "Destroyer / frégate AAW",
   fregate: "Frégate",
   corvette: "Corvette",
   "sous-marin": "Sous-marin",
@@ -110,6 +112,8 @@ export const NAVAL_VESSEL_LABELS: Record<NavalVesselClass, string> = {
 export const NAVAL_VESSEL_BLURBS: Record<NavalVesselClass, string> = {
   "porte-avions":
     "Projection aéronavale, C2, groupe aérien embarqué et dépendances MCO lourdes.",
+  destroyer:
+    "Défense aérienne de zone, BMD, escorte de flotte et forte densité VLS / radar.",
   fregate:
     "Escorte de premier rang, ASM/AAW/ASuW, capteurs, CMS, VLS et hélicoptère.",
   corvette:
@@ -120,6 +124,18 @@ export const NAVAL_VESSEL_BLURBS: Record<NavalVesselClass, string> = {
     "Présence souveraine, police maritime, ZEE et rapport coût/effet en basse intensité.",
   amphibie:
     "Projection de forces, commandement, aviation tournante, chalands et missions duales.",
+};
+
+export const NAVAL_MISSION_LABELS: Record<NavalMission, string> = {
+  AAW: "Défense aérienne",
+  ASW: "Lutte ASM",
+  ASuW: "Anti-surface",
+  strike: "Frappe",
+  amphibie: "Amphibie",
+  projection: "Projection",
+  presence: "Présence",
+  MCM: "Guerre des mines",
+  BMD: "Défense antimissile",
 };
 
 export const SCORE_LABELS: Record<ScoreKey, string> = {

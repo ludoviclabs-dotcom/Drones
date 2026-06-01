@@ -19,6 +19,67 @@ export const charlesDeGaulle: DefenseSystem = {
     "La pièce maîtresse aéronavale française : projection, C2, dissuasion politique et MCO nucléaire lourd.",
   summary:
     "Le Charles de Gaulle est le seul porte-avions nucléaire non américain en service. Sa valeur Panoplie ne tient pas seulement à sa coque : elle vient du couple aviation embarquée, catapultes, C2, escorte, soutien nucléaire et capacité à fédérer un groupe aéronaval.\n\nLa fiche le traite donc comme une architecture de puissance, pas comme un simple bâtiment. Le coût et la disponibilité se lisent à l'échelle de tout l'écosystème : Rafale Marine, E-2C Hawkeye, frégates d'escorte, ravitailleurs, SNLE/SSN en environnement et cycles d'arrêt technique.",
+  navalProfile: {
+    platform: {
+      missions: ["projection", "strike", "presence"],
+      displacement: "≈ 42 000 t pleine charge",
+      crew: "≈ 1 200 marins + groupe aérien selon déploiement",
+      aviation: ["Rafale Marine", "E-2C Hawkeye", "hélicoptères"],
+      notes:
+        "Porte-avions CATOBAR nucléaire ; la valeur se lit au niveau du groupe aéronaval.",
+    },
+    combatSystem: {
+      family: "autre",
+      cms: "Système de combat et C2 du groupe aéronaval",
+      tacticalLinks: ["Link 16", "liaisons interalliées", "C2 groupe aéronaval"],
+      ballisticMissileDefense: false,
+      interoperabilityNotes:
+        "Interopérabilité de coalition centrée sur l'aviation embarquée et l'escorte.",
+    },
+    sensors: {
+      radarPrimary: "Radars de veille et de conduite selon modernisations",
+      esm: ["Suite guerre électronique et C2 embarqué"],
+      optronics: ["Capteurs de veille et navigation"],
+    },
+    effectors: {
+      aviationWeapons: ["Rafale Marine", "E-2C Hawkeye"],
+      sam: ["Aster / Sadral selon modernisations et escorte"],
+      ciws: ["Autodéfense rapprochée"],
+      navalGuns: ["Artillerie légère"],
+    },
+    propulsion: {
+      architecture: "nucleaire",
+      primeMovers: ["Deux chaufferies K15"],
+      maxSpeed: "≈ 27 kt selon sources ouvertes",
+      notes:
+        "Propulsion nucléaire souveraine, déterminante pour endurance et MCO spécialisé.",
+    },
+    industrial: {
+      primeContractor: "Naval Group / filière nucléaire navale française",
+      shipyards: ["Brest", "Saint-Nazaire selon cycles industriels"],
+      suppliers: [
+        { subsystem: "Propulsion", supplier: "filière nucléaire navale", country: "France" },
+        { subsystem: "Maintenance", supplier: "Naval Group", country: "France" },
+        { subsystem: "Aviation", supplier: "Dassault / Northrop Grumman", country: "France / États-Unis" },
+      ],
+      localContentNotes:
+        "Compétence rare : porte-avions CATOBAR nucléaire hors États-Unis.",
+    },
+    export: {
+      regimeSummary:
+        "Non exportable en pratique ; capacité souveraine française.",
+      itarExposure: "elevee",
+      politicalConstraints:
+        "Nucléaire naval, catapultes, aviation embarquée et C2 restent hautement sensibles.",
+    },
+    sustainment: {
+      sustainmentNotes:
+        "Coût complet porté par arrêts techniques majeurs, propulsion nucléaire, groupe aérien, escorte et ravitaillement.",
+      refitPrograms: ["ATM / IPER", "modernisations à mi-vie"],
+      industrialRiskNotes:
+        "Continuité PA-NG et compétences nucléaires navales à préserver.",
+    },
+  },
   keySpecs: [
     {
       label: "Déplacement",

@@ -2,12 +2,14 @@ import type {
   Brick,
   EditorialBlocks,
   Indicator,
+  NavalStructuredProfile,
   Score,
   SourceRef,
 } from "@/data/types";
 import {
   BRICK_BLURBS,
   BRICK_LABELS,
+  NAVAL_MISSION_LABELS,
   RELIABILITY_LABELS,
   SCORE_LABELS,
   SOURCE_TYPE_LABELS,
@@ -205,6 +207,109 @@ export function SpecsPanel({ specs }: { specs: Indicator[] }) {
               {spec.note}
             </p>
           ) : null}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function joinList(items?: string[]): string | null {
+  return items && items.length > 0 ? items.join(" · ") : null;
+}
+
+function navalRows(profile: NavalStructuredProfile): [string, string | null][] {
+  const platform = profile.platform;
+  const combat = profile.combatSystem;
+  const sensors = profile.sensors;
+  const effectors = profile.effectors;
+  const propulsion = profile.propulsion;
+  const industrial = profile.industrial;
+  const sustainment = profile.sustainment;
+  const exportProfile = profile.export;
+
+  const rows: [string, string | null][] = [
+    [
+      "Mission dominante",
+      platform.missions.map((mission) => NAVAL_MISSION_LABELS[mission]).join(" · "),
+    ],
+    ["Déplacement", platform.displacement ?? null],
+    ["Équipage", platform.crew ?? null],
+    ["Aviation embarquée", joinList(platform.aviation)],
+    ["CMS", combat ? `${combat.cms} · ${combat.family}` : null],
+    ["Baseline / réseau", joinList([combat?.baseline, ...(combat?.tacticalLinks ?? [])].filter(Boolean) as string[])],
+    [
+      "BMD",
+      combat?.ballisticMissileDefense === undefined
+        ? null
+        : combat.ballisticMissileDefense
+          ? "Capacité ou intégration BMD affichée publiquement"
+          : "Pas de rôle BMD public central",
+    ],
+    ["Radar principal", sensors?.radarPrimary ?? null],
+    [
+      "Sonar",
+      joinList([sensors?.hullSonar, sensors?.towedSonar].filter(Boolean) as string[]),
+    ],
+    ["Guerre électronique", joinList(sensors?.esm)],
+    [
+      "VLS / missiles",
+      joinList([
+        effectors?.vlsCells,
+        effectors?.vlsType,
+        joinList(effectors?.sam),
+        joinList(effectors?.antiShipMissiles),
+      ].filter(Boolean) as string[]),
+    ],
+    ["ASM / artillerie", joinList([joinList(effectors?.antiSubWeapons), joinList(effectors?.navalGuns), joinList(effectors?.ciws)].filter(Boolean) as string[])],
+    [
+      "Propulsion",
+      propulsion
+        ? joinList([
+            propulsion.architecture,
+            joinList(propulsion.primeMovers),
+            propulsion.maxSpeed,
+          ].filter(Boolean) as string[])
+        : null,
+    ],
+    ["Maître d'oeuvre", industrial?.primeContractor ?? null],
+    ["Chantiers", joinList(industrial?.shipyards)],
+    [
+      "Sous-systèmes",
+      industrial?.suppliers
+        ?.map((supplier) => `${supplier.subsystem}: ${supplier.supplier}`)
+        .join(" · ") ?? null,
+    ],
+    ["Coût public", sustainment?.unitCost ?? sustainment?.programCost ?? null],
+    ["MCO / soutien", sustainment?.sustainmentNotes ?? null],
+    ["Régime export", exportProfile?.regimeSummary ?? null],
+    [
+      "Exposition ITAR",
+      exportProfile?.itarExposure
+        ? exportProfile.itarExposure === "elevee"
+          ? "élevée"
+          : exportProfile.itarExposure
+        : null,
+    ],
+  ];
+
+  return rows.filter(([, value]) => value);
+}
+
+export function NavalArchitecturePanel({
+  profile,
+}: {
+  profile: NavalStructuredProfile;
+}) {
+  return (
+    <div className="grid gap-px border border-line bg-line md:grid-cols-2">
+      {navalRows(profile).map(([label, value]) => (
+        <div key={label} className="bg-panel p-4">
+          <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
+            {label}
+          </span>
+          <p className="mt-1.5 font-serif text-sm leading-relaxed text-ink">
+            {value}
+          </p>
         </div>
       ))}
     </div>

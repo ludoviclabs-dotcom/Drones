@@ -12,6 +12,7 @@ import {
   BrickSection,
   EditorialTriptych,
   LegalNote,
+  NavalArchitecturePanel,
   ScoreGrid,
   SourceList,
   SpecsPanel,
@@ -90,10 +91,12 @@ export default async function SystemPage({
   const hasConstraints =
     !!system.physicalConstraints && system.physicalConstraints.length > 0;
   const hasVariants = !!system.variants && system.variants.length > 0;
+  const hasNavalProfile = !!system.navalProfile;
   const hasTimeline = !!system.timeline && system.timeline.length > 0;
 
   const idxSummary = nextIndex();
   const idxQuickRead = nextIndex();
+  const idxNavalArchitecture = hasNavalProfile ? nextIndex() : null;
   const idxVariants = hasVariants ? nextIndex() : null;
   const brickBase = counter;
   counter += system.bricks.length;
@@ -207,6 +210,19 @@ export default async function SystemPage({
           <EditorialTriptych editorial={system.editorial} />
         </div>
       </section>
+
+      {idxNavalArchitecture && system.navalProfile ? (
+        <section className="mt-16">
+          <SectionMarker
+            index={idxNavalArchitecture}
+            label="Architecture navale"
+            blurb="Plateforme, CMS, capteurs, effecteurs, propulsion, soutien et export — la couche structurée du dossier."
+          />
+          <div className="mt-6">
+            <NavalArchitecturePanel profile={system.navalProfile} />
+          </div>
+        </section>
+      ) : null}
 
       {idxVariants && system.variants ? (
         <section className="mt-16">

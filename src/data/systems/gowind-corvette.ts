@@ -18,6 +18,69 @@ export const gowindCorvette: DefenseSystem = {
     "La corvette qui brouille la frontière avec la frégate légère : compacte, exportable, mais dépendante de son standard.",
   summary:
     "La Gowind est une corvette multirôle conçue pour offrir à des marines moyennes un bâtiment compact, fortement intégré et exportable. Son intérêt Panoplie tient à son format : moins coûteux qu'une frégate de premier rang, mais capable d'emporter CMS, missiles, artillerie, hélicoptère et capteurs de combat.\n\nLa fiche doit toutefois rester prudente : le mot Gowind recouvre des configurations clients très différentes. La valeur réelle dépend du radar, du CMS, des missiles retenus, de la lutte ASM éventuelle et du soutien local.",
+  navalProfile: {
+    platform: {
+      missions: ["ASuW", "ASW", "presence"],
+      displacement: "≈ 2 800 t pour le format Gowind 2500",
+      crew: "≈ 65 à 80 marins selon configuration",
+      aviation: ["Hélicoptère embarqué selon client", "drone selon évolution"],
+      notes:
+        "Corvette dense : proche d'une frégate légère lorsque capteurs, missiles et sonar sont retenus.",
+    },
+    combatSystem: {
+      family: "SETIS",
+      cms: "SETIS",
+      tacticalLinks: ["liaisons tactiques selon client"],
+      ballisticMissileDefense: false,
+      interoperabilityNotes:
+        "Standard export adaptable ; la valeur dépend fortement de la configuration client.",
+    },
+    sensors: {
+      radarPrimary: "Radar 3D selon client",
+      hullSonar: "Sonar de coque selon configuration",
+      towedSonar: "Option ASM selon client",
+      esm: ["Suite EW selon standard export"],
+      optronics: ["Conduite de tir optronique selon configuration"],
+    },
+    effectors: {
+      vlsType: "VLS / lanceurs selon client",
+      sam: ["VL MICA / défense locale selon standard"],
+      antiShipMissiles: ["Exocet ou missile antinavire client"],
+      antiSubWeapons: ["Torpilles légères selon version ASM"],
+      navalGuns: ["76 mm selon configuration"],
+      ciws: ["Artillerie légère / autodéfense"],
+    },
+    propulsion: {
+      architecture: "CODAD",
+      primeMovers: ["Diesels"],
+      notes:
+        "Format soutenable pour marines moyennes, avec coûts variables selon capteurs et armements.",
+    },
+    industrial: {
+      primeContractor: "Naval Group",
+      shipyards: ["Lorient", "chantiers locaux selon contrat"],
+      suppliers: [
+        { subsystem: "CMS", supplier: "Naval Group", country: "France" },
+        { subsystem: "Missiles", supplier: "MBDA / client", country: "Europe / client" },
+        { subsystem: "Capteurs", supplier: "Thales / fournisseurs client", country: "variable" },
+      ],
+      transferOfTechnology:
+        "Transfert industriel et production locale possibles selon contrat.",
+    },
+    export: {
+      regimeSummary:
+        "Produit export modulable ; la fiche doit toujours préciser le client et le standard.",
+      itarExposure: "partielle",
+      reexportConstraints:
+        "Missiles, capteurs et liaisons peuvent dépendre de régimes tiers.",
+    },
+    sustainment: {
+      sustainmentNotes:
+        "MCO plus léger qu'une frégate lourde, mais sensible au standard CMS, missiles et capteurs.",
+      industrialRiskNotes:
+        "Comparaison fragile entre Gowind clients : chaque configuration change la valeur militaire.",
+    },
+  },
   keySpecs: [
     {
       label: "Déplacement",

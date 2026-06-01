@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { SYSTEMS_BY_SLUG } from "@/data/systems";
-import type { RadarRole } from "@/data/types";
+import type { NavalVesselClass, RadarRole } from "@/data/types";
 
 // Schématiques filaires — vue de dessus, dessin au trait. Stylisées, non
 // cotées : elles donnent un visage au système, pas une référence technique.
@@ -925,6 +925,79 @@ const RADAR_ROLE_SCHEMATICS: Record<RadarRole, ReactNode> = {
   ),
 };
 
+const NAVAL_CLASS_SCHEMATICS: Record<NavalVesselClass, ReactNode> = {
+  "porte-avions": (
+    <>
+      <line x1="120" y1="18" x2="120" y2="222" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M82 28 L168 44 L172 196 L118 224 L70 196 L74 56 Z" />
+      <path d="M92 52 L152 62 L154 168 L94 196 Z" strokeWidth="1" />
+      <path d="M122 72 L162 98" strokeWidth="1" />
+      <rect x="142" y="82" width="18" height="42" />
+      <circle cx="151" cy="76" r="5" />
+      <path d="M92 118 L142 154" strokeDasharray="4 5" />
+    </>
+  ),
+  destroyer: (
+    <>
+      <line x1="120" y1="22" x2="120" y2="220" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 28 C148 52 162 98 160 164 C158 198 140 216 120 224 C100 216 82 198 80 164 C78 98 92 52 120 28 Z" />
+      <rect x="100" y="80" width="40" height="36" />
+      <path d="M108 66 L132 66 L140 80 L100 80 Z" />
+      <line x1="92" y1="130" x2="148" y2="130" strokeWidth="1" />
+      <line x1="96" y1="142" x2="144" y2="142" strokeWidth="1" />
+      <path d="M88 164 L152 164" />
+    </>
+  ),
+  fregate: (
+    <>
+      <line x1="120" y1="24" x2="120" y2="220" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 30 C144 58 156 104 154 164 C152 198 136 216 120 222 C104 216 88 198 86 164 C84 104 96 58 120 30 Z" />
+      <path d="M98 122 L142 122 L136 172 L104 172 Z" />
+      <rect x="102" y="78" width="36" height="30" />
+      <path d="M108 58 L132 58 L138 78 L102 78 Z" />
+      <path d="M96 150 L144 150" strokeWidth="1" />
+    </>
+  ),
+  corvette: (
+    <>
+      <line x1="120" y1="34" x2="120" y2="214" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 40 C142 70 152 114 148 166 C146 196 132 210 120 216 C108 210 94 196 92 166 C88 114 98 70 120 40 Z" />
+      <rect x="103" y="92" width="34" height="26" />
+      <path d="M108 76 L132 76 L137 92 L103 92 Z" />
+      <path d="M99 140 L141 140" strokeWidth="1" />
+    </>
+  ),
+  "sous-marin": (
+    <>
+      <line x1="120" y1="44" x2="120" y2="196" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 44 C154 64 176 104 176 138 C176 176 148 198 120 206 C92 198 64 176 64 138 C64 104 86 64 120 44 Z" />
+      <path d="M105 92 L135 92 L132 120 L108 120 Z" />
+      <line x1="82" y1="148" x2="158" y2="148" strokeWidth="1" />
+      <path d="M92 184 L76 204 M148 184 L164 204" />
+    </>
+  ),
+  patrouilleur: (
+    <>
+      <line x1="120" y1="42" x2="120" y2="210" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M120 48 C140 78 148 118 146 164 C144 194 132 208 120 214 C108 208 96 194 94 164 C92 118 100 78 120 48 Z" />
+      <rect x="104" y="96" width="32" height="24" />
+      <path d="M108 82 L132 82 L136 96 L104 96 Z" />
+      <circle cx="120" cy="144" r="4" />
+    </>
+  ),
+  amphibie: (
+    <>
+      <line x1="120" y1="26" x2="120" y2="220" strokeWidth="1" strokeDasharray="2 5" />
+      <path d="M84 36 L156 46 L164 182 L120 220 L76 182 Z" />
+      <rect x="94" y="70" width="52" height="82" />
+      <rect x="130" y="82" width="18" height="46" />
+      <path d="M96 166 L144 166 L136 194 L104 194 Z" />
+      <circle cx="106" cy="90" r="5" />
+      <circle cx="106" cy="116" r="5" />
+    </>
+  ),
+};
+
 export function SystemSchematic({
   slug,
   className = "",
@@ -941,6 +1014,8 @@ export function SystemSchematic({
     const system = SYSTEMS_BY_SLUG[slug];
     if (system?.category === "radar" && system.radarRole) {
       content = RADAR_ROLE_SCHEMATICS[system.radarRole];
+    } else if (system?.category === "naval-vessel" && system.navalVesselClass) {
+      content = NAVAL_CLASS_SCHEMATICS[system.navalVesselClass];
     }
   }
   if (!content) return null;

@@ -4,30 +4,21 @@ import { systems } from "@/data/systems";
 import {
   NAVAL_VESSEL_BLURBS,
   NAVAL_VESSEL_LABELS,
+  NAVAL_VESSEL_ORDER,
 } from "@/data/labels";
 import type { NavalVesselClass } from "@/data/types";
 import { LegalNote } from "@/components/fiche-sections";
+import { NavalDossierFilter } from "@/components/naval-dossier-filter";
 import { Narrative } from "@/components/narrative";
 import { SectionMarker } from "@/components/primitives";
 import { RegistrationMarks } from "@/components/registration-marks";
 import { Stamp } from "@/components/stamp";
-import { SystemSchematic } from "@/components/system-schematic";
 
 export const metadata: Metadata = {
   title: "Bâtiments navals",
   description:
     "Le domaine des bâtiments navals - porte-avions, frégates, destroyers, corvettes, sous-marins, patrouilleurs et plateformes amphibies, lus comme des architectures de mission.",
 };
-
-const CLASS_ORDER: NavalVesselClass[] = [
-  "porte-avions",
-  "destroyer",
-  "fregate",
-  "corvette",
-  "sous-marin",
-  "patrouilleur",
-  "amphibie",
-];
 
 const MVP_FLEETS = [
   {
@@ -126,6 +117,17 @@ const LEGAL_NOTE =
 
 export default function BatimentsNavalsPage() {
   const dossiers = systems.filter((s) => s.category === "naval-vessel");
+  const filterableDossiers = dossiers
+    .filter((system) => system.navalVesselClass)
+    .map((system) => ({
+      slug: system.slug,
+      reference: system.reference,
+      name: system.name,
+      flag: system.flag,
+      country: system.country,
+      classLabel: system.classLabel,
+      navalVesselClass: system.navalVesselClass as NavalVesselClass,
+    }));
   const countByClass = (navalClass: NavalVesselClass) =>
     dossiers.filter((s) => s.navalVesselClass === navalClass).length;
 
@@ -164,7 +166,7 @@ export default function BatimentsNavalsPage() {
           blurb="La taxonomie navale croise classe de coque, mission dominante et architecture de combat."
         />
         <div className="mt-6 grid gap-px border border-line bg-line sm:grid-cols-2">
-          {CLASS_ORDER.map((navalClass) => {
+          {NAVAL_VESSEL_ORDER.map((navalClass) => {
             const count = countByClass(navalClass);
             return (
               <div key={navalClass} className="bg-panel p-5">
@@ -308,36 +310,8 @@ export default function BatimentsNavalsPage() {
           label="Les dossiers du domaine"
           blurb={`${dossiers.length} bâtiments documentés - projection aéronavale, frégates de premier rang, destroyers Aegis, corvettes export, sous-marins, patrouille et amphibie.`}
         />
-        {dossiers.length > 0 ? (
-          <ul className="mt-6 grid gap-px border border-line bg-line sm:grid-cols-2">
-            {dossiers.map((system) => (
-              <li key={system.slug} className="bg-panel">
-                <Link
-                  href={`/systemes/${system.slug}`}
-                  className="group flex items-center gap-4 p-5"
-                >
-                  <SystemSchematic
-                    slug={system.slug}
-                    className="h-14 w-14 shrink-0 text-ink-faint transition-colors group-hover:text-accent"
-                  />
-                  <span className="flex-1">
-                    <span className="block font-mono text-[10px] uppercase tracking-[0.14em] text-accent">
-                      {system.reference}
-                    </span>
-                    <span className="block font-serif text-xl text-ink transition-colors group-hover:text-accent">
-                      {system.name}
-                    </span>
-                    <span className="block font-mono text-[10px] text-ink-faint">
-                      {system.flag} {system.country} · {system.classLabel}
-                    </span>
-                  </span>
-                  <span className="font-mono text-ink-faint transition-colors group-hover:text-accent">
-                    →
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+        {filterableDossiers.length > 0 ? (
+          <NavalDossierFilter dossiers={filterableDossiers} />
         ) : (
           <p className="mt-6 border border-dashed border-line-bright bg-panel/40 px-6 py-12 text-center font-mono text-xs uppercase tracking-[0.16em] text-ink-faint">
             Dossiers en cours de rédaction.

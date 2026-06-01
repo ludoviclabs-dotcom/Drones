@@ -109,6 +109,16 @@ export const NAVAL_VESSEL_LABELS: Record<NavalVesselClass, string> = {
   amphibie: "Bâtiment amphibie",
 };
 
+export const NAVAL_VESSEL_ORDER: NavalVesselClass[] = [
+  "porte-avions",
+  "destroyer",
+  "fregate",
+  "corvette",
+  "sous-marin",
+  "patrouilleur",
+  "amphibie",
+];
+
 export const NAVAL_VESSEL_BLURBS: Record<NavalVesselClass, string> = {
   "porte-avions":
     "Projection aéronavale, C2, groupe aérien embarqué et dépendances MCO lourdes.",

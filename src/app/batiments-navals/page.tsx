@@ -8,6 +8,7 @@ import {
 } from "@/data/labels";
 import type { NavalVesselClass } from "@/data/types";
 import { LegalNote } from "@/components/fiche-sections";
+import { NavalDomainBriefing } from "@/components/naval-domain-briefing";
 import { NavalDossierFilter } from "@/components/naval-dossier-filter";
 import { Narrative } from "@/components/narrative";
 import { SectionMarker } from "@/components/primitives";
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
     "Le domaine des bâtiments navals - porte-avions, frégates, destroyers, corvettes, sous-marins, patrouilleurs et plateformes amphibies, lus comme des architectures de mission.",
 };
 
-const MVP_FLEETS = [
+const PUBLISHED_FLEETS = [
   {
     country: "France",
     flag: "🇫🇷",
@@ -190,11 +191,11 @@ export default function BatimentsNavalsPage() {
       <section className="mt-16">
         <SectionMarker
           index="02"
-          label="Noyau multinational MVP"
-          blurb="Le rapport ajoute un socle France, États-Unis, Royaume-Uni, Italie et Espagne pour comparer les architectures, pas seulement les tonnages."
+          label="Noyau publié"
+          blurb="Les dossiers déjà intégrés posent un socle France, États-Unis, Royaume-Uni, Italie et Espagne ; le rapport complète ce socle par une cartographie industrielle plus large."
         />
         <div className="mt-6 grid gap-px border border-line bg-line">
-          {MVP_FLEETS.map((fleet) => (
+          {PUBLISHED_FLEETS.map((fleet) => (
             <article
               key={fleet.country}
               className="grid gap-px bg-line md:grid-cols-[160px_1fr_1fr]"
@@ -231,6 +232,17 @@ export default function BatimentsNavalsPage() {
       <section className="mt-16">
         <SectionMarker
           index="03"
+          label="Cartographie comparative"
+          blurb="La prochaine lecture utile n'est pas seulement pays par pays : elle croise fonctions navales, base industrielle, stress programme et comparaisons pertinentes."
+        />
+        <div className="mt-6">
+          <NavalDomainBriefing />
+        </div>
+      </section>
+
+      <section className="mt-16">
+        <SectionMarker
+          index="04"
           label="Plateforme -> mission -> réseau"
           blurb="Le bâtiment n'est qu'un noeud visible d'un système plus vaste."
         />
@@ -244,7 +256,7 @@ export default function BatimentsNavalsPage() {
 
       <section className="mt-16">
         <SectionMarker
-          index="04"
+          index="05"
           label="Quatre couches d'analyse"
           blurb="Les fiches navales reprennent la grille Panoplie et lui ajoutent un profil structuré d'architecture."
         />
@@ -264,7 +276,7 @@ export default function BatimentsNavalsPage() {
 
       <section className="mt-16">
         <SectionMarker
-          index="05"
+          index="06"
           label="Chaîne navale critique"
           blurb="Les dépendances se cachent souvent dans le CMS, le sonar, la propulsion, les missiles ou le soutien logiciel."
         />
@@ -295,7 +307,7 @@ export default function BatimentsNavalsPage() {
 
       <section className="mt-16">
         <SectionMarker
-          index="06"
+          index="07"
           label="Cadre de prudence"
           blurb="Les performances fines restent rarement publiques, surtout sous l'eau, en guerre électronique et sur les signatures."
         />
@@ -306,7 +318,7 @@ export default function BatimentsNavalsPage() {
 
       <section className="mt-16">
         <SectionMarker
-          index="07"
+          index="08"
           label="Les dossiers du domaine"
           blurb={`${dossiers.length} bâtiments documentés - projection aéronavale, frégates de premier rang, destroyers Aegis, corvettes export, sous-marins, patrouille et amphibie.`}
         />

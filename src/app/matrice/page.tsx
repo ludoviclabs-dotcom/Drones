@@ -5,6 +5,7 @@ import { SectionMarker } from "@/components/primitives";
 import { MatrixPlot } from "@/components/matrix-plot";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/matrice" },
   title: "Matrice stratégique",
   description:
     "Positionnement des systèmes sur deux axes dérivés des paliers d'évaluation : autonomie industrielle contre dépendance géopolitique, effet par rapport au coût.",

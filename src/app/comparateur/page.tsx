@@ -8,6 +8,7 @@ import {
 } from "@/components/comparateur-tool";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/comparateur" },
   title: "Comparateur",
   description:
     "Confronter les systèmes de défense — sélection de deux à trois dossiers : identité, modes d'acquisition et évaluation par paliers.",
@@ -21,6 +22,9 @@ const comparable: ComparableSystem[] = systems.map((s) => ({
   classLabel: s.classLabel,
   category: s.category,
   combatAircraftClass: s.combatAircraftClass,
+  droneClass: s.droneClass,
+  missileRole: s.missileRole,
+  radarRole: s.radarRole,
   claimedGeneration: s.claimedGeneration,
   naval: s.naval,
   navalVesselClass: s.navalVesselClass,

@@ -57,6 +57,34 @@ const PUBLISHED_FLEETS = [
     architecture: "SCOMBA, IAFCL, SPY-7, CAPTAS-4, Mk 41, NSM",
     purpose: "Hybridation souveraineté CMS et briques américaines",
   },
+  {
+    country: "Allemagne",
+    flag: "🇩🇪",
+    classes: "Sachsen F124, F126 Niedersachsen, Type 212CD",
+    architecture: "APAR/SMART-L, frégate modulaire, sous-marin AIP furtif",
+    purpose: "Spécialiste OTAN : défense aérienne, modularité et sous-marin conventionnel",
+  },
+  {
+    country: "Japon",
+    flag: "🇯🇵",
+    classes: "Maya, Izumo / Kaga, Taigei",
+    architecture: "Aegis Baseline 9C + CEC, conversion F-35B, sous-marin lithium-ion",
+    purpose: "Densité technologique d'escorte et projection aéronavale assumée",
+  },
+  {
+    country: "Corée du Sud",
+    flag: "🇰🇷",
+    classes: "KDX-III Batch II, KSS-III, Dokdo / Marado",
+    architecture: "Aegis + KVLS-II, sous-marin à lanceurs verticaux, amphibie LPH",
+    purpose: "Montée en gamme industrielle rapide et offre export agressive",
+  },
+  {
+    country: "Chine",
+    flag: "🇨🇳",
+    classes: "Fujian, Type 055, Type 075",
+    architecture: "EMALS, 112 cellules VLS, grand LHD — régime de confiance abaissé",
+    purpose: "Masse industrielle de la PLAN, lue avec triangulation et prudence",
+  },
 ];
 
 const ARCHITECTURE_LAYERS: [string, string][] = [
@@ -192,7 +220,7 @@ export default function BatimentsNavalsPage() {
         <SectionMarker
           index="02"
           label="Noyau publié"
-          blurb="Les dossiers déjà intégrés posent un socle France, États-Unis, Royaume-Uni, Italie et Espagne ; le rapport complète ce socle par une cartographie industrielle plus large."
+          blurb="Les dossiers couvrent désormais neuf pays — France, États-Unis, Royaume-Uni, Italie, Espagne, Allemagne, Japon, Corée du Sud et Chine — du socle souverain européen aux grandes marines de l'Indo-Pacifique."
         />
         <div className="mt-6 grid gap-px border border-line bg-line">
           {PUBLISHED_FLEETS.map((fleet) => (

@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Newsreader, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
 import { MotionController } from "@/components/motion-controller";
+import { JsonLd } from "@/components/json-ld";
+import { organizationLd, webSiteLd } from "@/lib/structured-data";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import { systems } from "@/data/systems";
 
 const newsreader = Newsreader({
@@ -19,13 +23,29 @@ const plexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
+const TITLE_DEFAULT =
+  "Panoplie — Intelligence open source sur les systèmes de défense";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Panoplie — Intelligence open source sur les systèmes de défense",
+    default: TITLE_DEFAULT,
     template: "%s — Panoplie",
   },
   description:
     "Analyse et comparaison des systèmes de défense à partir de sources ouvertes : coût, finance, supply chain, géopolitique et export.",
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    locale: "fr_FR",
+    title: TITLE_DEFAULT,
+    description: SITE_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE_DEFAULT,
+    description: SITE_DESCRIPTION,
+  },
 };
 
 const NAV = [
@@ -60,6 +80,8 @@ export default function RootLayout({
               "try{if(!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('motion-ready')}}catch(e){}",
           }}
         />
+        <JsonLd data={organizationLd()} />
+        <JsonLd data={webSiteLd()} />
         <MotionController />
         <div className="film-grain" aria-hidden="true" />
         <div className="border-b border-line">
@@ -139,10 +161,11 @@ export default function RootLayout({
           </div>
           <div className="border-t border-line">
             <p className="mx-auto max-w-[1180px] px-5 py-4 text-[10px] uppercase tracking-[0.18em] text-ink-faint">
-              © 2026 Panoplie — version MVP · {systems.length} systèmes documentés
+              © 2026 Panoplie · {systems.length} systèmes documentés
             </p>
           </div>
         </footer>
+        <Analytics />
       </body>
     </html>
   );

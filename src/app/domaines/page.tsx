@@ -5,6 +5,7 @@ import { DOMAINS } from "@/data/domains";
 import { DomainEmblem } from "@/components/domain-emblem";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/domaines" },
   title: "Domaines",
   description:
     "Les domaines d'analyse de Panoplie — drones, énergie dirigée, aviation de combat, missiles et bâtiments navals — à grille de lecture constante.",

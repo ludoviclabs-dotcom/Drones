@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { systems } from "@/data/systems";
 import { DOMAINS } from "@/data/domains";
@@ -11,6 +12,10 @@ import { RegistrationMarks } from "@/components/registration-marks";
 import { Stamp } from "@/components/stamp";
 import { StatGrid, type Stat } from "@/components/stat-cards";
 import { getEvidenceStats } from "@/lib/claims";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 export default function Home() {
   const stats = getEvidenceStats();

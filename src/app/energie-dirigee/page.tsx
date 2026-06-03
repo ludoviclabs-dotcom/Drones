@@ -10,6 +10,7 @@ import { RegistrationMarks } from "@/components/registration-marks";
 import { Stamp } from "@/components/stamp";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/energie-dirigee" },
   title: "Énergie dirigée",
   description:
     "Le domaine des lasers haute énergie — missions C-UAS, C-RAM et SHORAD, promesse de coût, contraintes physiques et cadre juridique.",

@@ -9,6 +9,7 @@ import { RegistrationMarks } from "@/components/registration-marks";
 import { Stamp } from "@/components/stamp";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/aviation-combat" },
   title: "Aviation de combat",
   description:
     "Le domaine des avions de combat — générations 4.5, 5e et 6e, couches de coût, chaîne industrielle, versions et standards, régimes d'export.",

@@ -5,6 +5,7 @@ import { ROADMAP_HORIZON_LABELS } from "@/data/labels";
 import { SectionMarker } from "@/components/primitives";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/roadmap" },
   title: "Roadmap",
   description:
     "Ce qui est en cours, prochain et à l'étude pour Panoplie — la trajectoire de l'observatoire.",

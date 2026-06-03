@@ -13,6 +13,7 @@ import {
 import { ConfidenceMark, GradeBadge, SectionMarker } from "@/components/primitives";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/methodologie" },
   title: "Méthodologie",
   description:
     "Comment Panoplie évalue, score et source les systèmes de défense — paliers, confiance des données, fiabilité des sources, cadre éthique.",

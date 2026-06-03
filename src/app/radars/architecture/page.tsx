@@ -10,6 +10,7 @@ import { RegistrationMarks } from "@/components/registration-marks";
 import { Stamp } from "@/components/stamp";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/radars/architecture" },
   title: "Architecture IAMD",
   description:
     "Le radar dans l'IAMD — capteurs, commandement, effecteurs. Une lecture en réseau, pas en produit isolé.",

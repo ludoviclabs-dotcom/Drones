@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Claim } from "@/lib/claims";
 import {
   FRESHNESS_LABELS,
@@ -29,6 +29,8 @@ const COLUMNS = [
   "Statut",
   "Fraîcheur",
 ];
+
+const PAGE_SIZE = 60;
 
 function Field({
   label,
@@ -69,6 +71,7 @@ export function ConsoleTable({ claims }: { claims: Claim[] }) {
   const [status, setStatus] = useState("all");
   const [sourceType, setSourceType] = useState("all");
   const [freshness, setFreshness] = useState("all");
+  const [page, setPage] = useState(1);
 
   const systemNames = useMemo(
     () => Array.from(new Set(claims.map((claim) => claim.systemName))),
@@ -94,6 +97,19 @@ export function ConsoleTable({ claims }: { claims: Claim[] }) {
         return true;
       }),
     [claims, domain, system, scope, confidence, status, sourceType, freshness],
+  );
+
+  // Pagination : un changement de filtre ramène en page 1 ; l'export reste sur
+  // l'intégralité du jeu filtré (pas seulement la page visible).
+  useEffect(() => {
+    setPage(1);
+  }, [domain, system, scope, confidence, status, sourceType, freshness]);
+
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const currentPage = Math.min(page, pageCount);
+  const pageRows = filtered.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE,
   );
 
   return (
@@ -228,7 +244,7 @@ export function ConsoleTable({ claims }: { claims: Claim[] }) {
             </tr>
           </thead>
           <tbody>
-            {filtered.map((claim) => (
+            {pageRows.map((claim) => (
               <tr
                 key={`${claim.systemSlug}-${claim.scope}-${claim.label}`}
                 className="border-b border-line align-top last:border-0"
@@ -322,6 +338,40 @@ export function ConsoleTable({ claims }: { claims: Claim[] }) {
           </tbody>
         </table>
       </div>
+
+      {pageCount > 1 ? (
+        <nav
+          aria-label="Pagination du registre"
+          className="mt-4 flex flex-wrap items-center justify-between gap-3 font-mono text-[11px] text-ink-dim"
+        >
+          <span>
+            {(currentPage - 1) * PAGE_SIZE + 1}–
+            {Math.min(currentPage * PAGE_SIZE, filtered.length)} sur{" "}
+            {filtered.length}
+          </span>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage <= 1}
+              className="h-9 border border-line-bright px-3 uppercase tracking-[0.14em] transition-colors hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              ← Précédent
+            </button>
+            <span>
+              Page {currentPage} / {pageCount}
+            </span>
+            <button
+              type="button"
+              onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+              disabled={currentPage >= pageCount}
+              className="h-9 border border-line-bright px-3 uppercase tracking-[0.14em] transition-colors hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Suivant →
+            </button>
+          </div>
+        </nav>
+      ) : null}
     </div>
   );
 }

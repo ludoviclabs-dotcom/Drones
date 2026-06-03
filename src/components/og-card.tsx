@@ -12,8 +12,8 @@ const C = {
   line: "#33301f",
   ink: "#ece6d5",
   inkDim: "#9c9783",
-  inkFaint: "#8a8472",
-  accent: "#d2683c",
+  inkFaint: "#948d79",
+  accent: "#e07a4d",
 } as const;
 
 const GRADE_COLOR: Record<Grade, string> = {

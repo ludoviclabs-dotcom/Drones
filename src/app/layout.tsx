@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Newsreader, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { MotionController } from "@/components/motion-controller";
 import { JsonLd } from "@/components/json-ld";
 import { organizationLd, webSiteLd } from "@/lib/structured-data";
@@ -166,6 +167,7 @@ export default function RootLayout({
           </div>
         </footer>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

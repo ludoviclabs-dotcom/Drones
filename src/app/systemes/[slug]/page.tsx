@@ -30,7 +30,7 @@ import { Timeline } from "@/components/timeline";
 import { JsonLd } from "@/components/json-ld";
 import { ConfidenceHeatmap } from "@/components/confidence-heatmap";
 import { RelationGraph } from "@/components/relation-graph";
-import { systemDatasetLd } from "@/lib/structured-data";
+import { systemBreadcrumbLd, systemDatasetLd } from "@/lib/structured-data";
 
 export function generateStaticParams() {
   return getSystemSlugs().map((slug) => ({ slug }));
@@ -135,6 +135,7 @@ export default async function SystemPage({
   return (
     <article className="mx-auto max-w-[1100px] px-5 py-10">
       <JsonLd data={systemDatasetLd(system)} />
+      <JsonLd data={systemBreadcrumbLd(system)} />
       <ReadingProgress />
       <Link
         href="/"

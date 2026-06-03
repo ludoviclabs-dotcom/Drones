@@ -23,10 +23,14 @@ test("parcours home → domaine naval → fiche → console (export) → compara
   ]);
   expect(download.suggestedFilename()).toBe("panoplie-console-claims.csv");
 
-  // Comparateur : chargements rapides pays / famille présents.
+  // Comparateur : loaders pays/famille + bascule en vue Chaînes système.
   await page.goto("/comparateur");
   await expect(page.getByText("Charger un pays")).toBeVisible();
   await expect(page.getByText("Charger une famille")).toBeVisible();
+  await page.getByRole("combobox").first().selectOption({ index: 1 });
+  const chainsRadio = page.getByRole("radio", { name: "Chaînes système" });
+  await chainsRadio.click();
+  await expect(chainsRadio).toHaveAttribute("aria-checked", "true");
 });
 
 test("SEO : sitemap, robots et image Open Graph répondent", async ({
@@ -46,17 +50,9 @@ for (const path of A11Y_PAGES) {
   }, testInfo) => {
     test.setTimeout(120_000);
     await page.goto(path);
-    const builder = new AxeBuilder({ page }).withTags([
-      "wcag2a",
-      "wcag2aa",
-      "wcag21aa",
-      "wcag22aa",
-    ]);
-    // La Console rend ~2 000 lignes homogènes : on exclut le corps du tableau
-    // (même structure de ligne validée sur les fiches) pour qu'axe termine —
-    // les en-têtes et les contrôles de filtre restent audités.
-    if (path === "/console") builder.exclude("tbody");
-    const results = await builder.analyze();
+    const results = await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
+      .analyze();
     const serious = results.violations.filter(
       (v) => v.impact === "serious" || v.impact === "critical",
     );

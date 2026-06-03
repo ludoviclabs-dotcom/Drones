@@ -33,6 +33,7 @@ export function ConfidenceMark({ confidence }: { confidence: Confidence }) {
   const meta = CONFIDENCE_META[confidence];
   return (
     <span
+      role="img"
       className="inline-flex items-center gap-[3px]"
       title={meta.label}
       aria-label={meta.label}

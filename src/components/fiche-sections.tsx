@@ -32,17 +32,17 @@ export function IndicatorPanel({
           {title}
         </span>
       </div>
-      <dl>
+      <div>
         {indicators.map((ind) => (
           <div
             key={ind.label}
             className="border-b border-line px-4 py-3 last:border-0"
           >
             <div className="flex items-baseline justify-between gap-3">
-              <dt className="font-mono text-xs text-ink-dim">{ind.label}</dt>
+              <span className="font-mono text-xs text-ink-dim">{ind.label}</span>
               <ConfidenceMark confidence={ind.confidence} />
             </div>
-            <dd className="mt-1 font-mono text-sm text-ink">{ind.value}</dd>
+            <div className="mt-1 font-mono text-sm text-ink">{ind.value}</div>
             {ind.note ? (
               <p className="mt-1.5 font-serif text-xs italic leading-snug text-ink-faint">
                 {ind.note}
@@ -50,7 +50,7 @@ export function IndicatorPanel({
             ) : null}
           </div>
         ))}
-      </dl>
+      </div>
     </div>
   );
 }

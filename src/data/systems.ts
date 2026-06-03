@@ -83,6 +83,10 @@ import {
   type26Frigate,
   virginiaBlockV,
 } from "./systems/naval-multinational";
+import { sachsenF124, f126Niedersachsen, type212cd } from "./systems/naval-germany";
+import { mayaClass, izumoKaga, taigeiClass } from "./systems/naval-japan";
+import { kdxIiiBatchIi, kssIii, dokdoMarado } from "./systems/naval-korea";
+import { fujian, type055, type075 } from "./systems/naval-china";
 
 export const systems: DefenseSystem[] = [
   mq9Reaper,
@@ -167,6 +171,22 @@ export const systems: DefenseSystem[] = [
   type26Frigate,
   fremmCarloBergamini,
   f110Bonifaz,
+  // Allemagne
+  sachsenF124,
+  f126Niedersachsen,
+  type212cd,
+  // Japon
+  mayaClass,
+  izumoKaga,
+  taigeiClass,
+  // Corée du Sud
+  kdxIiiBatchIi,
+  kssIii,
+  dokdoMarado,
+  // Chine
+  fujian,
+  type055,
+  type075,
 ];
 
 export const SYSTEMS_BY_SLUG: Record<string, DefenseSystem> = Object.fromEntries(

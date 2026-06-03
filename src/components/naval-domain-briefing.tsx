@@ -22,7 +22,7 @@ const STRATEGIC_FLEETS = [
   {
     country: "Corée du Sud",
     code: "KR",
-    status: "à ouvrir",
+    status: "base publiée",
     doctrine: "Montée en gamme export",
     signatures: "KDX-III Batch II, Dokdo / Marado, KSS-III",
     nextWave: "KDDX en programme prospectif",
@@ -32,7 +32,7 @@ const STRATEGIC_FLEETS = [
   {
     country: "Japon",
     code: "JP",
-    status: "à ouvrir",
+    status: "base publiée",
     doctrine: "Densité technologique d'escorte",
     signatures: "Izumo / Kaga, Maya, Mogami, Taigei",
     nextWave: "F-35B embarqué, USV/UUV, modernisation sous-marine",
@@ -42,7 +42,7 @@ const STRATEGIC_FLEETS = [
   {
     country: "Chine",
     code: "CN",
-    status: "à ouvrir",
+    status: "base publiée",
     doctrine: "Masse industrielle et accélération PLAN",
     signatures: "Fujian, Type 055, Type 075 / 076",
     nextWave: "Type 052D / 054B si données assez robustes",
@@ -52,7 +52,7 @@ const STRATEGIC_FLEETS = [
   {
     country: "Allemagne",
     code: "DE",
-    status: "à ouvrir",
+    status: "base publiée",
     doctrine: "Spécialiste OTAN / export",
     signatures: "Sachsen F124, F126, Type 212CD, K130",
     nextWave: "F125 comme cas présence longue durée",
@@ -64,36 +64,36 @@ const STRATEGIC_FLEETS = [
 const FUNCTIONAL_MATRIX = [
   {
     function: "Grands ponts aviation",
-    current: "Charles de Gaulle, Gerald R. Ford, Queen Elizabeth",
-    next: "Fujian, Izumo / Kaga, France Libre",
+    current: "Charles de Gaulle, Gerald R. Ford, Queen Elizabeth, Fujian, Izumo / Kaga",
+    next: "France Libre / PA-NG, futurs porte-avions chinois",
     logic:
       "Comparer propulsion, catapultes ou STOVL, groupe aérien, escorte et coût complet.",
   },
   {
     function: "Amphibie / projection",
-    current: "Mistral PHA",
-    next: "America-class, Dokdo / Marado, Type 075 / 076",
+    current: "Mistral PHA, Dokdo / Marado, Type 075",
+    next: "America-class, Type 076 (radier + drones)",
     logic:
       "Lire le pont aviation, les chalands, le C2, la protection et la dépendance à l'escorte.",
   },
   {
     function: "Escorteurs AAW / BMD",
-    current: "Arleigh Burke Flight III, F110 Bonifaz",
-    next: "Type 055, Maya, KDX-III Batch II, Sachsen F124",
+    current: "Arleigh Burke Flight III, F110 Bonifaz, Maya, KDX-III Batch II, Type 055, Sachsen F124",
+    next: "F127 allemande, Type 052D",
     logic:
       "Comparer radar, CMS, VLS, défense antimissile, liaisons et cadence industrielle.",
   },
   {
     function: "Frégates / corvettes multi-missions",
-    current: "FREMM, FDI, Type 26, Gowind",
-    next: "Mogami, F126, K130, Constellation en cas de programme",
+    current: "FREMM, FDI, Type 26, Gowind, FREMM Carlo Bergamini, F126",
+    next: "Mogami, K130, Constellation en cas de programme",
     logic:
       "Distinguer frégate lourde, compacte, corvette export et présence armée.",
   },
   {
     function: "Sous-marins",
-    current: "Scorpène, Virginia Block V",
-    next: "Suffren, KSS-III, Taigei, Type 212CD",
+    current: "Scorpène, Virginia Block V, Type 212CD, Taigei, KSS-III",
+    next: "Suffren, KSS-III Batch II",
     logic:
       "Ne pas mélanger SSK, SSN et programmes stratégiques : segmenter avant de comparer.",
   },

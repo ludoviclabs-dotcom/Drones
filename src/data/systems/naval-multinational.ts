@@ -15,7 +15,7 @@ import type {
 
 type ScorePlan = Record<ScoreKey, [Grade, string]>;
 
-interface NavalSeed {
+export interface NavalSeed {
   slug: string;
   name: string;
   designation: string;
@@ -49,6 +49,7 @@ interface NavalSeed {
   supplyNarrative: string;
   geopoliticsNarrative: string;
   exportNarrative: string;
+  updated?: string;
   scores: ScorePlan;
 }
 
@@ -215,7 +216,7 @@ function makeScores(scores: ScorePlan): Score[] {
   }));
 }
 
-function makeNavalSystem(seed: NavalSeed): DefenseSystem {
+export function makeNavalSystem(seed: NavalSeed): DefenseSystem {
   return {
     slug: seed.slug,
     name: seed.name,
@@ -241,11 +242,11 @@ function makeNavalSystem(seed: NavalSeed): DefenseSystem {
     theatres: seed.theatres,
     timeline: seed.timeline,
     sources: seed.sources,
-    updated: "2026-06-01",
+    updated: seed.updated ?? "2026-06-01",
   };
 }
 
-const commonCarrierScores: Pick<ScorePlan, "maturite" | "confiance-donnees"> = {
+export const commonCarrierScores: Pick<ScorePlan, "maturite" | "confiance-donnees"> = {
   maturite: ["B", "Plateforme en service ou doctrine installée, mais disponibilité et cycles de soutien restent déterminants."],
   "confiance-donnees": ["B", "Caractéristiques générales bien documentées ; disponibilité, coûts complets et détails de configuration restent partiellement sensibles."],
 };

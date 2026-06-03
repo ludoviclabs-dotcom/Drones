@@ -20,6 +20,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Outils de build hors application (scripts Node CommonJS, ex. deck pptx).
+    "docs/**",
   ]),
 ]);
 

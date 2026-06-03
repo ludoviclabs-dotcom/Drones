@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import type { Claim } from "@/lib/claims";
 import {
   FRESHNESS_LABELS,
@@ -63,6 +63,166 @@ function Field({
   );
 }
 
+// Table + pagination. Monté avec key={filterKey} par le parent : un changement
+// de filtre remonte le composant et réinitialise la page à 1 (pas d'effet).
+function PagedClaims({ rows }: { rows: Claim[] }) {
+  const [page, setPage] = useState(1);
+  const pageCount = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+  const currentPage = Math.min(page, pageCount);
+  const pageRows = rows.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE,
+  );
+
+  return (
+    <>
+      <div className="mt-4 overflow-x-auto border border-line">
+        <table className="w-full min-w-[820px] border-collapse">
+          <thead>
+            <tr className="border-b border-line bg-surface-2">
+              {COLUMNS.map((column) => (
+                <th
+                  key={column}
+                  scope="col"
+                  className="px-4 py-2.5 text-left font-mono text-[10px] uppercase tracking-[0.16em] text-ink-faint"
+                >
+                  {column}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {pageRows.map((claim) => (
+              <tr
+                key={`${claim.systemSlug}-${claim.scope}-${claim.label}`}
+                className="border-b border-line align-top last:border-0"
+              >
+                <td className="px-4 py-3">
+                  <div className="font-mono text-[10px] tracking-wide text-accent">
+                    {claim.systemReference}
+                  </div>
+                  <div className="font-mono text-xs text-ink-dim">
+                    {claim.systemName}
+                  </div>
+                </td>
+                <td className="px-4 py-3">
+                  <div className="font-mono text-xs text-ink">{claim.label}</div>
+                  <div className="mt-0.5 font-mono text-xs text-ink-dim">
+                    {claim.value}
+                  </div>
+                </td>
+                <td className="px-4 py-3 font-mono text-[11px] text-ink-dim">
+                  {SCOPE_LABELS[claim.scope]}
+                </td>
+                <td className="px-4 py-3">
+                  {claim.sources.length > 0 ? (
+                    <ul className="space-y-1">
+                      {claim.sources.map((source) => (
+                        <li key={source.id} className="font-mono text-[11px]">
+                          {source.url ? (
+                            <a
+                              href={source.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-ink-dim transition-colors hover:text-accent"
+                            >
+                              {source.publisher} ↗
+                            </a>
+                          ) : (
+                            <span className="text-ink-dim">
+                              {source.publisher}
+                            </span>
+                          )}
+                          <span
+                            className="ml-1 text-ink-faint"
+                            title={`Fiabilité ${source.reliability}`}
+                          >
+                            · {source.reliability}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <span className="font-mono text-[11px] text-ink-faint">
+                      —
+                    </span>
+                  )}
+                </td>
+                <td className="px-4 py-3">
+                  <ConfidenceMark confidence={claim.confidence} />
+                </td>
+                <td className="px-4 py-3">
+                  <span className="inline-flex items-center gap-1.5 font-mono text-[11px] text-ink-dim">
+                    <span
+                      className="h-2 w-2 shrink-0"
+                      style={{ backgroundColor: STATUS_TOKEN[claim.status] }}
+                    />
+                    {STATUS_LABELS[claim.status]}
+                  </span>
+                </td>
+                <td className="px-4 py-3">
+                  <span className="inline-flex items-center gap-1.5 font-mono text-[11px] text-ink-dim">
+                    <span
+                      className="h-2 w-2 shrink-0"
+                      style={{
+                        backgroundColor: FRESHNESS_TOKEN[freshnessBand(claim.date)],
+                      }}
+                    />
+                    {FRESHNESS_LABELS[freshnessBand(claim.date)]}
+                  </span>
+                </td>
+              </tr>
+            ))}
+            {rows.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={COLUMNS.length}
+                  className="px-4 py-10 text-center font-mono text-xs text-ink-faint"
+                >
+                  Aucune affirmation pour ces filtres.
+                </td>
+              </tr>
+            ) : null}
+          </tbody>
+        </table>
+      </div>
+
+      {pageCount > 1 ? (
+        <nav
+          aria-label="Pagination du registre"
+          className="mt-4 flex flex-wrap items-center justify-between gap-3 font-mono text-[11px] text-ink-dim"
+        >
+          <span>
+            {(currentPage - 1) * PAGE_SIZE + 1}–
+            {Math.min(currentPage * PAGE_SIZE, rows.length)} sur {rows.length}
+          </span>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage <= 1}
+              className="h-9 border border-line-bright px-3 uppercase tracking-[0.14em] transition-colors hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              ← Précédent
+            </button>
+            <span>
+              Page {currentPage} / {pageCount}
+            </span>
+            <button
+              type="button"
+              onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+              disabled={currentPage >= pageCount}
+              className="h-9 border border-line-bright px-3 uppercase tracking-[0.14em] transition-colors hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Suivant →
+            </button>
+          </div>
+        </nav>
+      ) : null}
+    </>
+  );
+}
+
 export function ConsoleTable({ claims }: { claims: Claim[] }) {
   const [domain, setDomain] = useState("all");
   const [system, setSystem] = useState("all");
@@ -71,7 +231,6 @@ export function ConsoleTable({ claims }: { claims: Claim[] }) {
   const [status, setStatus] = useState("all");
   const [sourceType, setSourceType] = useState("all");
   const [freshness, setFreshness] = useState("all");
-  const [page, setPage] = useState(1);
 
   const systemNames = useMemo(
     () => Array.from(new Set(claims.map((claim) => claim.systemName))),
@@ -99,18 +258,17 @@ export function ConsoleTable({ claims }: { claims: Claim[] }) {
     [claims, domain, system, scope, confidence, status, sourceType, freshness],
   );
 
-  // Pagination : un changement de filtre ramène en page 1 ; l'export reste sur
-  // l'intégralité du jeu filtré (pas seulement la page visible).
-  useEffect(() => {
-    setPage(1);
-  }, [domain, system, scope, confidence, status, sourceType, freshness]);
-
-  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const currentPage = Math.min(page, pageCount);
-  const pageRows = filtered.slice(
-    (currentPage - 1) * PAGE_SIZE,
-    currentPage * PAGE_SIZE,
-  );
+  // Sert de clé de remontage de la table paginée : un changement de filtre
+  // réinitialise la page à 1. L'export agit sur l'intégralité du jeu filtré.
+  const filterKey = [
+    domain,
+    system,
+    scope,
+    confidence,
+    status,
+    sourceType,
+    freshness,
+  ].join("|");
 
   return (
     <div>
@@ -228,150 +386,7 @@ export function ConsoleTable({ claims }: { claims: Claim[] }) {
         </div>
       </div>
 
-      <div className="mt-4 overflow-x-auto border border-line">
-        <table className="w-full min-w-[820px] border-collapse">
-          <thead>
-            <tr className="border-b border-line bg-surface-2">
-              {COLUMNS.map((column) => (
-                <th
-                  key={column}
-                  scope="col"
-                  className="px-4 py-2.5 text-left font-mono text-[10px] uppercase tracking-[0.16em] text-ink-faint"
-                >
-                  {column}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {pageRows.map((claim) => (
-              <tr
-                key={`${claim.systemSlug}-${claim.scope}-${claim.label}`}
-                className="border-b border-line align-top last:border-0"
-              >
-                <td className="px-4 py-3">
-                  <div className="font-mono text-[10px] tracking-wide text-accent">
-                    {claim.systemReference}
-                  </div>
-                  <div className="font-mono text-xs text-ink-dim">
-                    {claim.systemName}
-                  </div>
-                </td>
-                <td className="px-4 py-3">
-                  <div className="font-mono text-xs text-ink">{claim.label}</div>
-                  <div className="mt-0.5 font-mono text-xs text-ink-dim">
-                    {claim.value}
-                  </div>
-                </td>
-                <td className="px-4 py-3 font-mono text-[11px] text-ink-dim">
-                  {SCOPE_LABELS[claim.scope]}
-                </td>
-                <td className="px-4 py-3">
-                  {claim.sources.length > 0 ? (
-                    <ul className="space-y-1">
-                      {claim.sources.map((source) => (
-                        <li key={source.id} className="font-mono text-[11px]">
-                          {source.url ? (
-                            <a
-                              href={source.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-ink-dim transition-colors hover:text-accent"
-                            >
-                              {source.publisher} ↗
-                            </a>
-                          ) : (
-                            <span className="text-ink-dim">
-                              {source.publisher}
-                            </span>
-                          )}
-                          <span
-                            className="ml-1 text-ink-faint"
-                            title={`Fiabilité ${source.reliability}`}
-                          >
-                            · {source.reliability}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <span className="font-mono text-[11px] text-ink-faint">
-                      —
-                    </span>
-                  )}
-                </td>
-                <td className="px-4 py-3">
-                  <ConfidenceMark confidence={claim.confidence} />
-                </td>
-                <td className="px-4 py-3">
-                  <span className="inline-flex items-center gap-1.5 font-mono text-[11px] text-ink-dim">
-                    <span
-                      className="h-2 w-2 shrink-0"
-                      style={{ backgroundColor: STATUS_TOKEN[claim.status] }}
-                    />
-                    {STATUS_LABELS[claim.status]}
-                  </span>
-                </td>
-                <td className="px-4 py-3">
-                  <span className="inline-flex items-center gap-1.5 font-mono text-[11px] text-ink-dim">
-                    <span
-                      className="h-2 w-2 shrink-0"
-                      style={{
-                        backgroundColor: FRESHNESS_TOKEN[freshnessBand(claim.date)],
-                      }}
-                    />
-                    {FRESHNESS_LABELS[freshnessBand(claim.date)]}
-                  </span>
-                </td>
-              </tr>
-            ))}
-            {filtered.length === 0 ? (
-              <tr>
-                <td
-                  colSpan={COLUMNS.length}
-                  className="px-4 py-10 text-center font-mono text-xs text-ink-faint"
-                >
-                  Aucune affirmation pour ces filtres.
-                </td>
-              </tr>
-            ) : null}
-          </tbody>
-        </table>
-      </div>
-
-      {pageCount > 1 ? (
-        <nav
-          aria-label="Pagination du registre"
-          className="mt-4 flex flex-wrap items-center justify-between gap-3 font-mono text-[11px] text-ink-dim"
-        >
-          <span>
-            {(currentPage - 1) * PAGE_SIZE + 1}–
-            {Math.min(currentPage * PAGE_SIZE, filtered.length)} sur{" "}
-            {filtered.length}
-          </span>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={currentPage <= 1}
-              className="h-9 border border-line-bright px-3 uppercase tracking-[0.14em] transition-colors hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              ← Précédent
-            </button>
-            <span>
-              Page {currentPage} / {pageCount}
-            </span>
-            <button
-              type="button"
-              onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
-              disabled={currentPage >= pageCount}
-              className="h-9 border border-line-bright px-3 uppercase tracking-[0.14em] transition-colors hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              Suivant →
-            </button>
-          </div>
-        </nav>
-      ) : null}
+      <PagedClaims key={filterKey} rows={filtered} />
     </div>
   );
 }

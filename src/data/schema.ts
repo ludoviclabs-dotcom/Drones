@@ -12,6 +12,8 @@ const SystemCategory = z.enum([
   "missile",
   "radar",
   "naval-vessel",
+  "air-defense",
+  "combat-system",
 ]);
 
 const Confidence = z.enum(["haute", "moyenne", "faible"]);
@@ -230,6 +232,12 @@ export const DefenseSystemSchema = z.object({
   missileRole: z.enum(["AAM", "ASM", "SSM", "SAM", "ARM"]).optional(),
   radarRole: z
     .enum(["alerte-avancee", "multi-mission", "naval-mfr", "bmd", "aeroporte-aesa", "cuas"])
+    .optional(),
+  airDefenseClass: z
+    .enum(["VSHORAD", "SHORAD", "MRAD", "LRAD", "BMD", "C-RAM", "C-UAS"])
+    .optional(),
+  combatSystemClass: z
+    .enum(["naval-cms", "iamd-c2", "c4isr", "collaboratif"])
     .optional(),
   integrationFrameworks: z.array(z.string()).optional(),
   navalVesselClass: NavalVesselClass.optional(),

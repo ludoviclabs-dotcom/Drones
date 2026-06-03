@@ -1,8 +1,10 @@
 # Spec — nouveaux domaines (Défense aérienne & Systèmes de combat / C2)
 
-> Statut : **prêt à exécuter, recommandé post-salon.** Effort estimé : ~1–1,5 j par domaine
-> (architecture + ~5 dossiers sourcés). Ces dossiers sont **hand-authored** (full
-> `DefenseSystem`), pas via la factory navale.
+> Statut : **✅ Implémenté (juin 2026).** Les deux domaines sont en ligne — catégories
+> `air-defense` et `combat-system`, pages `/defense-aerienne` et `/systemes-combat`,
+> 11 dossiers sourcés (NB : IRIS-T SLM existait déjà comme `missile` ; remplacé ici par
+> David's Sling). Ce document reste la référence d'architecture et liste l'évolution
+> restante (généraliser la chaîne système au-delà du naval).
 
 ## Pourquoi pas tout de suite
 

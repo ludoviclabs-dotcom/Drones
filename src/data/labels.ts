@@ -1,8 +1,10 @@
 import type {
   AcquisitionMode,
+  AirDefenseClass,
   BrickKey,
   ClaimStatus,
   CombatAircraftClass,
+  CombatSystemClass,
   Confidence,
   Grade,
   MissileRole,
@@ -52,6 +54,8 @@ export const CATEGORY_LABELS: Record<SystemCategory, string> = {
   missile: "Missiles",
   radar: "Radars",
   "naval-vessel": "Bâtiments navals",
+  "air-defense": "Défense aérienne",
+  "combat-system": "Systèmes de combat / C2",
 };
 
 export const GENERATION_LABELS: Record<CombatAircraftClass, string> = {
@@ -225,4 +229,55 @@ export const TIMELINE_KIND_LABELS: Record<TimelineKind, string> = {
   emploi: "Emploi",
   export: "Export",
   debat: "Débat",
+};
+
+export const AIR_DEFENSE_LABELS: Record<AirDefenseClass, string> = {
+  VSHORAD: "Très courte portée (VSHORAD)",
+  SHORAD: "Courte portée (SHORAD)",
+  MRAD: "Moyenne portée (MRAD)",
+  LRAD: "Longue portée (LRAD / HIMAD)",
+  BMD: "Antimissile balistique (BMD)",
+  "C-RAM": "Anti-roquettes & rapprochée (C-RAM)",
+  "C-UAS": "Anti-drones (C-UAS)",
+};
+
+export const AIR_DEFENSE_ORDER: AirDefenseClass[] = [
+  "VSHORAD",
+  "SHORAD",
+  "MRAD",
+  "LRAD",
+  "BMD",
+  "C-RAM",
+  "C-UAS",
+];
+
+export const AIR_DEFENSE_BLURBS: Record<AirDefenseClass, string> = {
+  VSHORAD: "Défense rapprochée — drones, hélicoptères, menaces à très courte portée.",
+  SHORAD: "Couche courte portée — protection de site et bulle tactique.",
+  MRAD: "Couche moyenne portée — aéronefs, missiles de croisière, défense de zone.",
+  LRAD: "Longue portée et haute altitude — défense de zone étendue et antimissile.",
+  BMD: "Interception de missiles balistiques — couches endo et exo-atmosphériques.",
+  "C-RAM": "Contre roquettes, obus et mortiers — réaction très rapide, faible coût par tir.",
+  "C-UAS": "Lutte anti-drones — détection fine et effecteurs adaptés aux petites cibles.",
+};
+
+export const COMBAT_SYSTEM_LABELS: Record<CombatSystemClass, string> = {
+  "naval-cms": "Système de combat naval (CMS)",
+  "iamd-c2": "Commandement IAMD (C2)",
+  c4isr: "C4ISR",
+  collaboratif: "Combat collaboratif",
+};
+
+export const COMBAT_SYSTEM_ORDER: CombatSystemClass[] = [
+  "naval-cms",
+  "iamd-c2",
+  "c4isr",
+  "collaboratif",
+];
+
+export const COMBAT_SYSTEM_BLURBS: Record<CombatSystemClass, string> = {
+  "naval-cms": "Le cerveau d'un navire — fusion capteurs, conduite de tir et armes.",
+  "iamd-c2": "Commandement de la défense aérienne et antimissile — tout capteur, tout effecteur.",
+  c4isr: "Commandement, contrôle, communications, renseignement et surveillance.",
+  collaboratif: "Engagement coopératif en réseau — partage de pistes entre plateformes.",
 };

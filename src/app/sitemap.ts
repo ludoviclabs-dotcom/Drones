@@ -18,6 +18,8 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: ChangeFr
   { path: "/console", priority: 0.8, changeFrequency: "weekly" },
   { path: "/aviation-combat", priority: 0.8, changeFrequency: "monthly" },
   { path: "/batiments-navals", priority: 0.8, changeFrequency: "monthly" },
+  { path: "/defense-aerienne", priority: 0.8, changeFrequency: "monthly" },
+  { path: "/systemes-combat", priority: 0.8, changeFrequency: "monthly" },
   { path: "/energie-dirigee", priority: 0.8, changeFrequency: "monthly" },
   { path: "/missiles", priority: 0.8, changeFrequency: "monthly" },
   { path: "/radars", priority: 0.8, changeFrequency: "monthly" },

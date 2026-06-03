@@ -129,6 +129,52 @@ const EMBLEMS: Record<SystemCategory, ReactNode> = {
       <path d="M42 52 L31 58 M58 52 L69 58" strokeWidth="1" />
     </>
   ),
+  // Défense aérienne — boîtier lanceur sur véhicule, missile sur rail incliné,
+  // arcs d'interception montants.
+  "air-defense": (
+    <>
+      <line
+        x1="50"
+        y1="6"
+        x2="50"
+        y2="92"
+        strokeWidth="1"
+        strokeDasharray="2 4"
+      />
+      <path d="M70 16 L74 10 L78 16 L76 40 L72 40 Z" />
+      <line x1="74" y1="40" x2="60" y2="58" strokeWidth="1.4" />
+      <path d="M78 12 A34 34 0 0 1 92 34" strokeDasharray="3 4" />
+      <path d="M82 8 A44 44 0 0 1 96 38" strokeDasharray="3 4" />
+      <rect x="30" y="54" width="34" height="20" />
+      <line x1="34" y1="60" x2="60" y2="60" strokeWidth="1" />
+      <circle cx="38" cy="80" r="4.5" />
+      <circle cx="56" cy="80" r="4.5" />
+      <line x1="20" y1="86" x2="74" y2="86" strokeWidth="1" />
+    </>
+  ),
+  // Systèmes de combat / C2 — noeud central et capteurs/effecteurs en réseau.
+  "combat-system": (
+    <>
+      <line
+        x1="50"
+        y1="6"
+        x2="50"
+        y2="94"
+        strokeWidth="1"
+        strokeDasharray="2 4"
+      />
+      <circle cx="50" cy="50" r="11" />
+      <circle cx="50" cy="50" r="3.5" />
+      <circle cx="22" cy="26" r="5" />
+      <circle cx="78" cy="26" r="5" />
+      <circle cx="20" cy="74" r="5" />
+      <circle cx="80" cy="74" r="5" />
+      <line x1="42" y1="43" x2="26" y2="30" />
+      <line x1="58" y1="43" x2="74" y2="30" />
+      <line x1="42" y1="57" x2="24" y2="70" />
+      <line x1="58" y1="57" x2="76" y2="70" />
+    </>
+  ),
 };
 
 export function DomainEmblem({

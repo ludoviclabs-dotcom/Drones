@@ -58,4 +58,20 @@ export const DOMAINS: DomainInfo[] = [
     blurb:
       "Porte-avions, frégates, corvettes, sous-marins et patrouilleurs — des architectures de mission, pas seulement des coques.",
   },
+  {
+    category: "air-defense",
+    label: "Défense aérienne & antimissile",
+    href: "/defense-aerienne",
+    cta: "Ouvrir le domaine",
+    blurb:
+      "Du VSHORAD à l'antimissile balistique — SAMP/T, Patriot, NASAMS, David's Sling, Arrow 3, Iron Dome lus comme des systèmes intégrés.",
+  },
+  {
+    category: "combat-system",
+    label: "Systèmes de combat & C2",
+    href: "/systemes-combat",
+    cta: "Ouvrir le domaine",
+    blurb:
+      "Aegis, TACTICOS, PAAMS, SETIS, IBCS — le cerveau des plateformes et de la défense aérienne intégrée.",
+  },
 ];

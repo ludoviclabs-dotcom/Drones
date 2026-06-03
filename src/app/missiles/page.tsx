@@ -11,6 +11,7 @@ import { RegistrationMarks } from "@/components/registration-marks";
 import { Stamp } from "@/components/stamp";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/missiles" },
   title: "Missiles",
   description:
     "Le domaine des missiles — air-air, air-surface, surface-surface, surface-air et SEAD. Coût réel, chaîne industrielle, régimes d'export et cadre juridique du droit des conflits armés.",

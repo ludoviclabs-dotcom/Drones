@@ -10,6 +10,7 @@ import { RegistrationMarks } from "@/components/registration-marks";
 import { Stamp } from "@/components/stamp";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/radars" },
   title: "Radars",
   description:
     "Le domaine des radars — alerte avancée, multi-mission, naval, BMD, aéroporté AESA, C-UAS. Coût réel, chaîne industrielle, régimes d'export et place dans les architectures IAMD.",

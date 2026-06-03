@@ -5,6 +5,7 @@ import { StatGrid, type Stat } from "@/components/stat-cards";
 import { ConsoleTable } from "@/components/console-table";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/console" },
   title: "Console OSINT",
   description:
     "Registre de preuves filtrable — chaque affirmation publiée par Panoplie, tracée, sourcée et statuée.",

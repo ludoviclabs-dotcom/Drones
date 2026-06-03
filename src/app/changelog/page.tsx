@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { changelog } from "@/data/changelog";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/changelog" },
   title: "Changelog",
   description:
     "Le journal des évolutions de Panoplie — données, fonctionnalités et corrections.",

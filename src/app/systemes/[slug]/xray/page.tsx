@@ -22,6 +22,7 @@ export async function generateMetadata({
   return {
     title: `${system.name} — System X-Ray`,
     description: `Lecture X-Ray OSINT non operationnelle du dossier ${system.name}.`,
+    alternates: { canonical: `/systemes/${slug}/xray` },
   };
 }
 

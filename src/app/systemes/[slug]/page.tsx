@@ -27,6 +27,10 @@ import { Tilt } from "@/components/tilt";
 import { GlitchText } from "@/components/glitch-text";
 import { ReadingProgress } from "@/components/reading-progress";
 import { Timeline } from "@/components/timeline";
+import { JsonLd } from "@/components/json-ld";
+import { ConfidenceHeatmap } from "@/components/confidence-heatmap";
+import { RelationGraph } from "@/components/relation-graph";
+import { systemDatasetLd } from "@/lib/structured-data";
 
 export function generateStaticParams() {
   return getSystemSlugs().map((slug) => ({ slug }));
@@ -40,7 +44,23 @@ export async function generateMetadata({
   const { slug } = await params;
   const system = getSystem(slug);
   if (!system) return { title: "Système introuvable" };
-  return { title: system.name, description: system.tagline };
+  const canonical = `/systemes/${slug}`;
+  return {
+    title: system.name,
+    description: system.tagline,
+    alternates: { canonical },
+    openGraph: {
+      type: "article",
+      title: system.name,
+      description: system.tagline,
+      url: canonical,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: system.name,
+      description: system.tagline,
+    },
+  };
 }
 
 export default async function SystemPage({
@@ -97,12 +117,14 @@ export default async function SystemPage({
   const idxSummary = nextIndex();
   const idxQuickRead = nextIndex();
   const idxNavalArchitecture = hasNavalProfile ? nextIndex() : null;
+  const idxRelations = hasNavalProfile ? nextIndex() : null;
   const idxVariants = hasVariants ? nextIndex() : null;
   const brickBase = counter;
   counter += system.bricks.length;
   const idxConstraints = hasConstraints ? nextIndex() : null;
   const idxLegal = system.legalNote ? nextIndex() : null;
   const idxEval = nextIndex();
+  const idxConfidence = nextIndex();
   const idxAnalyst = system.editorial.analystNote ? nextIndex() : null;
   const idxSpecs = nextIndex();
   const idxOperators = nextIndex();
@@ -112,6 +134,7 @@ export default async function SystemPage({
 
   return (
     <article className="mx-auto max-w-[1100px] px-5 py-10">
+      <JsonLd data={systemDatasetLd(system)} />
       <ReadingProgress />
       <Link
         href="/"
@@ -224,6 +247,19 @@ export default async function SystemPage({
         </section>
       ) : null}
 
+      {idxRelations && system.navalProfile ? (
+        <section className="mt-16">
+          <SectionMarker
+            index={idxRelations}
+            label="Carte relationnelle"
+            blurb="Le navire comme nœud d'un système de systèmes : plateforme, capteurs, CMS/C2, effecteurs et industriels."
+          />
+          <div className="mt-6">
+            <RelationGraph profile={system.navalProfile} name={system.name} />
+          </div>
+        </section>
+      ) : null}
+
       {idxVariants && system.variants ? (
         <section className="mt-16">
           <SectionMarker
@@ -283,6 +319,17 @@ export default async function SystemPage({
         </div>
         <div className="mt-4">
           <ScoreGrid scores={system.scores} />
+        </div>
+      </section>
+
+      <section className="mt-16">
+        <SectionMarker
+          index={idxConfidence}
+          label="Heatmap de confiance"
+          blurb="Quelles sections du dossier sont solidement étayées, lesquelles restent fragiles — dérivé du registre de preuves."
+        />
+        <div className="mt-6">
+          <ConfidenceHeatmap slug={system.slug} />
         </div>
       </section>
 

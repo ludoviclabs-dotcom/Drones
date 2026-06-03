@@ -8,6 +8,7 @@ import {
 } from "@/components/arbitrage-simulator";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/simulateur" },
   title: "Simulateur d'arbitrage",
   description:
     "Outil de pondération non opérationnel : régler ses priorités d'acquisition et lire, en regard, les paliers d'évaluation et les points de vigilance de chaque système.",

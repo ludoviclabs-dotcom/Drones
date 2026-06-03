@@ -5,6 +5,7 @@ import { organisms } from "@/data/organisms";
 import { SectionMarker } from "@/components/primitives";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/glossaire" },
   title: "Glossaire",
   description:
     "Lexique des termes et registre des organismes et cadres réglementaires cités sur Panoplie.",

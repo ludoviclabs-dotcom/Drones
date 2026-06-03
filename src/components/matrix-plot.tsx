@@ -57,7 +57,7 @@ export function MatrixPlot({ points }: { points: MatrixPoint[] }) {
             {QUADRANTS.map((quadrant) => (
               <span
                 key={quadrant.text}
-                className={`pointer-events-none absolute ${quadrant.pos} ${quadrant.align} max-w-[44%] font-mono text-[9px] uppercase leading-tight tracking-[0.12em] text-ink-faint/70`}
+                className={`pointer-events-none absolute ${quadrant.pos} ${quadrant.align} max-w-[44%] font-mono text-[10px] uppercase leading-tight tracking-[0.12em] text-ink-dim`}
               >
                 {quadrant.text}
               </span>

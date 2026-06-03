@@ -1,18 +1,18 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { Claim, ClaimScope } from "@/lib/claims";
+import type { Claim } from "@/lib/claims";
+import {
+  FRESHNESS_LABELS,
+  FRESHNESS_TOKEN,
+  SCOPE_LABELS,
+  freshnessBand,
+  isPrimaryClaim,
+} from "@/lib/claims";
+import { claimsToCsv, claimsToJson, downloadFile } from "@/lib/export";
 import type { ClaimStatus } from "@/data/types";
-import { BRICK_LABELS, CATEGORY_LABELS, STATUS_LABELS } from "@/data/labels";
+import { CATEGORY_LABELS, STATUS_LABELS } from "@/data/labels";
 import { ConfidenceMark } from "./primitives";
-
-const SCOPE_LABELS: Record<ClaimScope, string> = {
-  ...BRICK_LABELS,
-  specs: "Caractéristiques",
-  contraintes: "Contraintes physiques",
-  versions: "Versions & standards",
-  "architecture-navale": "Architecture navale",
-};
 
 const STATUS_TOKEN: Record<ClaimStatus, string> = {
   verifie: "var(--color-grade-a)",
@@ -27,6 +27,7 @@ const COLUMNS = [
   "Source",
   "Confiance",
   "Statut",
+  "Fraîcheur",
 ];
 
 function Field({
@@ -66,6 +67,8 @@ export function ConsoleTable({ claims }: { claims: Claim[] }) {
   const [scope, setScope] = useState("all");
   const [confidence, setConfidence] = useState("all");
   const [status, setStatus] = useState("all");
+  const [sourceType, setSourceType] = useState("all");
+  const [freshness, setFreshness] = useState("all");
 
   const systemNames = useMemo(
     () => Array.from(new Set(claims.map((claim) => claim.systemName))),
@@ -74,15 +77,23 @@ export function ConsoleTable({ claims }: { claims: Claim[] }) {
 
   const filtered = useMemo(
     () =>
-      claims.filter(
-        (claim) =>
-          (domain === "all" || claim.category === domain) &&
-          (system === "all" || claim.systemName === system) &&
-          (scope === "all" || claim.scope === scope) &&
-          (confidence === "all" || claim.confidence === confidence) &&
-          (status === "all" || claim.status === status),
-      ),
-    [claims, domain, system, scope, confidence, status],
+      claims.filter((claim) => {
+        if (domain !== "all" && claim.category !== domain) return false;
+        if (system !== "all" && claim.systemName !== system) return false;
+        if (scope !== "all" && claim.scope !== scope) return false;
+        if (confidence !== "all" && claim.confidence !== confidence) return false;
+        if (status !== "all" && claim.status !== status) return false;
+        if (sourceType !== "all") {
+          const primary = isPrimaryClaim(claim);
+          if (sourceType === "primaire" && !primary) return false;
+          if (sourceType === "secondaire" && primary) return false;
+        }
+        if (freshness !== "all" && freshnessBand(claim.date) !== freshness) {
+          return false;
+        }
+        return true;
+      }),
+    [claims, domain, system, scope, confidence, status, sourceType, freshness],
   );
 
   return (
@@ -144,9 +155,61 @@ export function ConsoleTable({ claims }: { claims: Claim[] }) {
             })),
           ]}
         />
-        <span className="ml-auto font-mono text-[11px] text-ink-dim">
-          {filtered.length} / {claims.length} affirmations
-        </span>
+        <Field
+          label="Sources"
+          value={sourceType}
+          onChange={setSourceType}
+          options={[
+            { value: "all", label: "Toutes" },
+            { value: "primaire", label: "Primaires" },
+            { value: "secondaire", label: "Secondaires" },
+          ]}
+        />
+        <Field
+          label="Fraîcheur"
+          value={freshness}
+          onChange={setFreshness}
+          options={[
+            { value: "all", label: "Toutes" },
+            ...Object.entries(FRESHNESS_LABELS).map(([value, label]) => ({
+              value,
+              label,
+            })),
+          ]}
+        />
+        <div className="ml-auto flex items-center gap-3">
+          <span className="font-mono text-[11px] text-ink-dim">
+            {filtered.length} / {claims.length} affirmations
+          </span>
+          <button
+            type="button"
+            onClick={() =>
+              downloadFile(
+                "panoplie-console-claims.csv",
+                "text/csv;charset=utf-8",
+                claimsToCsv(filtered),
+              )
+            }
+            disabled={filtered.length === 0}
+            className="h-9 border border-accent px-3 font-mono text-[10px] uppercase tracking-[0.14em] text-accent transition-colors hover:bg-accent hover:text-bg disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Export CSV
+          </button>
+          <button
+            type="button"
+            onClick={() =>
+              downloadFile(
+                "panoplie-console-claims.json",
+                "application/json",
+                claimsToJson(filtered),
+              )
+            }
+            disabled={filtered.length === 0}
+            className="h-9 border border-line-bright px-3 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-dim transition-colors hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Export JSON
+          </button>
+        </div>
       </div>
 
       <div className="mt-4 overflow-x-auto border border-line">
@@ -231,6 +294,17 @@ export function ConsoleTable({ claims }: { claims: Claim[] }) {
                       style={{ backgroundColor: STATUS_TOKEN[claim.status] }}
                     />
                     {STATUS_LABELS[claim.status]}
+                  </span>
+                </td>
+                <td className="px-4 py-3">
+                  <span className="inline-flex items-center gap-1.5 font-mono text-[11px] text-ink-dim">
+                    <span
+                      className="h-2 w-2 shrink-0"
+                      style={{
+                        backgroundColor: FRESHNESS_TOKEN[freshnessBand(claim.date)],
+                      }}
+                    />
+                    {FRESHNESS_LABELS[freshnessBand(claim.date)]}
                   </span>
                 </td>
               </tr>

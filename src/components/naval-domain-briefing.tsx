@@ -71,22 +71,22 @@ const FUNCTIONAL_MATRIX = [
   },
   {
     function: "Amphibie / projection",
-    current: "Mistral PHA, Dokdo / Marado, Type 075",
-    next: "America-class, Type 076 (radier + drones)",
+    current: "Mistral PHA, Dokdo / Marado, Type 075, Type 076",
+    next: "America-class, futurs LHD",
     logic:
       "Lire le pont aviation, les chalands, le C2, la protection et la dépendance à l'escorte.",
   },
   {
     function: "Escorteurs AAW / BMD",
-    current: "Arleigh Burke Flight III, F110 Bonifaz, Maya, KDX-III Batch II, Type 055, Sachsen F124",
-    next: "F127 allemande, Type 052D",
+    current: "Arleigh Burke Flight III, F110 Bonifaz, Maya, KDX-III Batch II, Type 055, Sachsen F124, F127, KDDX",
+    next: "Type 052D, Type 054B",
     logic:
       "Comparer radar, CMS, VLS, défense antimissile, liaisons et cadence industrielle.",
   },
   {
     function: "Frégates / corvettes multi-missions",
-    current: "FREMM, FDI, Type 26, Gowind, FREMM Carlo Bergamini, F126",
-    next: "Mogami, K130, Constellation en cas de programme",
+    current: "FREMM, FDI, Type 26, Gowind, FREMM Carlo Bergamini, F126, FREMM EVO, Constellation",
+    next: "Mogami, K130",
     logic:
       "Distinguer frégate lourde, compacte, corvette export et présence armée.",
   },
@@ -135,7 +135,7 @@ const COMPARISON_COMPASS = [
 
 const PROGRAM_STRESS = [
   ["Programme futur", "France Libre / PA-NG", "coût, nucléaire, continuité industrielle"],
-  ["Programme instable", "Constellation", "adaptation de design et gouvernance"],
+  ["Programme réduit", "Constellation", "design instable, surpoids, série amputée fin 2025"],
   ["Programme glissant", "F126", "calendrier, chantier, arbitrage industriel"],
   ["Capacité critique", "Sous-marins", "main-d'oeuvre, réacteurs, batteries, carénage"],
 ] as const;

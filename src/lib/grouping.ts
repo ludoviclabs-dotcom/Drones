@@ -1,5 +1,7 @@
 import type {
+  AirDefenseClass,
   CombatAircraftClass,
+  CombatSystemClass,
   DroneClass,
   MissileRole,
   NavalVesselClass,
@@ -7,6 +9,8 @@ import type {
   SystemCategory,
 } from "@/data/types";
 import {
+  AIR_DEFENSE_LABELS,
+  COMBAT_SYSTEM_LABELS,
   GENERATION_LABELS,
   MISSILE_ROLE_LABELS,
   NAVAL_VESSEL_LABELS,
@@ -30,6 +34,8 @@ export interface FamilyGroupable {
   droneClass?: DroneClass;
   missileRole?: MissileRole;
   radarRole?: RadarRole;
+  airDefenseClass?: AirDefenseClass;
+  combatSystemClass?: CombatSystemClass;
 }
 
 /**
@@ -54,6 +60,14 @@ export function familyLabel(system: FamilyGroupable): string {
     case "radar":
       return system.radarRole
         ? RADAR_ROLE_LABELS[system.radarRole]
+        : system.classLabel;
+    case "air-defense":
+      return system.airDefenseClass
+        ? AIR_DEFENSE_LABELS[system.airDefenseClass]
+        : system.classLabel;
+    case "combat-system":
+      return system.combatSystemClass
+        ? COMBAT_SYSTEM_LABELS[system.combatSystemClass]
         : system.classLabel;
     default:
       return system.classLabel;

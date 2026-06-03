@@ -9,7 +9,9 @@ export type SystemCategory =
   | "combat-aircraft"
   | "missile"
   | "radar"
-  | "naval-vessel";
+  | "naval-vessel"
+  | "air-defense"
+  | "combat-system";
 
 export type DroneClass =
   | "MALE"
@@ -52,6 +54,23 @@ export type RadarRole =
   | "bmd"
   | "aeroporte-aesa"
   | "cuas";
+
+/** Couche de la défense sol-air — du très courte portée à l'antimissile. */
+export type AirDefenseClass =
+  | "VSHORAD"
+  | "SHORAD"
+  | "MRAD"
+  | "LRAD"
+  | "BMD"
+  | "C-RAM"
+  | "C-UAS";
+
+/** Famille d'un système de combat / C2 — CMS naval, C2 IAMD, C4ISR, collaboratif. */
+export type CombatSystemClass =
+  | "naval-cms"
+  | "iamd-c2"
+  | "c4isr"
+  | "collaboratif";
 
 /** Famille de bâtiment naval — lecture plateforme + mission, pas simple tonnage. */
 export type NavalVesselClass =
@@ -281,6 +300,10 @@ export interface DefenseSystem {
   missileRole?: MissileRole;
   /** Rôle radar — renseigné pour le domaine « radar ». */
   radarRole?: RadarRole;
+  /** Couche de défense aérienne — renseignée pour le domaine « air-defense ». */
+  airDefenseClass?: AirDefenseClass;
+  /** Famille C2 — renseignée pour le domaine « combat-system ». */
+  combatSystemClass?: CombatSystemClass;
   /**
    * Cadres d'intégration réseau — NATINAMDS, IBCS, NASAMS, SAMP/T, Iron Dome,
    * Aegis. Champ transversal : un radar y siège comme capteur, un missile

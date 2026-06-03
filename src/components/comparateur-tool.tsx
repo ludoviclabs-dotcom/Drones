@@ -28,6 +28,7 @@ import { GradeBadge } from "./primitives";
 import { ScoreProfile } from "./score-profile";
 import { ScoreRadar } from "./score-radar";
 import { SystemSchematic } from "./system-schematic";
+import { RelationGraph } from "./relation-graph";
 
 // Forme allégée — le comparateur n'a besoin que de l'identité, des modes
 // d'acquisition, des paliers et de deux blocs de lecture.
@@ -89,6 +90,7 @@ export function ComparateurTool({ systems }: { systems: ComparableSystem[] }) {
     systems.slice(0, MIN_SELECTION).map((s) => s.slug),
   );
   const [domain, setDomain] = useState<DomainValue>("all");
+  const [view, setView] = useState<"tableau" | "chaines">("tableau");
   const tableRef = useRef<HTMLDivElement>(null);
 
   // Le filtre de domaine ne restreint que la grille de sélection — les
@@ -276,8 +278,64 @@ export function ComparateurTool({ systems }: { systems: ComparableSystem[] }) {
           </p>
         </div>
       ) : (
-        <div ref={tableRef} className="mt-6 overflow-x-auto">
-          <table className="w-full min-w-[600px] border-collapse">
+        <div className="mt-6">
+          <div
+            role="radiogroup"
+            aria-label="Vue du comparateur"
+            className="mb-4 flex gap-2"
+          >
+            {(
+              [
+                ["tableau", "Tableau"],
+                ["chaines", "Chaînes système"],
+              ] as const
+            ).map(([value, label]) => (
+              <button
+                key={value}
+                type="button"
+                role="radio"
+                aria-checked={view === value}
+                onClick={() => setView(value)}
+                className={`border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] transition-colors ${
+                  view === value
+                    ? "border-accent bg-accent/10 text-accent"
+                    : "border-line-bright text-ink-dim hover:border-ink-faint"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
+          {view === "chaines" ? (
+            <div className="space-y-8">
+              {chosen.map((system) => (
+                <div key={system.slug}>
+                  <div className="mb-3 flex flex-wrap items-baseline gap-2">
+                    <span className="text-base">{system.flag}</span>
+                    <span className="font-serif text-xl text-ink">
+                      {system.name}
+                    </span>
+                    <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
+                      {system.classLabel}
+                    </span>
+                  </div>
+                  {system.navalProfile ? (
+                    <RelationGraph
+                      profile={system.navalProfile}
+                      name={system.name}
+                    />
+                  ) : (
+                    <p className="border border-dashed border-line-bright bg-panel/40 px-4 py-6 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-faint">
+                      Chaîne système disponible pour les bâtiments navals.
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div ref={tableRef} className="overflow-x-auto">
+              <table className="w-full min-w-[600px] border-collapse">
             <thead>
               <tr>
                 <td className="w-[170px] border border-line bg-bg" />
@@ -553,7 +611,9 @@ export function ComparateurTool({ systems }: { systems: ComparableSystem[] }) {
                 </tr>
               ))}
             </tbody>
-          </table>
+              </table>
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Newsreader, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { MotionController } from "@/components/motion-controller";
 import { JsonLd } from "@/components/json-ld";
 import { organizationLd, webSiteLd } from "@/lib/structured-data";
@@ -49,6 +50,7 @@ export const metadata: Metadata = {
 };
 
 const NAV = [
+  { href: "/eurosatory", label: "EuroSatory" },
   { href: "/domaines", label: "Domaines" },
   { href: "/comparateur", label: "Comparateur" },
   { href: "/matrice", label: "Matrice" },
@@ -166,6 +168,7 @@ export default function RootLayout({
           </div>
         </footer>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

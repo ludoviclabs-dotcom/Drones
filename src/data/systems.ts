@@ -87,6 +87,28 @@ import { sachsenF124, f126Niedersachsen, type212cd } from "./systems/naval-germa
 import { mayaClass, izumoKaga, taigeiClass } from "./systems/naval-japan";
 import { kdxIiiBatchIi, kssIii, dokdoMarado } from "./systems/naval-korea";
 import { fujian, type055, type075 } from "./systems/naval-china";
+import {
+  f127,
+  type076,
+  kddx,
+  constellationFfg62,
+  fremmEvo,
+} from "./systems/naval-next-wave";
+import {
+  sampTNg,
+  patriotPac3Mse,
+  nasams,
+  davidsSling,
+  arrow3,
+  ironDome,
+} from "./systems/air-defense";
+import {
+  aegis,
+  tacticos,
+  paamsSeaViper,
+  setis,
+  ibcs,
+} from "./systems/combat-systems";
 
 export const systems: DefenseSystem[] = [
   mq9Reaper,
@@ -187,6 +209,25 @@ export const systems: DefenseSystem[] = [
   fujian,
   type055,
   type075,
+  // Vague suivante (programmes / en construction)
+  f127,
+  type076,
+  kddx,
+  constellationFfg62,
+  fremmEvo,
+  // Défense aérienne & antimissile
+  sampTNg,
+  patriotPac3Mse,
+  nasams,
+  davidsSling,
+  arrow3,
+  ironDome,
+  // Systèmes de combat & C2
+  aegis,
+  tacticos,
+  paamsSeaViper,
+  setis,
+  ibcs,
 ];
 
 export const SYSTEMS_BY_SLUG: Record<string, DefenseSystem> = Object.fromEntries(

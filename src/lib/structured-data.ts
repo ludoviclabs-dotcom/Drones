@@ -1,4 +1,5 @@
 import type { DefenseSystem } from "@/data/types";
+import { DOMAINS } from "@/data/domains";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
 // Données structurées schema.org. Une fiche système = un jeu de preuves OSINT
@@ -50,5 +51,28 @@ export function systemDatasetLd(system: DefenseSystem): Ld {
     creator: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
     isPartOf: { "@type": "WebSite", name: SITE_NAME, url: SITE_URL },
     ...(isBasedOn.length > 0 ? { isBasedOn } : {}),
+  };
+}
+
+/** Fil d'Ariane Accueil > Domaine > Système — enrichit les rich results. */
+export function systemBreadcrumbLd(system: DefenseSystem): Ld {
+  const domain = DOMAINS.find((d) => d.category === system.category);
+  const crumbs = [
+    { name: "Accueil", url: SITE_URL },
+    // Le domaine « drone » pointe vers une ancre (#catalogue) : on l'omet.
+    ...(domain && !domain.href.includes("#")
+      ? [{ name: domain.label, url: `${SITE_URL}${domain.href}` }]
+      : []),
+    { name: system.name, url: `${SITE_URL}/systemes/${system.slug}` },
+  ];
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: crumbs.map((crumb, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: crumb.name,
+      item: crumb.url,
+    })),
   };
 }

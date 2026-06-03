@@ -19,10 +19,13 @@
 
   --color-ink: #ece6d5;
   --color-ink-dim: #9c9783;
-  --color-ink-faint: #8a8472;
+  /* Remonté de #8a8472 pour atteindre 4.5:1 (WCAG AA) sur les panneaux
+     élevés, tout en restant sous ink-dim (hiérarchie préservée). */
+  --color-ink-faint: #948d79;
 
   /* Encres */
-  --color-accent: #d2683c;
+  /* Remonté de #d2683c → 4.5:1 sur surface-2 / tuiles accent-10 (WCAG AA). */
+  --color-accent: #e07a4d;
   --color-accent-deep: #a8521f;
   --color-stamp: #6d8a9a;
 

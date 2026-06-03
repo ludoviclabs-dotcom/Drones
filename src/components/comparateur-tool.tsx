@@ -5,9 +5,12 @@ import Link from "next/link";
 import type {
   AcquisitionMode,
   CombatAircraftClass,
+  DroneClass,
   EditorialBlocks,
+  MissileRole,
   NavalStructuredProfile,
   NavalVesselClass,
+  RadarRole,
   Score,
   ScoreKey,
   SystemCategory,
@@ -19,6 +22,7 @@ import {
   NAVAL_VESSEL_LABELS,
   SCORE_LABELS,
 } from "@/data/labels";
+import { familyLabel, primaryCountry } from "@/lib/grouping";
 import { DomainChips, type DomainValue } from "./domain-filter";
 import { GradeBadge } from "./primitives";
 import { ScoreProfile } from "./score-profile";
@@ -34,6 +38,9 @@ export interface ComparableSystem {
   classLabel: string;
   category: SystemCategory;
   combatAircraftClass?: CombatAircraftClass;
+  droneClass?: DroneClass;
+  missileRole?: MissileRole;
+  radarRole?: RadarRole;
   claimedGeneration?: string;
   naval?: string;
   navalVesselClass?: NavalVesselClass;
@@ -91,6 +98,40 @@ export function ComparateurTool({ systems }: { systems: ComparableSystem[] }) {
     [systems, domain],
   );
 
+  // Chargements rapides « par pays » et « par famille » : préremplissent la
+  // sélection avec les premiers frères correspondants (dans le domaine filtré).
+  const countryOptions = useMemo(
+    () =>
+      Array.from(
+        new Set(visibleSystems.map((s) => primaryCountry(s.country))),
+      ).sort((a, b) => a.localeCompare(b, "fr")),
+    [visibleSystems],
+  );
+  const familyOptions = useMemo(
+    () =>
+      Array.from(new Set(visibleSystems.map((s) => familyLabel(s)))).sort(
+        (a, b) => a.localeCompare(b, "fr"),
+      ),
+    [visibleSystems],
+  );
+
+  function loadCountry(country: string) {
+    setSelected(
+      visibleSystems
+        .filter((s) => primaryCountry(s.country) === country)
+        .slice(0, MAX_SELECTION)
+        .map((s) => s.slug),
+    );
+  }
+  function loadFamily(family: string) {
+    setSelected(
+      visibleSystems
+        .filter((s) => familyLabel(s) === family)
+        .slice(0, MAX_SELECTION)
+        .map((s) => s.slug),
+    );
+  }
+
   // Colonnes en ordre de catalogue — les colonnes ne se déplacent pas quand
   // on coche ou décoche un système.
   const chosen = useMemo(
@@ -138,6 +179,46 @@ export function ComparateurTool({ systems }: { systems: ComparableSystem[] }) {
         </div>
         <div className="mt-3">
           <DomainChips value={domain} onChange={setDomain} />
+        </div>
+        <div className="mt-3 flex flex-wrap gap-3">
+          <label className="flex items-center gap-2">
+            <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
+              Charger un pays
+            </span>
+            <select
+              value=""
+              onChange={(event) => {
+                if (event.target.value) loadCountry(event.target.value);
+              }}
+              className="border border-line-bright bg-surface px-2.5 py-1.5 font-mono text-xs text-ink"
+            >
+              <option value="">—</option>
+              {countryOptions.map((country) => (
+                <option key={country} value={country}>
+                  {country}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="flex items-center gap-2">
+            <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
+              Charger une famille
+            </span>
+            <select
+              value=""
+              onChange={(event) => {
+                if (event.target.value) loadFamily(event.target.value);
+              }}
+              className="border border-line-bright bg-surface px-2.5 py-1.5 font-mono text-xs text-ink"
+            >
+              <option value="">—</option>
+              {familyOptions.map((family) => (
+                <option key={family} value={family}>
+                  {family}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
         <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
           {visibleSystems.map((system) => {

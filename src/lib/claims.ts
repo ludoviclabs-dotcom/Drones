@@ -6,6 +6,7 @@ import type {
   SystemCategory,
 } from "@/data/types";
 import { systems } from "@/data/systems";
+import { BRICK_LABELS } from "@/data/labels";
 
 export type ClaimScope =
   | BrickKey
@@ -202,4 +203,94 @@ export function getEvidenceStats(): EvidenceStats {
     byStatus,
     updated,
   };
+}
+
+/** Libellés des périmètres d'affirmation — partagés Console / heatmap. */
+export const SCOPE_LABELS: Record<ClaimScope, string> = {
+  ...BRICK_LABELS,
+  specs: "Caractéristiques",
+  contraintes: "Contraintes physiques",
+  versions: "Versions & standards",
+  "architecture-navale": "Architecture navale",
+};
+
+// === Fraîcheur ===
+// Paliers (pas de score chiffré, cohérent avec la méthodologie Panoplie) dérivés
+// de l'écart entre la date d'arrêté du dossier et aujourd'hui.
+export type FreshnessBand = "frais" | "recent" | "a-rafraichir" | "perime";
+
+export const FRESHNESS_LABELS: Record<FreshnessBand, string> = {
+  frais: "Frais",
+  recent: "Récent",
+  "a-rafraichir": "À rafraîchir",
+  perime: "Périmé",
+};
+
+/** Jeton de couleur (palier A→E) par bande de fraîcheur. */
+export const FRESHNESS_TOKEN: Record<FreshnessBand, string> = {
+  frais: "var(--color-grade-a)",
+  recent: "var(--color-grade-b)",
+  "a-rafraichir": "var(--color-grade-c)",
+  perime: "var(--color-grade-e)",
+};
+
+export function freshnessBand(updatedISO: string, now: Date = new Date()): FreshnessBand {
+  const updated = new Date(`${updatedISO}T00:00:00Z`);
+  const ageDays = (now.getTime() - updated.getTime()) / 86_400_000;
+  if (Number.isNaN(ageDays)) return "a-rafraichir";
+  if (ageDays <= 90) return "frais";
+  if (ageDays <= 270) return "recent";
+  if (ageDays <= 540) return "a-rafraichir";
+  return "perime";
+}
+
+// === Source primaire / secondaire ===
+// Primaire = producteur (constructeur), institution opérante ou document officiel.
+// Secondaire = think-tank et presse. Dérivation, pas un champ stocké.
+const PRIMARY_SOURCE_TYPES: ReadonlySet<SourceRef["type"]> = new Set([
+  "constructeur",
+  "institution",
+  "officiel",
+]);
+
+export function isPrimaryClaim(claim: Claim): boolean {
+  return claim.sources.some((source) => PRIMARY_SOURCE_TYPES.has(source.type));
+}
+
+// === Confiance par section (heatmap de fiche) ===
+export type ConfidenceBand = "solide" | "moyen" | "fragile";
+
+export interface SectionConfidence {
+  scope: ClaimScope;
+  label: string;
+  count: number;
+  /** Moyenne de confiance 1 (faible) → 3 (haute). */
+  score: number;
+  band: ConfidenceBand;
+}
+
+const CONFIDENCE_VALUE: Record<Confidence, number> = {
+  haute: 3,
+  moyenne: 2,
+  faible: 1,
+};
+
+/** Confiance moyenne par section pour un système — alimente la heatmap de fiche. */
+export function getSystemSectionConfidence(slug: string): SectionConfidence[] {
+  const byScope = new Map<ClaimScope, Claim[]>();
+  for (const claim of getAllClaims()) {
+    if (claim.systemSlug !== slug) continue;
+    const list = byScope.get(claim.scope) ?? [];
+    list.push(claim);
+    byScope.set(claim.scope, list);
+  }
+
+  return Array.from(byScope.entries()).map(([scope, list]) => {
+    const score =
+      list.reduce((sum, claim) => sum + CONFIDENCE_VALUE[claim.confidence], 0) /
+      list.length;
+    const band: ConfidenceBand =
+      score >= 2.5 ? "solide" : score >= 1.75 ? "moyen" : "fragile";
+    return { scope, label: SCOPE_LABELS[scope], count: list.length, score, band };
+  });
 }

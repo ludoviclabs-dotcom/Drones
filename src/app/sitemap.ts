@@ -10,6 +10,7 @@ type ChangeFrequency = NonNullable<
 // Routes statiques de premier niveau (les fiches système sont ajoutées plus bas).
 const STATIC_ROUTES: { path: string; priority: number; changeFrequency: ChangeFrequency }[] = [
   { path: "/", priority: 1, changeFrequency: "weekly" },
+  { path: "/eurosatory", priority: 0.9, changeFrequency: "weekly" },
   { path: "/domaines", priority: 0.8, changeFrequency: "monthly" },
   { path: "/comparateur", priority: 0.8, changeFrequency: "monthly" },
   { path: "/matrice", priority: 0.7, changeFrequency: "monthly" },

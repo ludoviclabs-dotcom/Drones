@@ -50,6 +50,7 @@ export const metadata: Metadata = {
 };
 
 const NAV = [
+  { href: "/eurosatory", label: "EuroSatory" },
   { href: "/domaines", label: "Domaines" },
   { href: "/comparateur", label: "Comparateur" },
   { href: "/matrice", label: "Matrice" },

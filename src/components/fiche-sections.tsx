@@ -1,5 +1,6 @@
 import type {
   Brick,
+  CCAReading,
   EditorialBlocks,
   Indicator,
   NavalStructuredProfile,
@@ -171,6 +172,44 @@ export function AnalystNote({ note }: { note: string }) {
         {note}
       </blockquote>
     </figure>
+  );
+}
+
+// Rubriques de la lecture CCA — ordre d'affichage, leconCCA traitée à part en
+// exergue. Co-localisées comme `navalRows`, sans passer par labels.ts.
+const CCA_RUBRICS: [keyof Omit<CCAReading, "leconCCA">, string][] = [
+  ["natureEconomique", "Nature économique"],
+  ["problemeCosting", "Problème de costing"],
+  ["inducteursCout", "Inducteurs de coûts"],
+  ["modeAcquisition", "Mode d'acquisition"],
+  ["risqueBudgetaire", "Risque budgétaire"],
+  ["kpiPilotage", "KPI de pilotage"],
+];
+
+export function CCAReadingPanel({ reading }: { reading: CCAReading }) {
+  return (
+    <div>
+      <div className="grid gap-px border border-line bg-line sm:grid-cols-2">
+        {CCA_RUBRICS.map(([key, label]) => (
+          <div key={key} className="bg-panel p-5">
+            <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
+              {label}
+            </span>
+            <p className="mt-2 font-serif text-sm leading-relaxed text-ink">
+              {reading[key]}
+            </p>
+          </div>
+        ))}
+      </div>
+      <figure className="mt-4 border-l-2 border-accent bg-paper px-7 py-6">
+        <figcaption className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-paper-dim">
+          Leçon de gestion
+        </figcaption>
+        <blockquote className="mt-3 font-serif text-lg italic leading-relaxed text-ink-paper">
+          {reading.leconCCA}
+        </blockquote>
+      </figure>
+    </div>
   );
 }
 

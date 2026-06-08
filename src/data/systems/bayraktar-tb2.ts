@@ -241,6 +241,22 @@ export const bayraktarTb2: DefenseSystem = {
     analystNote:
       "Le TB2 a moins révolutionné la technique que l'accès : il a prouvé qu'un drone armé pouvait être un produit de grande diffusion. Sa vraie portée est industrielle et politique — un modèle d'autonomie que beaucoup chercheront à copier.",
   },
+  ccaReading: {
+    natureEconomique:
+      "Drone frugal orienté volume et export : vecteur ≈ 1–5 M$, système ≈ 10 M$ et plus — un ordre de grandeur sous un Reaper.",
+    problemeCosting:
+      "Le prix d'appel faible masque le coût d'un parc soutenu dans la durée : attrition au combat, munitions, formation, stations sol.",
+    inducteursCout:
+      "Micro-munitions MAM, attrition en milieu contesté, formation des équipages, stations sol.",
+    modeAcquisition:
+      "DCS et accords de production locale, portés par un industriel privé (Baykar) : agilité commerciale, mais garantie étatique moindre que le FMS.",
+    risqueBudgetaire:
+      "Sous-estimation du coût d'un emploi intensif — l'attrition s'envole dès que la défense sol-air se densifie (Ukraine, 2022).",
+    kpiPilotage:
+      "Coût par mission utile et coût par effet obtenu — pas le seul prix d'achat.",
+    leconCCA:
+      "Le low-cost n'est pertinent que si la doctrine d'emploi et le volume sont cohérents.",
+  },
   operators: [
     "Turquie",
     "Azerbaïdjan",

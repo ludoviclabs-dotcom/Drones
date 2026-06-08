@@ -128,6 +128,16 @@ const EditorialBlocks = z.object({
   analystNote: z.string().optional(),
 });
 
+const CCAReading = z.object({
+  natureEconomique: z.string().min(1),
+  problemeCosting: z.string().min(1),
+  inducteursCout: z.string().min(1),
+  modeAcquisition: z.string().min(1),
+  risqueBudgetaire: z.string().min(1),
+  kpiPilotage: z.string().min(1),
+  leconCCA: z.string().min(1),
+});
+
 const TimelineEvent = z.object({
   date: z.string().min(1),
   label: z.string().min(1),
@@ -259,6 +269,7 @@ export const DefenseSystemSchema = z.object({
   variants: z.array(Indicator).optional(),
   scores: z.array(Score),
   editorial: EditorialBlocks,
+  ccaReading: CCAReading.optional(),
   legalNote: z.string().optional(),
   operators: z.array(z.string()),
   theatres: z.array(z.string()),

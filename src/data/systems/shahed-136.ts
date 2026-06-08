@@ -249,6 +249,22 @@ export const shahed136: DefenseSystem = {
     analystNote:
       "Le Shahed-136 n'est pas une prouesse technique : c'est une thèse stratégique. Il affirme que la quantité, le coût et la cadence de production valent capacité militaire. Sa principale conséquence n'est pas sur le champ de bataille, mais dans les bureaux d'études : il a relancé partout la quête d'une défense anti-drone réellement abordable.",
   },
+  ccaReading: {
+    natureEconomique:
+      "Munition rôdeuse consommable, pensée pour la masse : la valeur est dans le ratio coût/effet, pas dans le vecteur isolé.",
+    problemeCosting:
+      "Coût très incertain et contesté — trois chiffres coexistent (fabrication ≈ 20 000–50 000 $, production Alabuga ≈ 70 000–80 000 $, cession Iran-Russie ≈ 190 000–300 000 $). L'essentiel est le ratio, pas le chiffre exact.",
+    inducteursCout:
+      "Accès à l'électronique commerciale sous sanctions, cadence de production, pertes assumées par conception.",
+    modeAcquisition:
+      "Hors marché : transfert d'État à État contesté (Iran-Russie), puis production russe localisée à Alabuga.",
+    risqueBudgetaire:
+      "Opacité du prix réel et du financement — donnée largement invérifiable (confiance des données faible).",
+    kpiPilotage:
+      "Ratio d'échange économique attaquant/défenseur — coût du Shahed rapporté à celui de l'intercepteur qu'il fait tirer.",
+    leconCCA:
+      "Un coût unitaire faible peut produire un effet stratégique majeur : mesurer le ratio coût/effet, pas la sophistication.",
+  },
   operators: ["Iran", "Russie (sous la désignation « Geran-2 »)"],
   theatres: ["Ukraine", "Moyen-Orient"],
   timeline: [

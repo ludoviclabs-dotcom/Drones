@@ -15,6 +15,10 @@ export const XRAY_EDITED_SLUGS: ReadonlySet<string> = new Set([
   "shahed-136",
   "spy-6",
   "fremm-france",
+  "eurofighter-typhoon",
+  "charles-de-gaulle",
+  "helma-p",
+  "aster-30-b1nt",
 ]);
 
 export function isXrayEdited(slug: string): boolean {

@@ -4,6 +4,17 @@ import type { ChangelogEntry } from "./types";
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-06-08",
+    title: "System X-Ray — lot 2 : quatre dossiers à forte densité éditoriale",
+    items: [
+      "Quatre dossiers passent en lecture éditoriale — Eurofighter Typhoon, Charles de Gaulle, HELMA-P et Aster 30 B1NT — portant la couverture éditoriale à douze systèmes (sur 110).",
+      "Eurofighter Typhoon — cas-école de la coopération à quatre nations : moteur EJ200 (consortium), radar ECRS Mk1, Tranche 5 allemande 2025, friction de gouvernance et veto d'export structurel.",
+      "Charles de Gaulle — porte-avions lu comme architecture de puissance : K15 nucléaire, CATOBAR, ATM/IPER, écosystème Rafale Marine + Hawkeye, PA-NG.",
+      "HELMA-P — laser anti-drone CILAS : couches de coût (marginal vs système), contraintes physiques (ligne de visée, atmosphère, dwell time), DGA / L2AD, cadre Protocole IV.",
+      "Aster 30 B1NT — intercepteur LRAD européen hors ITAR : Eurosam, PIF/PAF + RF actif, OCCAR/FSAF, cadence MBDA sous tension (post-Ukraine, European Sky Shield), positionnement vs PAC-3.",
+    ],
+  },
+  {
+    date: "2026-06-08",
     title: "System X-Ray — lot 1 : cinq phares éditoriaux",
     items: [
       "Quatre dossiers passent en lecture éditoriale — MQ-9 Reaper, Shahed-136, AN/SPY-6 et FREMM France — et rejoignent Bayraktar TB2, Rafale, F-35 et F-15EX déjà édités.",

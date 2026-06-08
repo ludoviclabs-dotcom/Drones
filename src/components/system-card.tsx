@@ -1,10 +1,12 @@
 import Link from "next/link";
 import type { DefenseSystem } from "@/data/types";
+import { isXrayEdited } from "@/data/decision-twin/coverage";
 import { GradeBadge } from "./primitives";
 import { SystemSchematic } from "./system-schematic";
 import { RegistrationMarks } from "./registration-marks";
 
 export function SystemCard({ system }: { system: DefenseSystem }) {
+  const hasEditedXray = isXrayEdited(system.slug);
   return (
     <Link
       href={`/systemes/${system.slug}`}
@@ -20,9 +22,19 @@ export function SystemCard({ system }: { system: DefenseSystem }) {
       </span>
 
       <div className="flex items-center justify-between border-b border-line px-5 py-2.5">
-        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-accent">
-          {system.reference}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-accent">
+            {system.reference}
+          </span>
+          {hasEditedXray ? (
+            <span
+              className="border border-accent/60 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.14em] text-accent/80"
+              title="System X-Ray — lecture éditoriale disponible"
+            >
+              X-Ray
+            </span>
+          ) : null}
+        </div>
         <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
           {system.classLabel}
         </span>

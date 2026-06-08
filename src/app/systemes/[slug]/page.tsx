@@ -32,6 +32,8 @@ import { JsonLd } from "@/components/json-ld";
 import { ConfidenceHeatmap } from "@/components/confidence-heatmap";
 import { RelationGraph } from "@/components/relation-graph";
 import { systemBreadcrumbLd, systemDatasetLd } from "@/lib/structured-data";
+import { buildPanoplieXrayScenario } from "@/data/decision-twin/panoplie-xray";
+import { isXrayEdited } from "@/data/decision-twin/coverage";
 
 export function generateStaticParams() {
   return getSystemSlugs().map((slug) => ({ slug }));
@@ -72,6 +74,13 @@ export default async function SystemPage({
   const { slug } = await params;
   const system = getSystem(slug);
   if (!system) notFound();
+
+  // Aperçu « points de preuve » : construit côté serveur uniquement pour les
+  // dossiers à lecture éditoriale (`coverage === "edited"`), pour éviter de
+  // promettre une curation qui n'existe pas en mode `auto`.
+  const xrayPreview = isXrayEdited(system.slug)
+    ? buildPanoplieXrayScenario(system).nodes.slice(0, 5)
+    : null;
 
   const identity = [
     { label: "Pays d'origine", value: `${system.flag} ${system.country}` },
@@ -220,6 +229,38 @@ export default async function SystemPage({
           ))}
         </dl>
       </header>
+
+      {xrayPreview ? (
+        <aside
+          aria-label="Aperçu System X-Ray"
+          className="mt-10 border border-line bg-panel"
+        >
+          <div className="flex flex-wrap items-baseline justify-between gap-3 border-b border-line px-5 py-3">
+            <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent">
+              System X-Ray · {xrayPreview.length} points de preuve
+            </span>
+            <Link
+              href={`/systemes/${system.slug}/xray`}
+              className="font-mono text-[11px] uppercase tracking-[0.18em] text-accent transition-colors hover:text-ink"
+            >
+              Ouvrir le X-Ray →
+            </Link>
+          </div>
+          <ul className="grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-5">
+            {xrayPreview.map((node) => (
+              <li key={node.id} className="bg-panel p-4">
+                <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
+                  {node.layer}
+                </span>
+                <p className="mt-1.5 font-mono text-xs text-ink">{node.label}</p>
+                <p className="mt-2 font-serif text-xs leading-relaxed text-ink-dim">
+                  {node.claim}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      ) : null}
 
       <section className="mt-16">
         <SectionMarker index={idxSummary} label="Résumé exécutif" />

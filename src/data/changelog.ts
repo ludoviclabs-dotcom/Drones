@@ -3,6 +3,17 @@ import type { ChangelogEntry } from "./types";
 // Du plus récent au plus ancien.
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-06-08",
+    title: "System X-Ray — lot 1 : cinq phares éditoriaux",
+    items: [
+      "Quatre dossiers passent en lecture éditoriale — MQ-9 Reaper, Shahed-136, AN/SPY-6 et FREMM France — et rejoignent Bayraktar TB2, Rafale, F-35 et F-15EX déjà édités.",
+      "Distinction explicite « Lecture éditoriale » vs « Lecture auto (briques) » dans le header de chaque X-Ray : l'utilisateur voit immédiatement si la lecture est curée ou agrégée automatiquement.",
+      "Aperçu « points de preuve » sur la fiche système — pour les dossiers édités, les cinq premiers hotspots apparaissent en bandeau au-dessus du résumé exécutif, avec lien direct vers l'X-Ray.",
+      "Badge « X-Ray » sur les cartes du catalogue pour les huit systèmes édités.",
+      "Garde-fou : smoke test des 110 scénarios — invariants couches/hotspots et synchronisation du registre éditorial avec le dispatch des builders.",
+    ],
+  },
+  {
     date: "2026-05-22",
     title: "Ouverture du domaine aviation de combat",
     items: [

@@ -450,6 +450,36 @@ export const glossary: GlossaryTerm[] = [
     definition:
       "Régime multilatéral de contrôle des exportations d'armes conventionnelles et de biens et technologies à double usage, signé en 1996. Cadre les transferts de radars, capteurs avancés et composants critiques entre 42 États participants — distinct de l'ITAR et du MTCR.",
   },
+  {
+    slug: "cout-complet",
+    term: "Coût complet",
+    category: "commerce",
+    definition:
+      "Approche qui agrège l'ensemble des coûts attribuables à un système — directs et indirects, récurrents et non récurrents — au-delà du seul prix d'achat. Base d'une comparaison honnête entre équipements hétérogènes.",
+  },
+  {
+    slug: "cout-de-possession",
+    term: "Coût de possession",
+    acronym: "TCO",
+    category: "commerce",
+    definition:
+      "Total Cost of Ownership. Coût d'un système sur tout son cycle de vie : acquisition, formation, infrastructure, MCO, munitions, modernisations et démantèlement. Le prix d'achat n'en est que la part visible.",
+  },
+  {
+    slug: "cout-objectif",
+    term: "Coût-objectif",
+    category: "commerce",
+    definition:
+      "Coût cible fixé en amont d'un programme, auquel la conception et l'industrialisation doivent se plier — logique inverse du coût simplement constaté a posteriori.",
+  },
+  {
+    slug: "ae-cp",
+    term: "Autorisations d'engagement / Crédits de paiement",
+    acronym: "AE / CP",
+    category: "commerce",
+    definition:
+      "Deux bornes de la dépense publique pluriannuelle : l'AE est le plafond juridique d'engagement d'une dépense, le CP la trésorerie budgétaire ouverte chaque année pour la payer. L'écart entre les deux nourrit le « reste à payer ».",
+  },
 ];
 
 export const GLOSSARY_BY_SLUG: Record<string, GlossaryTerm> = Object.fromEntries(

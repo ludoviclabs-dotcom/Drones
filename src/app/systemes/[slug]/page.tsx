@@ -10,6 +10,7 @@ import {
 import {
   AnalystNote,
   BrickSection,
+  CCAReadingPanel,
   EditorialTriptych,
   LegalNote,
   NavalArchitecturePanel,
@@ -123,6 +124,7 @@ export default async function SystemPage({
   counter += system.bricks.length;
   const idxConstraints = hasConstraints ? nextIndex() : null;
   const idxLegal = system.legalNote ? nextIndex() : null;
+  const idxCCA = system.ccaReading ? nextIndex() : null;
   const idxEval = nextIndex();
   const idxConfidence = nextIndex();
   const idxAnalyst = system.editorial.analystNote ? nextIndex() : null;
@@ -302,6 +304,19 @@ export default async function SystemPage({
           <SectionMarker index={idxLegal} label="Cadre juridique" />
           <div className="mt-6">
             <LegalNote note={system.legalNote} />
+          </div>
+        </section>
+      ) : null}
+
+      {idxCCA && system.ccaReading ? (
+        <section className="mt-16">
+          <SectionMarker
+            index={idxCCA}
+            label="Lecture CCA"
+            blurb="CCA — comptabilité, contrôle de gestion, audit. Synthèse dérivée des briques Coût et Finance ci-dessus : coût complet, coût de possession, mode d'acquisition, risque budgétaire. Une lecture de gestion, pas un score."
+          />
+          <div className="mt-6">
+            <CCAReadingPanel reading={system.ccaReading} />
           </div>
         </section>
       ) : null}

@@ -256,6 +256,60 @@ export default function MethodologiePage() {
           les bienvenues.
         </p>
       </section>
+
+      <section className="mt-14">
+        <SectionMarker
+          index="10"
+          label="La lecture CCA / costing"
+          blurb="Une couche de contrôle de gestion posée sur les briques existantes."
+        />
+        <div className="mt-5 space-y-4 font-serif text-[1.05rem] leading-[1.75] text-ink/90">
+          <p>
+            « CCA » désigne ici la comptabilité, le contrôle de gestion et
+            l'audit — non l'avion de combat collaboratif. Certains dossiers
+            reçoivent une « Lecture CCA » : une synthèse de contrôleur de gestion
+            qui reformule les briques Coût et Finance. Elle n'ajoute aucune donnée
+            chiffrée et aucun palier — elle nomme ce que les briques contiennent
+            déjà.
+          </p>
+          <p>
+            Son fil directeur : le prix affiché n'est jamais le coût réel. Un
+            système d'armes se lit en couches de coût emboîtées, du vecteur seul
+            jusqu'à l'effet militaire produit.
+          </p>
+        </div>
+        <div className="mt-5 grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
+          {(
+            [
+              ["Coût cellule", "Le vecteur seul — à ne jamais utiliser isolément."],
+              ["Coût système", "Vecteurs, stations sol, capteurs et soutien initial."],
+              ["Coût d'acquisition", "Le système, plus formation, infrastructure et stock initial de pièces."],
+              ["Coût de possession", "Sur la durée : acquisition, MCO, munitions, modernisations, fin de vie."],
+              ["Coût de disponibilité", "Le coût rapporté à la capacité réellement disponible."],
+              ["Coût par effet", "Le coût rapporté à l'effet obtenu — clé pour les systèmes attritables."],
+            ] as const
+          ).map(([label, blurb], i) => (
+            <div key={label} className="bg-panel p-5">
+              <span className="font-mono text-xs text-accent">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <h3 className="mt-1.5 font-mono text-sm uppercase tracking-[0.1em] text-ink">
+                {label}
+              </h3>
+              <p className="mt-2 font-serif text-sm leading-relaxed text-ink-dim">
+                {blurb}
+              </p>
+            </div>
+          ))}
+        </div>
+        <p className="mt-5 font-serif text-[1.05rem] leading-[1.75] text-ink/90">
+          Deux repères de finance publique complètent la lecture : les
+          autorisations d'engagement (AE), plafond juridique de la dépense, et les
+          crédits de paiement (CP), la trésorerie annuelle qui les solde. Le mode
+          d'acquisition — FMS, DCS, production nationale — détermine, lui, qui
+          porte le risque contractuel.
+        </p>
+      </section>
     </div>
   );
 }

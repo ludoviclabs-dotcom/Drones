@@ -241,6 +241,22 @@ export const mq9Reaper: DefenseSystem = {
     analystNote:
       "Le Reaper reste l'étalon du drone MALE occidental, mais son modèle — coûteux, exquis, tributaire d'un ciel dégagé — est interrogé par la guerre d'Ukraine. Sa vraie valeur en 2026 tient moins au combat de haute intensité qu'à la permanence ISR et au poids diplomatique du canal FMS.",
   },
+  ccaReading: {
+    natureEconomique:
+      "Système complet haut de gamme : la cellule (≈ 30 M$) n'est qu'une fraction du système opérationnel (≈ 56–121 M$ — quatre vecteurs, stations sol, capteurs, liaisons).",
+    problemeCosting:
+      "Confusion entre coût cellule, coût système et coût de possession. Le coût horaire cité (3 500–5 000 $/h) ignore souvent personnel, segment SATCOM et maintenance lourde.",
+    inducteursCout:
+      "SATCOM, capteur MTS-B, maintenance lourde, équipages déportés, soutien pluriannuel.",
+    modeAcquisition:
+      "FMS — l'État américain comme intermédiaire contractuel ; dépendance aux arbitrages budgétaires et politiques de Washington.",
+    risqueBudgetaire:
+      "Sous-estimation du soutien et du MCO dans la durée — le poste qui domine le coût réel.",
+    kpiPilotage:
+      "Coût complet par heure de mission ISR réellement disponible — pas le coût cellule.",
+    leconCCA:
+      "Ne jamais juger un système d'armes sur le seul prix unitaire : raisonner en coût de possession.",
+  },
   operators: [
     "États-Unis",
     "Royaume-Uni (Protector RG1)",

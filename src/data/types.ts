@@ -274,6 +274,22 @@ export interface EditorialBlocks {
   analystNote?: string;
 }
 
+/**
+ * Lecture de contrôle de gestion (CCA — comptabilité, contrôle, audit).
+ * Synthèse transversale qui *reformule* les briques Coût et Finance sans
+ * introduire de donnée chiffrée nouvelle : coût complet vs coût cellule,
+ * inducteurs, mode d'acquisition, risque budgétaire, KPI de pilotage.
+ */
+export interface CCAReading {
+  natureEconomique: string;
+  problemeCosting: string;
+  inducteursCout: string;
+  modeAcquisition: string;
+  risqueBudgetaire: string;
+  kpiPilotage: string;
+  leconCCA: string;
+}
+
 /** Nature d'un repère de la frise : jalon, emploi, exportation, débat. */
 export type TimelineKind = "jalon" | "emploi" | "export" | "debat";
 
@@ -335,6 +351,8 @@ export interface DefenseSystem {
   variants?: Indicator[];
   scores: Score[];
   editorial: EditorialBlocks;
+  /** Lecture CCA optionnelle — synthèse de contrôle de gestion par système. */
+  ccaReading?: CCAReading;
   /** Encadré juridique permanent — ex. Protocole IV de la CCW pour les lasers. */
   legalNote?: string;
   operators: string[];

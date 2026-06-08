@@ -1124,6 +1124,980 @@ function f15exNodes(system: DefenseSystem): DecisionTwinNode[] {
   ];
 }
 
+function mq9ReaperNodes(system: DefenseSystem): DecisionTwinNode[] {
+  const sources = sourceById(system);
+  const cost = brickByKey(system, "cout");
+  const finance = brickByKey(system, "finance");
+  const supply = brickByKey(system, "supply-chain");
+  const geopolitics = brickByKey(system, "geopolitique");
+  const exportBrick = brickByKey(system, "export");
+
+  const link = indicatorByLabel(system.keySpecs, "Liaison");
+  const engine = indicatorByLabel(system.keySpecs, "Motorisation");
+  const endurance = indicatorByLabel(system.keySpecs, "Endurance");
+
+  const cellCost = indicatorByLabel(cost?.indicators ?? [], "cellule");
+  const systemCost = indicatorByLabel(cost?.indicators ?? [], "systeme") ??
+    indicatorByLabel(cost?.indicators ?? [], "Coût d'un système");
+  const hourlyCost = indicatorByLabel(cost?.indicators ?? [], "horaire");
+  const sustainmentGap = indicatorByLabel(finance?.indicators ?? [], "sous-estim") ??
+    indicatorByLabel(finance?.indicators ?? [], "Poste");
+  const fmsCanal = indicatorByLabel(finance?.indicators ?? [], "FMS") ??
+    indicatorByLabel(finance?.indicators ?? [], "Canal");
+  const prime = indicatorByLabel(supply?.indicators ?? [], "oeuvre");
+  const criticalComponents = indicatorByLabel(supply?.indicators ?? [], "critiques");
+  const strategicRole = indicatorByLabel(geopolitics?.indicators ?? [], "strategique") ??
+    indicatorByLabel(geopolitics?.indicators ?? [], "Fonction");
+  const mtcrRegime = indicatorByLabel(exportBrick?.indicators ?? [], "applicable") ??
+    indicatorByLabel(exportBrick?.indicators ?? [], "MTCR");
+  const buyerLatitude = indicatorByLabel(exportBrick?.indicators ?? [], "acheteur") ??
+    indicatorByLabel(exportBrick?.indicators ?? [], "Marge");
+
+  const confidenceClaims = getAllClaims().filter(
+    (claim) => claim.systemSlug === system.slug,
+  );
+  const confidenceScore = scoreEvidence(system, "confiance-donnees");
+
+  return [
+    makeNode({
+      id: `${system.slug}-fuselage`,
+      label: "Cellule / fuselage",
+      type: "component",
+      layer: "cout",
+      risk: "medium",
+      confidence: cellCost?.confidence ?? "faible",
+      claim:
+        "Le piege du cout complet: la cellule seule (~30 M$) n'est qu'une fraction du systeme operationnel (~56 a 121 M$ avec vecteurs, stations sol, capteurs, liaisons).",
+      evidence: evidenceFromIndicator(cellCost),
+      ...sourceFromIndicator(sources, cellCost),
+      nextAction:
+        "Distinguer cout cellule, cout systeme et cout de possession — comparer un prix d'achat brut induit en erreur.",
+      position2d: { x: 50, y: 50 },
+      position3d: { x: 0, y: 0, z: 0 },
+    }),
+    makeNode({
+      id: `${system.slug}-system-cost`,
+      label: "Cout systeme",
+      type: "source",
+      layer: "cout",
+      risk: "high",
+      confidence: systemCost?.confidence ?? "faible",
+      claim:
+        "Un systeme MQ-9 — quatre vecteurs, stations sol, capteurs, liaisons — change l'ordre de grandeur par rapport au seul vecteur.",
+      evidence: evidenceFromIndicator(systemCost),
+      ...sourceFromIndicator(sources, systemCost),
+      nextAction:
+        "Toujours afficher cout systeme et cout horaire en regard du cout cellule pour eviter la comparaison trompeuse.",
+      position2d: { x: 28, y: 64 },
+      position3d: { x: -0.85, y: -0.3, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-hourly-cost`,
+      label: "Cout horaire de vol",
+      type: "source",
+      layer: "cout",
+      risk: "high",
+      confidence: hourlyCost?.confidence ?? "faible",
+      claim:
+        "Les estimations basses (3 500–5 000 $/h) ignorent personnel, segment SATCOM et maintenance lourde: le cout pleinement charge est sensiblement superieur.",
+      evidence: evidenceFromIndicator(hourlyCost),
+      ...sourceFromIndicator(sources, hourlyCost),
+      nextAction:
+        "Refaire la lecture en cout par heure de mission ISR reellement disponible, pas en cout par heure de vol brute.",
+      position2d: { x: 72, y: 64 },
+      position3d: { x: 0.85, y: -0.3, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-satcom`,
+      label: "Liaison SATCOM",
+      type: "component",
+      layer: "geopolitique",
+      risk: "high",
+      confidence: link?.confidence ?? "haute",
+      claim:
+        "SATCOM affranchit le drone de l'horizon radio — mais cree une dependance spatiale et expose au brouillage. Lecture capacitaire, pas operationnelle.",
+      evidence: evidenceFromIndicator(link),
+      ...sourceFromIndicator(sources, link),
+      nextAction:
+        "Conserver la formulation au niveau capacitaire public; ne deduire aucun parametre d'emploi.",
+      position2d: { x: 50, y: 14 },
+      position3d: { x: 0, y: 1.5, z: 0.3 },
+    }),
+    makeNode({
+      id: `${system.slug}-mts-b`,
+      label: "Capteur MTS-B (Raytheon)",
+      type: "supplier",
+      layer: "supply-chain",
+      risk: "medium",
+      confidence: criticalComponents?.confidence ?? "haute",
+      claim:
+        "Boule optronique americaine: composant critique, mais chaine entierement nationale — peu de leviers de pression exterieurs sur le programme.",
+      evidence: evidenceFromIndicator(criticalComponents),
+      ...sourceFromIndicator(sources, criticalComponents),
+      nextAction:
+        "Comparer cette souverainete capteur avec les cas TB2 (substitution post-2020) et Shahed (electronique commerciale sous sanctions).",
+      position2d: { x: 36, y: 30 },
+      position3d: { x: -0.55, y: 0.85, z: 0.2 },
+    }),
+    makeNode({
+      id: `${system.slug}-engine`,
+      label: "Moteur TPE331 (Honeywell)",
+      type: "supplier",
+      layer: "supply-chain",
+      risk: "low",
+      confidence: engine?.confidence ?? "haute",
+      claim:
+        "Turbopropulseur americain Honeywell — endurance ~27h en configuration ISR, motorisation industriellement maitrisee depuis des decennies.",
+      evidence: evidenceFromIndicator(engine ?? endurance),
+      ...sourceFromIndicator(sources, engine ?? endurance),
+      nextAction:
+        "Lire l'endurance comme un capacitaire, sans extrapoler ni en doctrine ni en signature thermique.",
+      position2d: { x: 50, y: 84 },
+      position3d: { x: 0, y: -1.2, z: -0.15 },
+    }),
+    makeNode({
+      id: `${system.slug}-manufacturer`,
+      label: system.manufacturer,
+      type: "supplier",
+      layer: "finance",
+      risk: "low",
+      confidence: prime?.confidence ?? "haute",
+      claim:
+        "General Atomics — maitre d'oeuvre unique, base industrielle nationale. La concentration industrielle est un trait de force, pas une fragilite.",
+      evidence: evidenceFromIndicator(prime),
+      ...sourceFromIndicator(sources, prime),
+      nextAction:
+        "Relier le maitre d'oeuvre au canal FMS: les deux concentrent la lecture industrielle, commerciale et diplomatique du programme.",
+      position2d: { x: 14, y: 78 },
+      position3d: { x: -1.4, y: -0.9, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-fms-canal`,
+      label: "Canal FMS",
+      type: "source",
+      layer: "finance",
+      risk: "high",
+      confidence: fmsCanal?.confidence ?? "haute",
+      claim:
+        "L'Etat americain comme intermediaire contractuel: securisant pour l'acheteur, mais dependance aux arbitrages budgetaires et politiques de Washington.",
+      evidence: evidenceFromIndicator(fmsCanal),
+      ...sourceFromIndicator(sources, fmsCanal),
+      nextAction:
+        "Documenter contrat par contrat ce que recouvre exactement le FMS — vecteurs, soutien, formation, conditions d'emploi.",
+      position2d: { x: 86, y: 78 },
+      position3d: { x: 1.4, y: -0.9, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-sustainment-gap`,
+      label: "MCO sous-estime",
+      type: "source",
+      layer: "finance",
+      risk: "high",
+      confidence: sustainmentGap?.confidence ?? "moyenne",
+      claim:
+        "Le soutien pluriannuel est le poste regulierement sous-estime du financement d'un parc: c'est lui qui domine le cout reel sur la duree.",
+      evidence: evidenceFromIndicator(sustainmentGap),
+      ...sourceFromIndicator(sources, sustainmentGap),
+      nextAction:
+        "Pousser la lecture vers le cout de possession en regard du cout d'acquisition: rapport souvent superieur a 1.5.",
+      position2d: { x: 70, y: 38 },
+      position3d: { x: 0.7, y: 0.45, z: 0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-allies-circle`,
+      label: "Cercle restreint d'allies",
+      type: "country",
+      layer: "geopolitique",
+      risk: "medium",
+      confidence: strategicRole?.confidence ?? "moyenne",
+      claim:
+        "Reserve aux allies et partenaires proches — interoperabilite et influence americaines, mais effet de dependance eleve sur pieces et autorisations d'emploi.",
+      evidence: evidenceFromIndicator(strategicRole),
+      ...sourceFromIndicator(sources, strategicRole),
+      nextAction:
+        "Croiser la liste des operateurs avec le degre d'integration aux chaines de commandement americaines.",
+      position2d: { x: 84, y: 22 },
+      position3d: { x: 1.4, y: 0.9, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-mtcr`,
+      label: "MTCR cat. I (assoupli 2020)",
+      type: "source",
+      layer: "export",
+      risk: "high",
+      confidence: mtcrRegime?.confidence ?? "haute",
+      claim:
+        "ITAR + MTCR categorie I — la plus restrictive — reinterpretee unilateralement en 2020 pour les drones lents afin d'enrayer la perte d'influence face a Turquie et Chine.",
+      evidence: evidenceFromIndicator(mtcrRegime),
+      ...sourceFromIndicator(sources, mtcrRegime),
+      nextAction:
+        "Lire l'assouplissement 2020 comme un signal de doctrine d'export, pas comme une simple modification reglementaire.",
+      position2d: { x: 16, y: 16 },
+      position3d: { x: -1.4, y: 1.4, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-buyer-latitude`,
+      label: "Marge d'emploi de l'acheteur",
+      type: "source",
+      layer: "export",
+      risk: "medium",
+      confidence: buyerLatitude?.confidence ?? "moyenne",
+      claim:
+        "Acquisition conditionnee a une autorisation americaine et un certificat d'utilisateur final: l'acheteur ne dispose jamais d'une pleine liberte d'usage.",
+      evidence: evidenceFromIndicator(buyerLatitude),
+      ...sourceFromIndicator(sources, buyerLatitude),
+      nextAction:
+        "Conserver cette restriction comme cadre de lecture; ne deduire aucune procedure d'emploi specifique.",
+      position2d: { x: 30, y: 20 },
+      position3d: { x: -0.7, y: 1.25, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-global-confidence`,
+      label: "Confiance globale",
+      type: "confidence",
+      layer: "sources",
+      risk: "medium",
+      confidence: confidenceScore.confidence,
+      claim:
+        "Le dossier MQ-9 est tres documente — Air Force, SIPRI, CSIS, GA-ASI — mais les donnees de cout restent dispersees d'une source a l'autre.",
+      evidence: `${confidenceScore.evidence} Registre: ${confidenceClaims.length} affirmations tracees pour ce systeme.`,
+      metadata: confidenceScore.metadata,
+      sourceLabel: "Console OSINT Panoplie",
+      limitation:
+        "Les estimations de cout cellule, systeme et horaire varient fortement selon la source, le lot et le perimetre retenu.",
+      nextAction:
+        "Prioriser dans la Console OSINT les indicateurs marques variables, en commencant par les couts.",
+      position2d: { x: 16, y: 88 },
+      position3d: { x: -1.4, y: -1.4, z: 0.1 },
+    }),
+  ];
+}
+
+function shahed136Nodes(system: DefenseSystem): DecisionTwinNode[] {
+  const sources = sourceById(system);
+  const cost = brickByKey(system, "cout");
+  const finance = brickByKey(system, "finance");
+  const supply = brickByKey(system, "supply-chain");
+  const geopolitics = brickByKey(system, "geopolitique");
+  const exportBrick = brickByKey(system, "export");
+
+  const guidance = indicatorByLabel(system.keySpecs, "Guidage");
+
+  const mfgCost = indicatorByLabel(cost?.indicators ?? [], "fabrication");
+  const productionCost = indicatorByLabel(cost?.indicators ?? [], "Alabuga") ??
+    indicatorByLabel(cost?.indicators ?? [], "production");
+  const transferPrice = indicatorByLabel(cost?.indicators ?? [], "cession") ??
+    indicatorByLabel(cost?.indicators ?? [], "Iran-Russie");
+  const exchangeRatio = indicatorByLabel(cost?.indicators ?? [], "Ratio") ??
+    indicatorByLabel(cost?.indicators ?? [], "echange");
+  const transferChannel = indicatorByLabel(finance?.indicators ?? [], "Canal");
+  const fundingLogic = indicatorByLabel(finance?.indicators ?? [], "Logique");
+  const cellMaterials = indicatorByLabel(supply?.indicators ?? [], "Cellule");
+  const electronics = indicatorByLabel(supply?.indicators ?? [], "critiques") ??
+    indicatorByLabel(supply?.indicators ?? [], "electronique");
+  const onuControversy = indicatorByLabel(geopolitics?.indicators ?? [], "Controverse") ??
+    indicatorByLabel(geopolitics?.indicators ?? [], "ONU");
+  const counterDroneRace = indicatorByLabel(geopolitics?.indicators ?? [], "induit") ??
+    indicatorByLabel(geopolitics?.indicators ?? [], "anti-drones");
+  const exportRegime = indicatorByLabel(exportBrick?.indicators ?? [], "applicable") ??
+    indicatorByLabel(exportBrick?.indicators ?? [], "Regime");
+  const traceability = indicatorByLabel(exportBrick?.indicators ?? [], "Tracabilite") ??
+    indicatorByLabel(exportBrick?.indicators ?? [], "certificat");
+
+  const confidenceClaims = getAllClaims().filter(
+    (claim) => claim.systemSlug === system.slug,
+  );
+  const confidenceScore = scoreEvidence(system, "confiance-donnees");
+
+  return [
+    makeNode({
+      id: `${system.slug}-airframe`,
+      label: "Aile delta — vecteur consommable",
+      type: "component",
+      layer: "cout",
+      risk: "low",
+      confidence: cellMaterials?.confidence ?? "moyenne",
+      claim:
+        "Le Shahed est pense pour etre produit en masse et perdu en masse. La cellule est volontairement frugale: matieres simples, fabrication peu exigeante.",
+      evidence: evidenceFromIndicator(cellMaterials),
+      ...sourceFromIndicator(sources, cellMaterials),
+      nextAction:
+        "Lire la simplicite de la cellule comme strategie industrielle, pas comme faiblesse technique.",
+      position2d: { x: 50, y: 50 },
+      position3d: { x: 0, y: 0, z: 0 },
+    }),
+    makeNode({
+      id: `${system.slug}-mfg-cost`,
+      label: "Cout de fabrication (~20-50 k$)",
+      type: "source",
+      layer: "cout",
+      risk: "medium",
+      confidence: mfgCost?.confidence ?? "faible",
+      claim:
+        "Cout materiel estime hors marge — une des trois estimations qui coexistent dans le dossier. L'incertitude n'est pas un bruit, c'est la donnee.",
+      evidence: evidenceFromIndicator(mfgCost),
+      ...sourceFromIndicator(sources, mfgCost),
+      nextAction:
+        "Toujours afficher les trois chiffres (fabrication, Alabuga, cession) ensemble; aucun ne suffit isolement.",
+      position2d: { x: 24, y: 36 },
+      position3d: { x: -1.05, y: 0.55, z: 0 },
+    }),
+    makeNode({
+      id: `${system.slug}-alabuga-cost`,
+      label: "Production Alabuga (~70-80 k$)",
+      type: "source",
+      layer: "cout",
+      risk: "medium",
+      confidence: productionCost?.confidence ?? "faible",
+      claim:
+        "Production russe localisee a Alabuga depuis 2024 — Moscou investit pour s'affranchir des livraisons iraniennes.",
+      evidence: evidenceFromIndicator(productionCost),
+      ...sourceFromIndicator(sources, productionCost),
+      nextAction:
+        "Suivre la cadence Alabuga comme indicateur de soutenabilite d'une economie de guerre orientee volume.",
+      position2d: { x: 50, y: 26 },
+      position3d: { x: 0, y: 1.05, z: 0 },
+    }),
+    makeNode({
+      id: `${system.slug}-transfer-price`,
+      label: "Prix de cession (~190-300 k$)",
+      type: "source",
+      layer: "cout",
+      risk: "high",
+      confidence: transferPrice?.confidence ?? "faible",
+      claim:
+        "Selon documents ayant fuite, prix paye par la Russie a l'Iran 2022-2023 — un ordre de grandeur au-dessus du cout de production. La rente strategique d'un fournisseur sous sanctions.",
+      evidence: evidenceFromIndicator(transferPrice),
+      ...sourceFromIndicator(sources, transferPrice),
+      nextAction:
+        "Documenter la chronologie de baisse du prix au fur et a mesure que la production se localise.",
+      position2d: { x: 76, y: 36 },
+      position3d: { x: 1.05, y: 0.55, z: 0 },
+    }),
+    makeNode({
+      id: `${system.slug}-exchange-ratio`,
+      label: "Ratio d'echange (cout/effet)",
+      type: "source",
+      layer: "cout",
+      risk: "high",
+      confidence: exchangeRatio?.confidence ?? "haute",
+      claim:
+        "Meme a 80 k$, le Shahed reste sans commune mesure avec l'intercepteur sol-air — souvent 10 a 30 fois plus cher — qu'il force le defenseur a tirer. L'essentiel n'est pas le chiffre, c'est le ratio.",
+      evidence: evidenceFromIndicator(exchangeRatio),
+      ...sourceFromIndicator(sources, exchangeRatio),
+      nextAction:
+        "Lire ce ratio comme indicateur de pression economique sur le defenseur, pas comme parametre tactique d'emploi.",
+      position2d: { x: 50, y: 76 },
+      position3d: { x: 0, y: -1.05, z: 0 },
+    }),
+    makeNode({
+      id: `${system.slug}-guidance`,
+      label: "Guidage GNSS/INS",
+      type: "component",
+      layer: "supply-chain",
+      risk: "high",
+      confidence: guidance?.confidence ?? "moyenne",
+      claim:
+        "Navigation inertielle + GNSS, sensible au brouillage. Lecture capacitaire publique — aucun parametre d'emploi ni de contre-mesure n'est decrit ici.",
+      evidence: evidenceFromIndicator(guidance),
+      ...sourceFromIndicator(sources, guidance),
+      nextAction:
+        "Conserver cette lecture au niveau public; ne deduire ni doctrine d'emploi ni protocole de contre-mesure.",
+      position2d: { x: 36, y: 24 },
+      position3d: { x: -0.55, y: 1.15, z: 0.2 },
+    }),
+    makeNode({
+      id: `${system.slug}-electronics`,
+      label: "Electronique commerciale (occidentale)",
+      type: "supplier",
+      layer: "supply-chain",
+      risk: "critical",
+      confidence: electronics?.confidence ?? "moyenne",
+      claim:
+        "Drone pauvre dans sa cellule, riche dans son electronique: semi-conducteurs, microcontroleurs et modules de navigation d'origine commerciale occidentale — constat issu d'analyses de debris.",
+      evidence: evidenceFromIndicator(electronics),
+      ...sourceFromIndicator(sources, electronics),
+      nextAction:
+        "Suivre l'efficacite des controles export sur ces puces comme indicateur de soutenabilite de la production de masse.",
+      position2d: { x: 64, y: 24 },
+      position3d: { x: 0.55, y: 1.15, z: 0.2 },
+    }),
+    makeNode({
+      id: `${system.slug}-iran-russia-axis`,
+      label: "Axe Iran–Russie",
+      type: "country",
+      layer: "geopolitique",
+      risk: "high",
+      confidence: transferChannel?.confidence ?? "haute",
+      claim:
+        "Le Shahed a fait de l'Iran un fournisseur d'armes de premier plan dans une guerre majeure, et scelle un rapprochement militaro-industriel avec la Russie.",
+      evidence: evidenceFromIndicator(transferChannel ?? fundingLogic),
+      ...sourceFromIndicator(sources, transferChannel ?? fundingLogic),
+      nextAction:
+        "Lire l'axe industriel comme un trait structurant, pas comme une circonstance.",
+      position2d: { x: 14, y: 64 },
+      position3d: { x: -1.4, y: -0.55, z: -0.15 },
+    }),
+    makeNode({
+      id: `${system.slug}-counter-drone-race`,
+      label: "Course aux defenses anti-drones",
+      type: "source",
+      layer: "geopolitique",
+      risk: "medium",
+      confidence: counterDroneRace?.confidence ?? "haute",
+      claim:
+        "Effet induit majeur — le Shahed a relance partout la quete d'une defense anti-drone reellement abordable. Sa principale consequence est dans les bureaux d'etudes.",
+      evidence: evidenceFromIndicator(counterDroneRace),
+      ...sourceFromIndicator(sources, counterDroneRace),
+      nextAction:
+        "Suivre cet effet induit comme un indicateur de bascule doctrinale dans la defense aerienne.",
+      position2d: { x: 86, y: 64 },
+      position3d: { x: 1.4, y: -0.55, z: -0.15 },
+    }),
+    makeNode({
+      id: `${system.slug}-onu-controversy`,
+      label: "Conformite ONU contestee",
+      type: "source",
+      layer: "export",
+      risk: "high",
+      confidence: onuControversy?.confidence ?? "moyenne",
+      claim:
+        "Transfert juge contraire aux engagements ONU pesant sur l'Iran par plusieurs Etats — cas-type des limites du systeme quand un fournisseur s'en affranchit.",
+      evidence: evidenceFromIndicator(onuControversy),
+      ...sourceFromIndicator(sources, onuControversy),
+      nextAction:
+        "Lire la controverse comme illustration des limites du regime d'export, pas comme jugement definitif.",
+      position2d: { x: 30, y: 14 },
+      position3d: { x: -0.85, y: 1.4, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-no-regime`,
+      label: "Hors regime de controle",
+      type: "source",
+      layer: "export",
+      risk: "critical",
+      confidence: exportRegime?.confidence ?? "moyenne",
+      claim:
+        "Pas d'autorisation, pas de certificat d'utilisateur final, pas de tracabilite. Le Shahed echappe a ce que les regimes d'export cherchent precisement a garantir.",
+      evidence: evidenceFromIndicator(exportRegime ?? traceability),
+      ...sourceFromIndicator(sources, exportRegime ?? traceability),
+      nextAction:
+        "Croiser avec les regimes ITAR/MTCR/Wassenaar pour mesurer l'ecart structural, pas pour evaluer un comportement.",
+      position2d: { x: 70, y: 14 },
+      position3d: { x: 0.85, y: 1.4, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-global-confidence`,
+      label: "Confiance globale",
+      type: "confidence",
+      layer: "sources",
+      risk: "high",
+      confidence: confidenceScore.confidence,
+      claim:
+        "Le dossier Shahed est un cas-ecole d'incertitude assumee: donnees dispersees, souvent invuerifiables — l'opacite est elle-meme une information.",
+      evidence: `${confidenceScore.evidence} Registre: ${confidenceClaims.length} affirmations tracees pour ce systeme.`,
+      metadata: confidenceScore.metadata,
+      sourceLabel: "Console OSINT Panoplie",
+      limitation:
+        "Cout, portee et chiffres de production varient fortement d'une source a l'autre. Le statut 'variable' domine le dossier.",
+      nextAction:
+        "Prioriser dans la Console OSINT les affirmations marquees variable pour suivre leur evolution dans le temps.",
+      position2d: { x: 16, y: 88 },
+      position3d: { x: -1.4, y: -1.4, z: 0.1 },
+    }),
+  ];
+}
+
+function spy6Nodes(system: DefenseSystem): DecisionTwinNode[] {
+  const sources = sourceById(system);
+  const cost = brickByKey(system, "cout");
+  const finance = brickByKey(system, "finance");
+  const supply = brickByKey(system, "supply-chain");
+  const geopolitics = brickByKey(system, "geopolitique");
+  const exportBrick = brickByKey(system, "export");
+
+  const rma = indicatorByLabel(system.keySpecs, "RMA");
+  const variants = indicatorByLabel(system.keySpecs, "Variantes");
+  const simultaneity = indicatorByLabel(system.keySpecs, "simultanees") ??
+    indicatorByLabel(system.keySpecs, "Capacites");
+  const c2 = indicatorByLabel(system.keySpecs, "Integration C2") ??
+    indicatorByLabel(system.keySpecs, "C2");
+  const rfTech = indicatorByLabel(system.keySpecs, "Technologie RF");
+
+  const lccArg = indicatorByLabel(cost?.indicators ?? [], "LCC") ??
+    indicatorByLabel(cost?.indicators ?? [], "constructeur");
+  const exportModel = indicatorByLabel(finance?.indicators ?? [], "export") ??
+    indicatorByLabel(finance?.indicators ?? [], "FMS");
+  const industrialInvest = indicatorByLabel(finance?.indicators ?? [], "industriel");
+  const verticalIntegration = indicatorByLabel(supply?.indicators ?? [], "verticale") ??
+    indicatorByLabel(supply?.indicators ?? [], "Empreinte");
+  const ganTech = indicatorByLabel(supply?.indicators ?? [], "GaN") ??
+    indicatorByLabel(supply?.indicators ?? [], "Technologie RF");
+  const cadenceRisk = indicatorByLabel(supply?.indicators ?? [], "industriel");
+  const strategicPosition = indicatorByLabel(geopolitics?.indicators ?? [], "strategique") ??
+    indicatorByLabel(geopolitics?.indicators ?? [], "Position");
+  const aegisDoctrine = indicatorByLabel(geopolitics?.indicators ?? [], "doctrinal") ??
+    indicatorByLabel(geopolitics?.indicators ?? [], "Couplage");
+  const itarRegime = indicatorByLabel(exportBrick?.indicators ?? [], "applicable") ??
+    indicatorByLabel(exportBrick?.indicators ?? [], "Regime");
+  const exportPaths = indicatorByLabel(exportBrick?.indicators ?? [], "Pistes") ??
+    indicatorByLabel(exportBrick?.indicators ?? [], "documentees");
+
+  const confidenceClaims = getAllClaims().filter(
+    (claim) => claim.systemSlug === system.slug,
+  );
+  const confidenceScore = scoreEvidence(system, "confiance-donnees");
+
+  return [
+    makeNode({
+      id: `${system.slug}-rma-panel`,
+      label: "Panneau AESA — briques RMA",
+      type: "component",
+      layer: "cout",
+      risk: "medium",
+      confidence: rma?.confidence ?? "haute",
+      claim:
+        "Brique elementaire 0,6 m de cote — chaque RMA est un mini-radar autonome. La modularite est le seul levier LCC tangible d'un capteur dont la valeur absolue reste elevee.",
+      evidence: evidenceFromIndicator(rma),
+      ...sourceFromIndicator(sources, rma),
+      nextAction:
+        "Distinguer prix du capteur, prix de l'integration Aegis et cout LCC: trois niveaux qu'une seule valeur ne resume pas.",
+      position2d: { x: 50, y: 38 },
+      position3d: { x: 0, y: 0.4, z: 0 },
+    }),
+    makeNode({
+      id: `${system.slug}-lcc-argument`,
+      label: "Argument LCC modulaire",
+      type: "source",
+      layer: "cout",
+      risk: "medium",
+      confidence: lccArg?.confidence ?? "haute",
+      claim:
+        "Remplacer une brique defaillante coute moins cher qu'intervenir sur un panneau monolithique — argument LCC fort de RTX, mais a verifier dans la duree.",
+      evidence: evidenceFromIndicator(lccArg),
+      ...sourceFromIndicator(sources, lccArg),
+      nextAction:
+        "Suivre les retours d'experience MCO Flight III pour confronter l'argument LCC aux couts effectivement observes.",
+      position2d: { x: 28, y: 50 },
+      position3d: { x: -0.85, y: 0, z: 0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-variants`,
+      label: "Quatre variantes ((V)1 a (V)4)",
+      type: "source",
+      layer: "finance",
+      risk: "low",
+      confidence: variants?.confidence ?? "haute",
+      claim:
+        "DDG Flight III (37 RMA), LHA/LPD/CVN, FFG Constellation, backfit Flight IIA (24 RMA): un meme produit decline en quatre profils selon la classe de navire.",
+      evidence: evidenceFromIndicator(variants),
+      ...sourceFromIndicator(sources, variants),
+      nextAction:
+        "Comparer le cout systeme par variante: nombre de RMA et integration changent l'ordre de grandeur.",
+      position2d: { x: 72, y: 50 },
+      position3d: { x: 0.85, y: 0, z: 0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-c2-aegis`,
+      label: "Integration Aegis + NIFC-CA + CEC",
+      type: "system",
+      layer: "geopolitique",
+      risk: "high",
+      confidence: c2?.confidence ?? "haute",
+      claim:
+        "SPY-6 n'a aucune valeur operationnelle isole. Il ne se concoit qu'inscrit dans Aegis, NIFC-CA et CEC — sa valeur depend autant des liaisons que des briques RMA.",
+      evidence: evidenceFromIndicator(c2 ?? aegisDoctrine),
+      ...sourceFromIndicator(sources, c2 ?? aegisDoctrine),
+      nextAction:
+        "Lire l'integration C2 comme prerequis a toute acquisition export — pas un module optionnel.",
+      position2d: { x: 50, y: 14 },
+      position3d: { x: 0, y: 1.5, z: 0.3 },
+    }),
+    makeNode({
+      id: `${system.slug}-multi-mission`,
+      label: "Capacites simultanees IAMD",
+      type: "component",
+      layer: "sources",
+      risk: "low",
+      confidence: simultaneity?.confidence ?? "haute",
+      claim:
+        "Veille air, defense antiaerienne, defense antimissile balistique, conduite de tir et surveillance de surface — declarees simultanees. Lecture capacitaire publique.",
+      evidence: evidenceFromIndicator(simultaneity),
+      ...sourceFromIndicator(sources, simultaneity),
+      nextAction:
+        "Conserver cette lecture au niveau capacitaire; PRF, formes d'onde et ECCM precis restent classifies.",
+      position2d: { x: 38, y: 26 },
+      position3d: { x: -0.55, y: 1.05, z: 0.2 },
+    }),
+    makeNode({
+      id: `${system.slug}-gan-vertical`,
+      label: "Modules T/R GaN — integration verticale",
+      type: "component",
+      layer: "supply-chain",
+      risk: "medium",
+      confidence: ganTech?.confidence ?? "haute",
+      claim:
+        "RTX revendique une integration verticale microelectronique GaN. C'est exactement le type de souverainete capteur que les industriels europeens cherchent a reproduire.",
+      evidence: evidenceFromIndicator(ganTech ?? rfTech),
+      ...sourceFromIndicator(sources, ganTech ?? rfTech),
+      nextAction:
+        "Suivre l'integration verticale RTX comme reference comparative pour les programmes radar souverains europeens.",
+      position2d: { x: 62, y: 26 },
+      position3d: { x: 0.55, y: 1.05, z: 0.2 },
+    }),
+    makeNode({
+      id: `${system.slug}-rtx`,
+      label: system.manufacturer,
+      type: "supplier",
+      layer: "finance",
+      risk: "low",
+      confidence: industrialInvest?.confidence ?? "haute",
+      claim:
+        "Ligne dediee RMA chez RTX, montee en cadence en cours pour soutenir la flotte americaine. Empreinte industrielle entierement americaine.",
+      evidence: evidenceFromIndicator(industrialInvest ?? verticalIntegration),
+      ...sourceFromIndicator(sources, industrialInvest ?? verticalIntegration),
+      nextAction:
+        "Suivre la cadence face a la convergence des programmes navals US (Flight III, Constellation, Ford, San Antonio Flight II, backfit IIA).",
+      position2d: { x: 14, y: 78 },
+      position3d: { x: -1.4, y: -0.9, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-cadence-risk`,
+      label: "Pression cadence + semi-conducteurs RF",
+      type: "source",
+      layer: "supply-chain",
+      risk: "medium",
+      confidence: cadenceRisk?.confidence ?? "moyenne",
+      claim:
+        "Risque industriel principal: ce n'est pas une dependance etrangere, c'est la cadence face aux programmes navals simultanes et la pression sur les semi-conducteurs RF avances.",
+      evidence: evidenceFromIndicator(cadenceRisk),
+      ...sourceFromIndicator(sources, cadenceRisk),
+      nextAction:
+        "Croiser avec les autres grands programmes radar et EW americains qui partagent le meme noeud de tension semi-conducteurs.",
+      position2d: { x: 86, y: 78 },
+      position3d: { x: 1.4, y: -0.9, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-pacific`,
+      label: `${system.country} — pivot Pacifique`,
+      type: "country",
+      layer: "geopolitique",
+      risk: "medium",
+      confidence: strategicPosition?.confidence ?? "haute",
+      claim:
+        "Coeur de la transition IAMD navale US, theatre Pacifique prioritaire. SPY-6 porte la bascule doctrinale: capteur dedie -> IAMD integree.",
+      evidence: evidenceFromIndicator(strategicPosition),
+      ...sourceFromIndicator(sources, strategicPosition),
+      nextAction:
+        "Lire le programme comme signal doctrinal — meme un capteur exprime une posture strategique.",
+      position2d: { x: 84, y: 22 },
+      position3d: { x: 1.4, y: 0.9, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-itar`,
+      label: "ITAR — USML categorie XI",
+      type: "source",
+      layer: "export",
+      risk: "high",
+      confidence: itarRegime?.confidence ?? "haute",
+      claim:
+        "Capteur strategique sous controle Department of State — chaque transfert releve d'une decision politique de haut niveau, pas d'une simple commande.",
+      evidence: evidenceFromIndicator(itarRegime),
+      ...sourceFromIndicator(sources, itarRegime),
+      nextAction:
+        "Conserver cette restriction comme cadre de lecture; ne deduire aucune procedure d'integration alliee.",
+      position2d: { x: 16, y: 16 },
+      position3d: { x: -1.4, y: 1.4, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-export-paths`,
+      label: "Pistes export (Japon, Coree, Australie, Espagne)",
+      type: "source",
+      layer: "export",
+      risk: "medium",
+      confidence: exportPaths?.confidence ?? "moyenne",
+      claim:
+        "FMS restreint aux allies operant Aegis. L'integration capteur n'a de sens qu'avec une integration Aegis correspondante — la valeur geopolitique l'emporte sur la valeur commerciale.",
+      evidence: evidenceFromIndicator(exportPaths ?? exportModel),
+      ...sourceFromIndicator(sources, exportPaths ?? exportModel),
+      nextAction:
+        "Suivre les niveaux de maturite (Maya-class, Hunter-class, F-110) sans extrapoler vers des dates fermes.",
+      position2d: { x: 30, y: 14 },
+      position3d: { x: -0.85, y: 1.4, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-global-confidence`,
+      label: "Confiance globale",
+      type: "confidence",
+      layer: "sources",
+      risk: "medium",
+      confidence: confidenceScore.confidence,
+      claim:
+        "Documents Navy / RTX abondants et justifications DoD annuelles, mais parametres techniques fins (TRM, formes d'onde, ECCM) classifies.",
+      evidence: `${confidenceScore.evidence} Registre: ${confidenceClaims.length} affirmations tracees pour ce systeme.`,
+      metadata: confidenceScore.metadata,
+      sourceLabel: "Console OSINT Panoplie",
+      limitation:
+        "Le perimetre Flight IIA et Constellation evolue lot apres lot: prendre la date du document budgetaire DoD comme reference.",
+      nextAction:
+        "Prioriser dans la Console OSINT les indicateurs marques variable (cout unitaire capteur, pistes export).",
+      position2d: { x: 16, y: 88 },
+      position3d: { x: -1.4, y: -1.4, z: 0.1 },
+    }),
+  ];
+}
+
+function fremmFranceNodes(system: DefenseSystem): DecisionTwinNode[] {
+  const sources = sourceById(system);
+  const cost = brickByKey(system, "cout");
+  const finance = brickByKey(system, "finance");
+  const supply = brickByKey(system, "supply-chain");
+  const geopolitics = brickByKey(system, "geopolitique");
+  const exportBrick = brickByKey(system, "export");
+
+  const sensors = indicatorByLabel(system.keySpecs, "Capteurs");
+  const weapons = indicatorByLabel(system.keySpecs, "Armements");
+  const aviation = indicatorByLabel(system.keySpecs, "Aviation");
+
+  const costReading = indicatorByLabel(cost?.indicators ?? [], "lecture") ??
+    indicatorByLabel(cost?.indicators ?? [], "Cout");
+  const variability = indicatorByLabel(cost?.indicators ?? [], "Variabilite");
+  const cooperativeOrigin = indicatorByLabel(finance?.indicators ?? [], "programme") ??
+    indicatorByLabel(finance?.indicators ?? [], "Origine");
+  const frenchStandard = indicatorByLabel(finance?.indicators ?? [], "Standard");
+  const primeContractors = indicatorByLabel(supply?.indicators ?? [], "Maitres") ??
+    indicatorByLabel(supply?.indicators ?? [], "oeuvre");
+  const sonar = indicatorByLabel(supply?.indicators ?? [], "Sonar") ??
+    indicatorByLabel(supply?.indicators ?? [], "CAPTAS");
+  const effectors = indicatorByLabel(supply?.indicators ?? [], "Effecteurs") ??
+    indicatorByLabel(supply?.indicators ?? [], "Aster");
+  const strategicRole = indicatorByLabel(geopolitics?.indicators ?? [], "Role") ??
+    indicatorByLabel(geopolitics?.indicators ?? [], "ASM");
+  const europeanCoop = indicatorByLabel(geopolitics?.indicators ?? [], "Europe");
+  const exportability = indicatorByLabel(exportBrick?.indicators ?? [], "Exportabilite");
+  const sensitivity = indicatorByLabel(exportBrick?.indicators ?? [], "Sensibilite") ??
+    indicatorByLabel(exportBrick?.indicators ?? [], "Missiles");
+
+  const confidenceClaims = getAllClaims().filter(
+    (claim) => claim.systemSlug === system.slug,
+  );
+  const confidenceScore = scoreEvidence(system, "confiance-donnees");
+
+  return [
+    makeNode({
+      id: `${system.slug}-hull`,
+      label: "Coque / plateforme 6 000 t",
+      type: "component",
+      layer: "cout",
+      risk: "low",
+      confidence: costReading?.confidence ?? "moyenne",
+      claim:
+        "Fregate haut de gamme — cout complet domine par capteurs, missiles et MCO. La coque seule ne donne aucune lecture utile.",
+      evidence: evidenceFromIndicator(costReading),
+      ...sourceFromIndicator(sources, costReading),
+      nextAction:
+        "Refuser la comparaison brute par tonnage; lire la fregate comme systeme-de-systemes, pas comme volume d'acier.",
+      position2d: { x: 50, y: 56 },
+      position3d: { x: 0, y: 0, z: 0 },
+    }),
+    makeNode({
+      id: `${system.slug}-cms-setis`,
+      label: "CMS SETIS",
+      type: "system",
+      layer: "supply-chain",
+      risk: "medium",
+      confidence: primeContractors?.confidence ?? "haute",
+      claim:
+        "Sans CMS, la fregate n'est qu'une coque. SETIS structure la lecture de souverainete: Naval Group au coeur de l'architecture combat franco-italienne.",
+      evidence: evidenceFromIndicator(primeContractors),
+      ...sourceFromIndicator(sources, primeContractors),
+      nextAction:
+        "Comparer SETIS avec Aegis (SPY-6), TACTICOS (Thales) et 9LV (Saab) pour situer le CMS dans son ecosysteme.",
+      position2d: { x: 50, y: 30 },
+      position3d: { x: 0, y: 0.95, z: 0.2 },
+    }),
+    makeNode({
+      id: `${system.slug}-radar-herakles`,
+      label: "Radar Herakles (Thales)",
+      type: "component",
+      layer: "supply-chain",
+      risk: "low",
+      confidence: sensors?.confidence ?? "moyenne",
+      claim:
+        "Radar multifonction Thales — coeur du senseur AAW de la FREMM. Lecture capacitaire publique, sans parametres de detection precis.",
+      evidence: evidenceFromIndicator(sensors),
+      ...sourceFromIndicator(sources, sensors),
+      nextAction:
+        "Distinguer Herakles (FREMM) de Sea Fire (FDI) pour suivre la trajectoire des senseurs Thales sur fregates francaises.",
+      position2d: { x: 50, y: 14 },
+      position3d: { x: 0, y: 1.5, z: 0.3 },
+    }),
+    makeNode({
+      id: `${system.slug}-captas4`,
+      label: "Sonar CAPTAS-4 + UMS 4110",
+      type: "component",
+      layer: "supply-chain",
+      risk: "low",
+      confidence: sonar?.confidence ?? "haute",
+      claim:
+        "CAPTAS-4 transforme la FREMM en plateforme ASM credible a longue portee. Marqueur ASM le plus fort de la famille — la valeur est sous-marine autant que de surface.",
+      evidence: evidenceFromIndicator(sonar),
+      ...sourceFromIndicator(sources, sonar),
+      nextAction:
+        "Lire la performance ASM comme un capacitaire structurant, pas comme une option. Refuser la comparaison FREMM ASM / FREMM DA sans le distinguer.",
+      position2d: { x: 30, y: 72 },
+      position3d: { x: -0.85, y: -0.55, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-vls-aster`,
+      label: "Sylver A50 — missiles Aster",
+      type: "component",
+      layer: "supply-chain",
+      risk: "medium",
+      confidence: effectors?.confidence ?? "moyenne",
+      claim:
+        "Aster 15/30 (MBDA), Exocet MM40 et MdCN selon configuration — l'arme nucleaire navale n'est pas dans le perimetre, contrairement au SNLE. VLS Sylver est l'autre marqueur du systeme.",
+      evidence: evidenceFromIndicator(effectors ?? weapons),
+      ...sourceFromIndicator(sources, effectors ?? weapons),
+      nextAction:
+        "Documenter par standard les configurations (cellules VLS, types Aster, presence ou non du MdCN) — fortes variations.",
+      position2d: { x: 36, y: 42 },
+      position3d: { x: -0.55, y: 0.3, z: 0.15 },
+    }),
+    makeNode({
+      id: `${system.slug}-helicopter`,
+      label: "NH90 Caïman Marine",
+      type: "component",
+      layer: "sources",
+      risk: "low",
+      confidence: aviation?.confidence ?? "moyenne",
+      claim:
+        "L'helicoptere ASM embarque etend la portee de detection sous-marine bien au-dela du sonar de coque. Trait constitutif d'une fregate ASM credible.",
+      evidence: evidenceFromIndicator(aviation),
+      ...sourceFromIndicator(sources, aviation),
+      nextAction:
+        "Lire l'aviation embarquee comme integrale du systeme ASM, pas comme equipement annexe.",
+      position2d: { x: 70, y: 72 },
+      position3d: { x: 0.85, y: -0.55, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-naval-group`,
+      label: "Naval Group — Lorient",
+      type: "supplier",
+      layer: "finance",
+      risk: "low",
+      confidence: cooperativeOrigin?.confidence ?? "haute",
+      claim:
+        "Maitre d'oeuvre francais sur le programme cooperatif franco-italien, chantier de Lorient. Programme de flotte, pas achat unitaire isole.",
+      evidence: evidenceFromIndicator(cooperativeOrigin),
+      ...sourceFromIndicator(sources, cooperativeOrigin),
+      nextAction:
+        "Croiser avec Fincantieri (italien) pour lire la dimension cooperative comme tronc commun + branches nationales.",
+      position2d: { x: 14, y: 84 },
+      position3d: { x: -1.4, y: -0.9, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-asm-da-variants`,
+      label: "Variantes ASM vs DA",
+      type: "source",
+      layer: "cout",
+      risk: "medium",
+      confidence: variability?.confidence ?? "haute",
+      claim:
+        "ASM et DA ne sont pas la meme fregate. La configuration change capteurs, VLS, missiles et standard — comparer par tonnage masque tout.",
+      evidence: evidenceFromIndicator(variability),
+      ...sourceFromIndicator(sources, variability),
+      nextAction:
+        "Toujours afficher la variante dans toute comparaison; sans variante, la comparaison FREMM est trompeuse.",
+      position2d: { x: 86, y: 56 },
+      position3d: { x: 1.4, y: 0, z: -0.05 },
+    }),
+    makeNode({
+      id: `${system.slug}-european-coop`,
+      label: "Cooperation europeenne navale",
+      type: "country",
+      layer: "geopolitique",
+      risk: "medium",
+      confidence: europeanCoop?.confidence ?? "haute",
+      claim:
+        "Coeur d'une fregate europeenne: meme famille industrielle, mais doctrines nationales et exports differencies. Modele a la fois cooperatif et national.",
+      evidence: evidenceFromIndicator(europeanCoop ?? strategicRole),
+      ...sourceFromIndicator(sources, europeanCoop ?? strategicRole),
+      nextAction:
+        "Lire la cooperation FREMM comme modele de reference pour les autres programmes europeens (FCAS, MGCS).",
+      position2d: { x: 86, y: 30 },
+      position3d: { x: 1.4, y: 0.95, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-french-standards`,
+      label: `${system.country} — standards nationaux`,
+      type: "country",
+      layer: "geopolitique",
+      risk: "low",
+      confidence: frenchStandard?.confidence ?? "haute",
+      claim:
+        "Marine nationale et Marina Militare articulent la famille en standards distincts. La FREMM porte une souverainete maritime europeenne, sans dependance ITAR structurante.",
+      evidence: evidenceFromIndicator(frenchStandard),
+      ...sourceFromIndicator(sources, frenchStandard),
+      nextAction:
+        "Documenter chaque standard pour eviter l'amalgame: ASM, DA, version italienne, derives export ne sont pas equivalents.",
+      position2d: { x: 84, y: 22 },
+      position3d: { x: 1.4, y: 1.1, z: -0.05 },
+    }),
+    makeNode({
+      id: `${system.slug}-export-regime`,
+      label: "Exportabilite — partielle ITAR",
+      type: "source",
+      layer: "export",
+      risk: "medium",
+      confidence: exportability?.confidence ?? "moyenne",
+      claim:
+        "Famille exportable, mais chaque vente recompose missiles, capteurs, CMS et soutien. Exposition ITAR partielle — MdCN, Aster, Exocet et sonars exigent un examen par standard.",
+      evidence: evidenceFromIndicator(exportability),
+      ...sourceFromIndicator(sources, exportability),
+      nextAction:
+        "Documenter par contrat les configurations livrees — l'export vend autant un soutien de longue duree qu'un batiment.",
+      position2d: { x: 16, y: 16 },
+      position3d: { x: -1.4, y: 1.4, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-export-sensitivity`,
+      label: "Sensibilites export (missiles, CMS, EW)",
+      type: "source",
+      layer: "export",
+      risk: "medium",
+      confidence: sensitivity?.confidence ?? "moyenne",
+      claim:
+        "Missiles, CMS, guerre electronique et sonars soumis a arbitrages politiques. La fregate est exportee, mais sa configuration est negociee piece par piece.",
+      evidence: evidenceFromIndicator(sensitivity),
+      ...sourceFromIndicator(sources, sensitivity),
+      nextAction:
+        "Conserver cette grille (missiles / CMS / EW / sonars) comme cadre de lecture des contrats export navals.",
+      position2d: { x: 30, y: 14 },
+      position3d: { x: -0.85, y: 1.4, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-global-confidence`,
+      label: "Confiance globale",
+      type: "confidence",
+      layer: "sources",
+      risk: "low",
+      confidence: confidenceScore.confidence,
+      claim:
+        "Caracteristiques et roles bien documentes — Naval Group, Thales, presse specialisee — mais configurations exactes et couts restent variables selon standard et variante.",
+      evidence: `${confidenceScore.evidence} Registre: ${confidenceClaims.length} affirmations tracees pour ce systeme.`,
+      metadata: confidenceScore.metadata,
+      sourceLabel: "Console OSINT Panoplie",
+      limitation:
+        "Configurations exactes (VLS, presence MdCN, version Aster) varient entre unites et standards: prudence avant toute comparaison.",
+      nextAction:
+        "Prioriser dans la Console OSINT les indicateurs marques variable (configurations effecteurs, couts unitaires).",
+      position2d: { x: 16, y: 88 },
+      position3d: { x: -1.4, y: -1.4, z: 0.1 },
+    }),
+  ];
+}
+
 function genericNodes(system: DefenseSystem): DecisionTwinNode[] {
   const sources = sourceById(system);
   const claims = getAllClaims().filter((claim) => claim.systemSlug === system.slug);
@@ -1182,18 +2156,27 @@ function genericNodes(system: DefenseSystem): DecisionTwinNode[] {
   ];
 }
 
-const SYSTEM_NODE_BUILDERS: Record<string, (system: DefenseSystem) => DecisionTwinNode[]> = {
+// Exporté pour permettre la validation croisée avec `XRAY_EDITED_SLUGS`
+// (voir `tests/data/xray-scenarios.test.ts`) — pas pour usage runtime côté
+// client. `Partial` est requis pour que `SYSTEM_NODE_BUILDERS[slug]` retourne
+// `T | undefined` (sinon TS considère la lookup toujours définie).
+export const SYSTEM_NODE_BUILDERS: Partial<Record<string, (system: DefenseSystem) => DecisionTwinNode[]>> = {
   "bayraktar-tb2": bayraktarTb2Nodes,
   rafale: rafaleNodes,
   "f-35": f35Nodes,
   "f-15ex": f15exNodes,
+  "mq-9-reaper": mq9ReaperNodes,
+  "shahed-136": shahed136Nodes,
+  "spy-6": spy6Nodes,
+  "fremm-france": fremmFranceNodes,
 };
 
 export function buildPanoplieXrayScenario(
   system: DefenseSystem,
 ): PanoplieXrayScenario {
-  const builder = SYSTEM_NODE_BUILDERS[system.slug] ?? genericNodes;
-  const nodes = builder(system);
+  const builder = SYSTEM_NODE_BUILDERS[system.slug];
+  const coverage: PanoplieXrayScenario["coverage"] = builder ? "edited" : "auto";
+  const nodes = (builder ?? genericNodes)(system);
 
   return {
     id: `panoplie-xray-${system.slug}`,
@@ -1205,6 +2188,7 @@ export function buildPanoplieXrayScenario(
     generatedAt: `${system.updated}T00:00:00.000Z`,
     layers: LAYERS,
     nodes,
+    coverage,
     limitations: [
       DEFAULT_LIMITATION,
       "Les points X-Ray contextualisent des sources ouvertes; ils ne decrivent ni plans detailles, ni parametres sensibles, ni recommandations tactiques.",

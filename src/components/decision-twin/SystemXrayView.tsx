@@ -95,8 +95,13 @@ export function SystemXrayView({
               <Stamp tone="ink" rotate={2}>
                 {system.manufacturer}
               </Stamp>
-              <Stamp tone="dim" rotate={-1}>
-                Dossier source
+              <Stamp
+                tone={scenario.coverage === "edited" ? "accent" : "dim"}
+                rotate={-1}
+              >
+                {scenario.coverage === "edited"
+                  ? "Lecture éditoriale"
+                  : "Lecture auto (briques)"}
               </Stamp>
             </div>
           </div>

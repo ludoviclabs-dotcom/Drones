@@ -58,6 +58,18 @@ export interface EvidencePack {
   recommendedActions: string[];
 }
 
+/**
+ * Couverture éditoriale d'un X-Ray.
+ * - "edited" : scénario produit par un builder dédié — hotspots, claims,
+ *   positions choisis manuellement à partir des briques sourcées du dossier.
+ * - "auto"   : scénario produit par `genericNodes()` — 6 hotspots dérivés
+ *   automatiquement des briques (1 par couche + 1 node système), sans curation.
+ *
+ * Affiché à l'utilisateur via un stamp dans le header X-Ray, pour qu'il sache
+ * immédiatement s'il consulte une lecture éditoriale ou une agrégation auto.
+ */
+export type DecisionTwinCoverage = "edited" | "auto";
+
 export interface PanoplieXrayScenario {
   id: string;
   systemSlug: string;
@@ -69,4 +81,5 @@ export interface PanoplieXrayScenario {
   nodes: DecisionTwinNode[];
   limitations: string[];
   recommendedActions: string[];
+  coverage: DecisionTwinCoverage;
 }

@@ -4,6 +4,18 @@ import type { ChangelogEntry } from "./types";
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-06-08",
+    title: "System X-Ray — lot 3 : cinq dossiers à fort levier comparatif",
+    items: [
+      "Cinq dossiers passent en lecture éditoriale — J-20, Sea Fire, DragonFire, Meteor et MICA NG — portant la couverture éditoriale à dix-sept systèmes (sur 110).",
+      "J-20 — cas d'honnêteté radicale sur l'incertitude : flotte 300+ documentée, motorisation et coûts volontairement traités au niveau de confiance abaissé. Le X-Ray reflète ce que l'OSINT peut dire d'un programme aussi fermé — et ce qu'il refuse d'inventer.",
+      "Sea Fire — pendant français de SPY-6 : 4 panneaux fixes GaN, hors ITAR, couplé à l'export FDI (Grèce confirmée). Permet le couple comparatif Sea Fire / SPY-6 — deux modèles concurrents de souveraineté radar navale moderne.",
+      "DragonFire — du démonstrateur à l'engagement daté : contrat £316M, calendrier accéléré de 5 ans, déploiement Type 45 annoncé pour 2027. Couple comparatif HELMA-P (~2 kW, FR) / DragonFire (~50 kW, UK) : deux modèles de souveraineté laser nationale.",
+      "Meteor — pilier autonomie air-air européenne : ramjet Bayern-Chemie (souverain européen), intégration F-35 en cours = fait industriel et politique majeur. L'effecteur qui transforme un avion américain en plateforme partiellement européenne.",
+      "MICA NG — cohérence souveraine du couple Rafale + MBDA : double seeker interopérable (RF AESA + IR FPA), mutualisation air-air / sol-air via VL MICA, hors ITAR. Test de cohérence de l'arsenal souverain français à suivre dès 2026.",
+    ],
+  },
+  {
+    date: "2026-06-08",
     title: "System X-Ray — lot 2 : quatre dossiers à forte densité éditoriale",
     items: [
       "Quatre dossiers passent en lecture éditoriale — Eurofighter Typhoon, Charles de Gaulle, HELMA-P et Aster 30 B1NT — portant la couverture éditoriale à douze systèmes (sur 110).",

@@ -3201,6 +3201,1363 @@ function aster30B1NtNodes(system: DefenseSystem): DecisionTwinNode[] {
   ];
 }
 
+function j20Nodes(system: DefenseSystem): DecisionTwinNode[] {
+  const sources = sourceById(system);
+  const cost = brickByKey(system, "cout");
+  const finance = brickByKey(system, "finance");
+  const supply = brickByKey(system, "supply-chain");
+  const geopolitics = brickByKey(system, "geopolitique");
+  const exportBrick = brickByKey(system, "export");
+
+  const stealth = indicatorByLabel(system.keySpecs, "Furtivite") ??
+    indicatorByLabel(system.keySpecs, "Furtivité");
+  const role = indicatorByLabel(system.keySpecs, "Role") ??
+    indicatorByLabel(system.keySpecs, "Rôle");
+  const fleet = indicatorByLabel(system.keySpecs, "Flotte");
+  const engine = indicatorByLabel(system.keySpecs, "Motorisation");
+  const exportSpec = indicatorByLabel(system.keySpecs, "Export");
+  const crew = indicatorByLabel(system.keySpecs, "Equipage") ??
+    indicatorByLabel(system.keySpecs, "Équipage");
+
+  const noPublicCost = indicatorByLabel(cost?.indicators ?? [], "publies") ??
+    indicatorByLabel(cost?.indicators ?? [], "publiés");
+  const scaleIndicator = indicatorByLabel(cost?.indicators ?? [], "Indice");
+  const prudentReading = indicatorByLabel(cost?.indicators ?? [], "prudente");
+  const masterOwner = indicatorByLabel(finance?.indicators ?? [], "ouvrage");
+  const budgetDetail = indicatorByLabel(finance?.indicators ?? [], "budgetaire") ??
+    indicatorByLabel(finance?.indicators ?? [], "Detail");
+  const readableSignal = indicatorByLabel(finance?.indicators ?? [], "Signal");
+  const primeContractor = indicatorByLabel(supply?.indicators ?? [], "oeuvre");
+  const sovereigntyObjective = indicatorByLabel(supply?.indicators ?? [], "Objectif");
+  const motorWeakness = indicatorByLabel(supply?.indicators ?? [], "Maillon");
+  const strategicFunction = indicatorByLabel(geopolitics?.indicators ?? [], "strategique") ??
+    indicatorByLabel(geopolitics?.indicators ?? [], "Fonction");
+  const employmentZones = indicatorByLabel(geopolitics?.indicators ?? [], "emploi");
+  const trajectory = indicatorByLabel(geopolitics?.indicators ?? [], "Trajectoire");
+  const exportStatus = indicatorByLabel(exportBrick?.indicators ?? [], "Statut");
+  const exportAlternative = indicatorByLabel(exportBrick?.indicators ?? [], "Alternative");
+
+  const confidenceClaims = getAllClaims().filter(
+    (claim) => claim.systemSlug === system.slug,
+  );
+  const confidenceScore = scoreEvidence(system, "confiance-donnees");
+
+  return [
+    makeNode({
+      id: `${system.slug}-fuselage`,
+      label: "Cellule furtive lourde",
+      type: "component",
+      layer: "sources",
+      risk: "medium",
+      confidence: stealth?.confidence ?? "moyenne",
+      claim:
+        "Furtivite concue des l'origine, armement en soute interne. Capacite reelle et produite a grande echelle — mais performances precises (RCS, portee capteur) restent classifiees ou non verifiables.",
+      evidence: evidenceFromIndicator(stealth ?? role),
+      ...sourceFromIndicator(sources, stealth ?? role),
+      nextAction:
+        "Conserver la lecture au niveau capacitaire; ne pas extrapoler les chiffres RCS ou de portee que les sources ouvertes ne soutiennent pas.",
+      position2d: { x: 50, y: 50 },
+      position3d: { x: 0, y: 0, z: 0 },
+    }),
+    makeNode({
+      id: `${system.slug}-cockpit`,
+      label: "Cockpit — variante J-20S biplace",
+      type: "component",
+      layer: "sources",
+      risk: "low",
+      confidence: crew?.confidence ?? "moyenne",
+      claim:
+        "Premier chasseur furtif biplace operationnel. La variante J-20S signale une priorite donnee a l'integration avec drones d'accompagnement (loyal wingman).",
+      evidence: evidenceFromIndicator(crew),
+      ...sourceFromIndicator(sources, crew),
+      nextAction:
+        "Lire J-20S comme indicateur d'une doctrine d'emploi avec drones d'accompagnement — pas comme certitude operationnelle.",
+      position2d: { x: 50, y: 22 },
+      position3d: { x: 0, y: 1.15, z: 0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-engine`,
+      label: "Motorisation — point faible historique",
+      type: "component",
+      layer: "supply-chain",
+      risk: "high",
+      confidence: engine?.confidence ?? "faible",
+      claim:
+        "Premiers J-20 dependaient de reacteurs d'origine russe. Transition vers les moteurs chinois engagee — mais l'etat exact reste difficile a etablir depuis les sources ouvertes.",
+      evidence: evidenceFromIndicator(engine ?? motorWeakness),
+      ...sourceFromIndicator(sources, engine ?? motorWeakness),
+      nextAction:
+        "Documenter chaque jalon de transition motorisation comme element separe — la chronologie publique reste partielle.",
+      position2d: { x: 50, y: 84 },
+      position3d: { x: 0, y: -1.2, z: -0.15 },
+    }),
+    makeNode({
+      id: `${system.slug}-fleet-scale`,
+      label: "Flotte 300+ — production ~100/an",
+      type: "source",
+      layer: "cout",
+      risk: "low",
+      confidence: fleet?.confidence ?? "moyenne",
+      claim:
+        "L'echelle est l'information solide du dossier: production de masse, base industrielle dimensionnee. C'est ce que les sources autorisent — pas les couts unitaires.",
+      evidence: evidenceFromIndicator(fleet ?? scaleIndicator),
+      ...sourceFromIndicator(sources, fleet ?? scaleIndicator),
+      nextAction:
+        "Suivre les chiffres de flotte annuels (DoD, IISS) comme proxy budgetaire — le seul disponible publiquement.",
+      position2d: { x: 28, y: 64 },
+      position3d: { x: -0.85, y: -0.3, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-no-public-cost`,
+      label: "Cout — opacite assumee",
+      type: "source",
+      layer: "cout",
+      risk: "high",
+      confidence: noPublicCost?.confidence ?? "faible",
+      claim:
+        "Aucun chiffre verifiable: prix unitaire, programme, possession. La Chine ne publie pas. Toute valeur publiee est une estimation non recoupable — refuser la tentation de l'inventer.",
+      evidence: evidenceFromIndicator(noPublicCost ?? prudentReading),
+      ...sourceFromIndicator(sources, noPublicCost ?? prudentReading),
+      nextAction:
+        "Refuser l'inference: documenter l'ampleur et l'industrialisation, pas un cout que les sources ne supportent pas.",
+      position2d: { x: 72, y: 64 },
+      position3d: { x: 0.85, y: -0.3, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-plaaf`,
+      label: "Etat chinois — PLAAF",
+      type: "supplier",
+      layer: "finance",
+      risk: "medium",
+      confidence: masterOwner?.confidence ?? "haute",
+      claim:
+        "Maitre d'ouvrage etat chinois. Detail budgetaire non communique — la part aviation n'apparait pas dans les budgets de defense publies.",
+      evidence: evidenceFromIndicator(masterOwner ?? budgetDetail),
+      ...sourceFromIndicator(sources, masterOwner ?? budgetDetail),
+      nextAction:
+        "Croiser avec les rapports DoD/IISS annuels comme seule fenetre publique sur l'effort de defense aerienne chinois.",
+      position2d: { x: 14, y: 78 },
+      position3d: { x: -1.4, y: -0.9, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-financial-signal`,
+      label: "Signal financier — cadence + J-20S",
+      type: "source",
+      layer: "finance",
+      risk: "low",
+      confidence: readableSignal?.confidence ?? "moyenne",
+      claim:
+        "Produire en grande serie et lancer J-20S en parallele traduit une priorite budgetaire forte et durable accordee a la 5e generation. C'est le signal le plus lisible.",
+      evidence: evidenceFromIndicator(readableSignal),
+      ...sourceFromIndicator(sources, readableSignal),
+      nextAction:
+        "Lire la cadence comme signal budgetaire structurel — pas comme parametre operationnel.",
+      position2d: { x: 86, y: 78 },
+      position3d: { x: 1.4, y: -0.9, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-chengdu-avic`,
+      label: "Chengdu / AVIC — souverainete",
+      type: "supplier",
+      layer: "supply-chain",
+      risk: "medium",
+      confidence: primeContractor?.confidence ?? "haute",
+      claim:
+        "Conception et production assurees par Chengdu et le groupe AVIC. L'objectif programme est l'affranchissement total de toute dependance etrangere.",
+      evidence: evidenceFromIndicator(primeContractor ?? sovereigntyObjective),
+      ...sourceFromIndicator(sources, primeContractor ?? sovereigntyObjective),
+      nextAction:
+        "Lire la chaine AVIC comme analogue au modele Lockheed Martin — concentration nationale, profondeur industrielle, opacite.",
+      position2d: { x: 36, y: 30 },
+      position3d: { x: -0.55, y: 0.85, z: 0.2 },
+    }),
+    makeNode({
+      id: `${system.slug}-indo-pacific`,
+      label: "Indo-Pacifique — contestation 5e gen",
+      type: "country",
+      layer: "geopolitique",
+      risk: "high",
+      confidence: strategicFunction?.confidence ?? "haute",
+      claim:
+        "Conteste directement la superiorite aerienne occidentale en Indo-Pacifique. La 5e generation n'y est plus un monopole occidental — fait structurant.",
+      evidence: evidenceFromIndicator(strategicFunction ?? employmentZones),
+      ...sourceFromIndicator(sources, strategicFunction ?? employmentZones),
+      nextAction:
+        "Suivre la trajectoire de flotte (vers ~1000 appareils fin de decennie) comme indicateur de bascule capacitaire regional.",
+      position2d: { x: 84, y: 22 },
+      position3d: { x: 1.4, y: 0.9, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-deployment`,
+      label: "Detroit de Taiwan + mer de Chine orientale",
+      type: "source",
+      layer: "geopolitique",
+      risk: "high",
+      confidence: trajectory?.confidence ?? "moyenne",
+      claim:
+        "Zones d'emploi documentees. Lecture capacitaire publique — ne pas extrapoler vers des postures tactiques ou des plans d'engagement.",
+      evidence: evidenceFromIndicator(trajectory ?? employmentZones),
+      ...sourceFromIndicator(sources, trajectory ?? employmentZones),
+      nextAction:
+        "Conserver la lecture geographique au niveau ouvert (DoD, IISS); ne deduire aucune procedure ni intention.",
+      position2d: { x: 70, y: 38 },
+      position3d: { x: 0.7, y: 0.45, z: 0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-no-export`,
+      label: "Aucun export — doctrine F-22",
+      type: "source",
+      layer: "export",
+      risk: "low",
+      confidence: exportStatus?.confidence ?? "haute",
+      claim:
+        "Reserve a l'armee de l'air chinoise, comme les US l'ont fait du F-22: un appareil de pointe que l'on garde pour soi. Exportabilite nulle par choix strategique.",
+      evidence: evidenceFromIndicator(exportStatus ?? exportSpec),
+      ...sourceFromIndicator(sources, exportStatus ?? exportSpec),
+      nextAction:
+        "Lire la doctrine 'non exportable' comme parallele explicite au F-22 — meme posture, meme effet.",
+      position2d: { x: 16, y: 16 },
+      position3d: { x: -1.4, y: 1.4, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-j35-alternative`,
+      label: "J-35 — l'offre furtive export chinoise",
+      type: "source",
+      layer: "export",
+      risk: "medium",
+      confidence: exportAlternative?.confidence ?? "moyenne",
+      claim:
+        "Les clients etrangers cherchant un chasseur furtif chinois sont orientes vers d'autres plateformes — J-35 notamment. La distinction J-20/J-35 = doctrine F-22/F-35 cote chinois.",
+      evidence: evidenceFromIndicator(exportAlternative),
+      ...sourceFromIndicator(sources, exportAlternative),
+      nextAction:
+        "Croiser avec la fiche J-35 pour lire la complementarite du couple national / export chinois.",
+      position2d: { x: 30, y: 14 },
+      position3d: { x: -0.85, y: 1.4, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-global-confidence`,
+      label: "Confiance globale — abaissee",
+      type: "confidence",
+      layer: "sources",
+      risk: "high",
+      confidence: confidenceScore.confidence,
+      claim:
+        "Confiance volontairement abaissee. Le J-20 oblige a un exercice d'honnetete: reconnaitre l'ampleur d'un programme ferme sans ceder aux chiffres precis que les sources ne supportent pas.",
+      evidence: `${confidenceScore.evidence} Registre: ${confidenceClaims.length} affirmations tracees pour ce systeme.`,
+      metadata: confidenceScore.metadata,
+      sourceLabel: "Console OSINT Panoplie",
+      limitation:
+        "Le dossier J-20 illustre les limites de l'OSINT face a un programme aussi ferme: ampleur documentable, performances et couts hors d'atteinte.",
+      nextAction:
+        "Prioriser dans la Console OSINT les indicateurs sur la motorisation et l'export J-35 — les rares fenetres ouvertes du dossier chinois.",
+      position2d: { x: 16, y: 88 },
+      position3d: { x: -1.4, y: -1.4, z: 0.1 },
+    }),
+  ];
+}
+
+function seaFireNodes(system: DefenseSystem): DecisionTwinNode[] {
+  const sources = sourceById(system);
+  const cost = brickByKey(system, "cout");
+  const finance = brickByKey(system, "finance");
+  const supply = brickByKey(system, "supply-chain");
+  const geopolitics = brickByKey(system, "geopolitique");
+  const exportBrick = brickByKey(system, "export");
+
+  const architecture = indicatorByLabel(system.keySpecs, "Architecture");
+  const range = indicatorByLabel(system.keySpecs, "Portee") ??
+    indicatorByLabel(system.keySpecs, "Portée");
+  const simultaneity = indicatorByLabel(system.keySpecs, "simultanees") ??
+    indicatorByLabel(system.keySpecs, "simultanées");
+  const rfTech = indicatorByLabel(system.keySpecs, "Technologie RF");
+  const platforms = indicatorByLabel(system.keySpecs, "Plateformes");
+
+  const installCost = indicatorByLabel(cost?.indicators ?? [], "complete") ??
+    indicatorByLabel(cost?.indicators ?? [], "complète");
+  const economicReading = indicatorByLabel(cost?.indicators ?? [], "economique") ??
+    indicatorByLabel(cost?.indicators ?? [], "Lecture");
+  const lccArgument = indicatorByLabel(cost?.indicators ?? [], "LCC");
+  const dgaFunding = indicatorByLabel(finance?.indicators ?? [], "Financeur") ??
+    indicatorByLabel(finance?.indicators ?? [], "DGA");
+  const greekContract = indicatorByLabel(finance?.indicators ?? [], "Grece") ??
+    indicatorByLabel(finance?.indicators ?? [], "Grèce");
+  const exportProspects = indicatorByLabel(finance?.indicators ?? [], "discussion");
+  const thalesFootprint = indicatorByLabel(supply?.indicators ?? [], "industrielle");
+  const ganTech = indicatorByLabel(supply?.indicators ?? [], "GaN");
+  const sovereigntySensor = indicatorByLabel(geopolitics?.indicators ?? [], "capteur") ??
+    indicatorByLabel(geopolitics?.indicators ?? [], "Souverainete");
+  const natoPosition = indicatorByLabel(geopolitics?.indicators ?? [], "OTAN") ??
+    indicatorByLabel(geopolitics?.indicators ?? [], "Position");
+  const exportChannel = indicatorByLabel(exportBrick?.indicators ?? [], "Canal");
+  const exportRegime = indicatorByLabel(exportBrick?.indicators ?? [], "applicable");
+
+  const confidenceClaims = getAllClaims().filter(
+    (claim) => claim.systemSlug === system.slug,
+  );
+  const confidenceScore = scoreEvidence(system, "confiance-donnees");
+
+  return [
+    makeNode({
+      id: `${system.slug}-aesa-panel`,
+      label: "4 panneaux fixes AESA bande S",
+      type: "component",
+      layer: "cout",
+      risk: "low",
+      confidence: architecture?.confidence ?? "haute",
+      claim:
+        "Couverture 360° native par 4 faces fixes. Suppression des servocommandes mecaniques — l'argument LCC structural du capteur.",
+      evidence: evidenceFromIndicator(architecture),
+      ...sourceFromIndicator(sources, architecture),
+      nextAction:
+        "Comparer Sea Fire (panneaux fixes Thales) et SPY-6 (panneaux fixes RTX) comme deux reponses paralleles a la meme question doctrinale.",
+      position2d: { x: 50, y: 38 },
+      position3d: { x: 0, y: 0.4, z: 0 },
+    }),
+    makeNode({
+      id: `${system.slug}-range`,
+      label: "Portee ~500 km en surveillance air",
+      type: "component",
+      layer: "sources",
+      risk: "low",
+      confidence: range?.confidence ?? "moyenne",
+      claim:
+        "Annonce Thales — portee en surveillance air, plus en BMD partiel. Lecture capacitaire publique; PRF, formes d'onde et ECCM precis restent classifies.",
+      evidence: evidenceFromIndicator(range),
+      ...sourceFromIndicator(sources, range),
+      nextAction:
+        "Conserver les chiffres au niveau capacitaire annonce; ne pas extrapoler vers une comparaison fine avec SPY-6.",
+      position2d: { x: 38, y: 26 },
+      position3d: { x: -0.55, y: 1.05, z: 0.2 },
+    }),
+    makeNode({
+      id: `${system.slug}-multi-mission`,
+      label: "Capacites simultanees IAMD",
+      type: "component",
+      layer: "sources",
+      risk: "low",
+      confidence: simultaneity?.confidence ?? "haute",
+      claim:
+        "Surveillance air, conduite de tir Aster, BMD partielle, surveillance de surface — declarees simultanees. C'est ce qui distingue un MFR moderne d'un radar dedie.",
+      evidence: evidenceFromIndicator(simultaneity),
+      ...sourceFromIndicator(sources, simultaneity),
+      nextAction:
+        "Lire la simultaneite comme caracteristique structurante; la BMD partielle est explicitement bornee dans le dossier.",
+      position2d: { x: 62, y: 26 },
+      position3d: { x: 0.55, y: 1.05, z: 0.2 },
+    }),
+    makeNode({
+      id: `${system.slug}-gan-thales`,
+      label: "Modules T/R GaN — Thales europeen",
+      type: "component",
+      layer: "supply-chain",
+      risk: "medium",
+      confidence: ganTech?.confidence ?? "haute",
+      claim:
+        "Production Thales France/Pays-Bas. La maitrise GaN est l'enjeu de souverainete RF europeenne — Sea Fire est l'un des marqueurs concrets.",
+      evidence: evidenceFromIndicator(ganTech ?? rfTech),
+      ...sourceFromIndicator(sources, ganTech ?? rfTech),
+      nextAction:
+        "Croiser avec les autres programmes radar Thales (GM200, GM400, MS-MMR) pour situer la cadence semi-conducteurs RF europeens.",
+      position2d: { x: 28, y: 50 },
+      position3d: { x: -0.85, y: 0, z: 0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-platforms`,
+      label: "FREMM FDA + FDI Amiral Ronarc'h",
+      type: "system",
+      layer: "supply-chain",
+      risk: "low",
+      confidence: platforms?.confidence ?? "haute",
+      claim:
+        "Le capteur n'a de sens qu'integre. FREMM FDA (Alsace, Lorraine) operationnelles, classe FDI (5 fregates programmees + Grece) en cours.",
+      evidence: evidenceFromIndicator(platforms),
+      ...sourceFromIndicator(sources, platforms),
+      nextAction:
+        "Lire les fiches FREMM, FDI en regard — Sea Fire est un noeud du systeme naval francais, pas un produit isole.",
+      position2d: { x: 72, y: 50 },
+      position3d: { x: 0.85, y: 0, z: 0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-install-cost`,
+      label: "Cout installation ~100-150 M€",
+      type: "source",
+      layer: "cout",
+      risk: "high",
+      confidence: installCost?.confidence ?? "faible",
+      claim:
+        "Estimation — 10 a 15% du cout plateforme FDI. Le cout capteur isole n'est pas publie de facon homogene; il est integre dans le programme.",
+      evidence: evidenceFromIndicator(installCost ?? economicReading),
+      ...sourceFromIndicator(sources, installCost ?? economicReading),
+      nextAction:
+        "Suivre les contrats programme FDI comme proxy d'enveloppe capteur — la transparence est plus faible que pour SPY-6/DoD.",
+      position2d: { x: 28, y: 64 },
+      position3d: { x: -0.85, y: -0.3, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-lcc-argument`,
+      label: "Argument LCC — modularite GaN",
+      type: "source",
+      layer: "cout",
+      risk: "medium",
+      confidence: lccArgument?.confidence ?? "moyenne",
+      claim:
+        "Suppression rotation mecanique, modularite GaN, upgrade logiciel. Premieres annees operationnelles FDA encourageantes — retour d'experience public limite a ce stade.",
+      evidence: evidenceFromIndicator(lccArgument),
+      ...sourceFromIndicator(sources, lccArgument),
+      nextAction:
+        "Suivre le retour d'experience FDA Lorraine / Alsace comme test grandeur reelle de l'argument LCC.",
+      position2d: { x: 72, y: 64 },
+      position3d: { x: 0.85, y: -0.3, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-thales-footprint`,
+      label: "Thales — empreinte FR / NL",
+      type: "supplier",
+      layer: "finance",
+      risk: "low",
+      confidence: thalesFootprint?.confidence ?? "haute",
+      claim:
+        "Chaine entierement europeenne, largement francaise. Modules T/R, calculateurs, logiciel integres par Thales — base industrielle compacte vs RTX.",
+      evidence: evidenceFromIndicator(thalesFootprint ?? dgaFunding),
+      ...sourceFromIndicator(sources, thalesFootprint ?? dgaFunding),
+      nextAction:
+        "Comparer l'echelle Thales (compacte mais focalisee) avec RTX (echelle continentale) pour situer le risque cadence.",
+      position2d: { x: 14, y: 78 },
+      position3d: { x: -1.4, y: -0.9, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-greek-fdi`,
+      label: "FDI Grece — 1er export confirme",
+      type: "source",
+      layer: "finance",
+      risk: "low",
+      confidence: greekContract?.confidence ?? "haute",
+      claim:
+        "3 FDI grecques (Kimon, Nearchos, Formion) — contrats 2021-2022. Premier export Sea Fire confirme; signal politique fort pour la cooperation industrielle FR-GR.",
+      evidence: evidenceFromIndicator(greekContract ?? exportProspects),
+      ...sourceFromIndicator(sources, greekContract ?? exportProspects),
+      nextAction:
+        "Suivre la mise en service FDI grecques comme test reel du couple Sea Fire + FDI a l'export.",
+      position2d: { x: 86, y: 78 },
+      position3d: { x: 1.4, y: -0.9, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-non-aegis`,
+      label: "Alternative non-Aegis hors ITAR",
+      type: "country",
+      layer: "geopolitique",
+      risk: "low",
+      confidence: sovereigntySensor?.confidence ?? "haute",
+      claim:
+        "Hors ITAR — chaine europeenne. Alternative credible a Aegis pour les marines moyennes cherchant l'autonomie capacitaire sans integration politique americaine.",
+      evidence: evidenceFromIndicator(sovereigntySensor),
+      ...sourceFromIndicator(sources, sovereigntySensor),
+      nextAction:
+        "Lire Sea Fire / SPY-6 comme deux modeles concurrents de souverainete radar navale moderne.",
+      position2d: { x: 84, y: 22 },
+      position3d: { x: 1.4, y: 0.9, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-natinamds`,
+      label: "NATINAMDS — autonome politiquement",
+      type: "source",
+      layer: "geopolitique",
+      risk: "low",
+      confidence: natoPosition?.confidence ?? "haute",
+      claim:
+        "Compatible NATINAMDS — integre techniquement, autonome politiquement. C'est exactement la posture europeenne souveraine recherchee.",
+      evidence: evidenceFromIndicator(natoPosition),
+      ...sourceFromIndicator(sources, natoPosition),
+      nextAction:
+        "Lire la compatibilite NATINAMDS comme cadre technique, pas comme alignement politique automatique.",
+      position2d: { x: 70, y: 38 },
+      position3d: { x: 0.7, y: 0.45, z: 0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-export-channel`,
+      label: "Export couple FDI — DCS via DGA",
+      type: "source",
+      layer: "export",
+      risk: "medium",
+      confidence: exportChannel?.confidence ?? "haute",
+      claim:
+        "DCS sous licence DGA, partenariats industriels selon contrat. Sea Fire suit l'export FDI — capteur cher, valeur dependante de l'integration fregate.",
+      evidence: evidenceFromIndicator(exportChannel),
+      ...sourceFromIndicator(sources, exportChannel),
+      nextAction:
+        "Croiser clients FDI et configurations capteur pour reconstituer le pipeline Sea Fire a l'export.",
+      position2d: { x: 16, y: 16 },
+      position3d: { x: -1.4, y: 1.4, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-wassenaar`,
+      label: "Wassenaar — composants RF",
+      type: "source",
+      layer: "export",
+      risk: "low",
+      confidence: exportRegime?.confidence ?? "haute",
+      claim:
+        "Position commune UE 2008/944/PESC + controle DGA + Wassenaar pour composants RF avances. Sans ITAR — atout structurel a l'export.",
+      evidence: evidenceFromIndicator(exportRegime),
+      ...sourceFromIndicator(sources, exportRegime),
+      nextAction:
+        "Conserver Wassenaar comme cadre applicable aux modules T/R; pas un facteur bloquant en pratique pour les allies europeens.",
+      position2d: { x: 30, y: 14 },
+      position3d: { x: -0.85, y: 1.4, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-global-confidence`,
+      label: "Confiance globale",
+      type: "confidence",
+      layer: "sources",
+      risk: "low",
+      confidence: confidenceScore.confidence,
+      claim:
+        "Sources Thales et Marine nationale abondantes sur le role et l'architecture. Parametres techniques fins (TRM, formes d'onde, ECCM) classifies.",
+      evidence: `${confidenceScore.evidence} Registre: ${confidenceClaims.length} affirmations tracees pour ce systeme.`,
+      metadata: confidenceScore.metadata,
+      sourceLabel: "Console OSINT Panoplie",
+      limitation:
+        "Le perimetre BMD partielle et la performance ECCM exacte restent volontairement bornees publiquement.",
+      nextAction:
+        "Prioriser dans la Console OSINT le retour d'experience FDA (premier emploi operationnel) — meilleur signal de maturite.",
+      position2d: { x: 16, y: 88 },
+      position3d: { x: -1.4, y: -1.4, z: 0.1 },
+    }),
+  ];
+}
+
+function dragonfireNodes(system: DefenseSystem): DecisionTwinNode[] {
+  const sources = sourceById(system);
+  const cost = brickByKey(system, "cout");
+  const finance = brickByKey(system, "finance");
+  const supply = brickByKey(system, "supply-chain");
+  const geopolitics = brickByKey(system, "geopolitique");
+  const exportBrick = brickByKey(system, "export");
+  const constraints = system.physicalConstraints ?? [];
+
+  const power = indicatorByLabel(system.keySpecs, "puissance");
+  const accuracy = indicatorByLabel(system.keySpecs, "Precision") ??
+    indicatorByLabel(system.keySpecs, "Précision");
+  const targets = indicatorByLabel(system.keySpecs, "Cibles");
+  const costPerShot = indicatorByLabel(system.keySpecs, "tir");
+
+  const marginalCost = indicatorByLabel(cost?.indicators ?? [], "marginal");
+  const seriesContract = indicatorByLabel(cost?.indicators ?? [], "serie") ??
+    indicatorByLabel(cost?.indicators ?? [], "série");
+  const productionContract = indicatorByLabel(finance?.indicators ?? [], "production");
+  const politicalSignal = indicatorByLabel(finance?.indicators ?? [], "Signal");
+  const consortium = indicatorByLabel(supply?.indicators ?? [], "Consortium");
+  const ukIndustrial = indicatorByLabel(supply?.indicators ?? [], "oeuvre");
+  const compressedSchedule = indicatorByLabel(supply?.indicators ?? [], "Enjeu") ??
+    indicatorByLabel(supply?.indicators ?? [], "calendrier");
+  const strategicFunction = indicatorByLabel(geopolitics?.indicators ?? [], "strategique") ??
+    indicatorByLabel(geopolitics?.indicators ?? [], "Fonction");
+  const europeanFirst = indicatorByLabel(geopolitics?.indicators ?? [], "Positionnement");
+  const exportStatus = indicatorByLabel(exportBrick?.indicators ?? [], "Statut");
+  const exportPotential = indicatorByLabel(exportBrick?.indicators ?? [], "Potentiel");
+
+  const lineOfSight = indicatorByLabel(constraints, "Ligne");
+  const marineAtmosphere = indicatorByLabel(constraints, "marine") ??
+    indicatorByLabel(constraints, "Atmosphere");
+  const cooling = indicatorByLabel(constraints, "Refroidissement");
+
+  const confidenceClaims = getAllClaims().filter(
+    (claim) => claim.systemSlug === system.slug,
+  );
+  const confidenceScore = scoreEvidence(system, "confiance-donnees");
+
+  return [
+    makeNode({
+      id: `${system.slug}-laser-source`,
+      label: "Laser fibres combinees ~50 kW",
+      type: "component",
+      layer: "cout",
+      risk: "medium",
+      confidence: power?.confidence ?? "moyenne",
+      claim:
+        "Classe 50 kW a fibres combinees — pas un bouclier aerien, un effecteur de couche basse contre drones et embarcations. Lecture capacitaire publique.",
+      evidence: evidenceFromIndicator(power),
+      ...sourceFromIndicator(sources, power),
+      nextAction:
+        "Comparer la classe 50 kW DragonFire avec HELMA-P (~2 kW) — meme philosophie, niveau d'energie tres different selon menace.",
+      position2d: { x: 50, y: 50 },
+      position3d: { x: 0, y: 0, z: 0 },
+    }),
+    makeNode({
+      id: `${system.slug}-accuracy`,
+      label: "Precision — cible piece a 1 km",
+      type: "component",
+      layer: "sources",
+      risk: "low",
+      confidence: accuracy?.confidence ?? "moyenne",
+      claim:
+        "Affirmation MoD britannique — atteindre une cible de la taille d'une piece a 1 km. Lecture capacitaire publique, sans extrapolation tactique.",
+      evidence: evidenceFromIndicator(accuracy),
+      ...sourceFromIndicator(sources, accuracy),
+      nextAction:
+        "Conserver l'affirmation au niveau MoD; ne pas extrapoler vers un protocole d'emploi naval reel.",
+      position2d: { x: 50, y: 14 },
+      position3d: { x: 0, y: 1.5, z: 0.3 },
+    }),
+    makeNode({
+      id: `${system.slug}-targets`,
+      label: "Cibles — drones, munitions rodeuses, embarcations",
+      type: "component",
+      layer: "sources",
+      risk: "low",
+      confidence: targets?.confidence ?? "moyenne",
+      claim:
+        "Perimetre cibles volontairement borne. La lecon mer Rouge (Aster vs Shahed) fait du laser naval une reponse economique structurelle.",
+      evidence: evidenceFromIndicator(targets),
+      ...sourceFromIndicator(sources, targets),
+      nextAction:
+        "Lire DragonFire comme reponse a une question economique: dispenser des Aster sur des drones a quelques milliers de livres.",
+      position2d: { x: 38, y: 38 },
+      position3d: { x: -0.4, y: 0.4, z: 0.05 },
+    }),
+    makeNode({
+      id: `${system.slug}-line-of-sight`,
+      label: "Ligne de visee + roulis navire",
+      type: "component",
+      layer: "supply-chain",
+      risk: "high",
+      confidence: lineOfSight?.confidence ?? "haute",
+      claim:
+        "La cible doit etre vue et suivie en continu depuis le navire — la conduite de faisceau doit compenser le roulis. Contrainte d'integration majeure.",
+      evidence: evidenceFromIndicator(lineOfSight),
+      ...sourceFromIndicator(sources, lineOfSight),
+      nextAction:
+        "Lire la stabilisation de faisceau sur navire comme defi d'integration distinct du laser terrestre type HELMA-P.",
+      position2d: { x: 36, y: 30 },
+      position3d: { x: -0.55, y: 0.85, z: 0.2 },
+    }),
+    makeNode({
+      id: `${system.slug}-marine-atmosphere`,
+      label: "Atmosphere marine — embruns, sel, brouillard",
+      type: "component",
+      layer: "sources",
+      risk: "high",
+      confidence: marineAtmosphere?.confidence ?? "haute",
+      claim:
+        "Embruns, sel, humidite et brouillard degradent le faisceau. Effecteur de fenetre d'opportunite — pas tout-temps. Lecture honnete des limites.",
+      evidence: evidenceFromIndicator(marineAtmosphere),
+      ...sourceFromIndicator(sources, marineAtmosphere),
+      nextAction:
+        "Documenter le dispositif multicouche Type 45 — DragonFire complete CAMM/Aster, ne les remplace pas.",
+      position2d: { x: 64, y: 30 },
+      position3d: { x: 0.55, y: 0.85, z: 0.2 },
+    }),
+    makeNode({
+      id: `${system.slug}-marginal-cost`,
+      label: "Cout marginal — ~£10 / tir",
+      type: "source",
+      layer: "cout",
+      risk: "low",
+      confidence: marginalCost?.confidence ?? "moyenne",
+      claim:
+        "10 £ d'electricite par tir vs centaines de milliers pour un Aster. Le contraste est reel — mais c'est le cout marginal, pas le programme.",
+      evidence: evidenceFromIndicator(marginalCost),
+      ...sourceFromIndicator(sources, marginalCost ?? costPerShot),
+      nextAction:
+        "Toujours afficher cout marginal et cout systeme ensemble — sinon le chiffre induit en erreur.",
+      position2d: { x: 28, y: 64 },
+      position3d: { x: -0.85, y: -0.3, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-series-contract`,
+      label: "Contrat serie £316M — MBDA UK",
+      type: "source",
+      layer: "cout",
+      risk: "low",
+      confidence: seriesContract?.confidence ?? "haute",
+      claim:
+        "Novembre 2025 — £316M pour les 2 premiers systemes de serie. Le repere solide du programme — bien plus parlant que le coût par tir.",
+      evidence: evidenceFromIndicator(seriesContract),
+      ...sourceFromIndicator(sources, seriesContract ?? productionContract),
+      nextAction:
+        "Lire le contrat £316M comme l'engagement budgetaire reel; le tir a £10 est un argument media.",
+      position2d: { x: 72, y: 64 },
+      position3d: { x: 0.85, y: -0.3, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-uk-consortium`,
+      label: "Consortium UK — MBDA / Leonardo / QinetiQ / Dstl",
+      type: "supplier",
+      layer: "supply-chain",
+      risk: "low",
+      confidence: consortium?.confidence ?? "haute",
+      claim:
+        "MBDA UK maitre d'oeuvre, Leonardo UK pour la conduite de faisceau, QinetiQ pour la source laser, Dstl pour la recherche. Chaine largement nationale.",
+      evidence: evidenceFromIndicator(consortium ?? ukIndustrial),
+      ...sourceFromIndicator(sources, consortium ?? ukIndustrial),
+      nextAction:
+        "Comparer la chaine UK (4 acteurs majeurs) avec HELMA-P (CILAS quasi-unique) — deux modeles de souverainete laser nationale.",
+      position2d: { x: 14, y: 78 },
+      position3d: { x: -1.4, y: -0.9, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-compressed-schedule`,
+      label: "Calendrier accelere — -5 ans",
+      type: "source",
+      layer: "finance",
+      risk: "high",
+      confidence: compressedSchedule?.confidence ?? "haute",
+      claim:
+        "Le RU annonce un calendrier accelere de cinq ans. C'est le pari du programme — calendrier serie et integration Type 45 fortement comprimes.",
+      evidence: evidenceFromIndicator(compressedSchedule ?? politicalSignal),
+      ...sourceFromIndicator(sources, compressedSchedule ?? politicalSignal),
+      nextAction:
+        "Suivre la tenue du calendrier 2027 comme indicateur cle — un retard serait plus significatif qu'un retard ordinaire.",
+      position2d: { x: 86, y: 78 },
+      position3d: { x: 1.4, y: -0.9, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-type-45`,
+      label: "Type 45 — premiere flotte laser europeenne",
+      type: "country",
+      layer: "geopolitique",
+      risk: "medium",
+      confidence: europeanFirst?.confidence ?? "moyenne",
+      claim:
+        "Premier laser de marine europeen annonce en service de premiere ligne. Le RU vise une position — etre premier sur cette capacite navale.",
+      evidence: evidenceFromIndicator(europeanFirst ?? strategicFunction),
+      ...sourceFromIndicator(sources, europeanFirst ?? strategicFunction),
+      nextAction:
+        "Lire la position 'premier laser naval europeen' comme signal politique autant que capacitaire.",
+      position2d: { x: 84, y: 22 },
+      position3d: { x: 1.4, y: 0.9, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-red-sea-lesson`,
+      label: "Lecon mer Rouge — Aster vs Shahed",
+      type: "source",
+      layer: "geopolitique",
+      risk: "low",
+      confidence: "haute",
+      claim:
+        "Lecon recente: navires allies ont depense des missiles couteux contre des drones bon marche. Le laser promet de reequilibrer cette arithmetique.",
+      evidence:
+        "Dossier Panoplie — fiche DragonFire et fiche Shahed-136. Le ratio d'echange Aster vs drone houthi est l'illustration la plus claire.",
+      sourceLabel: "Dossier Panoplie — DragonFire et Shahed-136",
+      nextAction:
+        "Lire ce moteur strategique comme structurel — pas conjoncturel. Tous les programmes laser navals europeens partagent la meme genese.",
+      position2d: { x: 70, y: 38 },
+      position3d: { x: 0.7, y: 0.45, z: 0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-cooling`,
+      label: "Refroidissement — limite cadence",
+      type: "component",
+      layer: "supply-chain",
+      risk: "medium",
+      confidence: cooling?.confidence ?? "moyenne",
+      claim:
+        "Conditionne la cadence et l'integration dans le navire. SWaP-C est la contrainte d'integration laser dominante — partagee avec tous les programmes DEW.",
+      evidence: evidenceFromIndicator(cooling),
+      ...sourceFromIndicator(sources, cooling),
+      nextAction:
+        "Documenter l'integration sur Type 45 (deja en service, energie embarquee finie) comme cas d'ecole SWaP-C.",
+      position2d: { x: 64, y: 50 },
+      position3d: { x: 0.55, y: 0, z: 0.15 },
+    }),
+    makeNode({
+      id: `${system.slug}-export-status`,
+      label: "Effort national — Royal Navy d'abord",
+      type: "source",
+      layer: "export",
+      risk: "medium",
+      confidence: exportStatus?.confidence ?? "moyenne",
+      claim:
+        "Effort national tourne vers la Royal Navy. Potentiel export reel via MBDA — mais subordonne a une mise en service britannique prouvee.",
+      evidence: evidenceFromIndicator(exportStatus ?? exportPotential),
+      ...sourceFromIndicator(sources, exportStatus ?? exportPotential),
+      nextAction:
+        "Lire la trajectoire export comme conditionnee par 2027 — pas avant.",
+      position2d: { x: 16, y: 16 },
+      position3d: { x: -1.4, y: 1.4, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-protocol-iv`,
+      label: "Protocole IV (CCW)",
+      type: "source",
+      layer: "export",
+      risk: "low",
+      confidence: "haute",
+      claim:
+        "Le Protocole IV interdit les armes laser specifiquement concues pour provoquer une cecite permanente. DragonFire vise drones et embarcations — pas des personnels.",
+      evidence:
+        "Cadre juridique permanent rappele dans la fiche. CICR rappelle obligation de precaution pour eviter d'aveugler lors de l'emploi.",
+      sourceLabel: "Dossier Panoplie — fiche DragonFire",
+      nextAction:
+        "Conserver le rappel Protocole IV comme cadre — applicable a tous les programmes laser anti-drone (HELMA-P, DragonFire, etc.).",
+      position2d: { x: 30, y: 14 },
+      position3d: { x: -0.85, y: 1.4, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-global-confidence`,
+      label: "Confiance globale",
+      type: "confidence",
+      layer: "sources",
+      risk: "medium",
+      confidence: confidenceScore.confidence,
+      claim:
+        "Sources gouvernementales (GOV.UK) et industrielles (MBDA, Leonardo) convergentes. Performances de portee et puissance restent des ordres de grandeur.",
+      evidence: `${confidenceScore.evidence} Registre: ${confidenceClaims.length} affirmations tracees pour ce systeme.`,
+      metadata: confidenceScore.metadata,
+      sourceLabel: "Console OSINT Panoplie",
+      limitation:
+        "L'echeance 2027 est annoncee, pas acquise. Le retour d'experience operationnel post-2027 sera le veritable test.",
+      nextAction:
+        "Prioriser dans la Console OSINT les annonces calendaires Royal Navy — chaque trimestre est un indicateur de tenue du calendrier accelere.",
+      position2d: { x: 16, y: 88 },
+      position3d: { x: -1.4, y: -1.4, z: 0.1 },
+    }),
+  ];
+}
+
+function meteorNodes(system: DefenseSystem): DecisionTwinNode[] {
+  const sources = sourceById(system);
+  const cost = brickByKey(system, "cout");
+  const finance = brickByKey(system, "finance");
+  const supply = brickByKey(system, "supply-chain");
+  const geopolitics = brickByKey(system, "geopolitique");
+  const exportBrick = brickByKey(system, "export");
+
+  const propulsion = indicatorByLabel(system.keySpecs, "propulsion");
+  const guidance = indicatorByLabel(system.keySpecs, "Guidage");
+  const range = indicatorByLabel(system.keySpecs, "portee") ??
+    indicatorByLabel(system.keySpecs, "portée");
+  const warhead = indicatorByLabel(system.keySpecs, "Charge militaire");
+  const platforms = indicatorByLabel(system.keySpecs, "Plateformes");
+  const nez = indicatorByLabel(system.keySpecs, "No-escape");
+
+  const unitCost = indicatorByLabel(cost?.indicators ?? [], "unitaire");
+  const economicReading = indicatorByLabel(cost?.indicators ?? [], "economique") ??
+    indicatorByLabel(cost?.indicators ?? [], "économique");
+  const sixNations = indicatorByLabel(finance?.indicators ?? [], "financement");
+  const mbdaPrime = indicatorByLabel(finance?.indicators ?? [], "oeuvre");
+  const strategicLock = indicatorByLabel(finance?.indicators ?? [], "strategique") ??
+    indicatorByLabel(finance?.indicators ?? [], "stratégique");
+  const ramjet = indicatorByLabel(supply?.indicators ?? [], "ramjet") ??
+    indicatorByLabel(supply?.indicators ?? [], "Propulsion");
+  const seeker = indicatorByLabel(supply?.indicators ?? [], "Autodirecteur");
+  const cadence = indicatorByLabel(supply?.indicators ?? [], "principal");
+  const nonItar = indicatorByLabel(geopolitics?.indicators ?? [], "applicable");
+  const f35Effect = indicatorByLabel(geopolitics?.indicators ?? [], "politique");
+  const ecosystemPillar = indicatorByLabel(geopolitics?.indicators ?? [], "Position");
+  const exportModality = indicatorByLabel(exportBrick?.indicators ?? [], "Modalite") ??
+    indicatorByLabel(exportBrick?.indicators ?? [], "Modalité");
+  const exportClients = indicatorByLabel(exportBrick?.indicators ?? [], "Utilisateurs");
+
+  const confidenceClaims = getAllClaims().filter(
+    (claim) => claim.systemSlug === system.slug,
+  );
+  const confidenceScore = scoreEvidence(system, "confiance-donnees");
+
+  return [
+    makeNode({
+      id: `${system.slug}-ramjet`,
+      label: "Statoreacteur Bayern-Chemie",
+      type: "component",
+      layer: "cout",
+      risk: "low",
+      confidence: propulsion?.confidence ?? "haute",
+      claim:
+        "Variable flow ducted rocket — maintient la poussee en croisiere la ou les MRAAM classiques deviennent balistiques. C'est l'origine de la 'no-escape zone'.",
+      evidence: evidenceFromIndicator(propulsion),
+      ...sourceFromIndicator(sources, propulsion),
+      nextAction:
+        "Lire le ramjet comme noeud techno-critique souverain europeen — l'un des rares ou l'Europe maitrise un domaine de bout en bout.",
+      position2d: { x: 50, y: 50 },
+      position3d: { x: 0, y: 0, z: 0 },
+    }),
+    makeNode({
+      id: `${system.slug}-seeker`,
+      label: "Autodirecteur RF actif + datalink bidirectionnel",
+      type: "component",
+      layer: "supply-chain",
+      risk: "medium",
+      confidence: guidance?.confidence ?? "haute",
+      claim:
+        "Inertiel + datalink + autodirecteur RF actif terminal. Le datalink bidirectionnel rend l'evitement difficile — c'est l'autre cle de la NEZ.",
+      evidence: evidenceFromIndicator(guidance ?? seeker),
+      ...sourceFromIndicator(sources, guidance ?? seeker),
+      nextAction:
+        "Comparer Meteor (RF actif + datalink + ramjet) et AIM-260 (US, en developpement) comme reponses paralleles a la NEZ.",
+      position2d: { x: 50, y: 14 },
+      position3d: { x: 0, y: 1.5, z: 0.3 },
+    }),
+    makeNode({
+      id: `${system.slug}-range`,
+      label: "Longue portee — valeur dependante du profil",
+      type: "component",
+      layer: "sources",
+      risk: "low",
+      confidence: range?.confidence ?? "moyenne",
+      claim:
+        "La portee exacte depend du profil de tir. La valeur publique est volontairement non chiffree — la mesure reelle de NEZ reste classifiee.",
+      evidence: evidenceFromIndicator(range ?? nez),
+      ...sourceFromIndicator(sources, range ?? nez),
+      nextAction:
+        "Conserver la NEZ au niveau capacitaire annonce; ne pas extrapoler vers une table de performance comparee.",
+      position2d: { x: 38, y: 38 },
+      position3d: { x: -0.4, y: 0.4, z: 0.05 },
+    }),
+    makeNode({
+      id: `${system.slug}-warhead`,
+      label: "Charge blast-fragmentation + fusee proximite",
+      type: "component",
+      layer: "sources",
+      risk: "low",
+      confidence: warhead?.confidence ?? "haute",
+      claim:
+        "Charge classique BVRAAM — blast-fragmentation avec fusee de proximite. Lecture capacitaire publique, sans extrapolation tactique.",
+      evidence: evidenceFromIndicator(warhead),
+      ...sourceFromIndicator(sources, warhead),
+      nextAction:
+        "Conserver la charge au niveau public; ne pas en deduire des protocoles d'emploi.",
+      position2d: { x: 36, y: 30 },
+      position3d: { x: -0.55, y: 0.85, z: 0.2 },
+    }),
+    makeNode({
+      id: `${system.slug}-platforms`,
+      label: "Rafale + Typhoon + Gripen + F-35 (intégration)",
+      type: "system",
+      layer: "geopolitique",
+      risk: "medium",
+      confidence: platforms?.confidence ?? "haute",
+      claim:
+        "Integration F-35 = fait industriel + effet politique. Transforme un avion americain en plateforme partiellement europeenne — point de levier MBDA durable.",
+      evidence: evidenceFromIndicator(platforms ?? f35Effect),
+      ...sourceFromIndicator(sources, platforms ?? f35Effect),
+      nextAction:
+        "Suivre l'integration F-35 / Meteor comme l'evenement structurant a venir — fait politique autant que technique.",
+      position2d: { x: 62, y: 26 },
+      position3d: { x: 0.55, y: 1.05, z: 0.2 },
+    }),
+    makeNode({
+      id: `${system.slug}-unit-cost`,
+      label: "Cout unitaire — non public",
+      type: "source",
+      layer: "cout",
+      risk: "high",
+      confidence: unitCost?.confidence ?? "faible",
+      claim:
+        "Livraison par lots contractuels — pas de prix flyaway publie. Effecteur premium, plus cher qu'un AMRAAM, justifie par la NEZ et l'ECCM.",
+      evidence: evidenceFromIndicator(unitCost ?? economicReading),
+      ...sourceFromIndicator(sources, unitCost ?? economicReading),
+      nextAction:
+        "Refuser la comparaison missile-a-missile avec AMRAAM; construire au niveau enveloppe contrat.",
+      position2d: { x: 28, y: 64 },
+      position3d: { x: -0.85, y: -0.3, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-six-nations`,
+      label: "Cooperation a 6 nations — UK, FR, DE, IT, ES, SE",
+      type: "source",
+      layer: "finance",
+      risk: "low",
+      confidence: sixNations?.confidence ?? "haute",
+      claim:
+        "Modele cooperatif a 6 — distribue le risque programme et betonne le carnet de commandes par la base nationale de chaque participant.",
+      evidence: evidenceFromIndicator(sixNations),
+      ...sourceFromIndicator(sources, sixNations),
+      nextAction:
+        "Comparer la cooperation Meteor (6 nations, MBDA centralise) et Eurofighter (4 nations, consortium friction) — modeles distincts.",
+      position2d: { x: 72, y: 64 },
+      position3d: { x: 0.85, y: -0.3, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-mbda-prime`,
+      label: "MBDA — consortium europeen",
+      type: "supplier",
+      layer: "finance",
+      risk: "low",
+      confidence: mbdaPrime?.confidence ?? "haute",
+      claim:
+        "Chaque montee en standard ou en integration plateforme passe par MBDA — consolide la rente industrielle europeenne dans le segment longue portee.",
+      evidence: evidenceFromIndicator(mbdaPrime ?? strategicLock),
+      ...sourceFromIndicator(sources, mbdaPrime ?? strategicLock),
+      nextAction:
+        "Lire MBDA comme guichet industriel europeen unique pour BVR — pilier du systeme.",
+      position2d: { x: 14, y: 78 },
+      position3d: { x: -1.4, y: -0.9, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-cadence-risk`,
+      label: "Cadence ramjet — base etroite",
+      type: "source",
+      layer: "supply-chain",
+      risk: "high",
+      confidence: cadence?.confidence ?? "moyenne",
+      claim:
+        "Base europeenne ramjet plus etroite que les moteurs solide US. La montee en production en conflit de haute intensite est un sujet ouvert.",
+      evidence: evidenceFromIndicator(cadence ?? ramjet),
+      ...sourceFromIndicator(sources, cadence ?? ramjet),
+      nextAction:
+        "Suivre Bayern-Chemie + MBDA cadence comme indicateur strategique — la souverainete ramjet n'est solide que si la cadence l'est.",
+      position2d: { x: 86, y: 78 },
+      position3d: { x: 1.4, y: -0.9, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-non-itar`,
+      label: "Hors ITAR — pilier autonomie air-air europeenne",
+      type: "country",
+      layer: "geopolitique",
+      risk: "low",
+      confidence: nonItar?.confidence ?? "haute",
+      claim:
+        "Aucun noeud critique ITAR. Pilier de l'autonomie air-air europeenne — meme integre sur F-35, l'effecteur reste europeen et controle par MBDA.",
+      evidence: evidenceFromIndicator(nonItar ?? ecosystemPillar),
+      ...sourceFromIndicator(sources, nonItar ?? ecosystemPillar),
+      nextAction:
+        "Lire Meteor / AMRAAM comme deux ecosystemes paralleles — pas comme produits substituables.",
+      position2d: { x: 84, y: 22 },
+      position3d: { x: 1.4, y: 0.9, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-f35-european`,
+      label: "F-35 europeen — Meteor change la lecture",
+      type: "source",
+      layer: "geopolitique",
+      risk: "medium",
+      confidence: f35Effect?.confidence ?? "moyenne",
+      claim:
+        "Permet aux operateurs F-35 europeens de conserver un AAM longue portee non US. Un avion americain devient partiellement europeen par son effecteur.",
+      evidence: evidenceFromIndicator(f35Effect),
+      ...sourceFromIndicator(sources, f35Effect),
+      nextAction:
+        "Suivre les pays europeens F-35 qui adoptent Meteor — indicateur de leur posture d'autonomie.",
+      position2d: { x: 70, y: 38 },
+      position3d: { x: 0.7, y: 0.45, z: 0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-bundle-export`,
+      label: "Bundle plateforme + effecteur",
+      type: "source",
+      layer: "export",
+      risk: "low",
+      confidence: exportModality?.confidence ?? "haute",
+      claim:
+        "Exportable via les plateformes qui l'embarquent — Rafale, Typhoon, Gripen. La nation cliente accede a Meteor parce qu'elle achete l'avion qui le tire.",
+      evidence: evidenceFromIndicator(exportModality),
+      ...sourceFromIndicator(sources, exportModality),
+      nextAction:
+        "Lire le bundle plateforme + effecteur comme norme du segment longue portee europeen — pattern reutilise pour MICA NG.",
+      position2d: { x: 16, y: 16 },
+      position3d: { x: -1.4, y: 1.4, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-export-clients`,
+      label: "Operateurs Rafale, Typhoon, Gripen, F-35 EU",
+      type: "source",
+      layer: "export",
+      risk: "low",
+      confidence: exportClients?.confidence ?? "haute",
+      claim:
+        "Toute nation operant Rafale, Eurofighter ou Gripen E/F sous accord — plus utilisateurs F-35 europeens via integration. Base export naturellement large.",
+      evidence: evidenceFromIndicator(exportClients),
+      ...sourceFromIndicator(sources, exportClients),
+      nextAction:
+        "Croiser les fiches Rafale, Typhoon, Gripen, F-35 pour reconstituer le perimetre Meteor accessible mondialement.",
+      position2d: { x: 30, y: 14 },
+      position3d: { x: -0.85, y: 1.4, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-global-confidence`,
+      label: "Confiance globale",
+      type: "confidence",
+      layer: "sources",
+      risk: "low",
+      confidence: confidenceScore.confidence,
+      claim:
+        "Constructeur et programmes nationaux publient l'essentiel. Chiffres precis de portee et NEZ classifies — la NEZ se mesure en doctrine, pas en table comparative.",
+      evidence: `${confidenceScore.evidence} Registre: ${confidenceClaims.length} affirmations tracees pour ce systeme.`,
+      metadata: confidenceScore.metadata,
+      sourceLabel: "Console OSINT Panoplie",
+      limitation:
+        "Aucun emploi en combat documente a ce jour. Le retour d'experience operationnel reste a constituer.",
+      nextAction:
+        "Prioriser dans la Console OSINT toute annonce d'integration F-35 nation par nation — indicateur strategique majeur.",
+      position2d: { x: 16, y: 88 },
+      position3d: { x: -1.4, y: -1.4, z: 0.1 },
+    }),
+  ];
+}
+
+function micaNgNodes(system: DefenseSystem): DecisionTwinNode[] {
+  const sources = sourceById(system);
+  const cost = brickByKey(system, "cout");
+  const finance = brickByKey(system, "finance");
+  const supply = brickByKey(system, "supply-chain");
+  const geopolitics = brickByKey(system, "geopolitique");
+  const exportBrick = brickByKey(system, "export");
+
+  const dualSeeker = indicatorByLabel(system.keySpecs, "Autodirecteurs") ??
+    indicatorByLabel(system.keySpecs, "interoperables");
+  const midGuidance = indicatorByLabel(system.keySpecs, "mi-course");
+  const operatingModes = indicatorByLabel(system.keySpecs, "operatoires") ??
+    indicatorByLabel(system.keySpecs, "opératoires");
+  const warhead = indicatorByLabel(system.keySpecs, "Charge militaire");
+  const surfaceLaunch = indicatorByLabel(system.keySpecs, "surface-launch");
+
+  const unitCost = indicatorByLabel(cost?.indicators ?? [], "unitaire");
+  const economicReading = indicatorByLabel(cost?.indicators ?? [], "economique") ??
+    indicatorByLabel(cost?.indicators ?? [], "économique");
+  const ecosystemCost = indicatorByLabel(cost?.indicators ?? [], "ecosysteme") ??
+    indicatorByLabel(cost?.indicators ?? [], "écosystème");
+  const dgaProgram = indicatorByLabel(finance?.indicators ?? [], "programme");
+  const deliverySchedule = indicatorByLabel(finance?.indicators ?? [], "livraison") ??
+    indicatorByLabel(finance?.indicators ?? [], "Calendrier");
+  const fundingModel = indicatorByLabel(finance?.indicators ?? [], "financement");
+  const mbdaPrime = indicatorByLabel(supply?.indicators ?? [], "oeuvre");
+  const seekers = indicatorByLabel(supply?.indicators ?? [], "Seekers");
+  const cadenceRisk = indicatorByLabel(supply?.indicators ?? [], "principal");
+  const strategicFunction = indicatorByLabel(geopolitics?.indicators ?? [], "strategique") ??
+    indicatorByLabel(geopolitics?.indicators ?? [], "stratégique");
+  const nonItarRegime = indicatorByLabel(geopolitics?.indicators ?? [], "applicable");
+  const ecosystemEffect = indicatorByLabel(geopolitics?.indicators ?? [], "Effet");
+  const exportChannel = indicatorByLabel(exportBrick?.indicators ?? [], "Canal");
+  const naturalProspects = indicatorByLabel(exportBrick?.indicators ?? [], "Prospects");
+
+  const confidenceClaims = getAllClaims().filter(
+    (claim) => claim.systemSlug === system.slug,
+  );
+  const confidenceScore = scoreEvidence(system, "confiance-donnees");
+
+  return [
+    makeNode({
+      id: `${system.slug}-dual-seeker`,
+      label: "Double seeker — RF AESA + IR FPA",
+      type: "component",
+      layer: "cout",
+      risk: "low",
+      confidence: dualSeeker?.confidence ?? "haute",
+      claim:
+        "RF AESA ou IR imageur refroidi FPA — interchangeables sur la meme cellule, sans modification structure ni propulsion. Caracteristique unique de la famille MICA.",
+      evidence: evidenceFromIndicator(dualSeeker),
+      ...sourceFromIndicator(sources, dualSeeker),
+      nextAction:
+        "Lire le double seeker comme avantage structurel — flexibilite d'emploi sans renoncer a la mutualisation de soutien.",
+      position2d: { x: 50, y: 50 },
+      position3d: { x: 0, y: 0, z: 0 },
+    }),
+    makeNode({
+      id: `${system.slug}-mid-guidance`,
+      label: "Guidage mi-course + datalink bidirectionnel",
+      type: "component",
+      layer: "supply-chain",
+      risk: "low",
+      confidence: midGuidance?.confidence ?? "haute",
+      claim:
+        "Inertiel + datalink bidirectionnel. NG ameliore la resilience ECCM par rapport au MICA en service — comparable a Meteor cote BVR.",
+      evidence: evidenceFromIndicator(midGuidance),
+      ...sourceFromIndicator(sources, midGuidance),
+      nextAction:
+        "Comparer la combinaison datalink + autodirecteur NG avec le MICA legacy pour mesurer le saut capacitaire.",
+      position2d: { x: 50, y: 14 },
+      position3d: { x: 0, y: 1.5, z: 0.3 },
+    }),
+    makeNode({
+      id: `${system.slug}-modes`,
+      label: "LOBL + LOAL — multi-cible",
+      type: "component",
+      layer: "sources",
+      risk: "low",
+      confidence: operatingModes?.confidence ?? "haute",
+      claim:
+        "Lock-on Before Launch + Lock-on After Launch, verrou-tir multiple. Lecture capacitaire publique sans extrapolation tactique.",
+      evidence: evidenceFromIndicator(operatingModes),
+      ...sourceFromIndicator(sources, operatingModes),
+      nextAction:
+        "Conserver les modes au niveau capacitaire annonce; ne deduire aucun protocole d'emploi specifique.",
+      position2d: { x: 38, y: 38 },
+      position3d: { x: -0.4, y: 0.4, z: 0.05 },
+    }),
+    makeNode({
+      id: `${system.slug}-warhead`,
+      label: "Charge focalisee HE + fusee proximite",
+      type: "component",
+      layer: "sources",
+      risk: "low",
+      confidence: warhead?.confidence ?? "haute",
+      claim:
+        "Charge focalisee HE avec fusee de proximite RF/laser. Lecture capacitaire publique.",
+      evidence: evidenceFromIndicator(warhead),
+      ...sourceFromIndicator(sources, warhead),
+      nextAction:
+        "Conserver la charge au niveau public; ne pas en deduire des protocoles d'emploi.",
+      position2d: { x: 36, y: 30 },
+      position3d: { x: -0.55, y: 0.85, z: 0.2 },
+    }),
+    makeNode({
+      id: `${system.slug}-vl-mica`,
+      label: "VL MICA — mutualisation sol-air",
+      type: "system",
+      layer: "geopolitique",
+      risk: "low",
+      confidence: surfaceLaunch?.confidence ?? "moyenne",
+      claim:
+        "Alimente VL MICA — defense aerienne mobile terre et marine. Le seul SAM mobile francais-MBDA dans cette classe de portee. Mutualisation air-air / sol-air structurante.",
+      evidence: evidenceFromIndicator(surfaceLaunch),
+      ...sourceFromIndicator(sources, surfaceLaunch),
+      nextAction:
+        "Lire la fiche VL MICA en regard — MICA NG est l'effecteur d'un ecosysteme, pas un missile isole.",
+      position2d: { x: 62, y: 26 },
+      position3d: { x: 0.55, y: 1.05, z: 0.2 },
+    }),
+    makeNode({
+      id: `${system.slug}-unit-cost`,
+      label: "Cout — reutilisation cellule MICA",
+      type: "source",
+      layer: "cout",
+      risk: "medium",
+      confidence: unitCost?.confidence ?? "moyenne",
+      claim:
+        "Reutilisation de cellule MICA — propulsion, charge, structure — reduit le cout de developpement. Argument central de l'arbitrage DGA pour la NG plutot qu'un missile totalement nouveau.",
+      evidence: evidenceFromIndicator(unitCost ?? economicReading),
+      ...sourceFromIndicator(sources, unitCost ?? economicReading),
+      nextAction:
+        "Lire la reutilisation cellule comme strategie de cout consciente — pas comme limite capacitaire.",
+      position2d: { x: 28, y: 64 },
+      position3d: { x: -0.85, y: -0.3, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-ecosystem-cost`,
+      label: "Mutualisation VL MICA — economies",
+      type: "source",
+      layer: "cout",
+      risk: "low",
+      confidence: ecosystemCost?.confidence ?? "moyenne",
+      claim:
+        "Mutualisation soutien et formation avec VL MICA. C'est l'effet d'ecosysteme — un meme effecteur sert sur Rafale et en batterie SAM, soutien partage.",
+      evidence: evidenceFromIndicator(ecosystemCost),
+      ...sourceFromIndicator(sources, ecosystemCost),
+      nextAction:
+        "Croiser MICA NG (air-air) et VL MICA (sol-air) pour mesurer l'effet de mutualisation — modele unique en Europe.",
+      position2d: { x: 72, y: 64 },
+      position3d: { x: 0.85, y: -0.3, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-mbda-france`,
+      label: "MBDA France — chaine souveraine",
+      type: "supplier",
+      layer: "finance",
+      risk: "low",
+      confidence: mbdaPrime?.confidence ?? "haute",
+      claim:
+        "MBDA France maitre d'oeuvre. Thales (RF AESA), Safran (IR FPA). Aucun noeud ITAR — l'une des fiches les plus claires en matiere d'autonomie capacitaire.",
+      evidence: evidenceFromIndicator(mbdaPrime ?? seekers),
+      ...sourceFromIndicator(sources, mbdaPrime ?? seekers),
+      nextAction:
+        "Lire MICA NG comme cas-ecole de l'arsenal souverain francais — cherchant a verrouiller la coherence Rafale + munitions MBDA.",
+      position2d: { x: 14, y: 78 },
+      position3d: { x: -1.4, y: -0.9, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-cadence-tension`,
+      label: "Cadence MBDA — concomitance Aster + SCALP",
+      type: "source",
+      layer: "supply-chain",
+      risk: "high",
+      confidence: cadenceRisk?.confidence ?? "moyenne",
+      claim:
+        "Concomitance MICA NG + Aster B1NT + SCALP modernise cree une demande structurelle sur MBDA. Justifie les annonces de doublement de capacite.",
+      evidence: evidenceFromIndicator(cadenceRisk),
+      ...sourceFromIndicator(sources, cadenceRisk),
+      nextAction:
+        "Suivre la cadence MBDA cumulee (MICA NG + Aster + SCALP) comme test reel de l'echelle europeenne souveraine.",
+      position2d: { x: 86, y: 78 },
+      position3d: { x: 1.4, y: -0.9, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-dga-program`,
+      label: "DGA — programme national 2026",
+      type: "source",
+      layer: "finance",
+      risk: "low",
+      confidence: dgaProgram?.confidence ?? "haute",
+      claim:
+        "Programme national, financement national integral. Premieres livraisons a partir de 2026 — armee de l'air et de l'espace. Trajectoire publique nette.",
+      evidence: evidenceFromIndicator(dgaProgram ?? deliverySchedule ?? fundingModel),
+      ...sourceFromIndicator(sources, dgaProgram ?? deliverySchedule ?? fundingModel),
+      nextAction:
+        "Lire le calendrier 2026 comme test de cohérence — la premiere annee operationnelle determinera la confiance prospects export.",
+      position2d: { x: 70, y: 38 },
+      position3d: { x: 0.7, y: 0.45, z: 0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-french-autonomy`,
+      label: "France — coherence Rafale + MBDA",
+      type: "country",
+      layer: "geopolitique",
+      risk: "low",
+      confidence: strategicFunction?.confidence ?? "haute",
+      claim:
+        "Consolide la fonction air-air court/moyen sans dependance US. Coherence non-ITAR Rafale + Meteor + MICA NG + SCALP + Exocet — distingue Paris des autres exportateurs occidentaux.",
+      evidence: evidenceFromIndicator(strategicFunction ?? ecosystemEffect),
+      ...sourceFromIndicator(sources, strategicFunction ?? ecosystemEffect),
+      nextAction:
+        "Lire la coherence Rafale + munitions MBDA comme argument central de la diplomatie d'armement francaise.",
+      position2d: { x: 84, y: 22 },
+      position3d: { x: 1.4, y: 0.9, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-non-itar`,
+      label: "Hors ITAR — souverainete capacitaire",
+      type: "source",
+      layer: "geopolitique",
+      risk: "low",
+      confidence: nonItarRegime?.confidence ?? "haute",
+      claim:
+        "Controle francais + Position commune UE — hors ITAR. Un client peut acheter sans devoir negocier avec une troisieme capitale. Argument structurel.",
+      evidence: evidenceFromIndicator(nonItarRegime),
+      ...sourceFromIndicator(sources, nonItarRegime),
+      nextAction:
+        "Conserver l'argument 'hors ITAR' comme cadre — partage avec Aster B1NT, Meteor, SCALP, Exocet : toute la grille MBDA.",
+      position2d: { x: 16, y: 16 },
+      position3d: { x: -1.4, y: 1.4, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-bundle-export`,
+      label: "Bundle Rafale + VL MICA",
+      type: "source",
+      layer: "export",
+      risk: "low",
+      confidence: exportChannel?.confidence ?? "haute",
+      claim:
+        "Suivra naturellement les contrats Rafale et VL MICA. Les utilisateurs MICA actuels sont des prospects naturels — renouvellement de stock ou bundle Rafale.",
+      evidence: evidenceFromIndicator(exportChannel ?? naturalProspects),
+      ...sourceFromIndicator(sources, exportChannel ?? naturalProspects),
+      nextAction:
+        "Croiser les operateurs MICA actuels (Grece, Egypte, Inde, Qatar, Emirats, Croatie, Indonesie) avec leur flotte Rafale pour identifier le pipeline export.",
+      position2d: { x: 30, y: 14 },
+      position3d: { x: -0.85, y: 1.4, z: -0.1 },
+    }),
+    makeNode({
+      id: `${system.slug}-global-confidence`,
+      label: "Confiance globale",
+      type: "confidence",
+      layer: "sources",
+      risk: "medium",
+      confidence: confidenceScore.confidence,
+      claim:
+        "DGA et MBDA publient les jalons cles. Details seekers (RF AESA, IR FPA) et NEZ classifies — paliers indicatifs sur ces dimensions.",
+      evidence: `${confidenceScore.evidence} Registre: ${confidenceClaims.length} affirmations tracees pour ce systeme.`,
+      metadata: confidenceScore.metadata,
+      sourceLabel: "Console OSINT Panoplie",
+      limitation:
+        "Maturite encore a construire — la premiere annee d'emploi operationnel sera decisive pour la confiance des prospects export.",
+      nextAction:
+        "Prioriser dans la Console OSINT le retour d'experience operationnel 2026 — meilleur signal de maturite reelle.",
+      position2d: { x: 16, y: 88 },
+      position3d: { x: -1.4, y: -1.4, z: 0.1 },
+    }),
+  ];
+}
+
 function genericNodes(system: DefenseSystem): DecisionTwinNode[] {
   const sources = sourceById(system);
   const claims = getAllClaims().filter((claim) => claim.systemSlug === system.slug);
@@ -3276,6 +4633,11 @@ export const SYSTEM_NODE_BUILDERS: Partial<Record<string, (system: DefenseSystem
   "charles-de-gaulle": charlesDeGaulleNodes,
   "helma-p": helmaPNodes,
   "aster-30-b1nt": aster30B1NtNodes,
+  "j-20": j20Nodes,
+  "sea-fire": seaFireNodes,
+  dragonfire: dragonfireNodes,
+  meteor: meteorNodes,
+  "mica-ng": micaNgNodes,
 };
 
 export function buildPanoplieXrayScenario(

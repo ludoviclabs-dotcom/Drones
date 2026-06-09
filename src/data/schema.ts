@@ -14,6 +14,7 @@ const SystemCategory = z.enum([
   "naval-vessel",
   "air-defense",
   "combat-system",
+  "spatial",
 ]);
 
 const Confidence = z.enum(["haute", "moyenne", "faible"]);
@@ -228,6 +229,81 @@ const NavalStructuredProfile = z.object({
     .optional(),
 });
 
+const SatelliteClass = z.enum([
+  "observation",
+  "sigint",
+  "satcom",
+  "pnt",
+  "opir",
+  "sda",
+  "surveillance-maritime",
+  "counterspace",
+]);
+
+const OrbitClass = z.enum([
+  "LEO",
+  "MEO",
+  "GEO",
+  "GSO",
+  "SSO",
+  "Polar",
+  "HEO",
+  "Molniya",
+]);
+
+const SatellitePayloadType = z.enum([
+  "optique",
+  "infrarouge",
+  "sar",
+  "rf-sigint",
+  "satcom-x",
+  "satcom-ka",
+  "satcom-ehf",
+  "pnt",
+  "opir",
+  "space-surveillance",
+  "ais",
+  "autre",
+]);
+
+const SpaceStructuredProfile = z.object({
+  orbit: z.object({
+    classes: z.array(OrbitClass).min(1),
+    altitudeKm: z.string().optional(),
+    inclinationDeg: z.string().optional(),
+    notes: z.string().optional(),
+    operationalReading: z.string().min(1),
+  }),
+  payloads: z.array(
+    z.object({
+      type: SatellitePayloadType,
+      supplier: z.string().optional(),
+      publicDescription: z.string().min(1),
+      sensitivity: z.enum(["publique", "partielle", "sensible"]).optional(),
+    }),
+  ),
+  architecture: z.object({
+    constellationSize: z.string().optional(),
+    formationFlying: z.boolean().optional(),
+    serviceContinuityNotes: z.string().optional(),
+  }),
+  groundSegment: z.object({
+    facilities: z.array(z.string()),
+    dataChain: z.string().min(1),
+  }),
+  launch: z.object({
+    provider: z.string().min(1),
+    site: z.string().optional(),
+    dependencyNotes: z.string().optional(),
+  }),
+  resilience: z.object({
+    jammingExposure: z.string().optional(),
+    cyberNotes: z.string().optional(),
+    redundancyNotes: z.string().optional(),
+    replacementStrategy: z.string().optional(),
+  }),
+});
+
 export const DefenseSystemSchema = z.object({
   slug: z.string().min(1),
   name: z.string().min(1),
@@ -252,6 +328,8 @@ export const DefenseSystemSchema = z.object({
   integrationFrameworks: z.array(z.string()).optional(),
   navalVesselClass: NavalVesselClass.optional(),
   navalProfile: NavalStructuredProfile.optional(),
+  satelliteClass: SatelliteClass.optional(),
+  spaceProfile: SpaceStructuredProfile.optional(),
   claimedGeneration: z.string().optional(),
   classLabel: z.string().min(1),
   country: z.string().min(1),

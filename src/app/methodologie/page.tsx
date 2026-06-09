@@ -310,6 +310,47 @@ export default function MethodologiePage() {
           porte le risque contractuel.
         </p>
       </section>
+
+      <section className="mt-14">
+        <SectionMarker
+          index="11"
+          label="Le domaine spatial militaire"
+          blurb="Trois axes — mission, orbite, charge utile — et une vigilance éditoriale propre au domaine."
+        />
+        <div className="mt-5 space-y-4 font-serif text-[1.05rem] leading-[1.75] text-ink/90">
+          <p>
+            Les satellites militaires passent par les mêmes cinq briques que les
+            autres systèmes — coût, finance, supply chain, géopolitique, export.
+            Trois axes spécifiques s&apos;y ajoutent : la mission (observation,
+            écoute, communications, navigation, alerte, surveillance de
+            l&apos;espace), l&apos;orbite (LEO, MEO, GEO, SSO, HEO selon la
+            mission) et la charge utile (capteur optique, IR, SAR, RF, SATCOM,
+            PNT, OPIR).
+          </p>
+          <p>
+            Les fiches du domaine reçoivent un profil structuré — orbite,
+            charges utiles, segment sol, lanceur, résilience — calqué sur le
+            profil naval. La valeur d&apos;un satellite militaire ne tient
+            jamais au satellite isolé : elle tient au cycle complet de service
+            (commande, acquisition, descente de données, traitement, diffusion)
+            et à la souveraineté que ce cycle engage.
+          </p>
+          <p>
+            Vigilance éditoriale spécifique. Le domaine spatial militaire est
+            celui où la frontière entre OSINT responsable et donnée
+            opérationnelle est la plus mince. Panoplie publie ce qui est
+            ouvertement documenté : missions générales, orbites génériques,
+            calendrier de lancement public, opérateurs et industriels, coûts
+            issus de rapports parlementaires. Panoplie ne publie pas — par
+            principe — d&apos;éphémérides ou TLE temps réel, de fenêtres de
+            passage exploitables, de coordonnées précises de stations
+            sensibles, de paramètres détaillés de liaison, de méthodes de
+            brouillage ou d&apos;interception, ni de résolutions classifiées.
+            La règle est rappelée dans le « cadre de prudence » de chaque page
+            domaine spatial.
+          </p>
+        </div>
+      </section>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 // Modèle de données — plateforme d'intelligence sur les systèmes de défense.
 // L'entité de base est un « système » doté d'une catégorie. Le catalogue couvre
-// drones, énergie dirigée, aviation de combat, missiles, radars et bâtiments
-// navals ; le modèle reste générique pour l'extension future (spatial).
+// drones, énergie dirigée, aviation de combat, missiles, radars, bâtiments
+// navals, défense aérienne, systèmes de combat / C2 et spatial militaire.
 
 export type SystemCategory =
   | "drone"
@@ -11,7 +11,8 @@ export type SystemCategory =
   | "radar"
   | "naval-vessel"
   | "air-defense"
-  | "combat-system";
+  | "combat-system"
+  | "spatial";
 
 export type DroneClass =
   | "MALE"
@@ -200,6 +201,118 @@ export interface NavalStructuredProfile {
   sustainment?: NavalSustainmentProfile;
 }
 
+/**
+ * Famille d'un satellite militaire — mission dominante. La nomenclature suit
+ * les grandes fonctions spatiales militaires reconnues (OTAN) :
+ * observation/ISR, écoute électromagnétique, communications, navigation,
+ * alerte avancée et surveillance de l'espace. La frontière n'est jamais
+ * absolue (certains satellites portent plusieurs charges utiles), la mission
+ * principale porte la fiche.
+ */
+export type SatelliteClass =
+  | "observation"
+  | "sigint"
+  | "satcom"
+  | "pnt"
+  | "opir"
+  | "sda"
+  | "surveillance-maritime"
+  | "counterspace";
+
+/**
+ * Classes d'orbite militairement pertinentes. Lagrange et orbites cislunaires
+ * volontairement hors périmètre — pas d'usage militaire documenté à ce jour.
+ */
+export type OrbitClass =
+  | "LEO"
+  | "MEO"
+  | "GEO"
+  | "GSO"
+  | "SSO"
+  | "Polar"
+  | "HEO"
+  | "Molniya";
+
+/** Type de charge utile — vocabulaire public, sans paramètres opérationnels. */
+export type SatellitePayloadType =
+  | "optique"
+  | "infrarouge"
+  | "sar"
+  | "rf-sigint"
+  | "satcom-x"
+  | "satcom-ka"
+  | "satcom-ehf"
+  | "pnt"
+  | "opir"
+  | "space-surveillance"
+  | "ais"
+  | "autre";
+
+export interface SpaceOrbitProfile {
+  classes: OrbitClass[];
+  /** Champ libre — « ≈ 480 à 800 km selon mission » plus honnête qu'un nombre. */
+  altitudeKm?: string;
+  inclinationDeg?: string;
+  notes?: string;
+  /** Lecture pédagogique : ce que l'orbite *implique* opérationnellement. */
+  operationalReading: string;
+}
+
+export interface SpacePayloadProfile {
+  type: SatellitePayloadType;
+  supplier?: string;
+  publicDescription: string;
+  /** Niveau de détail accessible publiquement — sensibilité éditoriale. */
+  sensitivity?: "publique" | "partielle" | "sensible";
+}
+
+export interface SpaceArchitectureProfile {
+  /** « 3 satellites » / « 30+ satellites annoncés » — champ libre. */
+  constellationSize?: string;
+  formationFlying?: boolean;
+  serviceContinuityNotes?: string;
+}
+
+export interface SpaceGroundSegmentProfile {
+  /** Centres mission, stations sol publiquement documentées. */
+  facilities: string[];
+  /** Cycle commande → acquisition → traitement → diffusion. */
+  dataChain: string;
+}
+
+export interface SpaceLaunchProfile {
+  provider: string;
+  site?: string;
+  dependencyNotes?: string;
+}
+
+export interface SpaceResilienceProfile {
+  jammingExposure?: string;
+  cyberNotes?: string;
+  redundancyNotes?: string;
+  replacementStrategy?: string;
+}
+
+/**
+ * Profil structuré d'un satellite militaire — calqué sur NavalStructuredProfile.
+ * Décrit le système comme une *architecture* (orbite, charge utile, segment
+ * sol, lanceur, résilience) plutôt que comme un simple objet en orbite.
+ *
+ * Garde-fous éditoriaux : on documente l'orbite générique, la mission
+ * publique, le segment sol au niveau facilités annoncées. On *exclut*
+ * volontairement : éphémérides temps réel, fenêtres de passage exploitables,
+ * coordonnées précises de stations sensibles, paramètres de liaison
+ * détaillés, capacités de résolution non sourcées.
+ */
+export interface SpaceStructuredProfile {
+  orbit: SpaceOrbitProfile;
+  payloads: SpacePayloadProfile[];
+  architecture: SpaceArchitectureProfile;
+  groundSegment: SpaceGroundSegmentProfile;
+  launch: SpaceLaunchProfile;
+  resilience: SpaceResilienceProfile;
+}
+
 /** Modes d'acquisition — la grille de lecture qui relie les cinq briques. */
 export type AcquisitionMode =
   | "FMS"
@@ -330,6 +443,10 @@ export interface DefenseSystem {
   navalVesselClass?: NavalVesselClass;
   /** Profil naval structuré — capteurs, CMS, effecteurs, propulsion, MCO et export. */
   navalProfile?: NavalStructuredProfile;
+  /** Famille de satellite — renseignée pour le domaine « spatial ». */
+  satelliteClass?: SatelliteClass;
+  /** Profil spatial structuré — orbite, charge utile, segment sol, lanceur, résilience. */
+  spaceProfile?: SpaceStructuredProfile;
   /** Génération revendiquée par l'industriel ou la nation, si elle diffère. */
   claimedGeneration?: string;
   classLabel: string;

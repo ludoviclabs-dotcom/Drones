@@ -109,6 +109,9 @@ import {
   setis,
   ibcs,
 } from "./systems/combat-systems";
+import { csoMusis } from "./systems/cso-musis";
+import { ceres } from "./systems/ceres";
+import { syracuseIv } from "./systems/syracuse-iv";
 
 export const systems: DefenseSystem[] = [
   mq9Reaper,
@@ -228,6 +231,10 @@ export const systems: DefenseSystem[] = [
   paamsSeaViper,
   setis,
   ibcs,
+  // Spatial militaire
+  csoMusis,
+  ceres,
+  syracuseIv,
 ];
 
 export const SYSTEMS_BY_SLUG: Record<string, DefenseSystem> = Object.fromEntries(

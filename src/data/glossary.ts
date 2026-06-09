@@ -465,6 +465,157 @@ export const glossary: GlossaryTerm[] = [
     definition:
       "Total Cost of Ownership. Coût d'un système sur tout son cycle de vie : acquisition, formation, infrastructure, MCO, munitions, modernisations et démantèlement. Le prix d'achat n'en est que la part visible.",
   },
+  // === Glossaire spatial militaire (lot ouverture du domaine) ===
+  {
+    slug: "leo",
+    term: "Orbite basse",
+    acronym: "LEO",
+    category: "technique",
+    definition:
+      "Low Earth Orbit. Orbite proche de la Terre, généralement sous 2 000 km. Couverture limitée par satellite mais latence faible et résolution accessible — utilisée pour imagerie, reconnaissance et constellations proliférées.",
+  },
+  {
+    slug: "meo",
+    term: "Orbite moyenne",
+    acronym: "MEO",
+    category: "technique",
+    definition:
+      "Medium Earth Orbit. Entre LEO et GEO, typiquement entre 2 000 et 35 786 km. Zone de prédilection des constellations de navigation par satellite (GPS, Galileo, GLONASS, BeiDou).",
+  },
+  {
+    slug: "geo",
+    term: "Orbite géostationnaire",
+    acronym: "GEO",
+    category: "technique",
+    definition:
+      "Geostationary Orbit. Orbite équatoriale à 35 786 km où le satellite garde une position apparente fixe au-dessus du sol. Utilisée pour SATCOM, alerte avancée et veille persistante régionale.",
+  },
+  {
+    slug: "sso",
+    term: "Orbite héliosynchrone",
+    acronym: "SSO",
+    category: "technique",
+    definition:
+      "Sun-Synchronous Orbit. Orbite polaire dont le plan suit la rotation apparente du Soleil — passages à heure solaire locale comparable. Idéale pour l'observation répétable et le suivi de changements.",
+  },
+  {
+    slug: "heo",
+    term: "Orbite très elliptique",
+    acronym: "HEO",
+    category: "technique",
+    definition:
+      "Highly Elliptical Orbit. Orbite très allongée permettant une longue présence apparente au-dessus de hautes latitudes. Famille Molniya utilisée par la Russie pour communications arctiques et alerte avancée.",
+  },
+  {
+    slug: "imint",
+    term: "Renseignement image",
+    acronym: "IMINT",
+    category: "doctrine",
+    definition:
+      "Imagery Intelligence. Renseignement d'origine image — extraction d'informations à partir de photographies aériennes ou satellitaires, optique, IR ou radar.",
+  },
+  {
+    slug: "geoint",
+    term: "Renseignement géospatial",
+    acronym: "GEOINT",
+    category: "doctrine",
+    definition:
+      "Geospatial Intelligence. Renseignement issu de la fusion d'images, cartes, coordonnées et analyses spatiales pour caractériser un terrain, une activité ou un mouvement.",
+  },
+  {
+    slug: "sigint",
+    term: "Renseignement d'origine signaux",
+    acronym: "SIGINT",
+    category: "doctrine",
+    definition:
+      "Signals Intelligence. Détection, interception et analyse de signaux électromagnétiques — communications, radars, télémesure. Recouvre COMINT (communications) et ELINT (signaux non communicationnels).",
+  },
+  {
+    slug: "roem",
+    term: "Renseignement d'origine électromagnétique",
+    acronym: "ROEM",
+    category: "doctrine",
+    definition:
+      "Terme français équivalent à SIGINT. Détection et localisation d'émissions électromagnétiques — base de capacités comme CERES côté français.",
+  },
+  {
+    slug: "comint",
+    term: "Renseignement communications",
+    acronym: "COMINT",
+    category: "doctrine",
+    definition:
+      "Communications Intelligence. Branche du SIGINT consacrée à l'interception et à l'exploitation des communications adverses — voix, données, télémesure.",
+  },
+  {
+    slug: "elint",
+    term: "Renseignement électronique",
+    acronym: "ELINT",
+    category: "doctrine",
+    definition:
+      "Electronic Intelligence. Branche du SIGINT consacrée aux signaux électroniques non communicationnels — radars, télémesure, balises. Permet de caractériser un ordre de bataille électronique adverse.",
+  },
+  {
+    slug: "sar",
+    term: "Radar à synthèse d'ouverture",
+    acronym: "SAR",
+    category: "technique",
+    definition:
+      "Synthetic Aperture Radar. Imagerie radar jour/nuit, utilisable sous couverture nuageuse. La synthèse d'ouverture combine plusieurs prises pour atteindre des résolutions impossibles à une antenne fixe.",
+  },
+  {
+    slug: "milsatcom",
+    term: "Communications militaires par satellite",
+    acronym: "MILSATCOM",
+    category: "technique",
+    definition:
+      "Military Satellite Communications. Communications militaires durcies, sécurisées, souvent anti-brouillage, reliant forces déployées et centres de commandement. Bandes X, Ka et EHF principales.",
+  },
+  {
+    slug: "pnt",
+    term: "Position, navigation et temps",
+    acronym: "PNT",
+    category: "technique",
+    definition:
+      "Positioning, Navigation and Timing. Service délivré par les constellations GNSS (GPS, Galileo, GLONASS, BeiDou) — positionnement, navigation et synchronisation temporelle, essentiels au guidage et aux opérations interarmées.",
+  },
+  {
+    slug: "opir",
+    term: "Veille infrarouge persistante",
+    acronym: "OPIR",
+    category: "technique",
+    definition:
+      "Overhead Persistent Infrared. Capteurs infrarouges spatiaux détectant les lancements de missiles et participant à l'alerte stratégique. Famille SBIRS, Next-Gen OPIR côté US.",
+  },
+  {
+    slug: "sda",
+    term: "Connaissance de la situation spatiale",
+    acronym: "SDA / SSA",
+    category: "doctrine",
+    definition:
+      "Space Domain Awareness / Space Situational Awareness. Capacité à détecter, suivre, caractériser et comprendre les objets et comportements en orbite — pierre angulaire de la défense spatiale moderne.",
+  },
+  {
+    slug: "rpo",
+    term: "Rendez-vous et opérations de proximité",
+    acronym: "RPO",
+    category: "doctrine",
+    definition:
+      "Rendezvous and Proximity Operations. Manœuvres de rapprochement en orbite — inspection, ravitaillement, mais aussi capacités contre-spatiales documentées (patrouilleurs-guetteurs, satellites inspecteurs).",
+  },
+  {
+    slug: "segment-sol",
+    term: "Segment sol",
+    category: "doctrine",
+    definition:
+      "Ensemble des moyens terrestres d'un système spatial : stations de réception, centres de mission, chaînes de traitement et de diffusion. Sans segment sol, le satellite ne produit rien d'exploitable.",
+  },
+  {
+    slug: "revisite",
+    term: "Revisite",
+    category: "doctrine",
+    definition:
+      "Fréquence à laquelle un satellite ou une constellation peut repasser sur une même zone. Critère structurant pour l'observation — une constellation à 3 satellites améliore la revisite par rapport à un satellite unique.",
+  },
   {
     slug: "cout-objectif",
     term: "Coût-objectif",

@@ -10,9 +10,12 @@ import type {
   MissileRole,
   NavalMission,
   NavalVesselClass,
+  OrbitClass,
   RadarRole,
   Reliability,
   RoadmapHorizon,
+  SatelliteClass,
+  SatellitePayloadType,
   ScoreKey,
   SourceRef,
   SystemCategory,
@@ -56,6 +59,7 @@ export const CATEGORY_LABELS: Record<SystemCategory, string> = {
   "naval-vessel": "Bâtiments navals",
   "air-defense": "Défense aérienne",
   "combat-system": "Systèmes de combat / C2",
+  spatial: "Spatial militaire",
 };
 
 export const GENERATION_LABELS: Record<CombatAircraftClass, string> = {
@@ -150,6 +154,71 @@ export const NAVAL_MISSION_LABELS: Record<NavalMission, string> = {
   presence: "Présence",
   MCM: "Guerre des mines",
   BMD: "Défense antimissile",
+};
+
+export const SATELLITE_LABELS: Record<SatelliteClass, string> = {
+  observation: "Observation / ISR",
+  sigint: "SIGINT / ROEM",
+  satcom: "Télécommunications militaires",
+  pnt: "Navigation (PNT)",
+  opir: "Alerte avancée (OPIR)",
+  sda: "Surveillance de l'espace",
+  "surveillance-maritime": "Surveillance maritime",
+  counterspace: "Protection spatiale",
+};
+
+export const SATELLITE_ORDER: SatelliteClass[] = [
+  "observation",
+  "sigint",
+  "satcom",
+  "pnt",
+  "opir",
+  "sda",
+  "surveillance-maritime",
+  "counterspace",
+];
+
+export const SATELLITE_BLURBS: Record<SatelliteClass, string> = {
+  observation:
+    "Imagerie optique, infrarouge ou radar — cycle de renseignement, segment sol et latence d'exploitation.",
+  sigint:
+    "Détection et localisation d'émissions électromagnétiques — vol en formation, traitement croisé, capacité rare.",
+  satcom:
+    "Communications militaires sécurisées et durcies — anti-brouillage, bandes X/Ka/EHF, support aux théâtres déployés.",
+  pnt: "Positionnement, navigation et temps — signaux militaires durcis, synchronisation des opérations interarmées.",
+  opir:
+    "Veille infrarouge persistante — détection de lancements, alerte stratégique et théâtre, GEO/HEO/LEO.",
+  sda: "Catalogage, suivi et caractérisation des objets en orbite — pierre angulaire de la défense spatiale.",
+  "surveillance-maritime":
+    "Suivi d'activités navales par imagerie, AIS ou RF — couverture stratégique des espaces océaniques.",
+  counterspace:
+    "Inspection, rendez-vous de proximité et protection orbitale — capacités duales documentées avec prudence.",
+};
+
+export const ORBIT_LABELS: Record<OrbitClass, string> = {
+  LEO: "LEO — orbite basse",
+  MEO: "MEO — orbite moyenne",
+  GEO: "GEO — géostationnaire",
+  GSO: "GSO — géosynchrone",
+  SSO: "SSO — héliosynchrone",
+  Polar: "Polaire",
+  HEO: "HEO — très elliptique",
+  Molniya: "Molniya",
+};
+
+export const PAYLOAD_TYPE_LABELS: Record<SatellitePayloadType, string> = {
+  optique: "Capteur optique",
+  infrarouge: "Capteur infrarouge",
+  sar: "Radar SAR",
+  "rf-sigint": "RF / SIGINT",
+  "satcom-x": "SATCOM bande X",
+  "satcom-ka": "SATCOM bande Ka",
+  "satcom-ehf": "SATCOM bande EHF",
+  pnt: "Charge PNT",
+  opir: "OPIR — alerte IR",
+  "space-surveillance": "Surveillance spatiale",
+  ais: "Récepteur AIS",
+  autre: "Autre / non spécifié",
 };
 
 export const SCORE_LABELS: Record<ScoreKey, string> = {

@@ -6,11 +6,14 @@ import type {
   NavalStructuredProfile,
   Score,
   SourceRef,
+  SpaceStructuredProfile,
 } from "@/data/types";
 import {
   BRICK_BLURBS,
   BRICK_LABELS,
   NAVAL_MISSION_LABELS,
+  ORBIT_LABELS,
+  PAYLOAD_TYPE_LABELS,
   RELIABILITY_LABELS,
   SCORE_LABELS,
   SOURCE_TYPE_LABELS,
@@ -342,6 +345,77 @@ export function NavalArchitecturePanel({
   return (
     <div className="grid gap-px border border-line bg-line md:grid-cols-2">
       {navalRows(profile).map(([label, value]) => (
+        <div key={label} className="bg-panel p-4">
+          <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
+            {label}
+          </span>
+          <p className="mt-1.5 font-serif text-sm leading-relaxed text-ink">
+            {value}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function spaceRows(profile: SpaceStructuredProfile): [string, string | null][] {
+  const orbit = profile.orbit;
+  const arch = profile.architecture;
+  const ground = profile.groundSegment;
+  const launch = profile.launch;
+  const resilience = profile.resilience;
+
+  const orbitClasses = orbit.classes
+    .map((c) => ORBIT_LABELS[c])
+    .join(" · ");
+  const payloadLine = profile.payloads
+    .map((p) => {
+      const supplier = p.supplier ? ` (${p.supplier})` : "";
+      return `${PAYLOAD_TYPE_LABELS[p.type]}${supplier}`;
+    })
+    .join(" · ");
+
+  const rows: [string, string | null][] = [
+    ["Orbite(s)", orbitClasses || null],
+    ["Altitude publique", orbit.altitudeKm ?? null],
+    ["Inclinaison", orbit.inclinationDeg ?? null],
+    ["Lecture orbitale", orbit.operationalReading],
+    ["Notes orbitales", orbit.notes ?? null],
+    ["Charges utiles", payloadLine || null],
+    ["Architecture", arch.constellationSize ?? null],
+    [
+      "Vol en formation",
+      arch.formationFlying === undefined
+        ? null
+        : arch.formationFlying
+          ? "Oui — traitement croisé / triangulation"
+          : "Non — satellite(s) opérant indépendamment",
+    ],
+    ["Continuité de service", arch.serviceContinuityNotes ?? null],
+    ["Segment sol", joinList(ground.facilities)],
+    ["Chaîne de données", ground.dataChain],
+    [
+      "Lanceur",
+      [launch.provider, launch.site].filter(Boolean).join(" — ") || null,
+    ],
+    ["Dépendance lanceur", launch.dependencyNotes ?? null],
+    ["Exposition au brouillage", resilience.jammingExposure ?? null],
+    ["Cyber / liaisons", resilience.cyberNotes ?? null],
+    ["Redondance", resilience.redundancyNotes ?? null],
+    ["Stratégie de remplacement", resilience.replacementStrategy ?? null],
+  ];
+
+  return rows.filter(([, value]) => value);
+}
+
+export function SpaceArchitecturePanel({
+  profile,
+}: {
+  profile: SpaceStructuredProfile;
+}) {
+  return (
+    <div className="grid gap-px border border-line bg-line md:grid-cols-2">
+      {spaceRows(profile).map(([label, value]) => (
         <div key={label} className="bg-panel p-4">
           <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
             {label}

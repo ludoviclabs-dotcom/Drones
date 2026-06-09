@@ -3,6 +3,17 @@ import type { ChangelogEntry } from "./types";
 // Du plus récent au plus ancien.
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-06-09",
+    title: "Ouverture du domaine spatial militaire",
+    items: [
+      "Trois fiches pilotes françaises — CSO/MUSIS (observation), CERES (SIGINT/ROEM), Syracuse IV (SATCOM) — couvrant les trois grandes familles spatiales militaires.",
+      "Nouveau profil structuré spaceProfile (orbite, charge utile, segment sol, lanceur, résilience), calqué sur navalProfile.",
+      "Page /spatial : taxonomie par mission, inventaire d'orbites publiées, chaîne spatiale critique (bus, charge utile, lanceur, segment sol, chiffrement, MCO orbital).",
+      "Section méthodologie §11 dédiée et règle éditoriale explicite : pas d'éphémérides ou TLE temps réel, pas de fenêtres de passage exploitables, pas de coordonnées de stations sensibles, pas de paramètres de liaison détaillés.",
+      "Glossaire élargi : LEO/MEO/GEO/SSO/HEO, IMINT/GEOINT/SIGINT/ROEM/COMINT/ELINT, SAR/MILSATCOM/PNT/OPIR, SDA/SSA, RPO, segment sol, revisite.",
+    ],
+  },
+  {
     date: "2026-06-08",
     title: "System X-Ray — lot 3 : cinq dossiers à fort levier comparatif",
     items: [

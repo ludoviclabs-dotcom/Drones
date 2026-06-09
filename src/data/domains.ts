@@ -74,4 +74,12 @@ export const DOMAINS: DomainInfo[] = [
     blurb:
       "Aegis, TACTICOS, PAAMS, SETIS, IBCS — le cerveau des plateformes et de la défense aérienne intégrée.",
   },
+  {
+    category: "spatial",
+    label: "Spatial militaire",
+    href: "/spatial",
+    cta: "Ouvrir le domaine",
+    blurb:
+      "Observation, écoute, télécommunications, navigation, alerte avancée et surveillance de l'espace — des satellites lus comme des architectures de souveraineté, pas comme des objets en orbite.",
+  },
 ];

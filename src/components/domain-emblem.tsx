@@ -175,6 +175,43 @@ const EMBLEMS: Record<SystemCategory, ReactNode> = {
       <line x1="58" y1="57" x2="76" y2="70" />
     </>
   ),
+  // Spatial militaire — satellite vu de profil sur axe d'orbite vertical : bus
+  // central rectangulaire, deux panneaux solaires en ailes (lignes de cellules),
+  // antenne parabolique au sommet, arc terrestre en bas et faisceau RF.
+  spatial: (
+    <>
+      <line
+        x1="50"
+        y1="4"
+        x2="50"
+        y2="78"
+        strokeWidth="1"
+        strokeDasharray="2 4"
+      />
+      <rect x="42" y="40" width="16" height="20" />
+      <line x1="46" y1="46" x2="54" y2="46" strokeWidth="1" />
+      <line x1="46" y1="54" x2="54" y2="54" strokeWidth="1" />
+      <rect x="12" y="44" width="28" height="12" />
+      <line x1="20" y1="44" x2="20" y2="56" strokeWidth="1" />
+      <line x1="28" y1="44" x2="28" y2="56" strokeWidth="1" />
+      <line x1="36" y1="44" x2="36" y2="56" strokeWidth="1" />
+      <rect x="60" y="44" width="28" height="12" />
+      <line x1="68" y1="44" x2="68" y2="56" strokeWidth="1" />
+      <line x1="76" y1="44" x2="76" y2="56" strokeWidth="1" />
+      <line x1="84" y1="44" x2="84" y2="56" strokeWidth="1" />
+      <path d="M44 32 L56 32 L52 40 L48 40 Z" />
+      <line x1="50" y1="28" x2="50" y2="32" strokeWidth="1" />
+      <path d="M20 92 A60 60 0 0 1 80 92" strokeDasharray="3 4" />
+      <line
+        x1="50"
+        y1="60"
+        x2="50"
+        y2="86"
+        strokeWidth="1"
+        strokeDasharray="2 3"
+      />
+    </>
+  ),
 };
 
 export function DomainEmblem({

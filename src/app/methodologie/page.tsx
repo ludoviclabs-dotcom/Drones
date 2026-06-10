@@ -11,6 +11,7 @@ import {
   SCORE_LABELS,
 } from "@/data/labels";
 import { ConfidenceMark, GradeBadge, SectionMarker } from "@/components/primitives";
+import { SafetyBoundaryBanner } from "@/components/safety-boundary-banner";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/methodologie" },
@@ -22,6 +23,21 @@ export const metadata: Metadata = {
 const GRADES: Grade[] = ["A", "B", "C", "D", "E"];
 const RELIABILITIES: Reliability[] = ["A", "B", "C", "D"];
 const CONFIDENCES = ["haute", "moyenne", "faible"] as const;
+
+const SAFETY_ALLOWED = [
+  "Coûts publics, maintenance, cycle de vie et périmètre budgétaire.",
+  "Financement, offsets, crédits export et programmes publics.",
+  "Supply chain, industriels, pays et dépendances publiquement sourcées.",
+  "Régimes export publics, restrictions, autorisations et incertitudes.",
+  "Géopolitique, souveraineté, alliances, marché et contradictions publiques.",
+];
+
+const SAFETY_BLOCKED = [
+  "Emploi tactique, ciblage ou planification battlefield.",
+  "Optimisation d'arme, guidance de fabrication ou weaponization.",
+  "Analyse d'efficacité létale ou recommandation d'emploi.",
+  "Contournement export, conseil juridique final ou stratégie de transfert.",
+];
 
 export default function MethodologiePage() {
   return (
@@ -38,6 +54,10 @@ export default function MethodologiePage() {
           plateforme ne prétend pas faire.
         </p>
       </header>
+
+      <div className="mt-8">
+        <SafetyBoundaryBanner variant="panel" />
+      </div>
 
       <section className="mt-14">
         <SectionMarker index="01" label="Le projet" />
@@ -60,6 +80,48 @@ export default function MethodologiePage() {
       <section className="mt-14">
         <SectionMarker
           index="02"
+          label="Frontière de sécurité produit"
+          blurb="Panoplie doit rester un observatoire stratégique : preuve, source, coût, industrie, export et limites."
+        />
+        <div className="mt-5 grid gap-px border border-line bg-line md:grid-cols-2">
+          <div className="bg-panel p-5">
+            <h3 className="font-mono text-sm uppercase tracking-[0.14em] text-ink">
+              Autorisé
+            </h3>
+            <ul className="mt-4 space-y-2">
+              {SAFETY_ALLOWED.map((item) => (
+                <li
+                  key={item}
+                  className="flex gap-3 font-serif text-sm leading-relaxed text-ink-dim"
+                >
+                  <span className="text-accent">+</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="bg-panel p-5">
+            <h3 className="font-mono text-sm uppercase tracking-[0.14em] text-ink">
+              À bloquer
+            </h3>
+            <ul className="mt-4 space-y-2">
+              {SAFETY_BLOCKED.map((item) => (
+                <li
+                  key={item}
+                  className="flex gap-3 font-serif text-sm leading-relaxed text-ink-dim"
+                >
+                  <span className="text-[var(--color-grade-e)]">×</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section className="mt-14">
+        <SectionMarker
+          index="03"
           label="La grille des cinq briques"
           blurb="Chaque système est lu à travers les mêmes cinq dimensions."
         />
@@ -81,7 +143,7 @@ export default function MethodologiePage() {
       </section>
 
       <section className="mt-14">
-        <SectionMarker index="03" label="Les paliers d'évaluation" />
+        <SectionMarker index="04" label="Les paliers d'évaluation" />
         <div className="mt-5 space-y-4 font-serif text-[1.05rem] leading-[1.75] text-ink/90">
           <p>
             Chaque système reçoit six évaluations, exprimées en paliers de A à E
@@ -116,7 +178,7 @@ export default function MethodologiePage() {
       </section>
 
       <section className="mt-14">
-        <SectionMarker index="04" label="La confiance des données" />
+        <SectionMarker index="05" label="La confiance des données" />
         <p className="mt-5 font-serif text-[1.05rem] leading-[1.75] text-ink/90">
           Chaque indicateur chiffré porte un niveau de confiance, signalé par
           trois barres. Il distingue ce qui est établi de ce qui reste estimé.
@@ -134,7 +196,7 @@ export default function MethodologiePage() {
       </section>
 
       <section className="mt-14">
-        <SectionMarker index="05" label="La fiabilité des sources" />
+        <SectionMarker index="06" label="La fiabilité des sources" />
         <p className="mt-5 font-serif text-[1.05rem] leading-[1.75] text-ink/90">
           Chaque source est notée de A à D, selon une échelle inspirée des
           usages du renseignement — du document fiable à la source douteuse à
@@ -156,7 +218,7 @@ export default function MethodologiePage() {
 
       <section className="mt-14">
         <SectionMarker
-          index="06"
+          index="07"
           label="Les modes d'acquisition"
           blurb="Un système ne s'acquiert pas d'une seule manière — et chaque voie a ses conséquences."
         />
@@ -174,7 +236,7 @@ export default function MethodologiePage() {
 
       <section className="mt-14">
         <SectionMarker
-          index="07"
+          index="08"
           label="Le domaine énergie dirigée"
           blurb="Les lasers sont lus à la même grille — avec deux ajouts et une vigilance."
         />
@@ -197,7 +259,7 @@ export default function MethodologiePage() {
 
       <section className="mt-14">
         <SectionMarker
-          index="08"
+          index="09"
           label="Le domaine aviation de combat"
           blurb="Les chasseurs suivent la même grille — avec une lecture des générations qui sépare le revendiqué de l'évalué."
         />
@@ -228,7 +290,7 @@ export default function MethodologiePage() {
       </section>
 
       <section className="mt-14">
-        <SectionMarker index="09" label="Limites &amp; cadre éthique" />
+        <SectionMarker index="10" label="Limites &amp; cadre éthique" />
         <div className="mt-5 space-y-4 font-serif text-[1.05rem] leading-[1.75] text-ink/90">
           <p>
             Panoplie est un outil d'analyse stratégique, industrielle et

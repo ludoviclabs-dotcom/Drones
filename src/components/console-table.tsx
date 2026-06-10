@@ -13,6 +13,7 @@ import { claimsToCsv, claimsToJson, downloadFile } from "@/lib/export";
 import type { ClaimStatus } from "@/data/types";
 import { CATEGORY_LABELS, STATUS_LABELS } from "@/data/labels";
 import { ConfidenceMark } from "./primitives";
+import { SourceConfidenceBadge } from "./source-confidence-badge";
 
 const STATUS_TOKEN: Record<ClaimStatus, string> = {
   verifie: "var(--color-grade-a)",
@@ -28,6 +29,7 @@ const COLUMNS = [
   "Confiance",
   "Statut",
   "Fraîcheur",
+  "Périmètre",
 ];
 
 const PAGE_SIZE = 60;
@@ -94,7 +96,7 @@ function PagedClaims({ rows }: { rows: Claim[] }) {
           <tbody>
             {pageRows.map((claim) => (
               <tr
-                key={`${claim.systemSlug}-${claim.scope}-${claim.label}`}
+                key={claim.claimId}
                 className="border-b border-line align-top last:border-0"
               >
                 <td className="px-4 py-3">
@@ -118,26 +120,32 @@ function PagedClaims({ rows }: { rows: Claim[] }) {
                   {claim.sources.length > 0 ? (
                     <ul className="space-y-1">
                       {claim.sources.map((source) => (
-                        <li key={source.id} className="font-mono text-[11px]">
-                          {source.url ? (
-                            <a
-                              href={source.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-ink-dim transition-colors hover:text-accent"
+                        <li
+                          key={source.id}
+                          className="flex items-center gap-2 font-mono text-[11px]"
+                        >
+                          <SourceConfidenceBadge source={source} />
+                          <span>
+                            {source.url ? (
+                              <a
+                                href={source.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-ink-dim transition-colors hover:text-accent"
+                              >
+                                {source.publisher} ↗
+                              </a>
+                            ) : (
+                              <span className="text-ink-dim">
+                                {source.publisher}
+                              </span>
+                            )}
+                            <span
+                              className="ml-1 text-ink-faint"
+                              title={`Fiabilité ${source.reliability}`}
                             >
-                              {source.publisher} ↗
-                            </a>
-                          ) : (
-                            <span className="text-ink-dim">
-                              {source.publisher}
+                              · {source.reliability}
                             </span>
-                          )}
-                          <span
-                            className="ml-1 text-ink-faint"
-                            title={`Fiabilité ${source.reliability}`}
-                          >
-                            · {source.reliability}
                           </span>
                         </li>
                       ))}
@@ -170,6 +178,14 @@ function PagedClaims({ rows }: { rows: Claim[] }) {
                     />
                     {FRESHNESS_LABELS[freshnessBand(claim.date)]}
                   </span>
+                </td>
+                <td className="px-4 py-3">
+                  <span className="inline-flex border border-line-bright px-2 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-faint">
+                    {claim.nonOperational ? "Non opérationnel" : "À vérifier"}
+                  </span>
+                  <p className="mt-1 font-mono text-[10px] text-ink-faint">
+                    {claim.reviewStatus}
+                  </p>
                 </td>
               </tr>
             ))}

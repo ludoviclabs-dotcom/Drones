@@ -7,6 +7,11 @@ import type {
 } from "@/data/types";
 import { systems } from "@/data/systems";
 import { BRICK_LABELS } from "@/data/labels";
+import {
+  scoreSource,
+  sourceKey,
+  type SourceConfidenceBand,
+} from "@/lib/source-confidence";
 
 export type ClaimScope =
   | BrickKey
@@ -15,8 +20,15 @@ export type ClaimScope =
   | "versions"
   | "architecture-navale";
 
+export type ClaimReviewStatus =
+  | "verified"
+  | "uncertain"
+  | "contradicted"
+  | "obsolete";
+
 /** Une affirmation atomique du registre de preuves. */
 export interface Claim {
+  claimId: string;
   systemSlug: string;
   systemName: string;
   systemReference: string;
@@ -27,9 +39,16 @@ export interface Claim {
   note?: string;
   confidence: Confidence;
   status: ClaimStatus;
+  reviewStatus: ClaimReviewStatus;
+  nonOperational: true;
   sources: SourceRef[];
   date: string;
 }
+
+type DraftClaim = Omit<
+  Claim,
+  "claimId" | "reviewStatus" | "nonOperational"
+>;
 
 /** Statut effectif : explicite si fourni, sinon dérivé de la confiance. */
 function statusOf(confidence: Confidence, explicit?: ClaimStatus): ClaimStatus {
@@ -37,9 +56,24 @@ function statusOf(confidence: Confidence, explicit?: ClaimStatus): ClaimStatus {
   return confidence === "haute" ? "verifie" : "a-recouper";
 }
 
+function reviewStatusOf(status: ClaimStatus): ClaimReviewStatus {
+  if (status === "verifie") return "verified";
+  return "uncertain";
+}
+
+function slugifyClaimPart(value: string): string {
+  return value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 64);
+}
+
 /** Aplatit tous les indicateurs (specs + briques) des systèmes en affirmations. */
 export function getAllClaims(): Claim[] {
-  const claims: Claim[] = [];
+  const claims: DraftClaim[] = [];
   for (const system of systems) {
     const byId = new Map(system.sources.map((s) => [s.id, s] as const));
     const resolve = (ids?: string[]): SourceRef[] =>
@@ -156,15 +190,33 @@ export function getAllClaims(): Claim[] {
       );
     }
   }
-  return claims;
+  return claims.map((claim) => {
+    const reviewStatus = reviewStatusOf(claim.status);
+
+    return {
+      ...claim,
+      claimId: [
+        claim.systemSlug,
+        claim.scope,
+        slugifyClaimPart(claim.label),
+      ].join(":"),
+      reviewStatus,
+      nonOperational: true,
+    };
+  });
 }
 
 export interface EvidenceStats {
   systems: number;
   sources: number;
   claims: number;
+  claimsWithoutSources: number;
+  byCategory: Record<SystemCategory, number>;
+  byScope: Partial<Record<ClaimScope, number>>;
   byConfidence: Record<Confidence, number>;
   byStatus: Record<ClaimStatus, number>;
+  byReviewStatus: Record<ClaimReviewStatus, number>;
+  sourceConfidence: Record<SourceConfidenceBand, number>;
   updated: string;
 }
 
@@ -172,9 +224,40 @@ export interface EvidenceStats {
 export function getEvidenceStats(): EvidenceStats {
   const claims = getAllClaims();
   const sourceIds = new Set<string>();
+  const sourceConfidence: Record<SourceConfidenceBand, number> = {
+    forte: 0,
+    moyenne: 0,
+    faible: 0,
+    "a-recouper": 0,
+  };
+  const seenSources = new Set<string>();
   for (const system of systems) {
-    for (const source of system.sources) sourceIds.add(source.id);
+    for (const source of system.sources) {
+      sourceIds.add(source.id);
+      const key = sourceKey(source);
+      if (!seenSources.has(key)) {
+        seenSources.add(key);
+        sourceConfidence[scoreSource(source).band] += 1;
+      }
+    }
   }
+  const byCategory = Object.fromEntries(
+    systems
+      .map((system) => system.category)
+      .filter((value, index, array) => array.indexOf(value) === index)
+      .map((category) => [category, 0]),
+  ) as Record<SystemCategory, number>;
+  for (const category of [
+    "drone",
+    "directed-energy",
+    "combat-aircraft",
+    "missile",
+    "radar",
+    "naval-vessel",
+  ] satisfies SystemCategory[]) {
+    byCategory[category] ??= 0;
+  }
+  const byScope: Partial<Record<ClaimScope, number>> = {};
   const byConfidence: Record<Confidence, number> = {
     haute: 0,
     moyenne: 0,
@@ -185,9 +268,18 @@ export function getEvidenceStats(): EvidenceStats {
     "a-recouper": 0,
     variable: 0,
   };
+  const byReviewStatus: Record<ClaimReviewStatus, number> = {
+    verified: 0,
+    uncertain: 0,
+    contradicted: 0,
+    obsolete: 0,
+  };
   for (const claim of claims) {
+    byCategory[claim.category] += 1;
+    byScope[claim.scope] = (byScope[claim.scope] ?? 0) + 1;
     byConfidence[claim.confidence] += 1;
     byStatus[claim.status] += 1;
+    byReviewStatus[claim.reviewStatus] += 1;
   }
   const updated =
     systems
@@ -199,8 +291,14 @@ export function getEvidenceStats(): EvidenceStats {
     systems: systems.length,
     sources: sourceIds.size,
     claims: claims.length,
+    claimsWithoutSources: claims.filter((claim) => claim.sources.length === 0)
+      .length,
+    byCategory,
+    byScope,
     byConfidence,
     byStatus,
+    byReviewStatus,
+    sourceConfidence,
     updated,
   };
 }

@@ -18,6 +18,7 @@ import {
 import { ORGANISMS_BY_SLUG } from "@/data/organisms";
 import { ConfidenceMark, GradeBadge, SectionMarker } from "./primitives";
 import { Narrative } from "./narrative";
+import { SourceConfidenceBadge } from "./source-confidence-badge";
 
 export function IndicatorPanel({
   indicators,
@@ -373,12 +374,15 @@ export function SourceList({ sources }: { sources: SourceRef[] }) {
               {src.date ? ` · ${src.date}` : ""}
             </p>
           </div>
-          <span
-            className="shrink-0 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-dim"
-            title={`Fiabilité ${src.reliability} — ${RELIABILITY_LABELS[src.reliability]}`}
-          >
-            Fiab. {src.reliability}
-          </span>
+          <div className="flex shrink-0 items-center gap-2">
+            <SourceConfidenceBadge source={src} />
+            <span
+              className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-dim"
+              title={`Fiabilité ${src.reliability} — ${RELIABILITY_LABELS[src.reliability]}`}
+            >
+              Fiab. {src.reliability}
+            </span>
+          </div>
           {src.url ? (
             <a
               href={src.url}

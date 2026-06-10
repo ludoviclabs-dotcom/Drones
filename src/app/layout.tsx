@@ -5,6 +5,7 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { MotionController } from "@/components/motion-controller";
+import { SafetyBoundaryBanner } from "@/components/safety-boundary-banner";
 import { JsonLd } from "@/components/json-ld";
 import { organizationLd, webSiteLd } from "@/lib/structured-data";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
@@ -86,17 +87,7 @@ export default function RootLayout({
         <JsonLd data={webSiteLd()} />
         <MotionController />
         <div className="film-grain" aria-hidden="true" />
-        <div className="border-b border-line">
-          <div className="mx-auto flex max-w-[1180px] items-center gap-2.5 px-5 py-1.5">
-            <span
-              className="transmission-dot h-1.5 w-1.5 shrink-0 bg-accent"
-              aria-hidden="true"
-            />
-            <p className="text-[10px] uppercase tracking-[0.24em] text-ink-faint">
-              OSINT · Sources ouvertes · Analyse stratégique — aucun usage opérationnel
-            </p>
-          </div>
-        </div>
+        <SafetyBoundaryBanner />
 
         <header className="sticky top-0 z-40 border-b border-line bg-bg/90 backdrop-blur">
           <div className="mx-auto flex min-h-16 max-w-[1180px] flex-wrap items-center justify-between gap-x-4 gap-y-1 px-5 py-2 sm:flex-nowrap">

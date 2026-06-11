@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { getAllClaims, getEvidenceStats } from "@/lib/claims";
 import { getCostRecords } from "@/lib/cost-records";
 import { getContradictionCandidates } from "@/lib/contradictions";
@@ -8,6 +9,7 @@ import {
   ContradictionMatrixPanel,
   CostComparisonPanel,
 } from "@/components/audit-console-panels";
+import { SourceConfidencePanel } from "@/components/source-confidence-panel";
 import { SectionMarker } from "@/components/primitives";
 import { SafetyBoundaryBanner } from "@/components/safety-boundary-banner";
 import { StatGrid, type Stat } from "@/components/stat-cards";
@@ -17,7 +19,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/console" },
   title: "Console OSINT",
   description:
-    "Registre de preuves filtrable — chaque affirmation publiée par Panoplie, tracée, sourcée et statuée.",
+    "Registre de preuves filtrable : chaque affirmation publiée par Panoplie, tracée, sourcée et statuée.",
 };
 
 export default function ConsolePage() {
@@ -37,6 +39,15 @@ export default function ConsolePage() {
     { label: "Sources fortes", value: stats.sourceConfidence.forte },
   ];
 
+  const specializedViews = [
+    ["/audit", "Audit méthodo", "Sources, claims, contradictions et limites."],
+    ["/couts", "Coûts publics", "Registre coût et TCO public."],
+    ["/industrial-graph", "Graphe industriel", "Dépendances publiques et pays."],
+    ["/updates", "File de revue", "Mises à jour proposées, validation humaine."],
+    ["/export-briefs", "Briefs export", "Notes publiques non juridiques."],
+    ["/portefeuille", "Portefeuille", "Comparaison stratégique non opérationnelle."],
+  ];
+
   return (
     <div className="mx-auto max-w-[1180px] px-5 py-12">
       <header className="reveal">
@@ -49,7 +60,7 @@ export default function ConsolePage() {
         <p className="mt-5 max-w-2xl font-serif text-lg leading-relaxed text-ink-dim">
           Le registre de preuves : chaque affirmation publiée par Panoplie,
           rattachée à sa source, son niveau de confiance et son statut. Les
-          compteurs sont dérivés des données — aucun n'est saisi à la main.
+          compteurs sont dérivés des données, pas saisis à la main.
         </p>
         <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.18em] text-ink-faint">
           Registre arrêté au {stats.updated}
@@ -63,6 +74,23 @@ export default function ConsolePage() {
       <div className="mt-8">
         <StatGrid stats={cards} />
       </div>
+
+      <section className="mt-10 grid gap-px border border-line bg-line md:grid-cols-3">
+        {specializedViews.map(([href, label, detail]) => (
+          <Link
+            key={href}
+            href={href}
+            className="bg-panel p-4 transition-colors hover:bg-surface-2"
+          >
+            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-accent">
+              {label}
+            </p>
+            <p className="mt-2 font-serif text-sm leading-relaxed text-ink-dim">
+              {detail}
+            </p>
+          </Link>
+        ))}
+      </section>
 
       <section className="mt-14">
         <SectionMarker
@@ -79,8 +107,19 @@ export default function ConsolePage() {
       <section className="mt-14">
         <SectionMarker
           index="02"
+          label="Source Confidence Engine"
+          blurb="Score déterministe par source : type, fiabilité, fraîcheur, date et URL publique."
+        />
+        <div className="mt-6">
+          <SourceConfidencePanel limit={12} />
+        </div>
+      </section>
+
+      <section className="mt-14">
+        <SectionMarker
+          index="03"
           label="Coûts publics / TCO"
-          blurb="MVP déterministe : extraction des coûts publics, périmètres et incertitudes déjà présents dans les fiches."
+          blurb="MVP déterministe : extraction et curation de coûts publics, périmètres et incertitudes."
         />
         <div className="mt-6">
           <CostComparisonPanel records={costRecords} />
@@ -89,7 +128,7 @@ export default function ConsolePage() {
 
       <section className="mt-14">
         <SectionMarker
-          index="03"
+          index="04"
           label="Contradiction Matrix MVP"
           blurb="Divergences candidates à vérifier : coût, calendrier, export et industriel. La matrice ne conclut pas automatiquement."
         />
@@ -100,7 +139,7 @@ export default function ConsolePage() {
 
       <section className="mt-14">
         <SectionMarker
-          index="04"
+          index="05"
           label="Registre de preuves"
           blurb="Filtrer par système, brique, niveau de confiance ou statut."
         />

@@ -1,4 +1,5 @@
 import type { Confidence, Indicator, SourceRef } from "@/data/types";
+import { CURATED_COST_RECORDS } from "@/data/curated-cost-records";
 import { systems } from "@/data/systems";
 
 export type CostType =
@@ -11,6 +12,7 @@ export type CostType =
 export type CostUncertainty = "low" | "medium" | "high";
 
 export interface CostRecord {
+  recordId: string;
   systemId: string;
   systemName: string;
   costType: CostType;
@@ -22,6 +24,9 @@ export interface CostRecord {
   sourceIds: string[];
   sources: SourceRef[];
   uncertainty: CostUncertainty;
+  curated: boolean;
+  comparabilityLimit?: string;
+  normalizedNote?: string;
 }
 
 function uncertaintyOf(confidence: Confidence): CostUncertainty {
@@ -83,7 +88,29 @@ function isCostIndicator(indicator: Indicator, brickKey?: string): boolean {
   );
 }
 
-export function getCostRecords(): CostRecord[] {
+function resolveSources(systemId: string, sourceIds: string[]): SourceRef[] {
+  const system = systems.find((item) => item.slug === systemId);
+  if (!system) return [];
+  const byId = new Map(system.sources.map((source) => [source.id, source]));
+  return sourceIds
+    .map((id) => byId.get(id))
+    .filter((source): source is SourceRef => Boolean(source));
+}
+
+export function getCuratedCostRecords(): CostRecord[] {
+  return CURATED_COST_RECORDS.map((record) => {
+    const system = systems.find((item) => item.slug === record.systemId);
+
+    return {
+      ...record,
+      systemName: system?.name ?? record.systemId,
+      sources: resolveSources(record.systemId, record.sourceIds),
+      curated: true,
+    };
+  });
+}
+
+export function getExtractedCostRecords(): CostRecord[] {
   const records: CostRecord[] = [];
 
   for (const system of systems) {
@@ -98,6 +125,7 @@ export function getCostRecords(): CostRecord[] {
       const firstSourceYear = extractYear(...sources.map((source) => source.date));
 
       records.push({
+        recordId: `${system.slug}:${brickKey ?? "spec"}:${indicator.label}`,
         systemId: system.slug,
         systemName: system.name,
         costType: costTypeOf(indicator.label, indicator.value),
@@ -109,6 +137,7 @@ export function getCostRecords(): CostRecord[] {
         sourceIds,
         sources,
         uncertainty: uncertaintyOf(indicator.confidence),
+        curated: false,
       });
     };
 
@@ -121,6 +150,28 @@ export function getCostRecords(): CostRecord[] {
   }
 
   return records.sort((a, b) => {
+    if (a.amount === null && b.amount !== null) return 1;
+    if (a.amount !== null && b.amount === null) return -1;
+    return (b.amount ?? 0) - (a.amount ?? 0);
+  });
+}
+
+export function getCostRecords(): CostRecord[] {
+  const curated = getCuratedCostRecords();
+  const curatedKeys = new Set(
+    curated.map((record) =>
+      [record.systemId, record.costType, record.perimeter].join("|"),
+    ),
+  );
+  const extracted = getExtractedCostRecords().filter(
+    (record) =>
+      !curatedKeys.has(
+        [record.systemId, record.costType, record.perimeter].join("|"),
+      ),
+  );
+
+  return [...curated, ...extracted].sort((a, b) => {
+    if (a.curated !== b.curated) return a.curated ? -1 : 1;
     if (a.amount === null && b.amount !== null) return 1;
     if (a.amount !== null && b.amount === null) return -1;
     return (b.amount ?? 0) - (a.amount ?? 0);

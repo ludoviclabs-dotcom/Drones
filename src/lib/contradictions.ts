@@ -1,3 +1,6 @@
+import { CURATED_CONTRADICTIONS } from "@/data/curated-contradictions";
+import { systems } from "@/data/systems";
+import type { SourceRef } from "@/data/types";
 import type { Claim } from "@/lib/claims";
 
 export type ContradictionSeverity = "faible" | "moyenne" | "forte";
@@ -7,10 +10,46 @@ export interface ContradictionCandidate {
   systemName: string;
   category: "cout" | "date" | "export" | "industriel";
   point: string;
+  claimA?: string;
+  claimB?: string;
   nature: string;
   severity: ContradictionSeverity;
   sourceCount: number;
+  sourceIds: string[];
+  sources: SourceRef[];
   nextCheck: string;
+  curated: boolean;
+}
+
+function resolveSources(systemId: string, sourceIds: string[]): SourceRef[] {
+  const system = systems.find((item) => item.slug === systemId);
+  if (!system) return [];
+  return sourceIds
+    .map((sourceId) => system.sources.find((source) => source.id === sourceId))
+    .filter(Boolean) as SourceRef[];
+}
+
+function getCuratedContradictionCandidates(): ContradictionCandidate[] {
+  return CURATED_CONTRADICTIONS.map((item) => {
+    const system = systems.find((entry) => entry.slug === item.systemId);
+    const sources = resolveSources(item.systemId, item.sourceIds);
+
+    return {
+      id: item.id,
+      systemName: system?.name ?? item.systemId,
+      category: item.category,
+      point: item.point,
+      claimA: item.claimA,
+      claimB: item.claimB,
+      nature: item.nature,
+      severity: item.severity,
+      sourceCount: sources.length,
+      sourceIds: item.sourceIds,
+      sources,
+      nextCheck: item.nextCheck,
+      curated: true,
+    };
+  });
 }
 
 function categoryOf(claim: Claim): ContradictionCandidate["category"] | null {
@@ -51,8 +90,8 @@ function natureOf(claim: Claim): string {
 export function getContradictionCandidates(
   claims: Claim[],
 ): ContradictionCandidate[] {
-  const candidates: ContradictionCandidate[] = [];
-  const seen = new Set<string>();
+  const candidates = getCuratedContradictionCandidates();
+  const seen = new Set(candidates.map((candidate) => candidate.id));
 
   for (const claim of claims) {
     const category = categoryOf(claim);
@@ -77,10 +116,13 @@ export function getContradictionCandidates(
       nature: natureOf(claim),
       severity: severityOf(claim),
       sourceCount: claim.sources.length,
+      sourceIds: claim.sources.map((source) => source.id),
+      sources: claim.sources,
       nextCheck:
         "Comparer périmètre, date de publication et source primaire avant de trancher.",
+      curated: false,
     });
   }
 
-  return candidates.slice(0, 32);
+  return candidates.slice(0, 48);
 }

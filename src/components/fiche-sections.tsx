@@ -19,6 +19,7 @@ import { ORGANISMS_BY_SLUG } from "@/data/organisms";
 import { ConfidenceMark, GradeBadge, SectionMarker } from "./primitives";
 import { Narrative } from "./narrative";
 import { SourceConfidenceBadge } from "./source-confidence-badge";
+import { SourceConfidenceDetails } from "./source-confidence-panel";
 
 export function IndicatorPanel({
   indicators,
@@ -373,6 +374,7 @@ export function SourceList({ sources }: { sources: SourceRef[] }) {
               {src.publisher} · {SOURCE_TYPE_LABELS[src.type]}
               {src.date ? ` · ${src.date}` : ""}
             </p>
+            <SourceConfidenceDetails source={src} />
           </div>
           <div className="flex shrink-0 items-center gap-2">
             <SourceConfidenceBadge source={src} />

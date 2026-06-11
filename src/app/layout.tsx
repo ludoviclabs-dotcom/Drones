@@ -63,6 +63,12 @@ const NAV = [
 
 const FOOTER_LINKS = [
   ...NAV,
+  { href: "/audit", label: "Audit" },
+  { href: "/couts", label: "Coûts publics" },
+  { href: "/industrial-graph", label: "Graphe industriel" },
+  { href: "/updates", label: "File de revue" },
+  { href: "/export-briefs", label: "Briefs export" },
+  { href: "/portefeuille", label: "Portefeuille" },
   { href: "/roadmap", label: "Roadmap" },
   { href: "/changelog", label: "Changelog" },
 ];

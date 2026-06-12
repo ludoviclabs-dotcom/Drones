@@ -15,6 +15,9 @@ import type {
   RoadmapHorizon,
   ScoreKey,
   SourceRef,
+  SpaceMission,
+  SpaceOrbitClass,
+  SpacePayloadType,
   SystemCategory,
   TimelineKind,
 } from "./types";
@@ -56,6 +59,7 @@ export const CATEGORY_LABELS: Record<SystemCategory, string> = {
   "naval-vessel": "Bâtiments navals",
   "air-defense": "Défense aérienne",
   "combat-system": "Systèmes de combat / C2",
+  space: "Spatial militaire",
 };
 
 export const GENERATION_LABELS: Record<CombatAircraftClass, string> = {
@@ -150,6 +154,70 @@ export const NAVAL_MISSION_LABELS: Record<NavalMission, string> = {
   presence: "Présence",
   MCM: "Guerre des mines",
   BMD: "Défense antimissile",
+};
+
+export const SPACE_MISSION_LABELS: Record<SpaceMission, string> = {
+  observation: "Observation / IMINT",
+  sigint: "SIGINT / ROEM",
+  satcom: "SATCOM militaire",
+  pnt: "PNT gouvernemental",
+  "missile-warning": "Alerte avancée / OPIR",
+  "sda-ssa": "SDA / SSA",
+  metoc: "METOC",
+  "maritime-surveillance": "Surveillance maritime",
+  "data-relay": "Relais de données",
+};
+
+export const SPACE_MISSION_BLURBS: Record<SpaceMission, string> = {
+  observation:
+    "Imagerie optique, infrarouge ou radar — lecture de souveraineté ISR, pas de ciblage.",
+  sigint:
+    "Détection et caractérisation publique d'émissions électromagnétiques — sans paramètres exploitables.",
+  satcom:
+    "Communications sécurisées et résilientes entre commandement, forces et plateformes.",
+  pnt:
+    "Position, navigation et temps pour utilisateurs gouvernementaux ou militaires.",
+  "missile-warning":
+    "Alerte infrarouge/OPIR sur lancements et événements chauds, au niveau mission publique.",
+  "sda-ssa":
+    "Surveillance et connaissance de la situation spatiale : objets, comportements, services de données.",
+  metoc:
+    "Météorologie et environnement spatial au service de la planification stratégique.",
+  "maritime-surveillance":
+    "Observation océanique par imagerie, signaux ou AIS selon les sources ouvertes.",
+  "data-relay":
+    "Relais entre plateformes et centres de traitement, avec dépendances de réseau.",
+};
+
+export const SPACE_ORBIT_LABELS: Record<SpaceOrbitClass, string> = {
+  LEO: "LEO",
+  MEO: "MEO",
+  GEO: "GEO",
+  GSO: "GSO",
+  SSO: "SSO",
+  polar: "Polaire",
+  HEO: "HEO",
+  Molniya: "Molniya",
+  "multi-orbit": "Multi-orbites",
+  "ground-network": "Réseau sol",
+  unknown: "Non précisée publiquement",
+};
+
+export const SPACE_PAYLOAD_LABELS: Record<SpacePayloadType, string> = {
+  optical: "Optique",
+  infrared: "Infrarouge",
+  SAR: "SAR",
+  "RF-SIGINT": "RF / SIGINT",
+  COMINT: "COMINT",
+  ELINT: "ELINT",
+  "SATCOM-X": "SATCOM bande X",
+  "SATCOM-Ka": "SATCOM bande Ka",
+  "SATCOM-EHF": "SATCOM EHF",
+  PNT: "PNT",
+  OPIR: "OPIR",
+  "space-surveillance": "Surveillance spatiale",
+  AIS: "AIS",
+  "hosted-payload": "Charge utile hébergée",
 };
 
 export const SCORE_LABELS: Record<ScoreKey, string> = {

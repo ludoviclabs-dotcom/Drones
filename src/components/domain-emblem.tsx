@@ -175,6 +175,20 @@ const EMBLEMS: Record<SystemCategory, ReactNode> = {
       <line x1="58" y1="57" x2="76" y2="70" />
     </>
   ),
+  space: (
+    <>
+      <circle cx="50" cy="50" r="34" strokeWidth="1" strokeDasharray="2 4" />
+      <ellipse cx="50" cy="50" rx="46" ry="15" transform="rotate(-18 50 50)" />
+      <path d="M48 34 L60 40 L54 64 L38 58 Z" />
+      <rect x="42" y="38" width="14" height="18" rx="2" />
+      <path d="M36 38 L22 32 L18 42 L34 48 Z" />
+      <path d="M58 54 L76 62 L80 52 L62 44 Z" />
+      <circle cx="50" cy="50" r="3" />
+      <path d="M20 80 L40 68" strokeDasharray="3 4" />
+      <path d="M42 68 L52 76 L64 66" />
+      <line x1="20" y1="86" x2="70" y2="86" strokeWidth="1" />
+    </>
+  ),
 };
 
 export function DomainEmblem({

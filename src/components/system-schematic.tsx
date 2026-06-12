@@ -998,6 +998,22 @@ const NAVAL_CLASS_SCHEMATICS: Record<NavalVesselClass, ReactNode> = {
   ),
 };
 
+const SPACE_SCHEMATIC: ReactNode = (
+  <>
+    <circle cx="120" cy="120" r="54" strokeWidth="1" strokeDasharray="3 5" />
+    <ellipse cx="120" cy="120" rx="92" ry="28" transform="rotate(-18 120 120)" />
+    <line x1="120" y1="28" x2="120" y2="212" strokeWidth="1" strokeDasharray="2 5" />
+    <path d="M112 76 L144 94 L128 164 L88 146 Z" />
+    <rect x="98" y="92" width="34" height="42" rx="4" />
+    <path d="M88 92 L48 76 L38 104 L80 120 Z" />
+    <path d="M134 128 L184 150 L194 122 L144 100 Z" />
+    <circle cx="115" cy="113" r="8" />
+    <path d="M58 198 L92 176" strokeDasharray="4 6" />
+    <path d="M92 176 L116 194 L150 168" />
+    <line x1="46" y1="210" x2="170" y2="210" />
+  </>
+);
+
 export function SystemSchematic({
   slug,
   className = "",
@@ -1016,6 +1032,8 @@ export function SystemSchematic({
       content = RADAR_ROLE_SCHEMATICS[system.radarRole];
     } else if (system?.category === "naval-vessel" && system.navalVesselClass) {
       content = NAVAL_CLASS_SCHEMATICS[system.navalVesselClass];
+    } else if (system?.category === "space") {
+      content = SPACE_SCHEMATIC;
     }
   }
   if (!content) return null;

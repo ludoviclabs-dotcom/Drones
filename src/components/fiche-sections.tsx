@@ -6,6 +6,7 @@ import type {
   NavalStructuredProfile,
   Score,
   SourceRef,
+  SpaceStructuredProfile,
 } from "@/data/types";
 import {
   BRICK_BLURBS,
@@ -13,6 +14,9 @@ import {
   NAVAL_MISSION_LABELS,
   RELIABILITY_LABELS,
   SCORE_LABELS,
+  SPACE_MISSION_LABELS,
+  SPACE_ORBIT_LABELS,
+  SPACE_PAYLOAD_LABELS,
   SOURCE_TYPE_LABELS,
 } from "@/data/labels";
 import { ORGANISMS_BY_SLUG } from "@/data/organisms";
@@ -344,6 +348,78 @@ export function NavalArchitecturePanel({
   return (
     <div className="grid gap-px border border-line bg-line md:grid-cols-2">
       {navalRows(profile).map(([label, value]) => (
+        <div key={label} className="bg-panel p-4">
+          <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
+            {label}
+          </span>
+          <p className="mt-1.5 font-serif text-sm leading-relaxed text-ink">
+            {value}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function spaceRows(profile: SpaceStructuredProfile): [string, string | null][] {
+  const { missions, orbit, payloads, architecture, resilienceNotes, sovereigntyNotes } =
+    profile;
+
+  const rows: [string, string | null][] = [
+    [
+      "Missions",
+      missions.map((mission) => SPACE_MISSION_LABELS[mission]).join(" · "),
+    ],
+    [
+      "Orbite publique",
+      orbit.classes.map((orbitClass) => SPACE_ORBIT_LABELS[orbitClass]).join(" · "),
+    ],
+    ["Altitude", orbit.altitude ?? null],
+    ["Inclinaison", orbit.inclination ?? null],
+    ["Limite orbitale", orbit.notes ?? null],
+    [
+      "Charges utiles",
+      payloads
+        .map((payload) =>
+          [
+            SPACE_PAYLOAD_LABELS[payload.type],
+            payload.name,
+            payload.supplier,
+          ]
+            .filter(Boolean)
+            .join(" · "),
+        )
+        .join(" · "),
+    ],
+    [
+      "Segment spatial",
+      joinList(
+        [
+          architecture.constellationSize,
+          architecture.satellitesLaunched,
+          architecture.formationFlying ? "Vol en formation public" : null,
+        ].filter(Boolean) as string[],
+      ),
+    ],
+    ["Segment sol", joinList(architecture.groundSegment)],
+    ["Chaîne de données", architecture.dataChain],
+    ["Lancement", joinList(architecture.launchDependency)],
+    ["Continuité", architecture.serviceContinuityNotes ?? null],
+    ["Résilience", resilienceNotes ?? null],
+    ["Souveraineté", sovereigntyNotes ?? null],
+  ];
+
+  return rows.filter(([, value]) => value);
+}
+
+export function SpaceArchitecturePanel({
+  profile,
+}: {
+  profile: SpaceStructuredProfile;
+}) {
+  return (
+    <div className="grid gap-px border border-line bg-line md:grid-cols-2">
+      {spaceRows(profile).map(([label, value]) => (
         <div key={label} className="bg-panel p-4">
           <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
             {label}

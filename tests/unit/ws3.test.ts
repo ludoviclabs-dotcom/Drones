@@ -10,7 +10,8 @@ import { familyLabel, primaryCountry } from "@/lib/grouping";
 import { NAVAL_VESSEL_LABELS } from "@/data/labels";
 
 function makeClaim(overrides: Partial<Claim> = {}): Claim {
-  return {
+  const base: Claim = {
+    claimId: "x:cout:cout-complet",
     systemSlug: "x",
     systemName: "Système, X",
     systemReference: "PNP-NS-001",
@@ -20,6 +21,8 @@ function makeClaim(overrides: Partial<Claim> = {}): Claim {
     value: "A · B, C",
     confidence: "moyenne",
     status: "a-recouper",
+    reviewStatus: "uncertain",
+    nonOperational: true,
     sources: [
       {
         id: "s1",
@@ -30,8 +33,8 @@ function makeClaim(overrides: Partial<Claim> = {}): Claim {
       },
     ],
     date: "2026-06-01",
-    ...overrides,
   };
+  return { ...base, ...overrides };
 }
 
 describe("export — CSV / JSON", () => {

@@ -26,6 +26,7 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: ChangeFr
   { path: "/batiments-navals", priority: 0.8, changeFrequency: "monthly" },
   { path: "/defense-aerienne", priority: 0.8, changeFrequency: "monthly" },
   { path: "/systemes-combat", priority: 0.8, changeFrequency: "monthly" },
+  { path: "/spatial-militaire", priority: 0.8, changeFrequency: "monthly" },
   { path: "/energie-dirigee", priority: 0.8, changeFrequency: "monthly" },
   { path: "/missiles", priority: 0.8, changeFrequency: "monthly" },
   { path: "/radars", priority: 0.8, changeFrequency: "monthly" },

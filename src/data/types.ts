@@ -11,7 +11,8 @@ export type SystemCategory =
   | "radar"
   | "naval-vessel"
   | "air-defense"
-  | "combat-system";
+  | "combat-system"
+  | "space";
 
 export type DroneClass =
   | "MALE"
@@ -200,6 +201,82 @@ export interface NavalStructuredProfile {
   sustainment?: NavalSustainmentProfile;
 }
 
+/** Mission spatiale publique — lecture de service, pas trajectographie exploitable. */
+export type SpaceMission =
+  | "observation"
+  | "sigint"
+  | "satcom"
+  | "pnt"
+  | "missile-warning"
+  | "sda-ssa"
+  | "metoc"
+  | "maritime-surveillance"
+  | "data-relay";
+
+/** Classe orbitale générique publiée ; aucun TLE ni paramètre temps réel. */
+export type SpaceOrbitClass =
+  | "LEO"
+  | "MEO"
+  | "GEO"
+  | "GSO"
+  | "SSO"
+  | "polar"
+  | "HEO"
+  | "Molniya"
+  | "multi-orbit"
+  | "ground-network"
+  | "unknown";
+
+export type SpacePayloadType =
+  | "optical"
+  | "infrared"
+  | "SAR"
+  | "RF-SIGINT"
+  | "COMINT"
+  | "ELINT"
+  | "SATCOM-X"
+  | "SATCOM-Ka"
+  | "SATCOM-EHF"
+  | "PNT"
+  | "OPIR"
+  | "space-surveillance"
+  | "AIS"
+  | "hosted-payload";
+
+export interface SpaceOrbitProfile {
+  classes: SpaceOrbitClass[];
+  altitude?: string;
+  inclination?: string;
+  notes?: string;
+}
+
+export interface SpacePayloadProfile {
+  type: SpacePayloadType;
+  name?: string;
+  supplier?: string;
+  description: string;
+  sensitivity: "faible" | "moyenne" | "haute";
+}
+
+export interface SpaceArchitectureProfile {
+  constellationSize?: string;
+  satellitesLaunched?: string;
+  formationFlying?: boolean;
+  groundSegment: string[];
+  dataChain: string;
+  launchDependency?: string[];
+  serviceContinuityNotes?: string;
+}
+
+export interface SpaceStructuredProfile {
+  missions: SpaceMission[];
+  orbit: SpaceOrbitProfile;
+  payloads: SpacePayloadProfile[];
+  architecture: SpaceArchitectureProfile;
+  resilienceNotes?: string;
+  sovereigntyNotes?: string;
+}
+
 /** Modes d'acquisition — la grille de lecture qui relie les cinq briques. */
 export type AcquisitionMode =
   | "FMS"
@@ -330,6 +407,8 @@ export interface DefenseSystem {
   navalVesselClass?: NavalVesselClass;
   /** Profil naval structuré — capteurs, CMS, effecteurs, propulsion, MCO et export. */
   navalProfile?: NavalStructuredProfile;
+  /** Profil spatial structuré — orbite publique, charge utile, segment sol et résilience. */
+  spaceProfile?: SpaceStructuredProfile;
   /** Génération revendiquée par l'industriel ou la nation, si elle diffère. */
   claimedGeneration?: string;
   classLabel: string;

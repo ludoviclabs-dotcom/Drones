@@ -2,17 +2,16 @@
 
 import type { SystemCategory } from "@/data/types";
 import { CATEGORY_LABELS } from "@/data/labels";
+import { DOMAINS } from "@/data/domains";
 
 export type DomainValue = SystemCategory | "all";
 
 const OPTIONS: { value: DomainValue; label: string }[] = [
   { value: "all", label: "Tous les domaines" },
-  { value: "drone", label: CATEGORY_LABELS.drone },
-  { value: "directed-energy", label: CATEGORY_LABELS["directed-energy"] },
-  { value: "combat-aircraft", label: CATEGORY_LABELS["combat-aircraft"] },
-  { value: "missile", label: CATEGORY_LABELS.missile },
-  { value: "radar", label: CATEGORY_LABELS.radar },
-  { value: "naval-vessel", label: CATEGORY_LABELS["naval-vessel"] },
+  ...DOMAINS.map((domain) => ({
+    value: domain.category,
+    label: CATEGORY_LABELS[domain.category],
+  })),
 ];
 
 /** Jeu de puces de filtrage par domaine — catalogue Panoplie complet. */

@@ -480,6 +480,186 @@ export const glossary: GlossaryTerm[] = [
     definition:
       "Deux bornes de la dépense publique pluriannuelle : l'AE est le plafond juridique d'engagement d'une dépense, le CP la trésorerie budgétaire ouverte chaque année pour la payer. L'écart entre les deux nourrit le « reste à payer ».",
   },
+  {
+    slug: "leo",
+    term: "Low Earth Orbit",
+    acronym: "LEO",
+    category: "technique",
+    definition:
+      "Orbite basse, souvent utilisee par l'observation et certaines constellations. Panoplie n'en retient que la classe publique, jamais des parametres orbitaux exploitables.",
+  },
+  {
+    slug: "meo",
+    term: "Medium Earth Orbit",
+    acronym: "MEO",
+    category: "technique",
+    definition:
+      "Orbite moyenne, notamment associee aux constellations de navigation comme GPS et Galileo.",
+  },
+  {
+    slug: "geo",
+    term: "Geostationary Earth Orbit",
+    acronym: "GEO",
+    category: "technique",
+    definition:
+      "Orbite geostationnaire utilisee par de nombreux satellites de communications et d'alerte. La fiche Panoplie reste au niveau classe d'orbite.",
+  },
+  {
+    slug: "gso",
+    term: "Geosynchronous Orbit",
+    acronym: "GSO",
+    category: "technique",
+    definition:
+      "Orbite geosynchrone, proche de la logique GEO mais pas necessairement strictement stationnaire par rapport au sol.",
+  },
+  {
+    slug: "sso",
+    term: "Sun-Synchronous Orbit",
+    acronym: "SSO",
+    category: "technique",
+    definition:
+      "Orbite heliosynchrone, frequente en observation car elle permet des conditions d'eclairement comparables d'un passage a l'autre.",
+  },
+  {
+    slug: "heo",
+    term: "Highly Elliptical Orbit",
+    acronym: "HEO",
+    category: "technique",
+    definition:
+      "Orbite tres elliptique, utile pour certaines couvertures de hautes latitudes ou missions specialisees.",
+  },
+  {
+    slug: "molniya",
+    term: "Orbite Molniya",
+    category: "technique",
+    definition:
+      "Famille d'orbites tres elliptiques historiquement utilisees pour ameliorer la couverture de hautes latitudes.",
+  },
+  {
+    slug: "imint",
+    term: "Imagery Intelligence",
+    acronym: "IMINT",
+    category: "doctrine",
+    definition:
+      "Renseignement d'origine image. Dans Panoplie, il sert a classer une mission publique, pas a exploiter des images.",
+  },
+  {
+    slug: "geoint",
+    term: "Geospatial Intelligence",
+    acronym: "GEOINT",
+    category: "doctrine",
+    definition:
+      "Renseignement geospatial combinant information geographique, image et contexte. Panoplie le traite au niveau strategique non operationnel.",
+  },
+  {
+    slug: "sar",
+    term: "Synthetic Aperture Radar",
+    acronym: "SAR",
+    category: "technique",
+    definition:
+      "Radar a synthese d'ouverture utilise pour produire de l'imagerie radar. Les fiches n'exposent ni parametres d'acquisition ni usages tactiques.",
+  },
+  {
+    slug: "sigint",
+    term: "Signals Intelligence",
+    acronym: "SIGINT",
+    category: "doctrine",
+    definition:
+      "Renseignement d'origine electromagnetique. Panoplie se limite a la mission et aux sources publiques.",
+  },
+  {
+    slug: "comint",
+    term: "Communications Intelligence",
+    acronym: "COMINT",
+    category: "doctrine",
+    definition:
+      "Sous-ensemble du SIGINT portant sur les communications ; mentionne uniquement comme taxonomie publique.",
+  },
+  {
+    slug: "elint",
+    term: "Electronic Intelligence",
+    acronym: "ELINT",
+    category: "doctrine",
+    definition:
+      "Sous-ensemble du SIGINT portant sur les emissions electroniques non communicationnelles ; sans parametres de collecte.",
+  },
+  {
+    slug: "roem",
+    term: "Renseignement d'origine electromagnetique",
+    acronym: "ROEM",
+    category: "doctrine",
+    definition:
+      "Terme francais proche de SIGINT. Utilise pour qualifier des programmes comme CERES a un niveau non operationnel.",
+  },
+  {
+    slug: "milsatcom",
+    term: "Military Satellite Communications",
+    acronym: "MILSATCOM",
+    category: "technique",
+    definition:
+      "Communications militaires par satellite : satellites, segment sol, terminaux, securite et gouvernance d'acces.",
+  },
+  {
+    slug: "pnt",
+    term: "Positioning, Navigation and Timing",
+    acronym: "PNT",
+    category: "technique",
+    definition:
+      "Positionnement, navigation et temps. Les fiches comparent souverainete et gouvernance, pas l'emploi de guidage.",
+  },
+  {
+    slug: "opir",
+    term: "Overhead Persistent Infrared",
+    acronym: "OPIR",
+    category: "technique",
+    definition:
+      "Capteurs infrarouges persistants depuis l'espace, souvent associes a l'alerte avancee. Panoplie exclut les seuils et couvertures exploitables.",
+  },
+  {
+    slug: "sda",
+    term: "Space Domain Awareness",
+    acronym: "SDA",
+    category: "doctrine",
+    definition:
+      "Connaissance du domaine spatial : objets, environnements, risques et activite. Aucune donnee dynamique de suivi n'est publiee.",
+  },
+  {
+    slug: "ssa",
+    term: "Space Situational Awareness",
+    acronym: "SSA",
+    category: "doctrine",
+    definition:
+      "Connaissance de la situation spatiale, proche de SDA, centree sur le suivi et la comprehension de l'environnement orbital.",
+  },
+  {
+    slug: "segment-spatial",
+    term: "Segment spatial",
+    category: "technique",
+    definition:
+      "Partie orbitale d'une capacite : satellites, charges utiles et architectures de constellation, decrites au niveau public.",
+  },
+  {
+    slug: "segment-sol",
+    term: "Segment sol",
+    category: "technique",
+    definition:
+      "Stations, centres de controle, traitement, terminaux et chaines d'acces qui donnent sa valeur au satellite.",
+  },
+  {
+    slug: "revisite",
+    term: "Revisite",
+    category: "technique",
+    definition:
+      "Intervalle entre deux observations possibles d'une meme zone. Panoplie evite les calendriers exploitables et ne retient que les limites generales.",
+  },
+  {
+    slug: "rpo",
+    term: "Rendezvous and Proximity Operations",
+    acronym: "RPO",
+    category: "technique",
+    definition:
+      "Operations de rapprochement entre objets spatiaux. Sujet sensible : Panoplie le definit au glossaire mais ne fournit aucune procedure.",
+  },
 ];
 
 export const GLOSSARY_BY_SLUG: Record<string, GlossaryTerm> = Object.fromEntries(

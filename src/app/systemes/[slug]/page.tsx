@@ -6,6 +6,8 @@ import {
   GENERATION_LABELS,
   MODE_LABELS,
   NAVAL_VESSEL_LABELS,
+  SPACE_MISSION_LABELS,
+  SPACE_ORBIT_LABELS,
 } from "@/data/labels";
 import {
   AnalystNote,
@@ -15,6 +17,7 @@ import {
   LegalNote,
   NavalArchitecturePanel,
   ScoreGrid,
+  SpaceArchitecturePanel,
   SourceList,
   SpecsPanel,
 } from "@/components/fiche-sections";
@@ -109,6 +112,22 @@ export default async function SystemPage({
           },
         ]
       : []),
+    ...(system.spaceProfile
+      ? [
+          {
+            label: "Mission spatiale",
+            value: system.spaceProfile.missions
+              .map((mission) => SPACE_MISSION_LABELS[mission])
+              .join(" · "),
+          },
+          {
+            label: "Orbite",
+            value: system.spaceProfile.orbit.classes
+              .map((orbitClass) => SPACE_ORBIT_LABELS[orbitClass])
+              .join(" · "),
+          },
+        ]
+      : []),
     { label: "Statut", value: system.status },
   ];
 
@@ -122,12 +141,14 @@ export default async function SystemPage({
     !!system.physicalConstraints && system.physicalConstraints.length > 0;
   const hasVariants = !!system.variants && system.variants.length > 0;
   const hasNavalProfile = !!system.navalProfile;
+  const hasSpaceProfile = !!system.spaceProfile;
   const hasTimeline = !!system.timeline && system.timeline.length > 0;
 
   const idxSummary = nextIndex();
   const idxQuickRead = nextIndex();
   const idxNavalArchitecture = hasNavalProfile ? nextIndex() : null;
   const idxRelations = hasNavalProfile ? nextIndex() : null;
+  const idxSpaceArchitecture = hasSpaceProfile ? nextIndex() : null;
   const idxVariants = hasVariants ? nextIndex() : null;
   const brickBase = counter;
   counter += system.bricks.length;
@@ -300,6 +321,19 @@ export default async function SystemPage({
           />
           <div className="mt-6">
             <RelationGraph profile={system.navalProfile} name={system.name} />
+          </div>
+        </section>
+      ) : null}
+
+      {idxSpaceArchitecture && system.spaceProfile ? (
+        <section className="mt-16">
+          <SectionMarker
+            index={idxSpaceArchitecture}
+            label="Architecture spatiale"
+            blurb="Orbite publique, charge utile, segment sol, chaîne de données et résilience — sans données orbitales sensibles."
+          />
+          <div className="mt-6">
+            <SpaceArchitecturePanel profile={system.spaceProfile} />
           </div>
         </section>
       ) : null}

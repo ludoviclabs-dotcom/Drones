@@ -6,7 +6,12 @@ import type {
   SystemCategory,
 } from "@/data/types";
 import { systems } from "@/data/systems";
-import { BRICK_LABELS } from "@/data/labels";
+import {
+  BRICK_LABELS,
+  SPACE_MISSION_LABELS,
+  SPACE_ORBIT_LABELS,
+  SPACE_PAYLOAD_LABELS,
+} from "@/data/labels";
 import {
   scoreSource,
   sourceKey,
@@ -18,7 +23,11 @@ export type ClaimScope =
   | "specs"
   | "contraintes"
   | "versions"
-  | "architecture-navale";
+  | "architecture-navale"
+  | "orbite"
+  | "charge-utile"
+  | "segment-sol"
+  | "resilience-spatiale";
 
 export type ClaimReviewStatus =
   | "verified"
@@ -189,6 +198,83 @@ export function getAllClaims(): Claim[] {
         sustainment?.sustainmentNotes ?? sustainment?.industrialRiskNotes,
       );
     }
+    if (system.spaceProfile) {
+      const { missions, orbit, payloads, architecture, resilienceNotes, sovereigntyNotes } =
+        system.spaceProfile;
+      const addSpaceClaim = (
+        scope: Extract<
+          ClaimScope,
+          "orbite" | "charge-utile" | "segment-sol" | "resilience-spatiale"
+        >,
+        label: string,
+        value?: string | null,
+      ) => {
+        if (!value) return;
+        claims.push({
+          ...base,
+          scope,
+          label,
+          value,
+          confidence: "moyenne",
+          status: "a-recouper",
+          sources: allSystemSources,
+        });
+      };
+
+      addSpaceClaim(
+        "orbite",
+        "Mission spatiale",
+        missions.map((mission) => SPACE_MISSION_LABELS[mission]).join(" · "),
+      );
+      addSpaceClaim(
+        "orbite",
+        "Classe d'orbite",
+        orbit.classes.map((orbitClass) => SPACE_ORBIT_LABELS[orbitClass]).join(" · "),
+      );
+      addSpaceClaim("orbite", "Altitude publique", orbit.altitude);
+      addSpaceClaim("orbite", "Inclinaison publique", orbit.inclination);
+      addSpaceClaim("orbite", "Limite orbitale", orbit.notes);
+      addSpaceClaim(
+        "charge-utile",
+        "Charges utiles",
+        payloads
+          .map((payload) =>
+            [
+              SPACE_PAYLOAD_LABELS[payload.type],
+              payload.name,
+              payload.supplier,
+            ]
+              .filter(Boolean)
+              .join(" · "),
+          )
+          .join(" · "),
+      );
+      addSpaceClaim(
+        "segment-sol",
+        "Segment spatial",
+        [
+          architecture.constellationSize,
+          architecture.satellitesLaunched,
+          architecture.formationFlying ? "vol en formation public" : null,
+        ]
+          .filter(Boolean)
+          .join(" · "),
+      );
+      addSpaceClaim("segment-sol", "Segment sol", architecture.groundSegment.join(" · "));
+      addSpaceClaim("segment-sol", "Chaîne de données", architecture.dataChain);
+      addSpaceClaim(
+        "segment-sol",
+        "Dépendances lancement",
+        architecture.launchDependency?.join(" · "),
+      );
+      addSpaceClaim(
+        "resilience-spatiale",
+        "Continuité de service",
+        architecture.serviceContinuityNotes,
+      );
+      addSpaceClaim("resilience-spatiale", "Résilience", resilienceNotes);
+      addSpaceClaim("resilience-spatiale", "Souveraineté", sovereigntyNotes);
+    }
   }
   return claims.map((claim) => {
     const reviewStatus = reviewStatusOf(claim.status);
@@ -254,6 +340,9 @@ export function getEvidenceStats(): EvidenceStats {
     "missile",
     "radar",
     "naval-vessel",
+    "air-defense",
+    "combat-system",
+    "space",
   ] satisfies SystemCategory[]) {
     byCategory[category] ??= 0;
   }
@@ -310,6 +399,10 @@ export const SCOPE_LABELS: Record<ClaimScope, string> = {
   contraintes: "Contraintes physiques",
   versions: "Versions & standards",
   "architecture-navale": "Architecture navale",
+  orbite: "Orbite publique",
+  "charge-utile": "Charge utile",
+  "segment-sol": "Segment sol",
+  "resilience-spatiale": "Résilience spatiale",
 };
 
 // === Fraîcheur ===

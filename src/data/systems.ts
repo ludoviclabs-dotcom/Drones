@@ -109,6 +109,20 @@ import {
   setis,
   ibcs,
 } from "./systems/combat-systems";
+import {
+  aehf,
+  ceres,
+  csoMusis,
+  galileoPrs,
+  gpsIii,
+  iris2Govsatcom,
+  nato3sas,
+  natoApssAquila,
+  sarah,
+  sbirs,
+  skynet6,
+  syracuseIv,
+} from "./systems/space";
 
 export const systems: DefenseSystem[] = [
   mq9Reaper,
@@ -228,6 +242,19 @@ export const systems: DefenseSystem[] = [
   paamsSeaViper,
   setis,
   ibcs,
+  // Spatial militaire & satellites
+  csoMusis,
+  ceres,
+  syracuseIv,
+  galileoPrs,
+  gpsIii,
+  aehf,
+  sbirs,
+  natoApssAquila,
+  nato3sas,
+  skynet6,
+  sarah,
+  iris2Govsatcom,
 ];
 
 export const SYSTEMS_BY_SLUG: Record<string, DefenseSystem> = Object.fromEntries(

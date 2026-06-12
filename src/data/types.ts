@@ -12,7 +12,8 @@ export type SystemCategory =
   | "naval-vessel"
   | "air-defense"
   | "combat-system"
-  | "space";
+  | "space"
+  | "artillery";
 
 export type DroneClass =
   | "MALE"
@@ -278,6 +279,70 @@ export interface SpaceStructuredProfile {
 }
 
 /** Modes d'acquisition — la grille de lecture qui relie les cinq briques. */
+export type ArtilleryCarrier =
+  | "tracked-heavy"
+  | "truck-4x4"
+  | "truck-6x6"
+  | "truck-8x8"
+  | "armored-8x8"
+  | "light-vehicle"
+  | "towed";
+
+export type ArtilleryArchitecture =
+  | "open-mount"
+  | "protected-cab"
+  | "protected-turret"
+  | "remote-module"
+  | "light-system";
+
+export type ArtilleryCaliber = "105mm" | "122mm" | "152mm" | "155mm";
+export type ArtilleryBarrelLength = "L39" | "L45" | "L52" | "L58" | "unknown";
+
+export type ArtilleryLoading =
+  | "manual"
+  | "assisted"
+  | "semi-automatic"
+  | "automatic";
+
+export type ArtilleryInteropStatus =
+  | "nato-155"
+  | "jbmou-claimed"
+  | "jbmou-qualified"
+  | "national-munitions"
+  | "non-nato-caliber";
+
+export interface ArtilleryAmmunitionProfile {
+  families: string[];
+  guidedFamilies?: string[];
+  sourcePerimeter: string;
+  caution?: string;
+}
+
+export interface ArtillerySustainmentProfile {
+  tubeWearNotes?: string;
+  resupplyVehicle?: string;
+  maintenanceNotes?: string;
+  productionNotes?: string;
+}
+
+export interface ArtilleryStructuredProfile {
+  carrier: ArtilleryCarrier;
+  architecture: ArtilleryArchitecture;
+  caliber: ArtilleryCaliber;
+  barrelLength: ArtilleryBarrelLength;
+  loading: ArtilleryLoading;
+  interopStatus: ArtilleryInteropStatus;
+  crewProtection: string;
+  fcs: string;
+  c2: string;
+  ammunition: ArtilleryAmmunitionProfile;
+  sustainment: ArtillerySustainmentProfile;
+  industrialNotes: string;
+  costNotes?: string;
+  exportNotes?: string;
+  safetyBoundary?: string;
+}
+
 export type AcquisitionMode =
   | "FMS"
   | "DCS"
@@ -409,6 +474,7 @@ export interface DefenseSystem {
   navalProfile?: NavalStructuredProfile;
   /** Profil spatial structuré — orbite publique, charge utile, segment sol et résilience. */
   spaceProfile?: SpaceStructuredProfile;
+  artilleryProfile?: ArtilleryStructuredProfile;
   /** Génération revendiquée par l'industriel ou la nation, si elle diffère. */
   claimedGeneration?: string;
   classLabel: string;

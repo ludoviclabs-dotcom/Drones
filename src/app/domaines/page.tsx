@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/domaines" },
   title: "Domaines",
   description:
-    "Les domaines d'analyse de Panoplie — drones, énergie dirigée, aviation de combat, missiles et bâtiments navals — à grille de lecture constante.",
+    "Les domaines d'analyse de Panoplie, des drones aux feux terrestres, à grille de lecture constante.",
 };
 
 export default function DomainesPage() {

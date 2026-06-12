@@ -189,6 +189,27 @@ const EMBLEMS: Record<SystemCategory, ReactNode> = {
       <line x1="20" y1="86" x2="70" y2="86" strokeWidth="1" />
     </>
   ),
+  artillery: (
+    <>
+      <line
+        x1="50"
+        y1="8"
+        x2="50"
+        y2="92"
+        strokeWidth="1"
+        strokeDasharray="2 4"
+      />
+      <line x1="22" y1="80" x2="86" y2="80" strokeWidth="1" />
+      <rect x="24" y="62" width="44" height="16" rx="2" />
+      <path d="M34 62 L42 48 L62 48 L70 62 Z" />
+      <line x1="58" y1="48" x2="88" y2="30" strokeWidth="2" />
+      <line x1="54" y1="44" x2="84" y2="26" strokeWidth="1" />
+      <circle cx="34" cy="82" r="4" />
+      <circle cx="58" cy="82" r="4" />
+      <path d="M24 62 L18 72 L24 78" />
+      <path d="M70 62 L78 70 L68 78" />
+    </>
+  ),
 };
 
 export function DomainEmblem({

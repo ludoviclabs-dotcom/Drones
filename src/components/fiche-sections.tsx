@@ -1,4 +1,5 @@
 import type {
+  ArtilleryStructuredProfile,
   Brick,
   CCAReading,
   EditorialBlocks,
@@ -9,6 +10,12 @@ import type {
   SpaceStructuredProfile,
 } from "@/data/types";
 import {
+  ARTILLERY_ARCHITECTURE_LABELS,
+  ARTILLERY_BARREL_LABELS,
+  ARTILLERY_CALIBER_LABELS,
+  ARTILLERY_CARRIER_LABELS,
+  ARTILLERY_INTEROP_LABELS,
+  ARTILLERY_LOADING_LABELS,
   BRICK_BLURBS,
   BRICK_LABELS,
   NAVAL_MISSION_LABELS,
@@ -420,6 +427,56 @@ export function SpaceArchitecturePanel({
   return (
     <div className="grid gap-px border border-line bg-line md:grid-cols-2">
       {spaceRows(profile).map(([label, value]) => (
+        <div key={label} className="bg-panel p-4">
+          <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
+            {label}
+          </span>
+          <p className="mt-1.5 font-serif text-sm leading-relaxed text-ink">
+            {value}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function artilleryRows(profile: ArtilleryStructuredProfile): [string, string | null][] {
+  const { ammunition, sustainment } = profile;
+  const rows: [string, string | null][] = [
+    ["Porteur", ARTILLERY_CARRIER_LABELS[profile.carrier]],
+    ["Architecture", ARTILLERY_ARCHITECTURE_LABELS[profile.architecture]],
+    ["Calibre", ARTILLERY_CALIBER_LABELS[profile.caliber]],
+    ["Tube", ARTILLERY_BARREL_LABELS[profile.barrelLength]],
+    ["Chargement", ARTILLERY_LOADING_LABELS[profile.loading]],
+    ["Interopérabilité", ARTILLERY_INTEROP_LABELS[profile.interopStatus]],
+    ["Protection équipage", profile.crewProtection],
+    ["FCS / conduite de tir", profile.fcs],
+    ["C2 / réseau", profile.c2],
+    ["Munitions publiques", joinList(ammunition.families)],
+    ["Munitions guidées", joinList(ammunition.guidedFamilies)],
+    ["Périmètre source", ammunition.sourcePerimeter],
+    ["Avertissement munitions", ammunition.caution ?? null],
+    ["Véhicule ravitaillement", sustainment.resupplyVehicle ?? null],
+    ["Usure tubes", sustainment.tubeWearNotes ?? null],
+    ["Maintenance / MCO", sustainment.maintenanceNotes ?? null],
+    ["Production", sustainment.productionNotes ?? null],
+    ["Chaîne industrielle", profile.industrialNotes],
+    ["Coût public", profile.costNotes ?? null],
+    ["Export", profile.exportNotes ?? null],
+    ["Garde-fou", profile.safetyBoundary ?? null],
+  ];
+
+  return rows.filter(([, value]) => value);
+}
+
+export function ArtilleryArchitecturePanel({
+  profile,
+}: {
+  profile: ArtilleryStructuredProfile;
+}) {
+  return (
+    <div className="grid gap-px border border-line bg-line md:grid-cols-2">
+      {artilleryRows(profile).map(([label, value]) => (
         <div key={label} className="bg-panel p-4">
           <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
             {label}

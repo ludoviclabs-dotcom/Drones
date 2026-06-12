@@ -82,4 +82,12 @@ export const DOMAINS: DomainInfo[] = [
     blurb:
       "Observation, ROEM, SATCOM, PNT, alerte avancée et SDA — architectures spatiales publiques sans données orbitales sensibles.",
   },
+  {
+    category: "artillery",
+    label: "Artillerie & feux terrestres",
+    href: "/artillerie-feux-terrestres",
+    cta: "Ouvrir le domaine",
+    blurb:
+      "Obusiers automoteurs, canons sur camion, modules 155 mm, systèmes 105 mm mobiles, munitions publiques et chaînes industrielles.",
+  },
 ];

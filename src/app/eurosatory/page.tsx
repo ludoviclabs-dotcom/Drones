@@ -37,7 +37,7 @@ const SCORES = [
 const DEMO_STEPS = [
   [
     "Home multi-domaines",
-    "Six domaines, des compteurs dérivés des données — pas un catalogue marketing.",
+    "Des domaines extensibles, des compteurs dérivés des données — pas un catalogue marketing.",
     "/",
   ],
   [
@@ -77,7 +77,7 @@ const USE_CASES = [
   ],
   [
     "Naviguer",
-    "Entrer par domaine et par pays — neuf marines, six domaines, une grille unique.",
+    "Entrer par domaine et par pays — marines, spatial, feux terrestres, une grille unique.",
     "/batiments-navals",
     "Ouvrir le naval",
   ],

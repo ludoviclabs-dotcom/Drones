@@ -123,6 +123,20 @@ import {
   skynet6,
   syracuseIv,
 } from "./systems/space";
+import {
+  archer,
+  atmos,
+  bohdana,
+  caesar8x8,
+  caesarMk2,
+  hawkeye105Mhs,
+  k9Thunder,
+  m109a7Paladin,
+  noraB52,
+  pzh2000,
+  rch155,
+  zuzana2,
+} from "./systems/artillery";
 
 export const systems: DefenseSystem[] = [
   mq9Reaper,
@@ -255,6 +269,19 @@ export const systems: DefenseSystem[] = [
   skynet6,
   sarah,
   iris2Govsatcom,
+  // Artillerie & feux terrestres
+  caesarMk2,
+  caesar8x8,
+  archer,
+  atmos,
+  rch155,
+  pzh2000,
+  k9Thunder,
+  m109a7Paladin,
+  zuzana2,
+  noraB52,
+  bohdana,
+  hawkeye105Mhs,
 ];
 
 export const SYSTEMS_BY_SLUG: Record<string, DefenseSystem> = Object.fromEntries(

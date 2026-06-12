@@ -7,6 +7,12 @@ import type {
 } from "@/data/types";
 import { systems } from "@/data/systems";
 import {
+  ARTILLERY_ARCHITECTURE_LABELS,
+  ARTILLERY_BARREL_LABELS,
+  ARTILLERY_CALIBER_LABELS,
+  ARTILLERY_CARRIER_LABELS,
+  ARTILLERY_INTEROP_LABELS,
+  ARTILLERY_LOADING_LABELS,
   BRICK_LABELS,
   SPACE_MISSION_LABELS,
   SPACE_ORBIT_LABELS,
@@ -27,7 +33,13 @@ export type ClaimScope =
   | "orbite"
   | "charge-utile"
   | "segment-sol"
-  | "resilience-spatiale";
+  | "resilience-spatiale"
+  | "mobilite"
+  | "protection"
+  | "automatisation"
+  | "munition"
+  | "maintenance"
+  | "interop";
 
 export type ClaimReviewStatus =
   | "verified"
@@ -275,6 +287,72 @@ export function getAllClaims(): Claim[] {
       addSpaceClaim("resilience-spatiale", "Résilience", resilienceNotes);
       addSpaceClaim("resilience-spatiale", "Souveraineté", sovereigntyNotes);
     }
+    if (system.artilleryProfile) {
+      const { ammunition, sustainment } = system.artilleryProfile;
+      const addArtilleryClaim = (
+        scope: Extract<
+          ClaimScope,
+          "mobilite" | "protection" | "automatisation" | "munition" | "maintenance" | "interop"
+        >,
+        label: string,
+        value?: string | null,
+      ) => {
+        if (!value) return;
+        claims.push({
+          ...base,
+          scope,
+          label,
+          value,
+          confidence: "moyenne",
+          status: "a-recouper",
+          sources: allSystemSources,
+        });
+      };
+
+      addArtilleryClaim(
+        "mobilite",
+        "Porteur",
+        ARTILLERY_CARRIER_LABELS[system.artilleryProfile.carrier],
+      );
+      addArtilleryClaim(
+        "mobilite",
+        "Architecture",
+        ARTILLERY_ARCHITECTURE_LABELS[system.artilleryProfile.architecture],
+      );
+      addArtilleryClaim(
+        "mobilite",
+        "Calibre / tube",
+        [
+          ARTILLERY_CALIBER_LABELS[system.artilleryProfile.caliber],
+          ARTILLERY_BARREL_LABELS[system.artilleryProfile.barrelLength],
+        ].join(" · "),
+      );
+      addArtilleryClaim("protection", "Protection équipage", system.artilleryProfile.crewProtection);
+      addArtilleryClaim(
+        "automatisation",
+        "Chargement",
+        ARTILLERY_LOADING_LABELS[system.artilleryProfile.loading],
+      );
+      addArtilleryClaim("automatisation", "FCS", system.artilleryProfile.fcs);
+      addArtilleryClaim("automatisation", "C2", system.artilleryProfile.c2);
+      addArtilleryClaim("munition", "Munitions publiques", ammunition.families.join(" · "));
+      addArtilleryClaim("munition", "Munitions guidées", ammunition.guidedFamilies?.join(" · "));
+      addArtilleryClaim("munition", "Périmètre munitions", ammunition.sourcePerimeter);
+      addArtilleryClaim("munition", "Limite munitions", ammunition.caution);
+      addArtilleryClaim("maintenance", "Véhicule ravitaillement", sustainment.resupplyVehicle);
+      addArtilleryClaim("maintenance", "Usure tubes", sustainment.tubeWearNotes);
+      addArtilleryClaim("maintenance", "Maintenance / MCO", sustainment.maintenanceNotes);
+      addArtilleryClaim("maintenance", "Production", sustainment.productionNotes);
+      addArtilleryClaim(
+        "interop",
+        "Interopérabilité",
+        ARTILLERY_INTEROP_LABELS[system.artilleryProfile.interopStatus],
+      );
+      addArtilleryClaim("interop", "Chaîne industrielle", system.artilleryProfile.industrialNotes);
+      addArtilleryClaim("interop", "Coût public", system.artilleryProfile.costNotes);
+      addArtilleryClaim("interop", "Export", system.artilleryProfile.exportNotes);
+      addArtilleryClaim("interop", "Garde-fou", system.artilleryProfile.safetyBoundary);
+    }
   }
   return claims.map((claim) => {
     const reviewStatus = reviewStatusOf(claim.status);
@@ -343,6 +421,7 @@ export function getEvidenceStats(): EvidenceStats {
     "air-defense",
     "combat-system",
     "space",
+    "artillery",
   ] satisfies SystemCategory[]) {
     byCategory[category] ??= 0;
   }
@@ -403,6 +482,12 @@ export const SCOPE_LABELS: Record<ClaimScope, string> = {
   "charge-utile": "Charge utile",
   "segment-sol": "Segment sol",
   "resilience-spatiale": "Résilience spatiale",
+  mobilite: "Mobilité",
+  protection: "Protection",
+  automatisation: "Automatisation",
+  munition: "Munition",
+  maintenance: "Maintenance",
+  interop: "Interopérabilité",
 };
 
 // === Fraîcheur ===

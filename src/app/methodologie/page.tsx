@@ -290,7 +290,32 @@ export default function MethodologiePage() {
       </section>
 
       <section className="mt-14">
-        <SectionMarker index="10" label="Limites &amp; cadre éthique" />
+        <SectionMarker
+          index="10"
+          label="Le domaine artillerie"
+          blurb="Feux terrestres, munitions publiques, tubes et soutien — sans table de tir ni ciblage."
+        />
+        <div className="mt-5 space-y-4 font-serif text-[1.05rem] leading-[1.75] text-ink/90">
+          <p>
+            Les systèmes d'artillerie sont documentés comme programmes industriels :
+            porteur, protection, calibre, tube, automatisation, munitions publiques,
+            véhicules de ravitaillement, maintenance, coûts, export et limites de
+            source. Une donnée de portée ou de cadence n'est jamais traitée comme
+            vérité opérationnelle : elle reste un claim constructeur ou institutionnel,
+            dépendant du périmètre de munition et du contexte source.
+          </p>
+          <p>
+            Exclusions explicites : aucune table balistique, aucune procédure de tir,
+            aucune coordonnée, aucune méthode de contre-batterie, aucun calcul de
+            solution balistique, aucun ciblage et aucune optimisation tactique. Quand
+            une source mélange performance et emploi, Panoplie ne retient que les
+            éléments coût, industrie, maintenance, interopérabilité et preuve.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-14">
+        <SectionMarker index="11" label="Limites &amp; cadre éthique" />
         <div className="mt-5 space-y-4 font-serif text-[1.05rem] leading-[1.75] text-ink/90">
           <p>
             Panoplie est un outil d'analyse stratégique, industrielle et
@@ -321,7 +346,7 @@ export default function MethodologiePage() {
 
       <section className="mt-14">
         <SectionMarker
-          index="10"
+          index="12"
           label="La lecture CCA / costing"
           blurb="Une couche de contrôle de gestion posée sur les briques existantes."
         />

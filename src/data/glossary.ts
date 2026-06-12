@@ -660,6 +660,176 @@ export const glossary: GlossaryTerm[] = [
     definition:
       "Operations de rapprochement entre objets spatiaux. Sujet sensible : Panoplie le definit au glossaire mais ne fournit aucune procedure.",
   },
+  {
+    slug: "sph",
+    term: "Self-Propelled Howitzer",
+    acronym: "SPH",
+    category: "technique",
+    definition:
+      "Obusier automoteur. Plateforme d'artillerie portant son propre canon et ses moyens de mobilité ; Panoplie l'analyse comme système industriel et de soutien, pas comme mode d'emploi.",
+  },
+  {
+    slug: "truck-mounted-howitzer",
+    term: "Truck-mounted howitzer",
+    category: "technique",
+    definition:
+      "Obusier monté sur camion. Format qui arbitre coût, mobilité routière, protection, ravitaillement et maintenance, très présent sur le marché export 155 mm.",
+  },
+  {
+    slug: "mgs",
+    term: "Mounted Gun System",
+    acronym: "MGS",
+    category: "technique",
+    definition:
+      "Système canon monté sur véhicule, catégorie large qui couvre des architectures légères ou modulaires. Le terme ne présume pas d'une doctrine d'emploi.",
+  },
+  {
+    slug: "gun-howitzer",
+    term: "Gun-howitzer",
+    category: "technique",
+    definition:
+      "Pièce d'artillerie combinant des caractéristiques de canon et d'obusier. Dans Panoplie, le terme sert à identifier une famille de systèmes, sans paramètre balistique exploitable.",
+  },
+  {
+    slug: "calibres-155-52",
+    term: "155 mm / 52 calibres",
+    category: "technique",
+    definition:
+      "Désignation d'un tube de 155 mm dont la longueur est exprimée en calibres. C'est un repère industriel et comparatif ; les tables de tir et charges restent exclues.",
+  },
+  {
+    slug: "tube-l39-l58",
+    term: "L/39, L/45, L/52, L/58",
+    category: "technique",
+    definition:
+      "Notation de longueur de tube d'artillerie, utile pour comparer des architectures publiques. Elle ne suffit pas à déduire une performance opérationnelle.",
+  },
+  {
+    slug: "jbmou",
+    term: "Joint Ballistics Memorandum of Understanding",
+    acronym: "JBMOU",
+    category: "juridique",
+    definition:
+      "Cadre de standardisation OTAN autour de l'artillerie 155 mm. Panoplie distingue compatibilité revendiquée, qualification et périmètre réel du contrat.",
+  },
+  {
+    slug: "erfb",
+    term: "Extended Range Full Bore",
+    acronym: "ERFB",
+    category: "technique",
+    definition:
+      "Famille de munitions d'artillerie à portée accrue selon sources publiques. Panoplie la cite comme catégorie de munition, pas comme donnée de tir.",
+  },
+  {
+    slug: "base-bleed",
+    term: "Base bleed",
+    category: "technique",
+    definition:
+      "Dispositif réduisant la traînée à l'arrière d'un projectile. Mentionné uniquement comme famille de munition publique, sans paramètre d'emploi.",
+  },
+  {
+    slug: "rap",
+    term: "Rocket-Assisted Projectile",
+    acronym: "RAP",
+    category: "technique",
+    definition:
+      "Projectile assisté par fusée. Catégorie publique de munition à traiter avec prudence car les effets exacts dépendent du lot et du contexte source.",
+  },
+  {
+    slug: "vlap",
+    term: "Velocity-enhanced Long-range Artillery Projectile",
+    acronym: "VLAP",
+    category: "technique",
+    definition:
+      "Famille de projectiles longue portée associant plusieurs choix aérodynamiques ou propulsifs selon fabricants. Panoplie ne publie pas de table ou solution de tir.",
+  },
+  {
+    slug: "pgm-artillerie",
+    term: "Precision-Guided Munition",
+    acronym: "PGM",
+    category: "technique",
+    definition:
+      "Munition guidée de précision. Dans le domaine artillerie, Panoplie la traite comme dépendance industrielle, coût et régime export, pas comme conseil d'emploi.",
+  },
+  {
+    slug: "mrsi",
+    term: "Multiple Rounds Simultaneous Impact",
+    acronym: "MRSI",
+    category: "technique",
+    definition:
+      "Capacité revendiquée par certains systèmes à faire arriver plusieurs projectiles dans une même fenêtre temporelle. Définition de glossaire seulement, sans procédure.",
+  },
+  {
+    slug: "burst-rate",
+    term: "Burst rate",
+    category: "technique",
+    definition:
+      "Cadence courte revendiquée sur une durée limitée. Panoplie la traite comme claim constructeur dépendant du périmètre source, jamais comme instruction.",
+  },
+  {
+    slug: "sustained-rate",
+    term: "Sustained rate",
+    category: "technique",
+    definition:
+      "Cadence soutenue annoncée sur une durée plus longue, liée au tube, au refroidissement, au chargement et au ravitaillement. Donnée à recouper.",
+  },
+  {
+    slug: "autoloader",
+    term: "Autoloader",
+    category: "technique",
+    definition:
+      "Chargeur automatique ou mécanisme automatisé de munitionnement. Il influence coût, maintenance, équipage et cadence revendiquée.",
+  },
+  {
+    slug: "automated-fuze-setting",
+    term: "Automated fuze setting",
+    category: "technique",
+    definition:
+      "Réglage automatisé de fusée mentionné par certains constructeurs. Panoplie se limite à la catégorie fonctionnelle et exclut les paramètres de réglage.",
+  },
+  {
+    slug: "fcs-artillerie",
+    term: "Fire Control System",
+    acronym: "FCS",
+    category: "technique",
+    definition:
+      "Système de conduite de tir. Dans Panoplie, il est décrit comme brique logicielle et industrielle, sans calcul balistique ni procédure d'emploi.",
+  },
+  {
+    slug: "ins-gps",
+    term: "INS/GPS",
+    category: "technique",
+    definition:
+      "Combinaison navigation inertielle et positionnement satellite. Mentionnée comme dépendance de navigation publique, sans exploitation tactique.",
+  },
+  {
+    slug: "bms-c2",
+    term: "BMS / C2",
+    category: "doctrine",
+    definition:
+      "Battle Management System et commandement-contrôle. Panoplie les lit comme intégration réseau, dépendances et souveraineté logicielle.",
+  },
+  {
+    slug: "resupply-vehicle",
+    term: "Véhicule de ravitaillement",
+    category: "technique",
+    definition:
+      "Véhicule ou solution logistique associée aux munitions et charges. Il doit être inclus dans le coût complet mais sans procédure de recomplètement.",
+  },
+  {
+    slug: "tube-wear",
+    term: "Usure de tube",
+    category: "commerce",
+    definition:
+      "Dégradation progressive d'un tube d'artillerie, poste important de maintenance et de disponibilité. Panoplie l'aborde comme coût MCO, pas comme optimisation.",
+  },
+  {
+    slug: "shoot-and-scoot",
+    term: "Shoot-and-scoot",
+    category: "doctrine",
+    definition:
+      "Expression doctrinale désignant une logique de mobilité après tir. Le glossaire la définit pour comprendre les sources, sans procédure, délai ou recommandation.",
+  },
 ];
 
 export const GLOSSARY_BY_SLUG: Record<string, GlossaryTerm> = Object.fromEntries(

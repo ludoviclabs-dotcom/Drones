@@ -15,6 +15,7 @@ const SystemCategory = z.enum([
   "air-defense",
   "combat-system",
   "space",
+  "artillery",
 ]);
 
 const Confidence = z.enum(["haute", "moyenne", "faible"]);
@@ -131,6 +132,40 @@ const SpacePayloadType = z.enum([
   "space-surveillance",
   "AIS",
   "hosted-payload",
+]);
+
+const ArtilleryCarrier = z.enum([
+  "tracked-heavy",
+  "truck-4x4",
+  "truck-6x6",
+  "truck-8x8",
+  "armored-8x8",
+  "light-vehicle",
+  "towed",
+]);
+
+const ArtilleryArchitecture = z.enum([
+  "open-mount",
+  "protected-cab",
+  "protected-turret",
+  "remote-module",
+  "light-system",
+]);
+
+const ArtilleryCaliber = z.enum(["105mm", "122mm", "152mm", "155mm"]);
+const ArtilleryBarrelLength = z.enum(["L39", "L45", "L52", "L58", "unknown"]);
+const ArtilleryLoading = z.enum([
+  "manual",
+  "assisted",
+  "semi-automatic",
+  "automatic",
+]);
+const ArtilleryInteropStatus = z.enum([
+  "nato-155",
+  "jbmou-claimed",
+  "jbmou-qualified",
+  "national-munitions",
+  "non-nato-caliber",
 ]);
 
 const SourceRef = z.object({
@@ -302,6 +337,34 @@ const SpaceStructuredProfile = z.object({
   sovereigntyNotes: z.string().optional(),
 });
 
+const ArtilleryStructuredProfile = z.object({
+  carrier: ArtilleryCarrier,
+  architecture: ArtilleryArchitecture,
+  caliber: ArtilleryCaliber,
+  barrelLength: ArtilleryBarrelLength,
+  loading: ArtilleryLoading,
+  interopStatus: ArtilleryInteropStatus,
+  crewProtection: z.string(),
+  fcs: z.string(),
+  c2: z.string(),
+  ammunition: z.object({
+    families: z.array(z.string()),
+    guidedFamilies: z.array(z.string()).optional(),
+    sourcePerimeter: z.string(),
+    caution: z.string().optional(),
+  }),
+  sustainment: z.object({
+    tubeWearNotes: z.string().optional(),
+    resupplyVehicle: z.string().optional(),
+    maintenanceNotes: z.string().optional(),
+    productionNotes: z.string().optional(),
+  }),
+  industrialNotes: z.string(),
+  costNotes: z.string().optional(),
+  exportNotes: z.string().optional(),
+  safetyBoundary: z.string().optional(),
+});
+
 export const DefenseSystemSchema = z.object({
   slug: z.string().min(1),
   name: z.string().min(1),
@@ -327,6 +390,7 @@ export const DefenseSystemSchema = z.object({
   navalVesselClass: NavalVesselClass.optional(),
   navalProfile: NavalStructuredProfile.optional(),
   spaceProfile: SpaceStructuredProfile.optional(),
+  artilleryProfile: ArtilleryStructuredProfile.optional(),
   claimedGeneration: z.string().optional(),
   classLabel: z.string().min(1),
   country: z.string().min(1),

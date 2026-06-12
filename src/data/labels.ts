@@ -1,6 +1,12 @@
 import type {
   AcquisitionMode,
   AirDefenseClass,
+  ArtilleryArchitecture,
+  ArtilleryBarrelLength,
+  ArtilleryCaliber,
+  ArtilleryCarrier,
+  ArtilleryInteropStatus,
+  ArtilleryLoading,
   BrickKey,
   ClaimStatus,
   CombatAircraftClass,
@@ -60,6 +66,7 @@ export const CATEGORY_LABELS: Record<SystemCategory, string> = {
   "air-defense": "Défense aérienne",
   "combat-system": "Systèmes de combat / C2",
   space: "Spatial militaire",
+  artillery: "Artillerie & feux terrestres",
 };
 
 export const GENERATION_LABELS: Record<CombatAircraftClass, string> = {
@@ -218,6 +225,74 @@ export const SPACE_PAYLOAD_LABELS: Record<SpacePayloadType, string> = {
   "space-surveillance": "Surveillance spatiale",
   AIS: "AIS",
   "hosted-payload": "Charge utile hébergée",
+};
+
+export const ARTILLERY_CARRIER_LABELS: Record<ArtilleryCarrier, string> = {
+  "tracked-heavy": "Chenillé lourd",
+  "truck-4x4": "Camion 4x4",
+  "truck-6x6": "Camion 6x6",
+  "truck-8x8": "Camion 8x8",
+  "armored-8x8": "Blindé 8x8",
+  "light-vehicle": "Véhicule léger",
+  towed: "Remorqué",
+};
+
+export const ARTILLERY_CARRIER_BLURBS: Record<ArtilleryCarrier, string> = {
+  "tracked-heavy":
+    "Plateforme chenillée protégée, souvent lourde en MCO et pensée pour la masse mécanisée.",
+  "truck-4x4":
+    "Canon sur porteur 4x4 : empreinte plus légère, arbitrage entre mobilité, charge et protection.",
+  "truck-6x6":
+    "Porteur camion 6x6 : compromis export entre mobilité routière, coût et rusticité.",
+  "truck-8x8":
+    "Porteur camion 8x8 : charge utile plus haute, soutes et options d'automatisation.",
+  "armored-8x8":
+    "Blindé 8x8 ou châssis modulaire, avec intégration plus forte entre plateforme et module.",
+  "light-vehicle":
+    "Système mobile léger, principalement utile pour lire coût, déploiement et soutien.",
+  towed:
+    "Pièce remorquée : coût et soutien différents, mais moins centrale dans ce premier périmètre.",
+};
+
+export const ARTILLERY_ARCHITECTURE_LABELS: Record<
+  ArtilleryArchitecture,
+  string
+> = {
+  "open-mount": "Affût ouvert",
+  "protected-cab": "Cabine protégée",
+  "protected-turret": "Tourelle protégée",
+  "remote-module": "Module téléopéré",
+  "light-system": "Système léger",
+};
+
+export const ARTILLERY_CALIBER_LABELS: Record<ArtilleryCaliber, string> = {
+  "105mm": "105 mm",
+  "122mm": "122 mm",
+  "152mm": "152 mm",
+  "155mm": "155 mm",
+};
+
+export const ARTILLERY_BARREL_LABELS: Record<ArtilleryBarrelLength, string> = {
+  L39: "L/39",
+  L45: "L/45",
+  L52: "L/52",
+  L58: "L/58",
+  unknown: "Non précisé",
+};
+
+export const ARTILLERY_LOADING_LABELS: Record<ArtilleryLoading, string> = {
+  manual: "Manuel",
+  assisted: "Assisté",
+  "semi-automatic": "Semi-automatique",
+  automatic: "Automatique",
+};
+
+export const ARTILLERY_INTEROP_LABELS: Record<ArtilleryInteropStatus, string> = {
+  "nato-155": "OTAN 155 mm",
+  "jbmou-claimed": "JBMOU revendiqué",
+  "jbmou-qualified": "JBMOU qualifié",
+  "national-munitions": "Munitions nationales",
+  "non-nato-caliber": "Calibre non OTAN",
 };
 
 export const SCORE_LABELS: Record<ScoreKey, string> = {

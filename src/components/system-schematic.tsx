@@ -1014,6 +1014,24 @@ const SPACE_SCHEMATIC: ReactNode = (
   </>
 );
 
+const ARTILLERY_SCHEMATIC: ReactNode = (
+  <>
+    <line x1="120" y1="16" x2="120" y2="226" strokeWidth="1" strokeDasharray="2 5" />
+    <line x1="32" y1="202" x2="208" y2="202" strokeWidth="1" />
+    <rect x="50" y="154" width="106" height="42" rx="3" />
+    <path d="M70 154 L88 118 L132 118 L156 154 Z" />
+    <line x1="130" y1="118" x2="210" y2="70" strokeWidth="3" />
+    <line x1="122" y1="110" x2="202" y2="62" strokeWidth="1" />
+    <circle cx="72" cy="204" r="11" />
+    <circle cx="116" cy="204" r="11" />
+    <circle cx="150" cy="204" r="11" />
+    <path d="M50 154 L36 182 L50 196" />
+    <path d="M156 154 L178 174 L156 196" />
+    <rect x="80" y="132" width="28" height="22" />
+    <circle cx="94" cy="127" r="4" />
+  </>
+);
+
 export function SystemSchematic({
   slug,
   className = "",
@@ -1034,6 +1052,8 @@ export function SystemSchematic({
       content = NAVAL_CLASS_SCHEMATICS[system.navalVesselClass];
     } else if (system?.category === "space") {
       content = SPACE_SCHEMATIC;
+    } else if (system?.category === "artillery") {
+      content = ARTILLERY_SCHEMATIC;
     }
   }
   if (!content) return null;

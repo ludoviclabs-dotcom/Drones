@@ -3,6 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getSystem, getSystemSlugs } from "@/data/systems";
 import {
+  ARTILLERY_BARREL_LABELS,
+  ARTILLERY_CALIBER_LABELS,
+  ARTILLERY_CARRIER_LABELS,
   GENERATION_LABELS,
   MODE_LABELS,
   NAVAL_VESSEL_LABELS,
@@ -11,6 +14,7 @@ import {
 } from "@/data/labels";
 import {
   AnalystNote,
+  ArtilleryArchitecturePanel,
   BrickSection,
   CCAReadingPanel,
   EditorialTriptych,
@@ -128,6 +132,21 @@ export default async function SystemPage({
           },
         ]
       : []),
+    ...(system.artilleryProfile
+      ? [
+          {
+            label: "Porteur",
+            value: ARTILLERY_CARRIER_LABELS[system.artilleryProfile.carrier],
+          },
+          {
+            label: "Calibre / tube",
+            value: [
+              ARTILLERY_CALIBER_LABELS[system.artilleryProfile.caliber],
+              ARTILLERY_BARREL_LABELS[system.artilleryProfile.barrelLength],
+            ].join(" · "),
+          },
+        ]
+      : []),
     { label: "Statut", value: system.status },
   ];
 
@@ -142,6 +161,7 @@ export default async function SystemPage({
   const hasVariants = !!system.variants && system.variants.length > 0;
   const hasNavalProfile = !!system.navalProfile;
   const hasSpaceProfile = !!system.spaceProfile;
+  const hasArtilleryProfile = !!system.artilleryProfile;
   const hasTimeline = !!system.timeline && system.timeline.length > 0;
 
   const idxSummary = nextIndex();
@@ -149,6 +169,7 @@ export default async function SystemPage({
   const idxNavalArchitecture = hasNavalProfile ? nextIndex() : null;
   const idxRelations = hasNavalProfile ? nextIndex() : null;
   const idxSpaceArchitecture = hasSpaceProfile ? nextIndex() : null;
+  const idxArtilleryArchitecture = hasArtilleryProfile ? nextIndex() : null;
   const idxVariants = hasVariants ? nextIndex() : null;
   const brickBase = counter;
   counter += system.bricks.length;
@@ -334,6 +355,19 @@ export default async function SystemPage({
           />
           <div className="mt-6">
             <SpaceArchitecturePanel profile={system.spaceProfile} />
+          </div>
+        </section>
+      ) : null}
+
+      {idxArtilleryArchitecture && system.artilleryProfile ? (
+        <section className="mt-16">
+          <SectionMarker
+            index={idxArtilleryArchitecture}
+            label="Architecture de feu"
+            blurb="Porteur, protection, tube, FCS/C2, munitions publiques, ravitaillement, maintenance et industrie — sans tables de tir ni procédure d'emploi."
+          />
+          <div className="mt-6">
+            <ArtilleryArchitecturePanel profile={system.artilleryProfile} />
           </div>
         </section>
       ) : null}

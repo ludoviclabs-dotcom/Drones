@@ -13,7 +13,8 @@ export type SystemCategory =
   | "air-defense"
   | "combat-system"
   | "space"
-  | "artillery";
+  | "artillery"
+  | "armored-vehicle";
 
 export type DroneClass =
   | "MALE"
@@ -343,6 +344,75 @@ export interface ArtilleryStructuredProfile {
   safetyBoundary?: string;
 }
 
+export type ArmoredVehicleFamily =
+  | "MBT"
+  | "light-tank"
+  | "IFV"
+  | "APC"
+  | "support-vehicle"
+  | "program";
+
+export type ArmoredProgramStatus =
+  | "modernized"
+  | "new-standard"
+  | "future-program"
+  | "low-transparency";
+
+export type ArmoredLoading = "manual" | "automatic" | "assisted" | "unknown";
+
+export type ArmoredApsStatus =
+  | "integrated"
+  | "optional"
+  | "planned"
+  | "none-public"
+  | "unknown";
+
+export interface ArmoredArmamentProfile {
+  mainGun: string;
+  secondary?: string[];
+  ammunitionFamilies: string[];
+  sourcePerimeter: string;
+  caution?: string;
+}
+
+export interface ArmoredProtectionProfile {
+  passive: string;
+  modular?: string;
+  apsStatus: ArmoredApsStatus;
+  apsName?: string;
+  crewSurvivabilityNotes?: string;
+}
+
+export interface ArmoredMobilityProfile {
+  powerpack: string;
+  transmission?: string;
+  mobilityNotes?: string;
+}
+
+export interface ArmoredSupportProfile {
+  mcoNotes: string;
+  recoverySupport?: string;
+  modernizationNotes?: string;
+  localProductionNotes?: string;
+}
+
+export interface ArmoredStructuredProfile {
+  family: ArmoredVehicleFamily;
+  programStatus: ArmoredProgramStatus;
+  crew: string;
+  loading: ArmoredLoading;
+  armament: ArmoredArmamentProfile;
+  protection: ArmoredProtectionProfile;
+  mobility: ArmoredMobilityProfile;
+  vetronics: string;
+  c2: string;
+  support: ArmoredSupportProfile;
+  industrialNotes: string;
+  costNotes?: string;
+  exportNotes?: string;
+  safetyBoundary?: string;
+}
+
 export type AcquisitionMode =
   | "FMS"
   | "DCS"
@@ -475,6 +545,7 @@ export interface DefenseSystem {
   /** Profil spatial structuré — orbite publique, charge utile, segment sol et résilience. */
   spaceProfile?: SpaceStructuredProfile;
   artilleryProfile?: ArtilleryStructuredProfile;
+  armoredProfile?: ArmoredStructuredProfile;
   /** Génération revendiquée par l'industriel ou la nation, si elle diffère. */
   claimedGeneration?: string;
   classLabel: string;

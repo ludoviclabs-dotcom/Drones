@@ -16,6 +16,7 @@ const SystemCategory = z.enum([
   "combat-system",
   "space",
   "artillery",
+  "armored-vehicle",
 ]);
 
 const Confidence = z.enum(["haute", "moyenne", "faible"]);
@@ -166,6 +167,29 @@ const ArtilleryInteropStatus = z.enum([
   "jbmou-qualified",
   "national-munitions",
   "non-nato-caliber",
+]);
+
+const ArmoredVehicleFamily = z.enum([
+  "MBT",
+  "light-tank",
+  "IFV",
+  "APC",
+  "support-vehicle",
+  "program",
+]);
+const ArmoredProgramStatus = z.enum([
+  "modernized",
+  "new-standard",
+  "future-program",
+  "low-transparency",
+]);
+const ArmoredLoading = z.enum(["manual", "automatic", "assisted", "unknown"]);
+const ArmoredApsStatus = z.enum([
+  "integrated",
+  "optional",
+  "planned",
+  "none-public",
+  "unknown",
 ]);
 
 const SourceRef = z.object({
@@ -365,6 +389,44 @@ const ArtilleryStructuredProfile = z.object({
   safetyBoundary: z.string().optional(),
 });
 
+const ArmoredStructuredProfile = z.object({
+  family: ArmoredVehicleFamily,
+  programStatus: ArmoredProgramStatus,
+  crew: z.string(),
+  loading: ArmoredLoading,
+  armament: z.object({
+    mainGun: z.string(),
+    secondary: z.array(z.string()).optional(),
+    ammunitionFamilies: z.array(z.string()),
+    sourcePerimeter: z.string(),
+    caution: z.string().optional(),
+  }),
+  protection: z.object({
+    passive: z.string(),
+    modular: z.string().optional(),
+    apsStatus: ArmoredApsStatus,
+    apsName: z.string().optional(),
+    crewSurvivabilityNotes: z.string().optional(),
+  }),
+  mobility: z.object({
+    powerpack: z.string(),
+    transmission: z.string().optional(),
+    mobilityNotes: z.string().optional(),
+  }),
+  vetronics: z.string(),
+  c2: z.string(),
+  support: z.object({
+    mcoNotes: z.string(),
+    recoverySupport: z.string().optional(),
+    modernizationNotes: z.string().optional(),
+    localProductionNotes: z.string().optional(),
+  }),
+  industrialNotes: z.string(),
+  costNotes: z.string().optional(),
+  exportNotes: z.string().optional(),
+  safetyBoundary: z.string().optional(),
+});
+
 export const DefenseSystemSchema = z.object({
   slug: z.string().min(1),
   name: z.string().min(1),
@@ -391,6 +453,7 @@ export const DefenseSystemSchema = z.object({
   navalProfile: NavalStructuredProfile.optional(),
   spaceProfile: SpaceStructuredProfile.optional(),
   artilleryProfile: ArtilleryStructuredProfile.optional(),
+  armoredProfile: ArmoredStructuredProfile.optional(),
   claimedGeneration: z.string().optional(),
   classLabel: z.string().min(1),
   country: z.string().min(1),

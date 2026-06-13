@@ -210,6 +210,28 @@ const EMBLEMS: Record<SystemCategory, ReactNode> = {
       <path d="M70 62 L78 70 L68 78" />
     </>
   ),
+  "armored-vehicle": (
+    <>
+      <line
+        x1="50"
+        y1="8"
+        x2="50"
+        y2="92"
+        strokeWidth="1"
+        strokeDasharray="2 4"
+      />
+      <line x1="16" y1="78" x2="84" y2="78" strokeWidth="1" />
+      <path d="M18 62 L72 62 L84 72 L78 84 L24 84 L14 74 Z" />
+      <path d="M32 48 L58 48 L68 62 L26 62 Z" />
+      <line x1="56" y1="50" x2="88" y2="40" strokeWidth="2" />
+      <line x1="58" y1="46" x2="84" y2="38" strokeWidth="1" />
+      <circle cx="30" cy="78" r="4" />
+      <circle cx="44" cy="78" r="4" />
+      <circle cx="58" cy="78" r="4" />
+      <circle cx="72" cy="78" r="4" />
+      <rect x="39" y="40" width="13" height="8" />
+    </>
+  ),
 };
 
 export function DomainEmblem({

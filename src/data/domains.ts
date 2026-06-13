@@ -90,4 +90,12 @@ export const DOMAINS: DomainInfo[] = [
     blurb:
       "Obusiers automoteurs, canons sur camion, modules 155 mm, systèmes 105 mm mobiles, munitions publiques et chaînes industrielles.",
   },
+  {
+    category: "armored-vehicle",
+    label: "Blindes & chars de combat",
+    href: "/blindes-chars-combat",
+    cta: "Ouvrir le domaine",
+    blurb:
+      "MBT, programmes blindes, modernisations, APS, powerpacks, MCO et export lus comme objets politico-industriels.",
+  },
 ];

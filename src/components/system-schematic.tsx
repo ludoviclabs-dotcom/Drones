@@ -1032,6 +1032,25 @@ const ARTILLERY_SCHEMATIC: ReactNode = (
   </>
 );
 
+const ARMORED_SCHEMATIC: ReactNode = (
+  <>
+    <line x1="120" y1="16" x2="120" y2="226" strokeWidth="1" strokeDasharray="2 5" />
+    <line x1="34" y1="200" x2="210" y2="200" strokeWidth="1" />
+    <path d="M40 150 L172 150 L206 174 L190 202 L58 202 L28 176 Z" />
+    <path d="M78 114 L142 114 L170 150 L56 150 Z" />
+    <line x1="138" y1="118" x2="218" y2="90" strokeWidth="3" />
+    <line x1="142" y1="110" x2="214" y2="84" strokeWidth="1" />
+    <rect x="96" y="94" width="34" height="20" />
+    <circle cx="66" cy="202" r="10" />
+    <circle cx="94" cy="202" r="10" />
+    <circle cx="122" cy="202" r="10" />
+    <circle cx="150" cy="202" r="10" />
+    <circle cx="178" cy="202" r="10" />
+    <path d="M48 150 L38 132 L70 138" strokeDasharray="3 4" />
+    <path d="M176 150 L192 136 L204 154" strokeDasharray="3 4" />
+  </>
+);
+
 export function SystemSchematic({
   slug,
   className = "",
@@ -1054,6 +1073,8 @@ export function SystemSchematic({
       content = SPACE_SCHEMATIC;
     } else if (system?.category === "artillery") {
       content = ARTILLERY_SCHEMATIC;
+    } else if (system?.category === "armored-vehicle") {
+      content = ARMORED_SCHEMATIC;
     }
   }
   if (!content) return null;

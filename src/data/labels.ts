@@ -1,6 +1,10 @@
 import type {
   AcquisitionMode,
   AirDefenseClass,
+  ArmoredApsStatus,
+  ArmoredLoading,
+  ArmoredProgramStatus,
+  ArmoredVehicleFamily,
   ArtilleryArchitecture,
   ArtilleryBarrelLength,
   ArtilleryCaliber,
@@ -67,6 +71,7 @@ export const CATEGORY_LABELS: Record<SystemCategory, string> = {
   "combat-system": "Systèmes de combat / C2",
   space: "Spatial militaire",
   artillery: "Artillerie & feux terrestres",
+  "armored-vehicle": "Blindes & chars de combat",
 };
 
 export const GENERATION_LABELS: Record<CombatAircraftClass, string> = {
@@ -293,6 +298,49 @@ export const ARTILLERY_INTEROP_LABELS: Record<ArtilleryInteropStatus, string> = 
   "jbmou-qualified": "JBMOU qualifié",
   "national-munitions": "Munitions nationales",
   "non-nato-caliber": "Calibre non OTAN",
+};
+
+export const ARMORED_FAMILY_LABELS: Record<ArmoredVehicleFamily, string> = {
+  MBT: "Char de bataille principal",
+  "light-tank": "Char leger",
+  IFV: "Vehicule de combat d'infanterie",
+  APC: "Transport blinde",
+  "support-vehicle": "Vehicule de soutien blinde",
+  program: "Programme / demonstrateur",
+};
+
+export const ARMORED_FAMILY_BLURBS: Record<ArmoredVehicleFamily, string> = {
+  MBT: "Plateforme lourde de souverainete, lue par cout complet, protection, powerpack, MCO et export.",
+  "light-tank":
+    "Format plus leger : arbitrage public entre mobilite, cout, protection, soutien et marches export.",
+  IFV: "Vehicule de combat d'infanterie : capteurs, tourelle, protection et integration C2.",
+  APC: "Transport blinde : protection, volume, mobilite, soutien et production locale.",
+  "support-vehicle":
+    "Depannage, pontage, logistique et soutien : le parc blinde ne vaut que par son MCO.",
+  program:
+    "Programme futur ou demonstrateur : utile pour lire ambition industrielle, risque et maturite.",
+};
+
+export const ARMORED_STATUS_LABELS: Record<ArmoredProgramStatus, string> = {
+  modernized: "Modernise",
+  "new-standard": "Nouveau standard",
+  "future-program": "Programme futur",
+  "low-transparency": "Transparence reduite",
+};
+
+export const ARMORED_LOADING_LABELS: Record<ArmoredLoading, string> = {
+  manual: "Chargeur manuel",
+  automatic: "Chargeur automatique",
+  assisted: "Chargement assiste",
+  unknown: "Non precise publiquement",
+};
+
+export const ARMORED_APS_LABELS: Record<ArmoredApsStatus, string> = {
+  integrated: "APS integre",
+  optional: "APS optionnel",
+  planned: "APS prevu / annonce",
+  "none-public": "Pas d'APS public central",
+  unknown: "APS non precise",
 };
 
 export const SCORE_LABELS: Record<ScoreKey, string> = {

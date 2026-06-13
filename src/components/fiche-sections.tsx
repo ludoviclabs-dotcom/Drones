@@ -1,4 +1,5 @@
 import type {
+  ArmoredStructuredProfile,
   ArtilleryStructuredProfile,
   Brick,
   CCAReading,
@@ -10,6 +11,10 @@ import type {
   SpaceStructuredProfile,
 } from "@/data/types";
 import {
+  ARMORED_APS_LABELS,
+  ARMORED_FAMILY_LABELS,
+  ARMORED_LOADING_LABELS,
+  ARMORED_STATUS_LABELS,
   ARTILLERY_ARCHITECTURE_LABELS,
   ARTILLERY_BARREL_LABELS,
   ARTILLERY_CALIBER_LABELS,
@@ -477,6 +482,69 @@ export function ArtilleryArchitecturePanel({
   return (
     <div className="grid gap-px border border-line bg-line md:grid-cols-2">
       {artilleryRows(profile).map(([label, value]) => (
+        <div key={label} className="bg-panel p-4">
+          <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
+            {label}
+          </span>
+          <p className="mt-1.5 font-serif text-sm leading-relaxed text-ink">
+            {value}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function armoredRows(profile: ArmoredStructuredProfile): [string, string | null][] {
+  const { armament, protection, mobility, support } = profile;
+  const rows: [string, string | null][] = [
+    ["Famille", ARMORED_FAMILY_LABELS[profile.family]],
+    ["Statut programme", ARMORED_STATUS_LABELS[profile.programStatus]],
+    ["Equipage", profile.crew],
+    ["Canon principal public", armament.mainGun],
+    ["Armement secondaire", joinList(armament.secondary)],
+    ["Chargement", ARMORED_LOADING_LABELS[profile.loading]],
+    ["Munitions publiques", joinList(armament.ammunitionFamilies)],
+    ["Perimetre source", armament.sourcePerimeter],
+    ["Avertissement munitions", armament.caution ?? null],
+    ["Protection passive", protection.passive],
+    ["Protection modulaire", protection.modular ?? null],
+    [
+      "APS",
+      joinList(
+        [
+          ARMORED_APS_LABELS[protection.apsStatus],
+          protection.apsName,
+        ].filter(Boolean) as string[],
+      ),
+    ],
+    ["Survivabilite equipage", protection.crewSurvivabilityNotes ?? null],
+    ["Powerpack", mobility.powerpack],
+    ["Transmission", mobility.transmission ?? null],
+    ["Mobilite publique", mobility.mobilityNotes ?? null],
+    ["Vetronique", profile.vetronics],
+    ["C2 / reseau", profile.c2],
+    ["MCO", support.mcoNotes],
+    ["Depannage / soutien", support.recoverySupport ?? null],
+    ["Modernisation", support.modernizationNotes ?? null],
+    ["Production locale", support.localProductionNotes ?? null],
+    ["Chaine industrielle", profile.industrialNotes],
+    ["Cout public", profile.costNotes ?? null],
+    ["Export", profile.exportNotes ?? null],
+    ["Garde-fou", profile.safetyBoundary ?? null],
+  ];
+
+  return rows.filter(([, value]) => value);
+}
+
+export function ArmoredArchitecturePanel({
+  profile,
+}: {
+  profile: ArmoredStructuredProfile;
+}) {
+  return (
+    <div className="grid gap-px border border-line bg-line md:grid-cols-2">
+      {armoredRows(profile).map(([label, value]) => (
         <div key={label} className="bg-panel p-4">
           <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
             {label}

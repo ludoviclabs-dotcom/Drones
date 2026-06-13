@@ -137,6 +137,20 @@ import {
   rch155,
   zuzana2,
 } from "./systems/artillery";
+import {
+  altay,
+  challenger3,
+  k2BlackPanther,
+  kf51Panther,
+  leclercXlr,
+  leopard2A8,
+  m1a2Sepv3Abrams,
+  merkavaMk4mBarak,
+  t14Armata,
+  t90m,
+  type10Tank,
+  type99a,
+} from "./systems/armored";
 
 export const systems: DefenseSystem[] = [
   mq9Reaper,
@@ -282,6 +296,19 @@ export const systems: DefenseSystem[] = [
   noraB52,
   bohdana,
   hawkeye105Mhs,
+  // Blindes & chars de combat
+  leclercXlr,
+  leopard2A8,
+  m1a2Sepv3Abrams,
+  k2BlackPanther,
+  challenger3,
+  merkavaMk4mBarak,
+  type10Tank,
+  altay,
+  t90m,
+  t14Armata,
+  type99a,
+  kf51Panther,
 ];
 
 export const SYSTEMS_BY_SLUG: Record<string, DefenseSystem> = Object.fromEntries(

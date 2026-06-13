@@ -830,6 +830,165 @@ export const glossary: GlossaryTerm[] = [
     definition:
       "Expression doctrinale désignant une logique de mobilité après tir. Le glossaire la définit pour comprendre les sources, sans procédure, délai ou recommandation.",
   },
+  {
+    slug: "mbt",
+    term: "Main Battle Tank",
+    acronym: "MBT",
+    category: "technique",
+    definition:
+      "Char de bataille principal. Panoplie le traite comme parc industriel, logistique et budgetaire : plateforme, MCO, munitions, depannage, modernisation et export.",
+  },
+  {
+    slug: "light-tank",
+    term: "Char leger",
+    category: "technique",
+    definition:
+      "Plateforme blindee plus legere qu'un MBT, generalement lue par cout, mobilite, soutien et protection publique plutot que comme substitut direct.",
+  },
+  {
+    slug: "ifv",
+    term: "Infantry Fighting Vehicle",
+    acronym: "IFV",
+    category: "technique",
+    definition:
+      "Vehicule de combat d'infanterie. Le glossaire le classe comme famille de plateforme, sans detail de tactique embarquee.",
+  },
+  {
+    slug: "apc",
+    term: "Armoured Personnel Carrier",
+    acronym: "APC",
+    category: "technique",
+    definition:
+      "Transport de troupe blinde, analyse par protection, volume, mobilite, cout de parc et soutien.",
+  },
+  {
+    slug: "aps",
+    term: "Active Protection System",
+    acronym: "APS",
+    category: "technique",
+    definition:
+      "Systeme de protection active. Panoplie le decrit comme sous-systeme industriel et cout d'integration, sans conseil d'emploi ou exploitation de limites.",
+  },
+  {
+    slug: "hard-kill",
+    term: "Hard-kill",
+    category: "technique",
+    definition:
+      "Categorie d'APS qui agit physiquement contre une menace entrante. Definition generale uniquement, sans parametre d'interception.",
+  },
+  {
+    slug: "soft-kill",
+    term: "Soft-kill",
+    category: "technique",
+    definition:
+      "Categorie de protection active ou passive agissant par brouillage, leurre ou obscuration. Panoplie reste au niveau famille fonctionnelle.",
+  },
+  {
+    slug: "vetronique",
+    term: "Vetronique",
+    category: "technique",
+    definition:
+      "Electronique embarquee d'un vehicule : capteurs, calculateurs, reseaux internes, interfaces equipage et integration C2.",
+  },
+  {
+    slug: "hunter-killer",
+    term: "Hunter-killer",
+    category: "technique",
+    definition:
+      "Fonction de recherche et designation sequentielle entre membres d'equipage, citee comme capacite publique sans procedure tactique.",
+  },
+  {
+    slug: "autoloader-blinde",
+    term: "Chargeur automatique de char",
+    category: "technique",
+    definition:
+      "Mecanisme de chargement automatise d'un canon de char. Panoplie le lie a architecture, equipage, maintenance et cout.",
+  },
+  {
+    slug: "powerpack",
+    term: "Powerpack",
+    category: "technique",
+    definition:
+      "Ensemble moteur, transmission et auxiliaires remplaceable comme module de soutien. Poste critique de MCO et dependance industrielle.",
+  },
+  {
+    slug: "transmission-blindee",
+    term: "Transmission blindee",
+    category: "technique",
+    definition:
+      "Sous-systeme de mobilite transmettant la puissance du moteur aux chenilles ou roues, important pour pieces et maintenance.",
+  },
+  {
+    slug: "trophy-aps",
+    term: "Trophy APS",
+    acronym: "Trophy",
+    category: "technique",
+    definition:
+      "Systeme de protection active de Rafael, cite comme sous-systeme exportable et objet industriel, sans detail exploitable.",
+  },
+  {
+    slug: "blindage-composite",
+    term: "Blindage composite",
+    category: "technique",
+    definition:
+      "Famille de protections combinant plusieurs materiaux. Panoplie la mentionne comme claim public, pas comme analyse de vulnerabilite.",
+  },
+  {
+    slug: "blindage-modulaire",
+    term: "Blindage modulaire",
+    category: "technique",
+    definition:
+      "Protection composee de modules remplacables ou configurables selon standard, utile pour lire cout, MCO et modernisation.",
+  },
+  {
+    slug: "mco-blinde",
+    term: "MCO blinde",
+    category: "commerce",
+    definition:
+      "Maintien en condition d'un parc blinde : pieces, powerpacks, optiques, chenilles, depannage, ateliers, simulateurs et retrofits.",
+  },
+  {
+    slug: "pontage-depannage",
+    term: "Pontage / depannage",
+    category: "technique",
+    definition:
+      "Moyens de soutien lourds associes a un parc blinde. Ils appartiennent au cout complet mais Panoplie n'en donne aucune procedure.",
+  },
+  {
+    slug: "munition-fleche",
+    term: "Munition fleche",
+    category: "technique",
+    definition:
+      "Categorie publique de munition antichar cinetique. Panoplie la cite comme famille industrielle sans effet, perforation ou emploi.",
+  },
+  {
+    slug: "tungstene",
+    term: "Tungstene",
+    category: "technique",
+    definition:
+      "Metal critique pouvant intervenir dans certaines chaines de munitions ou blindages ; suivi comme dependance industrielle publique.",
+  },
+  {
+    slug: "germanium",
+    term: "Germanium",
+    category: "technique",
+    definition:
+      "Materiau critique notamment associe a certaines optiques et capteurs ; Panoplie le suit au niveau supply chain.",
+  },
+  {
+    slug: "gallium",
+    term: "Gallium",
+    category: "technique",
+    definition:
+      "Materiau critique de l'electronique et des composants RF/optroniques, deja important dans plusieurs chaines defense.",
+  },
+  {
+    slug: "antimoine",
+    term: "Antimoine",
+    category: "technique",
+    definition:
+      "Matiere critique pouvant apparaitre dans des chaines munitions, batteries ou materiaux ; mentionnee comme dependance de supply chain.",
+  },
 ];
 
 export const GLOSSARY_BY_SLUG: Record<string, GlossaryTerm> = Object.fromEntries(

@@ -315,7 +315,33 @@ export default function MethodologiePage() {
       </section>
 
       <section className="mt-14">
-        <SectionMarker index="11" label="Limites &amp; cadre éthique" />
+        <SectionMarker
+          index="11"
+          label="Le domaine blindes"
+          blurb="Chars de combat, programmes blindes, MCO, powerpacks et export - sans ciblage ni vulnerabilites."
+        />
+        <div className="mt-5 space-y-4 font-serif text-[1.05rem] leading-[1.75] text-ink/90">
+          <p>
+            Les blindes et chars de combat sont documentes comme parcs et
+            programmes industriels : plateforme, modernisation, powerpack,
+            transmission, vetronique, APS, munitions publiques, depannage,
+            stocks de pieces, formation, MCO, couts, production locale et export.
+            Une donnee de canon, de protection ou d'APS reste un claim public,
+            dependant du perimetre source.
+          </p>
+          <p>
+            Exclusions explicites : aucune vulnerabilite exploitable, aucun
+            angle d'attaque, aucun ciblage, aucune tactique urbaine, aucune
+            optimisation d'engagement, aucune procedure interarmes et aucun
+            calcul balistique. Quand une source melange performance et emploi,
+            Panoplie ne retient que les elements cout, industrie, modernisation,
+            soutien, export et preuve.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-14">
+        <SectionMarker index="12" label="Limites &amp; cadre éthique" />
         <div className="mt-5 space-y-4 font-serif text-[1.05rem] leading-[1.75] text-ink/90">
           <p>
             Panoplie est un outil d'analyse stratégique, industrielle et
@@ -346,7 +372,7 @@ export default function MethodologiePage() {
 
       <section className="mt-14">
         <SectionMarker
-          index="12"
+          index="13"
           label="La lecture CCA / costing"
           blurb="Une couche de contrôle de gestion posée sur les briques existantes."
         />

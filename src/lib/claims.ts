@@ -7,6 +7,10 @@ import type {
 } from "@/data/types";
 import { systems } from "@/data/systems";
 import {
+  ARMORED_APS_LABELS,
+  ARMORED_FAMILY_LABELS,
+  ARMORED_LOADING_LABELS,
+  ARMORED_STATUS_LABELS,
   ARTILLERY_ARCHITECTURE_LABELS,
   ARTILLERY_BARREL_LABELS,
   ARTILLERY_CALIBER_LABELS,
@@ -39,7 +43,13 @@ export type ClaimScope =
   | "automatisation"
   | "munition"
   | "maintenance"
-  | "interop";
+  | "interop"
+  | "mobilite-blindee"
+  | "vetronique"
+  | "mco"
+  | "munitions-blindees"
+  | "powerpack"
+  | "export-blinde";
 
 export type ClaimReviewStatus =
   | "verified"
@@ -353,6 +363,97 @@ export function getAllClaims(): Claim[] {
       addArtilleryClaim("interop", "Export", system.artilleryProfile.exportNotes);
       addArtilleryClaim("interop", "Garde-fou", system.artilleryProfile.safetyBoundary);
     }
+    if (system.armoredProfile) {
+      const { armament, protection, mobility, support } = system.armoredProfile;
+      const addArmoredClaim = (
+        scope: Extract<
+          ClaimScope,
+          | "mobilite-blindee"
+          | "protection"
+          | "vetronique"
+          | "mco"
+          | "munitions-blindees"
+          | "powerpack"
+          | "export-blinde"
+        >,
+        label: string,
+        value?: string | null,
+      ) => {
+        if (!value) return;
+        claims.push({
+          ...base,
+          scope,
+          label,
+          value,
+          confidence: "moyenne",
+          status: "a-recouper",
+          sources: allSystemSources,
+        });
+      };
+
+      addArmoredClaim(
+        "mobilite-blindee",
+        "Famille blindee",
+        ARMORED_FAMILY_LABELS[system.armoredProfile.family],
+      );
+      addArmoredClaim(
+        "mobilite-blindee",
+        "Statut programme",
+        ARMORED_STATUS_LABELS[system.armoredProfile.programStatus],
+      );
+      addArmoredClaim("mobilite-blindee", "Equipage", system.armoredProfile.crew);
+      addArmoredClaim("mobilite-blindee", "Mobilite publique", mobility.mobilityNotes);
+      addArmoredClaim("protection", "Protection passive", protection.passive);
+      addArmoredClaim("protection", "Protection modulaire", protection.modular);
+      addArmoredClaim(
+        "protection",
+        "APS",
+        [
+          ARMORED_APS_LABELS[protection.apsStatus],
+          protection.apsName,
+        ]
+          .filter(Boolean)
+          .join(" · "),
+      );
+      addArmoredClaim(
+        "protection",
+        "Survivabilite equipage",
+        protection.crewSurvivabilityNotes,
+      );
+      addArmoredClaim("vetronique", "Vetronique", system.armoredProfile.vetronics);
+      addArmoredClaim("vetronique", "C2", system.armoredProfile.c2);
+      addArmoredClaim("mco", "MCO", support.mcoNotes);
+      addArmoredClaim("mco", "Depannage / soutien", support.recoverySupport);
+      addArmoredClaim("mco", "Modernisation", support.modernizationNotes);
+      addArmoredClaim("mco", "Production locale", support.localProductionNotes);
+      addArmoredClaim("munitions-blindees", "Canon principal", armament.mainGun);
+      addArmoredClaim(
+        "munitions-blindees",
+        "Chargement",
+        ARMORED_LOADING_LABELS[system.armoredProfile.loading],
+      );
+      addArmoredClaim(
+        "munitions-blindees",
+        "Munitions publiques",
+        armament.ammunitionFamilies.join(" · "),
+      );
+      addArmoredClaim(
+        "munitions-blindees",
+        "Perimetre munitions",
+        armament.sourcePerimeter,
+      );
+      addArmoredClaim("munitions-blindees", "Limite munitions", armament.caution);
+      addArmoredClaim("powerpack", "Powerpack", mobility.powerpack);
+      addArmoredClaim("powerpack", "Transmission", mobility.transmission);
+      addArmoredClaim(
+        "export-blinde",
+        "Chaine industrielle",
+        system.armoredProfile.industrialNotes,
+      );
+      addArmoredClaim("export-blinde", "Cout public", system.armoredProfile.costNotes);
+      addArmoredClaim("export-blinde", "Export", system.armoredProfile.exportNotes);
+      addArmoredClaim("export-blinde", "Garde-fou", system.armoredProfile.safetyBoundary);
+    }
   }
   return claims.map((claim) => {
     const reviewStatus = reviewStatusOf(claim.status);
@@ -422,6 +523,7 @@ export function getEvidenceStats(): EvidenceStats {
     "combat-system",
     "space",
     "artillery",
+    "armored-vehicle",
   ] satisfies SystemCategory[]) {
     byCategory[category] ??= 0;
   }
@@ -488,6 +590,12 @@ export const SCOPE_LABELS: Record<ClaimScope, string> = {
   munition: "Munition",
   maintenance: "Maintenance",
   interop: "Interopérabilité",
+  "mobilite-blindee": "Mobilite blindee",
+  vetronique: "Vetronique",
+  mco: "MCO",
+  "munitions-blindees": "Munitions blindees",
+  powerpack: "Powerpack",
+  "export-blinde": "Export blinde",
 };
 
 // === Fraîcheur ===

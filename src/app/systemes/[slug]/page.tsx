@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getSystem, getSystemSlugs } from "@/data/systems";
 import {
+  ARMORED_FAMILY_LABELS,
+  ARMORED_STATUS_LABELS,
   ARTILLERY_BARREL_LABELS,
   ARTILLERY_CALIBER_LABELS,
   ARTILLERY_CARRIER_LABELS,
@@ -14,6 +16,7 @@ import {
 } from "@/data/labels";
 import {
   AnalystNote,
+  ArmoredArchitecturePanel,
   ArtilleryArchitecturePanel,
   BrickSection,
   CCAReadingPanel,
@@ -147,6 +150,18 @@ export default async function SystemPage({
           },
         ]
       : []),
+    ...(system.armoredProfile
+      ? [
+          {
+            label: "Famille blindee",
+            value: ARMORED_FAMILY_LABELS[system.armoredProfile.family],
+          },
+          {
+            label: "Statut blindage",
+            value: ARMORED_STATUS_LABELS[system.armoredProfile.programStatus],
+          },
+        ]
+      : []),
     { label: "Statut", value: system.status },
   ];
 
@@ -162,6 +177,7 @@ export default async function SystemPage({
   const hasNavalProfile = !!system.navalProfile;
   const hasSpaceProfile = !!system.spaceProfile;
   const hasArtilleryProfile = !!system.artilleryProfile;
+  const hasArmoredProfile = !!system.armoredProfile;
   const hasTimeline = !!system.timeline && system.timeline.length > 0;
 
   const idxSummary = nextIndex();
@@ -170,6 +186,7 @@ export default async function SystemPage({
   const idxRelations = hasNavalProfile ? nextIndex() : null;
   const idxSpaceArchitecture = hasSpaceProfile ? nextIndex() : null;
   const idxArtilleryArchitecture = hasArtilleryProfile ? nextIndex() : null;
+  const idxArmoredArchitecture = hasArmoredProfile ? nextIndex() : null;
   const idxVariants = hasVariants ? nextIndex() : null;
   const brickBase = counter;
   counter += system.bricks.length;
@@ -368,6 +385,19 @@ export default async function SystemPage({
           />
           <div className="mt-6">
             <ArtilleryArchitecturePanel profile={system.artilleryProfile} />
+          </div>
+        </section>
+      ) : null}
+
+      {idxArmoredArchitecture && system.armoredProfile ? (
+        <section className="mt-16">
+          <SectionMarker
+            index={idxArmoredArchitecture}
+            label="Architecture blindee"
+            blurb="Famille, protection, powerpack, vetronique, MCO, industrie, cout et export — sans ciblage ni exploitation de vulnerabilites."
+          />
+          <div className="mt-6">
+            <ArmoredArchitecturePanel profile={system.armoredProfile} />
           </div>
         </section>
       ) : null}

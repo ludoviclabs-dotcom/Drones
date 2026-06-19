@@ -757,6 +757,22 @@ const SCHEMATICS: Record<string, ReactNode> = {
   ),
 };
 
+const DRONE_SCHEMATIC: ReactNode = (
+  <>
+    <line x1="120" y1="20" x2="120" y2="222" strokeWidth="1" strokeDasharray="2 5" />
+    <path d="M120 28 C128 38 132 62 132 94 L132 184 C132 202 126 214 120 218 C114 214 108 202 108 184 L108 94 C108 62 112 38 120 28 Z" />
+    <path d="M26 112 L108 100 L108 118 L28 132 Z" />
+    <path d="M214 112 L132 100 L132 118 L212 132 Z" />
+    <path d="M92 74 L108 82 L108 96 L90 90 Z" />
+    <path d="M148 74 L132 82 L132 96 L150 90 Z" />
+    <circle cx="120" cy="58" r="8" />
+    <rect x="111" y="124" width="18" height="34" rx="3" />
+    <path d="M110 184 L82 212" />
+    <path d="M130 184 L158 212" />
+    <ellipse cx="120" cy="212" rx="20" ry="4" />
+  </>
+);
+
 // Silhouettes par rôle radar — appliquées en repli quand la fiche n'a pas de
 // schématique dédiée. Chaque archétype représente l'allure typique du capteur
 // (panneau, mât, plateforme), pas une géométrie précise — le détail viendra
@@ -1067,6 +1083,8 @@ export function SystemSchematic({
     const system = SYSTEMS_BY_SLUG[slug];
     if (system?.category === "radar" && system.radarRole) {
       content = RADAR_ROLE_SCHEMATICS[system.radarRole];
+    } else if (system?.category === "drone") {
+      content = DRONE_SCHEMATIC;
     } else if (system?.category === "naval-vessel" && system.navalVesselClass) {
       content = NAVAL_CLASS_SCHEMATICS[system.navalVesselClass];
     } else if (system?.category === "space") {

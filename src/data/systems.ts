@@ -14,6 +14,15 @@ import { switchblade600 } from "./systems/switchblade-600";
 import { heronTp } from "./systems/heron-tp";
 import { hermes900 } from "./systems/hermes-900";
 import { liutyi } from "./systems/liutyi";
+import {
+  allagE,
+  ht100,
+  ht750,
+  jernasM,
+  omen,
+  shadow3,
+  strilaQuantumWiy,
+} from "./systems/autonomy-edge";
 import { helmaP } from "./systems/helma-p";
 import { ironBeam } from "./systems/iron-beam";
 import { dragonfire } from "./systems/dragonfire";
@@ -168,6 +177,13 @@ export const systems: DefenseSystem[] = [
   heronTp,
   hermes900,
   liutyi,
+  ht100,
+  ht750,
+  omen,
+  allagE,
+  jernasM,
+  shadow3,
+  strilaQuantumWiy,
   helmaP,
   ironBeam,
   dragonfire,

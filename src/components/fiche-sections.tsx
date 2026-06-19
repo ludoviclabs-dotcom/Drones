@@ -1,4 +1,5 @@
 import type {
+  AutonomyProfile,
   ArmoredStructuredProfile,
   ArtilleryStructuredProfile,
   Brick,
@@ -21,11 +22,15 @@ import {
   ARTILLERY_CARRIER_LABELS,
   ARTILLERY_INTEROP_LABELS,
   ARTILLERY_LOADING_LABELS,
+  AUTONOMY_MODE_LABELS,
+  BATTLEFIELD_FUNCTION_LABELS,
   BRICK_BLURBS,
   BRICK_LABELS,
   NAVAL_MISSION_LABELS,
   RELIABILITY_LABELS,
+  RECOVERABILITY_LABELS,
   SCORE_LABELS,
+  SOURCE_CONTEXT_LABELS,
   SPACE_MISSION_LABELS,
   SPACE_ORBIT_LABELS,
   SPACE_PAYLOAD_LABELS,
@@ -272,6 +277,109 @@ export function SpecsPanel({ specs }: { specs: Indicator[] }) {
 
 function joinList(items?: string[]): string | null {
   return items && items.length > 0 ? items.join(" · ") : null;
+}
+
+function autonomyRows(profile: AutonomyProfile): [string, string | null][] {
+  const {
+    battlefieldFunctions,
+    autonomyModes,
+    navigationGuidance,
+    networkAndC2,
+    recoverability,
+    industrialRoles,
+    sourceContext,
+  } = profile;
+
+  const navigation = navigationGuidance
+    ? joinList(
+        [
+          navigationGuidance.gnss ? "GNSS" : null,
+          navigationGuidance.inertial ? "Inertiel" : null,
+          navigationGuidance.antiJam ? "Anti-jam revendique" : null,
+          navigationGuidance.vision ? "Vision / EO" : null,
+          navigationGuidance.opticalFlow ? "Flux optique" : null,
+          navigationGuidance.deckLanding ? "Appontage autonome" : null,
+          navigationGuidance.terminalSeeker,
+          navigationGuidance.notes,
+        ].filter(Boolean) as string[],
+      )
+    : null;
+
+  const network = networkAndC2
+    ? joinList(
+        [
+          joinList(networkAndC2.datalinkTypes),
+          joinList(networkAndC2.encryption),
+          networkAndC2.losRange,
+          networkAndC2.satcom ? "SATCOM" : null,
+          networkAndC2.meshNetworking ? "Mesh / MANET" : null,
+          joinList(networkAndC2.c2SoftwareStack),
+          networkAndC2.notes,
+        ].filter(Boolean) as string[],
+      )
+    : null;
+
+  const sourcePerimeter = sourceContext
+    ? joinList(
+        [
+          sourceContext.contexts
+            .map((context) => SOURCE_CONTEXT_LABELS[context])
+            .join(" · "),
+          sourceContext.version,
+          sourceContext.sourceDate,
+          sourceContext.varianceNotes,
+        ].filter(Boolean) as string[],
+      )
+    : null;
+
+  const rows: [string, string | null][] = [
+    [
+      "Fonctions",
+      battlefieldFunctions
+        .map((fn) => BATTLEFIELD_FUNCTION_LABELS[fn])
+        .join(" · "),
+    ],
+    [
+      "Modes d'autonomie",
+      autonomyModes.map((mode) => AUTONOMY_MODE_LABELS[mode]).join(" · "),
+    ],
+    [
+      "Recuperabilite",
+      recoverability ? RECOVERABILITY_LABELS[recoverability] : null,
+    ],
+    ["Navigation / guidage", navigation],
+    ["Reseau / C2", network],
+    ["Maitre d'oeuvre", joinList(industrialRoles?.prime)],
+    ["Integrateur", joinList(industrialRoles?.integrator)],
+    ["Logiciel autonomie", joinList(industrialRoles?.autonomySoftware)],
+    ["Powertrain", joinList(industrialRoles?.powertrain)],
+    ["Acceleration prototype", joinList(industrialRoles?.prototypeAccelerator)],
+    ["Production", joinList(industrialRoles?.production)],
+    ["Perimetre source", sourcePerimeter],
+  ];
+
+  return rows.filter(([, value]) => value);
+}
+
+export function AutonomyProfilePanel({
+  profile,
+}: {
+  profile: AutonomyProfile;
+}) {
+  return (
+    <div className="grid gap-px border border-line bg-line md:grid-cols-2">
+      {autonomyRows(profile).map(([label, value]) => (
+        <div key={label} className="bg-panel p-4">
+          <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
+            {label}
+          </span>
+          <p className="mt-1.5 font-serif text-sm leading-relaxed text-ink">
+            {value}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 function navalRows(profile: NavalStructuredProfile): [string, string | null][] {

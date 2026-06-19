@@ -17,7 +17,11 @@ import {
   ARTILLERY_CARRIER_LABELS,
   ARTILLERY_INTEROP_LABELS,
   ARTILLERY_LOADING_LABELS,
+  AUTONOMY_MODE_LABELS,
+  BATTLEFIELD_FUNCTION_LABELS,
   BRICK_LABELS,
+  RECOVERABILITY_LABELS,
+  SOURCE_CONTEXT_LABELS,
   SPACE_MISSION_LABELS,
   SPACE_ORBIT_LABELS,
   SPACE_PAYLOAD_LABELS,
@@ -49,7 +53,8 @@ export type ClaimScope =
   | "mco"
   | "munitions-blindees"
   | "powerpack"
-  | "export-blinde";
+  | "export-blinde"
+  | "autonomie";
 
 export type ClaimReviewStatus =
   | "verified"
@@ -454,6 +459,97 @@ export function getAllClaims(): Claim[] {
       addArmoredClaim("export-blinde", "Export", system.armoredProfile.exportNotes);
       addArmoredClaim("export-blinde", "Garde-fou", system.armoredProfile.safetyBoundary);
     }
+    if (system.autonomyProfile) {
+      const {
+        battlefieldFunctions,
+        autonomyModes,
+        navigationGuidance,
+        networkAndC2,
+        recoverability,
+        industrialRoles,
+        sourceContext,
+      } = system.autonomyProfile;
+      const addAutonomyClaim = (label: string, value?: string | null) => {
+        if (!value) return;
+        claims.push({
+          ...base,
+          scope: "autonomie",
+          label,
+          value,
+          confidence: "moyenne",
+          status: "a-recouper",
+          sources: allSystemSources,
+        });
+      };
+
+      addAutonomyClaim(
+        "Fonctions operationnelles",
+        battlefieldFunctions
+          .map((fn) => BATTLEFIELD_FUNCTION_LABELS[fn])
+          .join(" · "),
+      );
+      addAutonomyClaim(
+        "Modes d'autonomie",
+        autonomyModes.map((mode) => AUTONOMY_MODE_LABELS[mode]).join(" · "),
+      );
+      addAutonomyClaim(
+        "Recuperabilite",
+        recoverability ? RECOVERABILITY_LABELS[recoverability] : null,
+      );
+      addAutonomyClaim(
+        "Navigation / guidage",
+        [
+          navigationGuidance?.gnss ? "GNSS" : null,
+          navigationGuidance?.inertial ? "inertiel" : null,
+          navigationGuidance?.antiJam ? "anti-jam revendique" : null,
+          navigationGuidance?.vision ? "vision / EO" : null,
+          navigationGuidance?.opticalFlow ? "flux optique" : null,
+          navigationGuidance?.deckLanding ? "appontage autonome" : null,
+          navigationGuidance?.terminalSeeker,
+          navigationGuidance?.notes,
+        ]
+          .filter(Boolean)
+          .join(" · "),
+      );
+      addAutonomyClaim(
+        "Reseau / C2",
+        [
+          ...(networkAndC2?.datalinkTypes ?? []),
+          ...(networkAndC2?.encryption ?? []),
+          networkAndC2?.losRange,
+          networkAndC2?.satcom ? "SATCOM" : null,
+          networkAndC2?.meshNetworking ? "mesh / MANET" : null,
+          ...(networkAndC2?.c2SoftwareStack ?? []),
+          networkAndC2?.notes,
+        ]
+          .filter(Boolean)
+          .join(" · "),
+      );
+      addAutonomyClaim(
+        "Role industriel",
+        [
+          ...(industrialRoles?.prime ?? []),
+          ...(industrialRoles?.integrator ?? []),
+          ...(industrialRoles?.autonomySoftware ?? []),
+          ...(industrialRoles?.powertrain ?? []),
+          ...(industrialRoles?.prototypeAccelerator ?? []),
+          ...(industrialRoles?.production ?? []),
+        ].join(" · "),
+      );
+      addAutonomyClaim(
+        "Perimetre source",
+        [
+          sourceContext?.contexts
+            .map((context) => SOURCE_CONTEXT_LABELS[context])
+            .join(" · "),
+          sourceContext?.version,
+          sourceContext?.sourceDate,
+          sourceContext?.varianceNotes,
+        ]
+          .filter(Boolean)
+          .join(" · "),
+      );
+    }
   }
   return claims.map((claim) => {
     const reviewStatus = reviewStatusOf(claim.status);
@@ -596,6 +692,7 @@ export const SCOPE_LABELS: Record<ClaimScope, string> = {
   "munitions-blindees": "Munitions blindees",
   powerpack: "Powerpack",
   "export-blinde": "Export blinde",
+  autonomie: "Autonomie & fonction",
 };
 
 // === Fraîcheur ===

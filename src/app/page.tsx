@@ -177,13 +177,21 @@ export default function Home() {
           />
           <div className="mt-8">
             <CatalogueFilter
-              entries={systems.map((system) => ({
-                slug: system.slug,
-                category: system.category,
-                haystack:
-                  `${system.name} ${system.country} ${system.manufacturer} ${system.classLabel}`.toLowerCase(),
-                card: <SystemCard system={system} />,
-              }))}
+              entries={systems.map((system) => {
+                const autonomyProfile = system.autonomyProfile;
+                const battlefieldFunctions =
+                  autonomyProfile?.battlefieldFunctions ?? [];
+                const autonomyModes = autonomyProfile?.autonomyModes ?? [];
+                return {
+                  slug: system.slug,
+                  category: system.category,
+                  autonomyModes,
+                  battlefieldFunctions,
+                  hasCounterUas: battlefieldFunctions.includes("counter-uas"),
+                  haystack: `${system.name} ${system.country} ${system.manufacturer} ${system.classLabel} ${battlefieldFunctions.join(" ")} ${autonomyModes.join(" ")}`.toLowerCase(),
+                  card: <SystemCard system={system} />,
+                };
+              })}
             />
           </div>
         </div>

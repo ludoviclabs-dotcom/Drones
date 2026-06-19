@@ -8,6 +8,7 @@ import {
   ARTILLERY_BARREL_LABELS,
   ARTILLERY_CALIBER_LABELS,
   ARTILLERY_CARRIER_LABELS,
+  BATTLEFIELD_FUNCTION_LABELS,
   GENERATION_LABELS,
   MODE_LABELS,
   NAVAL_VESSEL_LABELS,
@@ -16,6 +17,7 @@ import {
 } from "@/data/labels";
 import {
   AnalystNote,
+  AutonomyProfilePanel,
   ArmoredArchitecturePanel,
   ArtilleryArchitecturePanel,
   BrickSection,
@@ -162,6 +164,16 @@ export default async function SystemPage({
           },
         ]
       : []),
+    ...(system.autonomyProfile
+      ? [
+          {
+            label: "Fonction transverse",
+            value: system.autonomyProfile.battlefieldFunctions
+              .map((fn) => BATTLEFIELD_FUNCTION_LABELS[fn])
+              .join(" · "),
+          },
+        ]
+      : []),
     { label: "Statut", value: system.status },
   ];
 
@@ -178,10 +190,12 @@ export default async function SystemPage({
   const hasSpaceProfile = !!system.spaceProfile;
   const hasArtilleryProfile = !!system.artilleryProfile;
   const hasArmoredProfile = !!system.armoredProfile;
+  const hasAutonomyProfile = !!system.autonomyProfile;
   const hasTimeline = !!system.timeline && system.timeline.length > 0;
 
   const idxSummary = nextIndex();
   const idxQuickRead = nextIndex();
+  const idxAutonomyProfile = hasAutonomyProfile ? nextIndex() : null;
   const idxNavalArchitecture = hasNavalProfile ? nextIndex() : null;
   const idxRelations = hasNavalProfile ? nextIndex() : null;
   const idxSpaceArchitecture = hasSpaceProfile ? nextIndex() : null;
@@ -336,6 +350,19 @@ export default async function SystemPage({
           <EditorialTriptych editorial={system.editorial} />
         </div>
       </section>
+
+      {idxAutonomyProfile && system.autonomyProfile ? (
+        <section className="mt-16">
+          <SectionMarker
+            index={idxAutonomyProfile}
+            label="Autonomie & fonction opérationnelle"
+            blurb="Lecture transverse : rôle tactique, niveau d'autonomie revendiqué, navigation, liaison C2, récupération et périmètre de source."
+          />
+          <div className="mt-6">
+            <AutonomyProfilePanel profile={system.autonomyProfile} />
+          </div>
+        </section>
+      ) : null}
 
       {idxNavalArchitecture && system.navalProfile ? (
         <section className="mt-16">

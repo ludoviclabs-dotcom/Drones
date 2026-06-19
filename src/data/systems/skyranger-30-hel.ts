@@ -13,6 +13,32 @@ export const skyranger30Hel: DefenseSystem = {
   manufacturer: "Rheinmetall",
   status: "Variante laser au stade démonstrateur ; tourelle Skyranger 30 commandée en série sans laser",
   acquisitionModes: ["production-nationale", "cooperatif"],
+  autonomyProfile: {
+    battlefieldFunctions: ["counter-uas", "air-defense"],
+    autonomyModes: ["manual-assisted"],
+    navigationGuidance: {
+      vision: true,
+      terminalSeeker: "suite capteurs / conduite de tir tourelle",
+      notes:
+        "Lecture C-UAS assistee par capteurs et conduite de tir ; pas d'autonomie lethale autonome documentee dans cette fiche.",
+    },
+    networkAndC2: {
+      notes:
+        "Tourelle SHORAD integree a une bulle de defense aerienne courte portee ; architecture C2 exacte depend du client et du vehicule porteur.",
+    },
+    recoverability: "not-applicable",
+    industrialRoles: {
+      prime: ["Rheinmetall"],
+      integrator: ["Rheinmetall"],
+      production: ["Europe / clients OTAN selon lots Skyranger 30"],
+    },
+    sourceContext: {
+      contexts: ["official-spec", "secondary-analysis"],
+      sourceDate: "2026-05",
+      varianceNotes:
+        "Profil transverse ajoute pour la fonction C-UAS ; la brique HEL reste demonstrateur et non commande serie.",
+    },
+  },
   tagline:
     "Le pari de l'effecteur mixte — canon, missiles et laser sur une même tourelle, dont seule la brique laser reste à mûrir.",
   summary:

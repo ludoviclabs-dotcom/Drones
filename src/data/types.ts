@@ -413,6 +413,84 @@ export interface ArmoredStructuredProfile {
   safetyBoundary?: string;
 }
 
+export type BattlefieldFunction =
+  | "isr"
+  | "strike"
+  | "counter-uas"
+  | "air-defense"
+  | "ew"
+  | "relay-c2"
+  | "logistics"
+  | "maritime-support";
+
+export type AutonomyMode =
+  | "teleoperated"
+  | "manual-assisted"
+  | "autonomous-flight"
+  | "terminal-autonomy"
+  | "mission-autonomy"
+  | "swarm-ready";
+
+export type Recoverability =
+  | "reusable"
+  | "attritable"
+  | "consumable"
+  | "not-applicable";
+
+export type SourceContext =
+  | "official-spec"
+  | "official-marketing-claim"
+  | "contract-announcement"
+  | "operator-or-battlefield-claim"
+  | "secondary-analysis";
+
+export interface NavigationGuidanceProfile {
+  gnss?: boolean;
+  inertial?: boolean;
+  antiJam?: boolean;
+  vision?: boolean;
+  opticalFlow?: boolean;
+  deckLanding?: boolean;
+  terminalSeeker?: string;
+  notes?: string;
+}
+
+export interface NetworkAndC2Profile {
+  datalinkTypes?: string[];
+  encryption?: string[];
+  losRange?: string;
+  satcom?: boolean;
+  meshNetworking?: boolean;
+  c2SoftwareStack?: string[];
+  notes?: string;
+}
+
+export interface IndustrialRoleProfile {
+  prime?: string[];
+  integrator?: string[];
+  autonomySoftware?: string[];
+  powertrain?: string[];
+  prototypeAccelerator?: string[];
+  production?: string[];
+}
+
+export interface SourceContextProfile {
+  contexts: SourceContext[];
+  version?: string;
+  sourceDate?: string;
+  varianceNotes?: string;
+}
+
+export interface AutonomyProfile {
+  battlefieldFunctions: BattlefieldFunction[];
+  autonomyModes: AutonomyMode[];
+  navigationGuidance?: NavigationGuidanceProfile;
+  networkAndC2?: NetworkAndC2Profile;
+  recoverability?: Recoverability;
+  industrialRoles?: IndustrialRoleProfile;
+  sourceContext?: SourceContextProfile;
+}
+
 export type AcquisitionMode =
   | "FMS"
   | "DCS"
@@ -546,6 +624,8 @@ export interface DefenseSystem {
   spaceProfile?: SpaceStructuredProfile;
   artilleryProfile?: ArtilleryStructuredProfile;
   armoredProfile?: ArmoredStructuredProfile;
+  /** Profil transversal autonomie / fonction / C-UAS, sans domaine dedie. */
+  autonomyProfile?: AutonomyProfile;
   /** Génération revendiquée par l'industriel ou la nation, si elle diffère. */
   claimedGeneration?: string;
   classLabel: string;

@@ -192,6 +192,41 @@ const ArmoredApsStatus = z.enum([
   "unknown",
 ]);
 
+const BattlefieldFunction = z.enum([
+  "isr",
+  "strike",
+  "counter-uas",
+  "air-defense",
+  "ew",
+  "relay-c2",
+  "logistics",
+  "maritime-support",
+]);
+
+const AutonomyMode = z.enum([
+  "teleoperated",
+  "manual-assisted",
+  "autonomous-flight",
+  "terminal-autonomy",
+  "mission-autonomy",
+  "swarm-ready",
+]);
+
+const Recoverability = z.enum([
+  "reusable",
+  "attritable",
+  "consumable",
+  "not-applicable",
+]);
+
+const SourceContext = z.enum([
+  "official-spec",
+  "official-marketing-claim",
+  "contract-announcement",
+  "operator-or-battlefield-claim",
+  "secondary-analysis",
+]);
+
 const SourceRef = z.object({
   id: z.string().min(1),
   title: z.string().min(1),
@@ -427,6 +462,53 @@ const ArmoredStructuredProfile = z.object({
   safetyBoundary: z.string().optional(),
 });
 
+const AutonomyProfile = z.object({
+  battlefieldFunctions: z.array(BattlefieldFunction),
+  autonomyModes: z.array(AutonomyMode),
+  navigationGuidance: z
+    .object({
+      gnss: z.boolean().optional(),
+      inertial: z.boolean().optional(),
+      antiJam: z.boolean().optional(),
+      vision: z.boolean().optional(),
+      opticalFlow: z.boolean().optional(),
+      deckLanding: z.boolean().optional(),
+      terminalSeeker: z.string().optional(),
+      notes: z.string().optional(),
+    })
+    .optional(),
+  networkAndC2: z
+    .object({
+      datalinkTypes: z.array(z.string()).optional(),
+      encryption: z.array(z.string()).optional(),
+      losRange: z.string().optional(),
+      satcom: z.boolean().optional(),
+      meshNetworking: z.boolean().optional(),
+      c2SoftwareStack: z.array(z.string()).optional(),
+      notes: z.string().optional(),
+    })
+    .optional(),
+  recoverability: Recoverability.optional(),
+  industrialRoles: z
+    .object({
+      prime: z.array(z.string()).optional(),
+      integrator: z.array(z.string()).optional(),
+      autonomySoftware: z.array(z.string()).optional(),
+      powertrain: z.array(z.string()).optional(),
+      prototypeAccelerator: z.array(z.string()).optional(),
+      production: z.array(z.string()).optional(),
+    })
+    .optional(),
+  sourceContext: z
+    .object({
+      contexts: z.array(SourceContext),
+      version: z.string().optional(),
+      sourceDate: z.string().optional(),
+      varianceNotes: z.string().optional(),
+    })
+    .optional(),
+});
+
 export const DefenseSystemSchema = z.object({
   slug: z.string().min(1),
   name: z.string().min(1),
@@ -454,6 +536,7 @@ export const DefenseSystemSchema = z.object({
   spaceProfile: SpaceStructuredProfile.optional(),
   artilleryProfile: ArtilleryStructuredProfile.optional(),
   armoredProfile: ArmoredStructuredProfile.optional(),
+  autonomyProfile: AutonomyProfile.optional(),
   claimedGeneration: z.string().optional(),
   classLabel: z.string().min(1),
   country: z.string().min(1),

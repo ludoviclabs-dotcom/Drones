@@ -11,6 +11,8 @@ import type {
   ArtilleryCarrier,
   ArtilleryInteropStatus,
   ArtilleryLoading,
+  AutonomyMode,
+  BattlefieldFunction,
   BrickKey,
   ClaimStatus,
   CombatAircraftClass,
@@ -21,10 +23,12 @@ import type {
   NavalMission,
   NavalVesselClass,
   RadarRole,
+  Recoverability,
   Reliability,
   RoadmapHorizon,
   ScoreKey,
   SourceRef,
+  SourceContext,
   SpaceMission,
   SpaceOrbitClass,
   SpacePayloadType,
@@ -341,6 +345,41 @@ export const ARMORED_APS_LABELS: Record<ArmoredApsStatus, string> = {
   planned: "APS prevu / annonce",
   "none-public": "Pas d'APS public central",
   unknown: "APS non precise",
+};
+
+export const BATTLEFIELD_FUNCTION_LABELS: Record<BattlefieldFunction, string> = {
+  isr: "ISR / renseignement",
+  strike: "Frappe",
+  "counter-uas": "Counter-UAS",
+  "air-defense": "Defense aerienne",
+  ew: "Guerre electronique",
+  "relay-c2": "Relais C2 / data",
+  logistics: "Logistique",
+  "maritime-support": "Appui maritime",
+};
+
+export const AUTONOMY_MODE_LABELS: Record<AutonomyMode, string> = {
+  teleoperated: "Teleopere",
+  "manual-assisted": "Assiste operateur",
+  "autonomous-flight": "Vol autonome",
+  "terminal-autonomy": "Autonomie terminale",
+  "mission-autonomy": "Autonomie mission",
+  "swarm-ready": "Pret essaim / equipe",
+};
+
+export const RECOVERABILITY_LABELS: Record<Recoverability, string> = {
+  reusable: "Reusable",
+  attritable: "Attritable",
+  consumable: "Consommable",
+  "not-applicable": "Sans objet",
+};
+
+export const SOURCE_CONTEXT_LABELS: Record<SourceContext, string> = {
+  "official-spec": "Specification officielle",
+  "official-marketing-claim": "Annonce constructeur",
+  "contract-announcement": "Contrat / commande",
+  "operator-or-battlefield-claim": "Retour operateur / terrain",
+  "secondary-analysis": "Analyse secondaire",
 };
 
 export const SCORE_LABELS: Record<ScoreKey, string> = {

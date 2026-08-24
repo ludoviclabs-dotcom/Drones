@@ -6,6 +6,10 @@ test("parcours home → domaine naval → fiche → console (export) → compara
 }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Voir le HUD drone →" })).toHaveAttribute(
+    "href",
+    "/hud/drone-airframe",
+  );
 
   await page.goto("/batiments-navals");
   await expect(page.getByText("Chine").first()).toBeVisible();
@@ -43,7 +47,30 @@ test("SEO : sitemap, robots et image Open Graph répondent", async ({
   expect(og.headers()["content-type"]).toContain("image/png");
 });
 
-const A11Y_PAGES = ["/", "/systemes/fujian", "/console", "/comparateur"];
+test("HUD drone : route publique, scène accessible et données signalées démo", async ({
+  page,
+}) => {
+  await page.goto("/hud/drone-airframe");
+
+  await expect(
+    page.getByRole("heading", { name: "Cellule de drone — vue éclatée" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("img", {
+      name: "CELLULE DE DRONE. OSINT INTELLIGENCE MILITAIRE · DONNÉES À BRANCHER",
+    }),
+  ).toBeVisible();
+  await expect(page.getByText("Mode démo · données hors ligne")).toBeVisible();
+  await expect(page.getByText("aucun aéronef")).toBeVisible();
+});
+
+const A11Y_PAGES = [
+  "/",
+  "/systemes/fujian",
+  "/console",
+  "/comparateur",
+  "/hud/drone-airframe",
+];
 for (const path of A11Y_PAGES) {
   test(`axe — a11y structurelle (WCAG 2.2 AA) : ${path}`, async ({
     page,

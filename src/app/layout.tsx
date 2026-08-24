@@ -63,6 +63,7 @@ const NAV = [
 
 const FOOTER_LINKS = [
   ...NAV,
+  { href: "/hud/drone-airframe", label: "HUD Drone" },
   { href: "/audit", label: "Audit" },
   { href: "/couts", label: "Coûts publics" },
   { href: "/industrial-graph", label: "Graphe industriel" },

@@ -54,7 +54,11 @@ export default function DroneAirframeHudPage() {
         <h2 id="hud-scene-heading" className="sr-only">
           Visualisation technique interactive
         </h2>
-        <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.16em] text-ink-faint sm:hidden">
+        {/* La planche a une largeur plancher de 960 px : elle déborde donc
+            jusqu'à ~1000 px de fenêtre, tablette comprise. L'indication suit ce
+            seuil (lg) et non le seuil mobile (sm), sinon la tablette défilait
+            sans aucun repère. */}
+        <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.16em] text-ink-faint lg:hidden">
           Faire défiler horizontalement pour lire toute la planche →
         </p>
         <HudScene scene={droneAirframeScene} />

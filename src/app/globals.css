@@ -290,6 +290,18 @@ body {
   transform-style: preserve-3d;
 }
 
+/* === Sobriété sur les planches techniques ===
+   Une page qui porte un HUD (.hudScene) est un instrument de lecture : le
+   décor y cesse de bouger. Le grain reste visible mais figé, le point de
+   statut cesse de pulser — on neutralise le mouvement, pas l'élément.
+   Règle purement déclarative : elle réagit à la présence de la planche dans le
+   document, sans JS, sans classe posée sur <html>, donc sans rien à nettoyer
+   au changement de route et sans effet résiduel après navigation. */
+body:has(.hudScene) .film-grain,
+body:has(.hudScene) .transmission-dot {
+  animation: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

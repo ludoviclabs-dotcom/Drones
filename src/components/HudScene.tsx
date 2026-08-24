@@ -2,6 +2,9 @@
 
 import {
   type CSSProperties,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type PointerEvent as ReactPointerEvent,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -78,7 +81,21 @@ export const HUD_THEME_TOKENS = {
   },
 } as const;
 
-type HotTarget = { kind: "part" | "panel"; id: string } | null;
+/**
+ * Cible d'inspection : une pièce du noyau ou un panneau latéral.
+ * `hotTarget` est transitoire (survol / focus), `selectedTarget` est épinglé
+ * par l'utilisateur, `activeTarget = selectedTarget ?? hotTarget`.
+ */
+export type HudTarget = { kind: "part" | "panel"; id: string };
+
+/** Emphase du rendu : l'épinglage pèse plus lourd que le survol. */
+type Emphasis = "selected" | "hot";
+
+const sameTarget = (a: HudTarget | null, b: HudTarget | null) =>
+  a !== null && b !== null && a.kind === b.kind && a.id === b.id;
+
+/** Identifiants DOM stables : dérivés des identifiants de scène, jamais tirés au sort. */
+const domSafe = (value: string) => value.replace(/[^a-zA-Z0-9_-]/g, "-");
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(max, Math.max(min, value));
@@ -182,28 +199,80 @@ function arc(cx: number, cy: number, radius: number, from: number, to: number) {
   return `M ${start.x} ${start.y} A ${radius} ${radius} 0 ${largeArc} 0 ${end.x} ${end.y}`;
 }
 
+/**
+ * Props d'interaction partagées par les pièces et les panneaux. Le survol et le
+ * focus alimentent `hotTarget` ; le clic, le tap, Entrée et Espace basculent
+ * `selectedTarget`. Le tactile passe uniquement par `onClick` : aucune
+ * interaction ne dépend de `mouseenter`.
+ */
+function targetInteractionProps({
+  target,
+  selected,
+  onHot,
+  onToggle,
+}: {
+  target: HudTarget;
+  selected: boolean;
+  onHot: (target: HudTarget | null) => void;
+  onToggle: (target: HudTarget) => void;
+}) {
+  return {
+    role: "button",
+    tabIndex: 0,
+    "aria-pressed": selected,
+    // Un tap émet aussi un pointerenter synthétique, sans pointerleave : il
+    // laisserait un survol collé après désélection. On ne retient donc l'aperçu
+    // que pour un pointeur qui peut réellement survoler.
+    onPointerEnter: (event: ReactPointerEvent<SVGGElement>) => {
+      if (event.pointerType === "touch") return;
+      onHot(target);
+    },
+    onPointerLeave: () => onHot(null),
+    onFocus: () => onHot(target),
+    onBlur: () => onHot(null),
+    onClick: () => onToggle(target),
+    onKeyDown: (event: ReactKeyboardEvent<SVGGElement>) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      // Espace ne doit pas défiler la planche, Entrée ne doit rien soumettre.
+      event.preventDefault();
+      onToggle(target);
+    },
+  } as const;
+}
+
 function PartView({
   part,
   y,
   entryShift,
   entryDelay,
   active,
+  selected,
+  emphasis,
   patternId,
+  panelDomId,
   onHot,
+  onToggle,
 }: {
   part: CorePart;
   y: number;
   entryShift: number;
   entryDelay: number;
   active: boolean;
+  selected: boolean;
+  emphasis: Emphasis;
   patternId: string;
-  onHot: (target: HotTarget) => void;
+  panelDomId?: string;
+  onHot: (target: HudTarget | null) => void;
+  onToggle: (target: HudTarget) => void;
 }) {
   const rx = PART_RX * clamp(part.scale ?? 1, 0.2, 1.3);
   const ry = rx * 0.3;
   const bodyHeight = part.shape === "core" ? 46 : 22;
   const stroke = active ? "var(--hud-text)" : stateColor(part.severity);
   const shell = part.shape === "shell";
+  // Épaisseur de trait : repère non chromatique de l'état épinglé.
+  const pinned = active && emphasis === "selected";
+  const contour = pinned ? STROKE.contour * 2 : STROKE.contour;
 
   return (
     <g
@@ -214,20 +283,22 @@ function PartView({
           "--hud-part-delay": `${entryDelay}ms`,
         } as CSSProperties
       }
-      role="group"
-      tabIndex={0}
       aria-label={`Pièce ${part.index} : ${part.label}`}
-      onMouseEnter={() => onHot({ kind: "part", id: part.id })}
-      onMouseLeave={() => onHot(null)}
-      onFocus={() => onHot({ kind: "part", id: part.id })}
-      onBlur={() => onHot(null)}
+      aria-controls={panelDomId}
+      data-hud-active={active}
+      {...targetInteractionProps({
+        target: { kind: "part", id: part.id },
+        selected,
+        onHot,
+        onToggle,
+      })}
     >
       <path
         d={`M ${CX - rx} ${y} L ${CX - rx} ${y + bodyHeight} A ${rx} ${ry} 0 0 0 ${CX + rx} ${y + bodyHeight} L ${CX + rx} ${y} Z`}
         fill="var(--hud-surface)"
         fillOpacity={shell ? 0.12 : 0.72}
         stroke={stroke}
-        strokeWidth={STROKE.contour}
+        strokeWidth={contour}
         strokeDasharray={shell ? "6 4" : undefined}
       />
       <ellipse
@@ -238,7 +309,7 @@ function PartView({
         fill="var(--hud-surface-alt)"
         fillOpacity={shell ? 0.16 : 0.82}
         stroke={stroke}
-        strokeWidth={STROKE.contour}
+        strokeWidth={contour}
         strokeDasharray={shell ? "6 4" : undefined}
       />
 
@@ -250,7 +321,7 @@ function PartView({
           ry={ry * 0.52}
           fill="var(--hud-ink)"
           stroke={stroke}
-          strokeWidth={STROKE.contour}
+          strokeWidth={contour}
         />
       )}
       {part.shape === "lattice" && (
@@ -282,7 +353,7 @@ function PartView({
               d={`M ${CX + direction * rx * (0.28 + arm * 0.3)} ${y + ry * 0.45} q ${direction * 48} ${42 + arm * 12} ${direction * 25} ${98 + arm * 18}`}
               fill="none"
               stroke={stroke}
-              strokeWidth={STROKE.contour}
+              strokeWidth={contour}
               strokeOpacity={0.78}
             />
           )),
@@ -295,10 +366,14 @@ function CalloutLine({
   part,
   y,
   active,
+  drawn,
+  epoch,
 }: {
   part: CorePart;
   y: number;
   active: boolean;
+  drawn: boolean;
+  epoch: number;
 }) {
   if (!part.callout) return null;
 
@@ -309,16 +384,38 @@ function CalloutLine({
   const lineEnd = marker + (left ? 10 : -10);
   const labelX = (edge + lineEnd) / 2;
   const color = active ? "var(--hud-text)" : "var(--hud-rule-strong)";
+  // Le trait est horizontal : sa longueur est l'écart en x.
+  const length = Math.abs(lineEnd - edge);
 
   return (
-    <g className="hudScene__callout" pointerEvents="none" aria-hidden="true">
+    <g
+      className="hudScene__callout"
+      pointerEvents="none"
+      aria-hidden="true"
+      data-hud-part={part.id}
+      data-hud-active={active}
+      data-hud-drawn={drawn}
+    >
       <line
+        // Remonter l'élément est ce qui rejoue le tracé : la clé ne change
+        // qu'à la sélection d'une nouvelle cible, jamais à un simple survol.
+        key={drawn ? `draw-${epoch}` : "static"}
+        className={
+          drawn ? "hudScene__calloutLine hudScene__calloutLine--draw" : undefined
+        }
         x1={edge}
         y1={y}
         x2={lineEnd}
         y2={y}
         stroke={color}
-        strokeWidth={STROKE.callout}
+        // Épaisseur doublée : distinction du trait tracé qui survit au
+        // mouvement réduit, où l'animation est supprimée.
+        strokeWidth={drawn ? STROKE.callout * 2 : STROKE.callout}
+        // dasharray = longueur exacte, dashoffset laissé à 0 : le trait est
+        // plein par défaut. Seule la keyframe part d'un offset non nul, donc
+        // « animation: none » le rend immédiatement visible.
+        strokeDasharray={length}
+        style={{ "--hud-callout-length": length } as CSSProperties}
       />
       <circle
         cx={marker}
@@ -682,30 +779,43 @@ function PanelContent({
 
 function PanelView({
   panel,
+  domId,
   x,
   y,
   active,
+  selected,
+  emphasis,
   reducedMotion,
   onHot,
+  onToggle,
 }: {
   panel: HudPanel;
+  domId: string;
   x: number;
   y: number;
   active: boolean;
+  selected: boolean;
+  emphasis: Emphasis;
   reducedMotion: boolean;
-  onHot: (target: HotTarget) => void;
+  onHot: (target: HudTarget | null) => void;
+  onToggle: (target: HudTarget) => void;
 }) {
+  // Épaisseur de cadre + liseré : repères non chromatiques de l'état épinglé.
+  const pinned = active && emphasis === "selected";
+
   return (
     <g
+      id={domId}
       className="hudScene__target"
       transform={`translate(${x} ${y})`}
-      role="group"
-      tabIndex={0}
       aria-label={`Panneau : ${panel.title}`}
-      onMouseEnter={() => onHot({ kind: "panel", id: panel.id })}
-      onMouseLeave={() => onHot(null)}
-      onFocus={() => onHot({ kind: "panel", id: panel.id })}
-      onBlur={() => onHot(null)}
+      data-hud-active={active}
+      {...targetInteractionProps({
+        target: { kind: "panel", id: panel.id },
+        selected,
+        onHot,
+        onToggle,
+      })}
     >
       <rect
         width={COL_W}
@@ -713,8 +823,18 @@ function PanelView({
         rx={1}
         fill="var(--hud-surface)"
         stroke={active ? "var(--hud-text)" : "var(--hud-rule)"}
-        strokeWidth={STROKE.structure}
+        strokeWidth={pinned ? STROKE.structure * 2.6 : STROKE.structure}
       />
+      {pinned && (
+        <rect
+          x={0}
+          y={0}
+          width={3}
+          height={PANEL_H}
+          fill="var(--hud-text)"
+          stroke="none"
+        />
+      )}
       <line
         x1={0}
         y1={30}
@@ -784,7 +904,8 @@ export const HUD_REDUCED_MOTION_CSS = `
   }
 `;
 
-const componentStyles = `
+/** Exporté pour que les tests puissent auditer animations et transitions. */
+export const HUD_COMPONENT_CSS = `
   .hudScene {
     --hud-label: "Arial Narrow", "Roboto Condensed", "Aptos Narrow", system-ui, sans-serif;
     --hud-mono: "IBM Plex Mono", "Cascadia Mono", ui-monospace, monospace;
@@ -835,11 +956,47 @@ const componentStyles = `
     user-select: none;
   }
   .hudScene__target {
-    cursor: crosshair;
+    cursor: pointer;
     outline: none;
   }
   .hudScene__target:focus-visible {
+    outline: 2px solid var(--hud-text);
+    outline-offset: 3px;
+    /* Repli pour les moteurs qui ignorent outline sur un <g> SVG. */
     filter: drop-shadow(0 0 3px var(--hud-text));
+  }
+  /* Micro-transition de changement d'état uniquement (150-220 ms). Neutralisée
+     avec le reste par le bloc « prefers-reduced-motion » plus bas. */
+  .hudScene__target,
+  .hudScene__callout {
+    transition:
+      opacity 180ms ease-out,
+      stroke 180ms ease-out;
+  }
+  /* Atténuation modérée des cibles hors sélection — jamais de disparition.
+     Le drapeau important est nécessaire : l'animation d'entrée des callouts a
+     un fill-mode « both » dont l'état final (opacity: 1) l'emporterait sinon
+     sur une déclaration normale. Les règles author importantes battent bien
+     les animations dans la cascade. */
+  .hudScene--pinned .hudScene__target[data-hud-active="false"],
+  .hudScene--pinned .hudScene__callout[data-hud-active="false"] {
+    opacity: 0.42 !important;
+  }
+  /* Un callout tracé est visible immédiatement, même pendant le fondu
+     d'entrée : sans cela, sélectionner une pièce dans la première seconde
+     traçait un trait encore à opacity 0 (le fondu a un fill-mode « both », qui
+     l'emporte sur une déclaration normale — d'où le drapeau important). */
+  .hudScene__callout[data-hud-drawn="true"] {
+    opacity: 1 !important;
+  }
+  /* Tracé ponctuel du callout lié à la sélection. Le trait reste ensuite
+     visible (fill-mode « both ») tant que la sélection tient. */
+  .hudScene__calloutLine--draw {
+    animation: hudScene-callout-draw 320ms cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+  @keyframes hudScene-callout-draw {
+    from { stroke-dashoffset: var(--hud-callout-length); }
+    to { stroke-dashoffset: 0; }
   }
   .hudScene--enter .hudScene__part {
     animation: hudScene-part-assemble ${PART_ASSEMBLY_MS}ms cubic-bezier(0.22, 1, 0.36, 1) var(--hud-part-delay) both;
@@ -867,17 +1024,68 @@ const componentStyles = `
 `;
 
 export default function HudScene({ scene }: { scene: Scene }) {
-  const [hot, setHot] = useState<HotTarget>(null);
-  const [hasEntered, setHasEntered] = useState(false);
+  // Survol / focus : transitoire. Sélection : épinglée par l'utilisateur.
+  // `epoch` n'est incrémenté qu'à la sélection d'une NOUVELLE cible. Il sert de
+  // clé de remontage pour rejouer le tracé du callout — et à rien d'autre : une
+  // désélection le laisse inchangé, donc ne rejoue rien.
+  const [hotTarget, setHotTarget] = useState<HudTarget | null>(null);
+  const [selection, setSelection] = useState<{
+    target: HudTarget | null;
+    epoch: number;
+  }>({ target: null, epoch: 0 });
   const reducedMotion = usePrefersReducedMotion();
+  const selectedTarget = selection.target;
+  const activeTarget = selectedTarget ?? hotTarget;
+  const emphasis: Emphasis = selectedTarget ? "selected" : "hot";
   const leftPanels = scene.panels.filter((panel) => panel.column === "left");
   const rightPanels = scene.panels.filter((panel) => panel.column === "right");
-  const safeSceneId = scene.id.replace(/[^a-zA-Z0-9_-]/g, "-") || "hud-scene";
+  const safeSceneId = domSafe(scene.id) || "hud-scene";
   const gridId = `${safeSceneId}-grid`;
   const latticeId = `${safeSceneId}-lattice`;
+  const descId = `${safeSceneId}-desc`;
+  const panelDomId = (id: string) => `${safeSceneId}-panel-${domSafe(id)}`;
   const ariaLabel = scene.subtitle
     ? `${scene.title}. ${scene.subtitle}`
     : scene.title;
+
+  // Description dérivée de la scène — aucune mesure ni valeur inventée.
+  const sceneDescription = [
+    scene.panels.every((panel) => panel.demo)
+      ? "Planche en mode démonstration : aucune télémétrie n'est branchée, les panneaux n'affichent aucune mesure."
+      : "Planche technique : les panneaux marqués DEMO DATA n'affichent aucune mesure réelle.",
+    `${scene.core.parts.length} pièces et ${scene.panels.length} panneaux.`,
+    "Utilisation au clavier : Tab atteint chaque pièce et chaque panneau, Entrée ou Espace épingle la sélection, une seconde activation ou Échap l'annule.",
+  ].join(" ");
+
+  const toggleTarget = useCallback((target: HudTarget) => {
+    setSelection((current) =>
+      sameTarget(current.target, target)
+        ? // Désélection : epoch figé, aucun tracé rejoué.
+          { target: null, epoch: current.epoch }
+        : { target, epoch: current.epoch + 1 },
+    );
+  }, []);
+
+  // Échap remonte depuis la cible focalisée : la portée reste la planche.
+  const handleSceneKeyDown = useCallback(
+    (event: ReactKeyboardEvent<HTMLDivElement>) => {
+      if (event.key !== "Escape") return;
+      setSelection((current) =>
+        current.target === null ? current : { target: null, epoch: current.epoch },
+      );
+    },
+    [],
+  );
+
+  // Callouts réellement reliés à la SÉLECTION (pas au survol) : eux seuls sont
+  // tracés. Une pièce sélectionnée trace son propre callout ; un panneau
+  // sélectionné trace ceux de toutes les pièces qui le référencent.
+  const partIsDrawn = (part: CorePart) =>
+    selectedTarget?.kind === "part"
+      ? selectedTarget.id === part.id
+      : selectedTarget?.kind === "panel"
+        ? selectedTarget.id === part.panelRef
+        : false;
 
   const yOf = (part: CorePart, explosion = scene.core.explosion) => {
     const spread = clamp(explosion, 0, 1);
@@ -885,19 +1093,23 @@ export default function HudScene({ scene }: { scene: Scene }) {
     return CORE_Y1 - centered * (CORE_Y1 - CORE_Y0);
   };
 
+  // Une pièce est active si elle est la cible, ou si la cible est le panneau
+  // qu'elle référence.
   const partIsActive = (part: CorePart) =>
-    hot?.kind === "part"
-      ? hot.id === part.id
-      : hot?.kind === "panel"
-        ? hot.id === part.panelRef
+    activeTarget?.kind === "part"
+      ? activeTarget.id === part.id
+      : activeTarget?.kind === "panel"
+        ? activeTarget.id === part.panelRef
         : false;
 
+  // Un panneau est actif s'il est la cible, ou si la cible est une pièce qui le
+  // référence — la sélection d'un panneau active donc toutes ses pièces.
   const panelIsActive = (panel: HudPanel) =>
-    hot?.kind === "panel"
-      ? hot.id === panel.id
-      : hot?.kind === "part"
+    activeTarget?.kind === "panel"
+      ? activeTarget.id === panel.id
+      : activeTarget?.kind === "part"
         ? scene.core.parts.some(
-            (part) => part.id === hot.id && part.panelRef === panel.id,
+            (part) => part.id === activeTarget.id && part.panelRef === panel.id,
           )
         : false;
 
@@ -914,24 +1126,32 @@ export default function HudScene({ scene }: { scene: Scene }) {
     "--hud-callout-delay": `${PART_ASSEMBLY_MS + Math.max(0, partsBottomToTop.length - 1) * PART_STAGGER_MS}ms`,
   } as CSSProperties;
 
-  useEffect(() => {
-    const frame = window.requestAnimationFrame(() => setHasEntered(true));
-    return () => window.cancelAnimationFrame(frame);
-  }, [scene.id]);
-
+  // `hudScene--enter` est posée dès le rendu serveur, et non après un
+  // requestAnimationFrame : sinon le HTML peint la planche déjà assemblée, puis
+  // l'hydratation la fait sauter en position repliée avant de la réassembler.
+  // L'animation étant purement CSS, elle démarre au premier paint, ne dépend
+  // pas de JS, et « animation: none » en mouvement réduit laisse les pièces à
+  // leur position finale — donc assemblées.
   return (
     <div
-      className={`hudScene hudScene--${scene.theme}${hasEntered ? " hudScene--enter" : ""}`}
+      className={`hudScene hudScene--${scene.theme} hudScene--enter${selectedTarget ? " hudScene--pinned" : ""}`}
       style={motionStyle}
+      onKeyDown={handleSceneKeyDown}
     >
-      <style>{componentStyles}</style>
+      <style>{HUD_COMPONENT_CSS}</style>
+      {/* role="group" et non role="img" : une image est atomique et retirerait
+          du même coup les pièces et panneaux focalisables de l'arbre
+          d'accessibilité. Le groupe conserve son nom accessible tout en
+          exposant ses descendants interactifs. */}
       <svg
         viewBox="0 0 1600 900"
-        role="img"
+        role="group"
         aria-label={ariaLabel}
+        aria-describedby={descId}
         preserveAspectRatio="xMidYMid meet"
       >
         <title>{ariaLabel}</title>
+        <desc id={descId}>{sceneDescription}</desc>
         <defs>
           <pattern
             id={gridId}
@@ -1041,6 +1261,33 @@ export default function HudScene({ scene }: { scene: Scene }) {
           aria-hidden="true"
         />
 
+        {/* Ordre du DOM = ordre de tabulation. On suit l'ordre de lecture de la
+            planche : colonne gauche, puis pièces de haut en bas, puis colonne
+            droite. Les colonnes ne recouvrent jamais les pièces (elles
+            s'arrêtent bien avant les repères de callout), donc les déplacer
+            avant elles ne change rien à l'empilement visuel. */}
+        {leftPanels.map((panel, index) => (
+          <PanelView
+            key={panel.id}
+            panel={panel}
+            domId={panelDomId(panel.id)}
+            x={LEFT_X}
+            y={104 + index * (PANEL_H + PANEL_GAP)}
+            active={panelIsActive(panel)}
+            selected={sameTarget(selectedTarget, {
+              kind: "panel",
+              id: panel.id,
+            })}
+            emphasis={emphasis}
+            reducedMotion={reducedMotion}
+            onHot={setHotTarget}
+            onToggle={toggleTarget}
+          />
+        ))}
+
+        {/* Les pièces restent peintes de l'arrière vers l'avant : cet ordre est
+            aussi celui du haut vers le bas de la planche, donc la tabulation
+            suit le regard. */}
         {partsBackToFront.map((part) => (
           <PartView
             key={part.id}
@@ -1049,8 +1296,12 @@ export default function HudScene({ scene }: { scene: Scene }) {
             entryShift={yOf(part, 0) - yOf(part)}
             entryDelay={(partMotionOrder.get(part.id) ?? 0) * PART_STAGGER_MS}
             active={partIsActive(part)}
+            selected={sameTarget(selectedTarget, { kind: "part", id: part.id })}
+            emphasis={emphasis}
             patternId={latticeId}
-            onHot={setHot}
+            panelDomId={part.panelRef ? panelDomId(part.panelRef) : undefined}
+            onHot={setHotTarget}
+            onToggle={toggleTarget}
           />
         ))}
         {partsBottomToTop.map((part) => (
@@ -1059,29 +1310,27 @@ export default function HudScene({ scene }: { scene: Scene }) {
             part={part}
             y={yOf(part)}
             active={partIsActive(part)}
+            drawn={partIsDrawn(part)}
+            epoch={selection.epoch}
           />
         ))}
 
-        {leftPanels.map((panel, index) => (
-          <PanelView
-            key={panel.id}
-            panel={panel}
-            x={LEFT_X}
-            y={104 + index * (PANEL_H + PANEL_GAP)}
-            active={panelIsActive(panel)}
-            reducedMotion={reducedMotion}
-            onHot={setHot}
-          />
-        ))}
         {rightPanels.map((panel, index) => (
           <PanelView
             key={panel.id}
             panel={panel}
+            domId={panelDomId(panel.id)}
             x={RIGHT_X}
             y={104 + index * (PANEL_H + PANEL_GAP)}
             active={panelIsActive(panel)}
+            selected={sameTarget(selectedTarget, {
+              kind: "panel",
+              id: panel.id,
+            })}
+            emphasis={emphasis}
             reducedMotion={reducedMotion}
-            onHot={setHot}
+            onHot={setHotTarget}
+            onToggle={toggleTarget}
           />
         ))}
 

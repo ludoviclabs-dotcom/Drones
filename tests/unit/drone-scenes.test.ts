@@ -50,4 +50,33 @@ describe("scènes HUD", () => {
       expect(markup).toContain(`aria-label="${scene.title}. ${scene.subtitle}"`);
     }
   });
+
+  it("rend chaque scène de façon strictement déterministe", () => {
+    for (const scene of hudScenes) {
+      const first = renderToStaticMarkup(createElement(HudScene, { scene }));
+      const second = renderToStaticMarkup(createElement(HudScene, { scene }));
+
+      expect(second).toBe(first);
+    }
+  });
+
+  it("expose la cellule de drone comme planche inspectable au clavier", () => {
+    const markup = renderToStaticMarkup(
+      createElement(HudScene, { scene: droneAirframeScene }),
+    );
+    const targets =
+      droneAirframeScene.core.parts.length + droneAirframeScene.panels.length;
+
+    expect(markup.split('role="button"').length - 1).toBe(targets);
+    expect(markup.split('aria-pressed="false"').length - 1).toBe(targets);
+    expect(markup).not.toContain('aria-pressed="true"');
+
+    // Chaque pièce de la cellule référence un panneau : le lien doit être
+    // exposé, et la cible du lien doit exister dans le même balisage.
+    for (const part of droneAirframeScene.core.parts) {
+      const domId = `drone-airframe-panel-${part.panelRef}`;
+      expect(markup).toContain(`aria-controls="${domId}"`);
+      expect(markup).toContain(`id="${domId}"`);
+    }
+  });
 });

@@ -1,0 +1,121 @@
+import type { HudScene } from "@/components/hud-scene";
+
+/**
+ * Fiche Drones validée pour le système HUD.
+ * Les mesures restent à l'état démo tant qu'aucune télémétrie n'est branchée.
+ */
+export const droneAirframeScene: HudScene = {
+  id: "drone-airframe",
+  title: "CELLULE DE DRONE",
+  subtitle: "OSINT INTELLIGENCE MILITAIRE · DONNÉES À BRANCHER",
+  theme: "graphite",
+  status: [
+    { label: "MODE", value: "DÉMO", severity: "offline" },
+    { label: "TÉLÉMÉTRIE", value: "NON BRANCHÉE", severity: "offline" },
+  ],
+  core: {
+    metaphor: "cellule de drone éclatée verticalement",
+    axis: "vertical",
+    explosion: 0.72,
+    parts: [
+      {
+        id: "chassis",
+        index: 1,
+        label: "Châssis",
+        shape: "core",
+        offset: 0.08,
+        scale: 1,
+        callout: { side: "left", text: "Châssis" },
+        panelRef: "attitude-cap",
+      },
+      {
+        id: "moteurs-esc",
+        index: 2,
+        label: "Bloc moteurs + ESC",
+        shape: "ring",
+        offset: 0.25,
+        scale: 1.08,
+        callout: { side: "right", text: "Moteurs + ESC" },
+        panelRef: "tension-consommation",
+      },
+      {
+        id: "centrale-inertielle-gps",
+        index: 3,
+        label: "Centrale inertielle et GPS",
+        shape: "disc",
+        offset: 0.42,
+        scale: 0.72,
+        callout: { side: "left", text: "Centrale IMU / GPS" },
+        panelRef: "attitude-cap",
+      },
+      {
+        id: "module-radio",
+        index: 4,
+        label: "Module radio",
+        shape: "disc",
+        offset: 0.59,
+        scale: 0.64,
+        callout: { side: "right", text: "Module radio" },
+        panelRef: "liaison-rf-satellites",
+      },
+      {
+        id: "batterie",
+        index: 5,
+        label: "Batterie",
+        shape: "disc",
+        offset: 0.76,
+        scale: 0.88,
+        callout: { side: "left", text: "Batterie" },
+        panelRef: "tension-consommation",
+      },
+      {
+        id: "nacelle-capteurs",
+        index: 6,
+        label: "Nacelle capteurs",
+        shape: "shell",
+        offset: 0.94,
+        scale: 0.78,
+        callout: { side: "right", text: "Nacelle capteurs" },
+        panelRef: "journal-vol",
+      },
+    ],
+  },
+  panels: [
+    {
+      id: "attitude-cap",
+      kind: "radial",
+      title: "Attitude et cap",
+      column: "left",
+      value: 0,
+      label: "—",
+      demo: true,
+    },
+    {
+      id: "tension-consommation",
+      kind: "sparkline",
+      title: "Tension et consommation",
+      column: "left",
+      series: [],
+      demo: true,
+    },
+    {
+      id: "liaison-rf-satellites",
+      kind: "readout",
+      title: "Liaison RF et satellites",
+      column: "right",
+      rows: [
+        { label: "Liaison RF", value: "—", severity: "offline" },
+        { label: "Satellites", value: "—", severity: "offline" },
+      ],
+      demo: true,
+    },
+    {
+      id: "journal-vol",
+      kind: "log",
+      title: "Journal de vol",
+      column: "right",
+      lines: [],
+      demo: true,
+    },
+  ],
+};

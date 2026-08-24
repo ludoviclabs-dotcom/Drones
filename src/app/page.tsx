@@ -74,12 +74,18 @@ export default function Home() {
                   Analyse — pas d'usage opérationnel
                 </Stamp>
               </div>
-              <div className="mt-9">
+              <div className="mt-9 flex flex-wrap gap-3">
                 <Link
                   href="#catalogue"
                   className="inline-flex h-11 items-center border border-accent px-5 font-mono text-xs uppercase tracking-[0.16em] text-accent transition-colors hover:bg-accent hover:text-bg"
                 >
                   Ouvrir le recueil →
+                </Link>
+                <Link
+                  href="/hud/drone-airframe"
+                  className="inline-flex h-11 items-center border border-line-bright px-5 font-mono text-xs uppercase tracking-[0.16em] text-ink-dim transition-colors hover:border-accent hover:text-accent"
+                >
+                  Voir le HUD drone →
                 </Link>
               </div>
             </div>

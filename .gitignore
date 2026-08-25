@@ -45,3 +45,7 @@ next-env.d.ts
 # captures d'écran de vérification (outils MCP, screenshots ad hoc)
 /.playwright-mcp/
 /*.png
+
+# fichiers Blender de travail (les assets sont reconstruits par tools/*/generate-*.py)
+*.blend
+*.blend[0-9]

@@ -1,0 +1,211 @@
+"use client";
+
+// React Compiler can mis-optimize R3F re-renders in some cases; opt out.
+"use no memo";
+
+import {
+  Component,
+  Suspense,
+  useCallback,
+  useEffect,
+  useState,
+  useSyncExternalStore,
+  type ReactNode,
+} from "react";
+import { Canvas } from "@react-three/fiber";
+import { Bounds, OrbitControls, useGLTF } from "@react-three/drei";
+import {
+  THUNDART_ASSET_PATH,
+  THUNDART_SEQUENCE_COPY,
+  type ThundartSequenceState,
+} from "@/data/hud/thundart";
+import { ThundartModel } from "./ThundartModel";
+
+type AssetStatus = "loading" | "ready" | "error";
+
+class ModelErrorBoundary extends Component<
+  { children: ReactNode; onError: () => void },
+  { hasError: boolean }
+> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch() {
+    this.props.onError();
+  }
+
+  render() {
+    return this.state.hasError ? <ModelErrorStandIn /> : this.props.children;
+  }
+}
+
+function LoadingStandIn() {
+  return (
+    <group position={[0, 0.85, 0]}>
+      <mesh position={[0, 0.4, 0]}>
+        <boxGeometry args={[2.7, 0.6, 7.8]} />
+        <meshBasicMaterial color="#6d8a9a" wireframe transparent opacity={0.55} />
+      </mesh>
+      <mesh position={[0, 1.35, 1.1]}>
+        <boxGeometry args={[2.3, 1.3, 3.7]} />
+        <meshBasicMaterial color="#e07a4d" wireframe transparent opacity={0.6} />
+      </mesh>
+    </group>
+  );
+}
+
+function ModelErrorStandIn() {
+  return (
+    <mesh position={[0, 1.6, 0]}>
+      <boxGeometry args={[3.2, 2.2, 6]} />
+      <meshBasicMaterial color="#b9602e" wireframe transparent opacity={0.75} />
+    </mesh>
+  );
+}
+
+function WebGlFallback() {
+  return (
+    <div className="grid h-full place-items-center px-6 text-center font-mono text-xs leading-relaxed text-ink-dim">
+      La vue 3D requiert WebGL. La structure éditoriale et les contrôles restent
+      disponibles dans la page.
+    </div>
+  );
+}
+
+export function ThundartScene3D({
+  sequenceState,
+}: {
+  sequenceState: ThundartSequenceState;
+}) {
+  const mounted = useSyncExternalStore(
+    subscribeToHydration,
+    getClientHydrationSnapshot,
+    getServerHydrationSnapshot,
+  );
+  const [assetStatus, setAssetStatus] = useState<AssetStatus>("loading");
+  const controlsEnabled =
+    sequenceState === "overview" || sequenceState === "inspect";
+
+  useEffect(() => {
+    useGLTF.preload(THUNDART_ASSET_PATH);
+  }, []);
+
+  const handleReady = useCallback(() => setAssetStatus("ready"), []);
+  const handleError = useCallback(() => setAssetStatus("error"), []);
+
+  const statusCopy =
+    assetStatus === "ready"
+      ? "Asset GLB chargé · vue statique"
+      : assetStatus === "error"
+        ? "Asset indisponible · repère de secours affiché"
+        : "Chargement de l’asset GLB local";
+
+  return (
+    <div
+      className="relative h-[clamp(26rem,62vw,46rem)] min-w-0 overflow-hidden border border-line bg-[#11100c] xl:h-[min(72vh,46rem)]"
+      role="group"
+      aria-label={`Vue 3D Thundart. État : ${THUNDART_SEQUENCE_COPY[sequenceState].label}.`}
+    >
+      {mounted ? (
+        <Canvas
+          aria-hidden="true"
+          camera={{ position: [12.5, 7.5, -14.5], fov: 30, near: 0.1, far: 80 }}
+          dpr={[1, 1.5]}
+          fallback={<WebGlFallback />}
+          frameloop="demand"
+          gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
+          shadows
+        >
+          <color attach="background" args={["#11100c"]} />
+          <fog attach="fog" args={["#11100c", 20, 42]} />
+
+          <ambientLight intensity={0.65} color="#94a2a7" />
+          <hemisphereLight args={["#d8ded9", "#201d14", 1.1]} />
+          <directionalLight
+            castShadow
+            color="#ece6d5"
+            intensity={2.2}
+            position={[-7, 12, -8]}
+            shadow-bias={-0.0004}
+            shadow-mapSize-height={1024}
+            shadow-mapSize-width={1024}
+          />
+          <directionalLight
+            color="#c8793f"
+            intensity={0.8}
+            position={[9, 4, 7]}
+          />
+
+          <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
+            <planeGeometry args={[36, 36]} />
+            <meshStandardMaterial color="#14130e" roughness={1} metalness={0} />
+          </mesh>
+          <gridHelper
+            args={[28, 28, "#6d8a9a", "#33301f"]}
+            position={[0, 0.012, 0]}
+          />
+
+          <ModelErrorBoundary onError={handleError}>
+            <Suspense fallback={<LoadingStandIn />}>
+              <Bounds fit clip observe margin={1.18} maxDuration={0}>
+                <ThundartModel onReady={handleReady} />
+              </Bounds>
+            </Suspense>
+          </ModelErrorBoundary>
+
+          <OrbitControls
+            makeDefault
+            enabled={controlsEnabled}
+            enableDamping
+            dampingFactor={0.08}
+            enablePan={false}
+            maxDistance={24}
+            maxPolarAngle={1.45}
+            minDistance={10}
+            minPolarAngle={0.55}
+            target={[0, 1.65, 0]}
+          />
+        </Canvas>
+      ) : (
+        <div className="grid h-full place-items-center px-8 text-center">
+          <div className="max-w-sm border border-line bg-panel/70 px-5 py-4 font-mono text-[11px] uppercase leading-relaxed tracking-[0.14em] text-ink-dim">
+            Préparation de la vue 3D locale
+          </div>
+        </div>
+      )}
+
+      <span className="pointer-events-none absolute left-0 top-0 h-8 w-8 border-l border-t border-accent" />
+      <span className="pointer-events-none absolute right-0 top-0 h-8 w-8 border-r border-t border-accent" />
+      <span className="pointer-events-none absolute bottom-0 left-0 h-8 w-8 border-b border-l border-accent" />
+      <span className="pointer-events-none absolute bottom-0 right-0 h-8 w-8 border-b border-r border-accent" />
+
+      <div className="pointer-events-none absolute left-3 top-3 border border-line-bright bg-panel/85 px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.18em] text-ink-dim sm:left-4 sm:top-4 sm:text-[10px]">
+        THD-02 · GLB statique
+      </div>
+      <div
+        className="pointer-events-none absolute bottom-3 left-3 max-w-[calc(100%-1.5rem)] border border-line-bright bg-panel/90 px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.13em] text-ink-dim sm:bottom-4 sm:left-4 sm:text-[10px]"
+        aria-live="polite"
+      >
+        {statusCopy}
+      </div>
+      <div className="pointer-events-none absolute bottom-3 right-3 hidden border border-line-bright bg-panel/85 px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.13em] text-ink-faint sm:block">
+        {controlsEnabled ? "Glisser · pivoter / molette · zoomer" : "Caméra verrouillée dans cet état"}
+      </div>
+    </div>
+  );
+}
+
+function subscribeToHydration() {
+  return () => undefined;
+}
+
+function getClientHydrationSnapshot() {
+  return true;
+}
+
+function getServerHydrationSnapshot() {
+  return false;
+}

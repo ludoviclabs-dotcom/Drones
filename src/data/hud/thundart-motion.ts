@@ -70,7 +70,7 @@ export type ThundartClipDurations = {
 };
 
 /**
- * Durées lues dans `public/models/hud/thundart.glb` (THD-01). Elles ne servent
+ * Durées lues dans `public/models/hud/thundart.glb`. Elles ne servent
  * que de repli : à l'exécution, les durées réelles des `AnimationClip` chargés
  * sont utilisées, pour que le mouvement reste aligné si l'asset est régénéré.
  */
@@ -109,7 +109,7 @@ export const THUNDART_CAMERA_POSES: Record<
   ThundartSequenceState,
   ThundartCameraPose
 > = {
-  // Silhouette générale, trois-quarts avant (cadrage hérité de THD-02).
+  // Silhouette générale, trois-quarts avant (cadrage de référence).
   overview: { position: [12.5, 7.5, -14.5], target: [0, 1.65, 0] },
   // Bascule en trois-quarts arrière : c'est de là que les huit conteneurs, le
   // cadre du rack et les quatre essieux se lisent en une seule vue.
@@ -120,10 +120,18 @@ export const THUNDART_CAMERA_POSES: Record<
   // Cadre nettement élargi : la séparation illustrative sort du gabarit du
   // véhicule et doit rester entièrement visible.
   departure: { position: [19.5, 11.0, 16.5], target: [-0.4, 4.8, 2.5] },
-  // Arrêt sur image : la géométrie ne bouge plus, seul le cadre s'ouvre un peu
-  // pour rendre la planche complète d'un seul regard.
-  complete: { position: [21.5, 12.0, 18.0], target: [-0.4, 4.6, 2.3] },
+  // Frame finale : la géométrie reste figée, mais ce trois-quarts arrière est
+  // volontairement plus proche que « departure ». Rack, véhicule et projectile
+  // séparé restent ainsi lisibles ensemble sans conclure par un recul.
+  complete: { position: [17.8, 9.8, 16.8], target: [-0.25, 4.1, 1.6] },
 };
+
+/** Distance euclidienne d'un cadrage, utile pour borner les poses finales. */
+export function cameraDistanceForPose(pose: ThundartCameraPose): number {
+  const [px, py, pz] = pose.position;
+  const [tx, ty, tz] = pose.target;
+  return Math.hypot(px - tx, py - ty, pz - tz);
+}
 
 /** Avancement des clips GLB pour chaque état. Toujours 0 ou 1 : pas d'état intermédiaire. */
 export const THUNDART_CLIP_POSES: Record<

@@ -98,7 +98,7 @@ export default function RootLayout({
         <SafetyBoundaryBanner />
 
         <header className="sticky top-0 z-40 border-b border-line bg-bg/90 backdrop-blur">
-          <div className="mx-auto flex min-h-16 max-w-[1180px] flex-wrap items-center justify-between gap-x-4 gap-y-1 px-5 py-2 sm:flex-nowrap">
+          <div className="mx-auto flex min-h-[var(--site-header-content-height)] max-w-[1180px] flex-wrap items-center justify-between gap-x-4 gap-y-1 px-5 py-2 sm:flex-nowrap">
             <Link href="/" className="flex shrink-0 items-baseline gap-3">
               <span className="font-serif text-2xl leading-none tracking-tight text-ink">
                 Panoplie

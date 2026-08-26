@@ -44,7 +44,10 @@ export const THUNDART_INSPECTABLES: readonly ThundartInspectable[] = [
   },
 ] as const;
 
-export const THUNDART_SOURCE_STATUS = "DOCUMENTÉ · HANDOFF THD-01";
+// Formulation produit : la provenance reste explicitement illustrative sans
+// exposer les identifiants internes des handoffs dans l'interface publique.
+export const THUNDART_SOURCE_STATUS =
+  "DOCUMENTATION PUBLIQUE · REPRÉSENTATION ILLUSTRATIVE";
 
 export type ThundartInspectionState = {
   previewId: ThundartInspectableId | null;
@@ -87,7 +90,12 @@ export function thundartInspectionReducer(
           }
         : state;
     case "CLEAR_SELECTION":
-      return state.selectedId === null ? state : { ...state, selectedId: null };
+      // Échap est une désélection explicite : il efface aussi un aperçu résiduel
+      // (par exemple lorsque le pointeur reste au-dessus d'un bouton) pour que
+      // le modèle et son repère local reviennent réellement à l'état neutre.
+      return state.selectedId === null && state.previewId === null
+        ? state
+        : THUNDART_INITIAL_INSPECTION_STATE;
   }
 }
 

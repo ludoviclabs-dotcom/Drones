@@ -30,7 +30,7 @@ export function ThundartControls({
       <div className="border-b border-line px-4 py-3">
         <h3
           id="thundart-sequence-heading"
-          className="font-mono text-[9px] uppercase tracking-[0.2em] text-ink-faint"
+          className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint"
         >
           Séquence éditoriale
         </h3>
@@ -45,7 +45,7 @@ export function ThundartControls({
           {copy.description}
         </p>
         {reducedMotion ? (
-          <p className="mt-2 border-l border-stamp pl-2 font-mono text-[9px] uppercase leading-relaxed tracking-[0.12em] text-stamp">
+          <p className="mt-2 border-l border-stamp pl-2 font-mono text-[10px] uppercase leading-relaxed tracking-[0.1em] text-stamp">
             Mouvement réduit actif · poses appliquées sans transition
           </p>
         ) : null}
@@ -78,7 +78,7 @@ export function ThundartControls({
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <span
-                  className={`truncate font-mono text-[9px] uppercase tracking-[0.12em] ${
+                  className={`truncate font-mono text-[10px] uppercase tracking-[0.1em] ${
                     active ? "text-ink" : "text-ink-faint"
                   }`}
                 >
@@ -93,7 +93,7 @@ export function ThundartControls({
       <div className="grid grid-cols-3 gap-px border-t border-line bg-line">
         <button
           type="button"
-          className="min-h-12 bg-panel px-2 font-mono text-[9px] uppercase tracking-[0.12em] text-ink-dim motion-safe:transition-colors hover:bg-surface-2 hover:text-ink disabled:cursor-not-allowed disabled:text-ink-faint disabled:opacity-45"
+          className="min-h-12 bg-panel px-2 font-mono text-[10px] uppercase tracking-[0.1em] text-ink-dim motion-safe:transition-colors hover:bg-surface-2 hover:text-ink disabled:cursor-not-allowed disabled:text-ink-faint disabled:opacity-45"
           onClick={() => dispatch({ type: "PREVIOUS" })}
           disabled={isFirst}
         >
@@ -101,14 +101,14 @@ export function ThundartControls({
         </button>
         <button
           type="button"
-          className="min-h-12 bg-panel px-2 font-mono text-[9px] uppercase tracking-[0.12em] text-ink-dim motion-safe:transition-colors hover:bg-surface-2 hover:text-ink"
+          className="min-h-12 bg-panel px-2 font-mono text-[10px] uppercase tracking-[0.1em] text-ink-dim motion-safe:transition-colors hover:bg-surface-2 hover:text-ink"
           onClick={() => dispatch({ type: "RESET" })}
         >
           Réinitialiser
         </button>
         <button
           type="button"
-          className="min-h-12 bg-accent-deep px-2 font-mono text-[9px] uppercase tracking-[0.12em] text-[#fff8e8] motion-safe:transition-colors hover:bg-[#8f4319] disabled:cursor-not-allowed disabled:bg-panel disabled:text-ink-faint disabled:opacity-45"
+          className="min-h-12 bg-accent-deep px-2 font-mono text-[10px] uppercase tracking-[0.1em] text-[#fff8e8] motion-safe:transition-colors hover:bg-[#8f4319] disabled:cursor-not-allowed disabled:bg-panel disabled:text-ink-faint disabled:opacity-45"
           onClick={() => dispatch({ type: "NEXT" })}
           disabled={isLast}
         >

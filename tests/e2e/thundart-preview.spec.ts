@@ -94,6 +94,40 @@ test.describe("Thundart — candidate Preview", () => {
     await expect(scene(page)).toHaveAttribute("data-thundart-motion", "idle");
   });
 
+  test("COMPLETE atteint une frame finale distincte et borne NEXT", async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto(ROUTE);
+    await waitForAsset(page);
+
+    const next = page.getByRole("button", { name: "Suivant" });
+    for (let step = 0; step < 4; step += 1) await next.click();
+
+    await expect(experience(page)).toHaveAttribute("data-sequence-state", "complete");
+    await expect(scene(page)).toHaveAttribute("data-thundart-motion", "idle");
+    await expect(next).toBeDisabled();
+    await expect(page.getByText("Planche terminée", { exact: true })).toBeVisible();
+  });
+
+  test("l’ancre de la planche reste sous le header sticky", async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto(ROUTE);
+    await waitForAsset(page);
+    await page.locator("#thundart-experience").evaluate((element) =>
+      element.scrollIntoView(),
+    );
+
+    const clearOfHeader = await page.evaluate(() => {
+      const sceneBox = document
+        .querySelector("[data-thundart-motion]")
+        ?.getBoundingClientRect();
+      const headerBox = document.querySelector("header")?.getBoundingClientRect();
+      return Boolean(sceneBox && headerBox && sceneBox.top >= headerBox.bottom);
+    });
+    expect(clearOfHeader).toBe(true);
+  });
+
   test("navigation, retour, reload et resize conservent une page stable", async ({
     page,
   }) => {

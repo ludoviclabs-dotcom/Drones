@@ -8,6 +8,7 @@ import {
 } from "@/data/hud/thundart";
 import {
   buildThundartMotionPlan,
+  cameraDistanceForPose,
   easeInOut,
   everyStateHasMotionPose,
   flashPulse,
@@ -89,6 +90,35 @@ describe("poses de mouvement Thundart", () => {
     });
     expect(THUNDART_CLIP_POSES.complete).toEqual(
       THUNDART_CLIP_POSES.departure,
+    );
+  });
+
+  it("conserve les poses déjà validées et resserre la frame COMPLETE", () => {
+    expect(THUNDART_CAMERA_POSES.overview).toEqual({
+      position: [12.5, 7.5, -14.5],
+      target: [0, 1.65, 0],
+    });
+    expect(THUNDART_CAMERA_POSES.inspect).toEqual({
+      position: [13.5, 7.0, 14.5],
+      target: [0, 1.9, 1.0],
+    });
+    expect(THUNDART_CAMERA_POSES.configure).toEqual({
+      position: [14.5, 8.2, 14.0],
+      target: [0, 3.0, 1.5],
+    });
+    expect(THUNDART_CAMERA_POSES.departure).toEqual({
+      position: [19.5, 11.0, 16.5],
+      target: [-0.4, 4.8, 2.5],
+    });
+
+    expect(THUNDART_CAMERA_POSES.complete).not.toEqual(
+      THUNDART_CAMERA_POSES.departure,
+    );
+    expect(cameraDistanceForPose(THUNDART_CAMERA_POSES.complete)).toBeLessThan(
+      cameraDistanceForPose(THUNDART_CAMERA_POSES.departure),
+    );
+    expect(cameraDistanceForPose(THUNDART_CAMERA_POSES.complete)).toBeLessThan(
+      25,
     );
   });
 });

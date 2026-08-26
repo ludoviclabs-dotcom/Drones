@@ -22,7 +22,7 @@ export default function ThundartHudPage() {
       <header className="mb-4 grid gap-5 border-y border-line py-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
         <div className="min-w-0">
           <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent">
-            Planche technique / démonstration · THD-05
+            Planche technique · démonstration illustrative
           </p>
           <h1 className="mt-2 max-w-4xl font-serif text-3xl leading-[1.05] text-ink sm:text-4xl lg:text-5xl">
             Thundart — inspection extérieure 3D
@@ -34,7 +34,7 @@ export default function ThundartHudPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3 border border-line bg-panel px-3 py-2.5 font-mono text-[9px] uppercase tracking-[0.16em] text-ink-dim sm:text-[10px]">
+        <div className="flex items-center gap-3 border border-line bg-panel px-3 py-2.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-dim">
           <span className="h-2 w-2 bg-stamp" aria-hidden="true" />
           <span>HUD technique · inspection accessible</span>
         </div>

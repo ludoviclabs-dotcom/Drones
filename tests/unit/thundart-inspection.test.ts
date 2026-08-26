@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   THUNDART_INITIAL_INSPECTION_STATE,
   THUNDART_INSPECTABLES,
+  THUNDART_SOURCE_STATUS,
   activeThundartInspectionId,
   isThundartInspectableId,
   thundartInspectionIdForNodeName,
@@ -53,6 +54,29 @@ describe("inspection accessible Thundart", () => {
 
     expect(fromPointer).toEqual(fromFocus);
     expect(activeThundartInspectionId(fromPointer)).toBe("launcher-rack");
+  });
+
+  it("active le même mode d’inspection pour le projectile en aperçu et en sélection", () => {
+    const preview = thundartInspectionReducer(
+      THUNDART_INITIAL_INSPECTION_STATE,
+      { type: "PREVIEW", id: "demonstration-projectile" },
+    );
+    const selected = thundartInspectionReducer(preview, {
+      type: "TOGGLE",
+      id: "demonstration-projectile",
+    });
+
+    expect(activeThundartInspectionId(preview)).toBe(
+      "demonstration-projectile",
+    );
+    expect(activeThundartInspectionId(selected)).toBe(
+      "demonstration-projectile",
+    );
+  });
+
+  it("n’expose aucun code de handoff dans le statut public", () => {
+    expect(THUNDART_SOURCE_STATUS).toMatch(/DOCUMENTATION PUBLIQUE/);
+    expect(THUNDART_SOURCE_STATUS).not.toMatch(/THD-|HANDOFF/);
   });
 
   it("épingle et désépingle une cible sans perdre la logique d’aperçu", () => {

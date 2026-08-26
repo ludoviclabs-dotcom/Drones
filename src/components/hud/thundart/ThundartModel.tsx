@@ -31,11 +31,13 @@ import {
 
 const [CONFIGURE_CLIP, DEPARTURE_CLIP] = THUNDART_ASSET_MANIFEST.animationClips;
 const FLASH_HOST_NODE = "THD_Canister_01";
+const PROJECTILE_CARRIER_NODE = "THD_Canister_01";
 const DEFAULT_TARGET = new THREE.Vector3(0, 1.65, 0);
 const INSPECTION_ACCENT = new THREE.Color("#e07a4d");
 
 type InspectableMaterialRecord = {
   componentId: ThundartInspectableId | null;
+  projectileCarrier: boolean;
   material: THREE.MeshStandardMaterial;
   color: THREE.Color;
   emissive: THREE.Color;
@@ -47,6 +49,7 @@ function applyInspectionMaterialStyle(
   activeId: ThundartInspectableId | null,
   pinned: boolean,
 ) {
+  const projectileInspection = activeId === "demonstration-projectile";
   for (const record of records) {
     const { material } = record;
     material.color.copy(record.color);
@@ -54,10 +57,20 @@ function applyInspectionMaterialStyle(
     material.emissiveIntensity = record.emissiveIntensity;
 
     if (!activeId) continue;
-    if (record.componentId === activeId) {
-      material.color.lerp(INSPECTION_ACCENT, pinned ? 0.2 : 0.11);
+    const carriesProjectile = projectileInspection && record.projectileCarrier;
+    if (record.componentId === activeId || carriesProjectile) {
+      material.color.lerp(
+        INSPECTION_ACCENT,
+        carriesProjectile ? 0.34 : pinned ? 0.24 : 0.14,
+      );
       material.emissive.copy(INSPECTION_ACCENT);
-      material.emissiveIntensity = pinned ? 0.34 : 0.18;
+      material.emissiveIntensity = carriesProjectile
+        ? pinned
+          ? 0.58
+          : 0.38
+        : pinned
+          ? 0.42
+          : 0.24;
     } else {
       // Atténuation colorimétrique seulement : aucun objet ne disparaît et
       // aucune transparence ne perturbe l'ordre de rendu du GLB.
@@ -79,6 +92,20 @@ function inspectionIdForObject(
     current = current.parent;
   }
   return null;
+}
+
+function isWithinNode(
+  object: THREE.Object3D,
+  nodeName: string,
+  root: THREE.Object3D,
+): boolean {
+  let current: THREE.Object3D | null = object;
+  while (current) {
+    if (current.name === nodeName) return true;
+    if (current === root) return false;
+    current = current.parent;
+  }
+  return false;
 }
 
 /**
@@ -129,6 +156,12 @@ type ThundartRuntime = {
   flash: THREE.Mesh;
   flashMaterial: THREE.MeshBasicMaterial;
   flashHost: THREE.Object3D | null;
+  projectileIndicator: THREE.LineSegments<
+    THREE.EdgesGeometry,
+    THREE.LineBasicMaterial
+  >;
+  projectileIndicatorMaterial: THREE.LineBasicMaterial;
+  projectileIndicatorHost: THREE.Object3D | null;
 };
 
 function createRuntime(
@@ -183,13 +216,69 @@ function createRuntime(
     flashHost = host;
   }
 
-  return { mixer, actions, flash, flashMaterial, flashHost };
+  // Repère sobre et localisé : il identifie le tube porteur du projectile sans
+  // déplacer l'asset ni jouer le clip de séparation. Son cadre filaire est
+  // plus lisible qu'un halo lorsque le projectile reste dans son conteneur.
+  const projectileIndicatorMaterial = new THREE.LineBasicMaterial({
+    color: "#f2b36f",
+    transparent: true,
+    opacity: 0,
+    depthTest: false,
+    depthWrite: false,
+    toneMapped: false,
+  });
+  const carrier = model.getObjectByName(PROJECTILE_CARRIER_NODE);
+  if (carrier) model.updateWorldMatrix(true, true);
+  const carrierBounds = carrier
+    ? new THREE.Box3().setFromObject(carrier)
+    : null;
+  const carrierSize = carrierBounds?.getSize(new THREE.Vector3());
+  const projectileIndicator = new THREE.LineSegments(
+    new THREE.EdgesGeometry(
+      new THREE.BoxGeometry(
+        (carrierSize?.x ?? 0.1) + 0.08,
+        (carrierSize?.y ?? 0.1) + 0.08,
+        (carrierSize?.z ?? 0.1) + 0.08,
+      ),
+    ),
+    projectileIndicatorMaterial,
+  );
+  projectileIndicator.name = "THD_UI_ProjectileCarrierIndicator";
+  projectileIndicator.visible = false;
+  projectileIndicator.renderOrder = 3;
+  // Le repère ne doit pas transformer un geste caméra en nouvelle cible R3F.
+  projectileIndicator.raycast = () => undefined;
+
+  let projectileIndicatorHost: THREE.Object3D | null = null;
+  if (carrierBounds) {
+    projectileIndicator.position.copy(
+      carrierBounds?.getCenter(new THREE.Vector3()) ?? new THREE.Vector3(),
+    );
+    // La boîte est calculée dans l’espace de `model`, ce qui rend le repère
+    // valide même si THD_Canister_01 est un groupe et non un mesh direct.
+    model.add(projectileIndicator);
+    projectileIndicatorHost = model;
+  }
+
+  return {
+    mixer,
+    actions,
+    flash,
+    flashMaterial,
+    flashHost,
+    projectileIndicator,
+    projectileIndicatorMaterial,
+    projectileIndicatorHost,
+  };
 }
 
 function disposeRuntime(runtime: ThundartRuntime) {
   runtime.flashHost?.remove(runtime.flash);
   runtime.flash.geometry.dispose();
   runtime.flashMaterial.dispose();
+  runtime.projectileIndicatorHost?.remove(runtime.projectileIndicator);
+  runtime.projectileIndicator.geometry.dispose();
+  runtime.projectileIndicatorMaterial.dispose();
   runtime.mixer.stopAllAction();
   runtime.mixer.uncacheRoot(runtime.mixer.getRoot() as THREE.Object3D);
 }
@@ -231,6 +320,7 @@ export function ThundartModel({
   const controls = useThree((state) => asOrbitControls(state.controls));
   const invalidate = useThree((state) => state.invalidate);
   const size = useThree((state) => state.size);
+  const gl = useThree((state) => state.gl);
 
   const preparedModel = useMemo(() => {
     const clone = scene.clone(true);
@@ -254,6 +344,11 @@ export function ThundartModel({
           if (!(material instanceof THREE.MeshStandardMaterial)) continue;
           materials.push({
             componentId,
+            projectileCarrier: isWithinNode(
+              child,
+              PROJECTILE_CARRIER_NODE,
+              clone,
+            ),
             material,
             color: material.color.clone(),
             emissive: material.emissive.clone(),
@@ -292,6 +387,17 @@ export function ThundartModel({
   const lastSampleRef = useRef<ThundartMotionSample | null>(null);
   const framingScaleRef = useRef(1);
   const inspectionMaterialsRef = useRef<InspectableMaterialRecord[]>([]);
+  const inspectionVisualRef = useRef({
+    activeId: null as ThundartInspectableId | null,
+    pinned: false,
+  });
+  const orbitGestureRef = useRef({
+    pointerId: null as number | null,
+    startX: 0,
+    startY: 0,
+    dragging: false,
+    suppressClick: false,
+  });
 
   useEffect(() => {
     inspectionMaterialsRef.current = preparedModel.materials;
@@ -305,11 +411,22 @@ export function ThundartModel({
 
   useEffect(() => {
     const pinned = selectedInspectionId === activeInspectionId;
+    inspectionVisualRef.current = { activeId: activeInspectionId, pinned };
     applyInspectionMaterialStyle(
       inspectionMaterialsRef.current,
       activeInspectionId,
       pinned,
     );
+    const runtime = runtimeRef.current;
+    if (runtime) {
+      const active = activeInspectionId === "demonstration-projectile";
+      runtime.projectileIndicator.visible = active;
+      runtime.projectileIndicatorMaterial.opacity = active
+        ? pinned
+          ? 0.94
+          : 0.68
+        : 0;
+    }
     invalidate();
   }, [
     activeInspectionId,
@@ -327,11 +444,63 @@ export function ThundartModel({
   useEffect(() => {
     const runtime = createRuntime(model, animations);
     runtimeRef.current = runtime;
+    const { activeId, pinned } = inspectionVisualRef.current;
+    const projectileActive = activeId === "demonstration-projectile";
+    runtime.projectileIndicator.visible = projectileActive;
+    runtime.projectileIndicatorMaterial.opacity = projectileActive
+      ? pinned
+        ? 0.94
+        : 0.68
+      : 0;
     return () => {
       runtimeRef.current = null;
       disposeRuntime(runtime);
     };
   }, [model, animations]);
+
+  // OrbitControls consomment aussi les gestes démarrés sur le fond du Canvas,
+  // donc le suivi est attaché au DOM et non seulement aux meshes touchés. Au
+  // premier vrai déplacement, tout aperçu transitoire est nettoyé; un clic ou
+  // un tap immobile garde exactement le comportement d'inspection existant.
+  useEffect(() => {
+    const element = gl.domElement;
+    const begin = (event: PointerEvent) => {
+      orbitGestureRef.current = {
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        startY: event.clientY,
+        dragging: false,
+        suppressClick: false,
+      };
+    };
+    const move = (event: PointerEvent) => {
+      const gesture = orbitGestureRef.current;
+      if (gesture.pointerId !== event.pointerId || gesture.dragging) return;
+      if (Math.hypot(event.clientX - gesture.startX, event.clientY - gesture.startY) < 6) {
+        return;
+      }
+      gesture.dragging = true;
+      gesture.suppressClick = true;
+      onInspectionPreview(null);
+    };
+    const finish = (event: PointerEvent) => {
+      const gesture = orbitGestureRef.current;
+      if (gesture.pointerId !== event.pointerId) return;
+      gesture.pointerId = null;
+      gesture.dragging = false;
+    };
+
+    element.addEventListener("pointerdown", begin, true);
+    element.addEventListener("pointermove", move, true);
+    element.addEventListener("pointerup", finish, true);
+    element.addEventListener("pointercancel", finish, true);
+    return () => {
+      element.removeEventListener("pointerdown", begin, true);
+      element.removeEventListener("pointermove", move, true);
+      element.removeEventListener("pointerup", finish, true);
+      element.removeEventListener("pointercancel", finish, true);
+    };
+  }, [gl, onInspectionPreview]);
 
   const applySample = useCallback(
     (sample: ThundartMotionSample) => {
@@ -476,6 +645,7 @@ export function ThundartModel({
   const handlePointerOver = useCallback(
     (event: ThreeEvent<PointerEvent>) => {
       if (event.pointerType === "touch") return;
+      if (orbitGestureRef.current.dragging) return;
       const id = inspectionIdForObject(event.object, model);
       if (!id) return;
       event.stopPropagation();
@@ -487,6 +657,7 @@ export function ThundartModel({
   const handlePointerOut = useCallback(
     (event: ThreeEvent<PointerEvent>) => {
       if (event.pointerType === "touch") return;
+      if (orbitGestureRef.current.dragging) return;
       event.stopPropagation();
       onInspectionPreview(null);
     },
@@ -495,6 +666,10 @@ export function ThundartModel({
 
   const handleClick = useCallback(
     (event: ThreeEvent<MouseEvent>) => {
+      if (orbitGestureRef.current.suppressClick) {
+        orbitGestureRef.current.suppressClick = false;
+        return;
+      }
       const id = inspectionIdForObject(event.object, model);
       if (!id) return;
       event.stopPropagation();

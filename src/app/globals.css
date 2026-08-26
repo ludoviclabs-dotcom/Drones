@@ -56,6 +56,9 @@
 
 :root {
   color-scheme: dark;
+  /* Source unique pour la hauteur du header sticky et les ancres de planches. */
+  --site-header-content-height: 4rem;
+  --site-header-offset: calc(var(--site-header-content-height) + 1px);
 }
 
 * {
@@ -64,6 +67,11 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--site-header-offset) + 0.75rem);
+}
+
+.thundartExperience {
+  scroll-margin-top: calc(var(--site-header-offset) + 0.75rem);
 }
 
 body {

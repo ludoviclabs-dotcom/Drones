@@ -112,6 +112,11 @@ export function ThundartScene3D({
     !transitionRunning &&
     (sequenceState === "overview" || sequenceState === "inspect");
   const activeInspection = thundartInspectableById(activeInspectionId);
+  const projectileInspection =
+    activeInspectionId === "demonstration-projectile";
+  const inspectionCallout = projectileInspection
+    ? "DEMONSTRATION PROJECTILE · TUBE 01"
+    : activeInspection?.label;
 
   useEffect(() => {
     useGLTF.preload(THUNDART_ASSET_PATH);
@@ -137,7 +142,7 @@ export function ThundartScene3D({
 
   return (
     <div
-      className="relative h-[clamp(26rem,62vw,46rem)] min-w-0 overflow-hidden border border-line bg-[#11100c] xl:h-[min(72vh,46rem)]"
+      className="relative h-[clamp(19rem,80vw,26rem)] min-w-0 overflow-hidden border border-line bg-[#11100c] lg:h-[clamp(26rem,62vw,46rem)] xl:h-[min(72vh,46rem)]"
       role="group"
       aria-label={`Vue 3D Thundart. État : ${THUNDART_SEQUENCE_COPY[sequenceState].label}.`}
       aria-describedby="thundart-a11y-description"
@@ -146,6 +151,7 @@ export function ThundartScene3D({
       data-thundart-asset={assetStatus}
       data-thundart-model-active={activeInspectionId ?? "none"}
       data-thundart-model-selected={selectedInspectionId ?? "none"}
+      data-thundart-projectile-visual={projectileInspection ? "active" : "idle"}
     >
       {mounted ? (
         <Canvas
@@ -170,12 +176,15 @@ export function ThundartScene3D({
           */}
           <fog attach="fog" args={["#11100c", 34, 88]} />
 
-          <ambientLight intensity={0.65} color="#94a2a7" />
-          <hemisphereLight args={["#d8ded9", "#201d14", 1.1]} />
+          {/* Éclairage local fixe : aucun asset externe, aucun rendu de sonde et
+              aucune boucle ajoutée. La combinaison clé/fill/rim révèle les
+              volumes métalliques comme une maquette d'exposition industrielle. */}
+          <ambientLight intensity={0.52} color="#94a2a7" />
+          <hemisphereLight args={["#d8ded9", "#201d14", 0.95]} />
           <directionalLight
             castShadow
             color="#ece6d5"
-            intensity={2.2}
+            intensity={2.05}
             position={[-7, 12, -8]}
             shadow-bias={-0.0004}
             shadow-mapSize-height={1024}
@@ -183,8 +192,13 @@ export function ThundartScene3D({
           />
           <directionalLight
             color="#c8793f"
-            intensity={0.8}
+            intensity={0.95}
             position={[9, 4, 7]}
+          />
+          <directionalLight
+            color="#84a8b8"
+            intensity={0.7}
+            position={[-10, 7, 10]}
           />
 
           {/* Sol et grille dimensionnés pour que leur bord reste hors cadre
@@ -246,14 +260,14 @@ export function ThundartScene3D({
       <span className="pointer-events-none absolute bottom-0 right-0 h-8 w-8 border-b border-r border-accent" />
 
       <div className="pointer-events-none absolute left-3 top-3 border border-line-bright bg-panel/90 px-2.5 py-1.5 font-mono uppercase sm:left-4 sm:top-4">
-        <span className="block text-[7px] tracking-[0.18em] text-ink-faint">SYSTEM</span>
-        <span className="mt-0.5 block text-[8px] tracking-[0.12em] text-ink-dim sm:text-[9px]">
+        <span className="block text-[9px] tracking-[0.18em] text-ink-faint">SYSTEM</span>
+        <span className="mt-0.5 block text-[10px] tracking-[0.12em] text-ink-dim">
           THUNDART — DEMONSTRATION VIEW
         </span>
       </div>
       <div className="pointer-events-none absolute right-3 top-3 border border-line-bright bg-panel/90 px-2.5 py-1.5 text-right font-mono uppercase sm:right-4 sm:top-4">
-        <span className="block text-[7px] tracking-[0.18em] text-ink-faint">STATE</span>
-        <span className="mt-0.5 block text-[8px] tracking-[0.14em] text-accent sm:text-[9px]">
+        <span className="block text-[9px] tracking-[0.18em] text-ink-faint">STATE</span>
+        <span className="mt-0.5 block text-[10px] tracking-[0.14em] text-accent">
           {sequenceState}
         </span>
       </div>
@@ -265,7 +279,7 @@ export function ThundartScene3D({
         >
           <span className="h-px w-8 shrink-0 bg-accent sm:w-12" />
           <span className="border-l border-accent bg-panel/90 px-2 py-1 font-mono text-[8px] uppercase tracking-[0.12em] text-ink sm:text-[9px]">
-            {activeInspection.label}
+            {inspectionCallout}
           </span>
         </div>
       ) : null}

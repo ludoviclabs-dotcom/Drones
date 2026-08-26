@@ -34,7 +34,13 @@ test.describe("Thundart — HUD technique accessible", () => {
     await expect(
       page.getByText("THUNDART — DEMONSTRATION VIEW").first(),
     ).toBeVisible();
-    await expect(page.getByText("DOCUMENTÉ · HANDOFF THD-01")).toBeVisible();
+    await expect(
+      page
+        .getByText("DOCUMENTATION PUBLIQUE · REPRÉSENTATION ILLUSTRATIVE", {
+          exact: true,
+        })
+        .last(),
+    ).toBeVisible();
 
     for (const name of COMPONENTS) {
       await expect(componentButton(page, name)).toHaveAttribute(
@@ -83,6 +89,94 @@ test.describe("Thundart — HUD technique accessible", () => {
       "vehicle",
     );
   });
+
+  test("le projectile active un repère dédié sur son conteneur porteur", async ({
+    page,
+  }) => {
+    await page.goto(ROUTE);
+    const projectile = componentButton(page, "DEMONSTRATION PROJECTILE");
+
+    await projectile.hover();
+    await expect(scene(page)).toHaveAttribute(
+      "data-thundart-projectile-visual",
+      "active",
+    );
+    await expect(scene(page)).toContainText("DEMONSTRATION PROJECTILE · TUBE 01");
+
+    await projectile.click();
+    await expect(projectile).toHaveAttribute("aria-pressed", "true");
+    await expect(scene(page)).toHaveAttribute(
+      "data-thundart-projectile-visual",
+      "active",
+    );
+
+    await page.keyboard.press("Escape");
+    await expect(scene(page)).toHaveAttribute(
+      "data-thundart-projectile-visual",
+      "idle",
+    );
+  });
+
+  test("un drag OrbitControls ne déclenche pas de nouvel aperçu", async ({
+    page,
+  }) => {
+    await page.goto(ROUTE);
+    await expect(scene(page)).toHaveAttribute("data-thundart-asset", "ready", {
+      timeout: 30_000,
+    });
+    const canvas = page.locator("canvas");
+    const box = await canvas.boundingBox();
+    expect(box).not.toBeNull();
+
+    await page.mouse.move(box!.x + box!.width * 0.45, box!.y + box!.height * 0.5);
+    await page.mouse.down();
+    await page.mouse.move(box!.x + box!.width * 0.62, box!.y + box!.height * 0.58, {
+      steps: 8,
+    });
+    await page.mouse.up();
+
+    await expect(experience(page)).toHaveAttribute(
+      "data-thundart-inspection",
+      "none",
+    );
+    await expect(experience(page)).toHaveAttribute(
+      "data-thundart-inspection-selected",
+      "none",
+    );
+  });
+
+  for (const viewport of [
+    { width: 375, height: 812 },
+    { width: 768, height: 1024 },
+  ]) {
+    test(`${viewport.width}px — sélection rack et scène restent co-visibles`, async ({
+      page,
+    }) => {
+      await page.setViewportSize(viewport);
+      await page.goto(ROUTE);
+      await expect(scene(page)).toHaveAttribute("data-thundart-asset", "ready", {
+        timeout: 30_000,
+      });
+
+      const rack = componentButton(page, "LAUNCHER RACK");
+      await rack.click();
+      await expect(rack).toHaveAttribute("aria-pressed", "true");
+
+      await expect.poll(async () =>
+        page.evaluate(() => {
+          const sceneBox = document
+            .querySelector("[data-thundart-motion]")
+            ?.getBoundingClientRect();
+          const headerBox = document.querySelector("header")?.getBoundingClientRect();
+          if (!sceneBox || !headerBox) return false;
+          return (
+            sceneBox.top >= headerBox.bottom &&
+            sceneBox.bottom <= window.innerHeight
+          );
+        }),
+      ).toBe(true);
+    });
+  }
 
   test("Entrée, Espace, Échap, Tab et Shift+Tab restent natifs", async ({
     page,

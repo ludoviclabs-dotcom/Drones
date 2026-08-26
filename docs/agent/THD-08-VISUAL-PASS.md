@@ -129,7 +129,7 @@ de sélection confirment la co-visibilité corrigée.
 
 | Commande | Résultat |
 |---|---|
-| `npm run test` | 91 tests, 11 fichiers — PASS |
+| `npm run test` | 96 tests, 12 fichiers — PASS |
 | `npm run typecheck` | PASS |
 | `npm run lint` | PASS |
 | `npm run build` | PASS (Next.js 16.2.6 / Turbopack) |
@@ -145,7 +145,7 @@ reduced-motion et axe WCAG 2.2 AA sans violation serious/critical.
   l’inspection l’identifie, elle ne simule pas un lancement.
 - La mesure d’occupation après correction est une validation visuelle par
   capture, non une segmentation d’image automatisée.
-- La Preview Vercel `dpl_AXXcnMJeX4acJKxTUv25kHZD4zpF` est READY et la CLI
+- La Preview Vercel corrective `dpl_8o3uhpQzUToNt2TzCqnWwKeactRz` est READY et la CLI
   authentifiée a récupéré le HTML réel de `/hud/thundart`. Le navigateur intégré
   est redirigé vers l’authentification Vercel, donc la vérification interactive
   distante ne contourne pas cette protection ; les quatre viewports et le

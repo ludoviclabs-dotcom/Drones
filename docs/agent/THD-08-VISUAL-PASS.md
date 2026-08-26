@@ -132,5 +132,9 @@ reduced-motion et axe WCAG 2.2 AA sans violation serious/critical.
   l’inspection l’identifie, elle ne simule pas un lancement.
 - La mesure d’occupation après correction est une validation visuelle par
   capture, non une segmentation d’image automatisée.
-- La Preview Vercel est vérifiée après le push de cette branche ; aucune PR
-  n’est créée dans cette mission.
+- La Preview Vercel `dpl_AXXcnMJeX4acJKxTUv25kHZD4zpF` est READY et la CLI
+  authentifiée a récupéré le HTML réel de `/hud/thundart`. Le navigateur intégré
+  est redirigé vers l’authentification Vercel, donc la vérification interactive
+  distante ne contourne pas cette protection ; les quatre viewports et le
+  reduced-motion restent couverts sur le build local identique par 54 E2E.
+- Aucune PR n’est créée dans cette mission.

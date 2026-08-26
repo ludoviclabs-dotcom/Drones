@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useReducer, type KeyboardEvent } from "react";
+import dynamic from "next/dynamic";
 import {
   THUNDART_INITIAL_STATE,
   thundartSequenceReducer,
@@ -13,8 +14,29 @@ import {
 } from "@/data/hud/thundart-inspection";
 import { ThundartControls } from "./ThundartControls";
 import { ThundartInspectionPanel } from "./ThundartInspectionPanel";
-import { ThundartScene3D } from "./ThundartScene3D";
 import { usePrefersReducedMotion } from "./usePrefersReducedMotion";
+
+const ThundartScene3D = dynamic(
+  () =>
+    import("./ThundartScene3D").then((module) => module.ThundartScene3D),
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        className="relative grid h-[clamp(26rem,62vw,46rem)] min-w-0 place-items-center overflow-hidden border border-line bg-[#11100c] xl:h-[min(72vh,46rem)]"
+        role="group"
+        aria-label="Vue 3D Thundart en préparation"
+        aria-describedby="thundart-a11y-description"
+        data-thundart-motion="idle"
+        data-thundart-asset="loading"
+      >
+        <p className="max-w-sm border border-line bg-panel/70 px-5 py-4 text-center font-mono text-[11px] uppercase leading-relaxed tracking-[0.14em] text-ink-dim">
+          Préparation différée de la vue 3D locale
+        </p>
+      </div>
+    ),
+  },
+);
 
 export function ThundartExperience() {
   const [sequenceState, dispatch] = useReducer(

@@ -132,6 +132,9 @@ test.describe("Thundart — HUD technique accessible", () => {
     }) => {
       await page.setViewportSize({ width, height: width < 768 ? 900 : 1000 });
       await page.goto(ROUTE);
+      await expect(scene(page)).toHaveAttribute("data-thundart-asset", "ready", {
+        timeout: 30_000,
+      });
 
       const layout = await page.evaluate(() => ({
         documentOverflow:

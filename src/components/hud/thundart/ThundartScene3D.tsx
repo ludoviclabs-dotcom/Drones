@@ -160,7 +160,7 @@ export function ThundartScene3D({
           fallback={<WebGlFallback />}
           frameloop="demand"
           gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
-          shadows
+          shadows="percentage"
         >
           <color attach="background" args={["#11100c"]} />
           {/*

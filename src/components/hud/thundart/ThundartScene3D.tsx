@@ -19,6 +19,10 @@ import {
   THUNDART_SEQUENCE_COPY,
   type ThundartSequenceState,
 } from "@/data/hud/thundart";
+import {
+  thundartInspectableById,
+  type ThundartInspectableId,
+} from "@/data/hud/thundart-inspection";
 import { THUNDART_CAMERA_POSES } from "@/data/hud/thundart-motion";
 import { ThundartModel } from "./ThundartModel";
 
@@ -81,9 +85,17 @@ function WebGlFallback() {
 export function ThundartScene3D({
   sequenceState,
   reducedMotion,
+  activeInspectionId,
+  selectedInspectionId,
+  onInspectionPreview,
+  onInspectionToggle,
 }: {
   sequenceState: ThundartSequenceState;
   reducedMotion: boolean;
+  activeInspectionId: ThundartInspectableId | null;
+  selectedInspectionId: ThundartInspectableId | null;
+  onInspectionPreview: (id: ThundartInspectableId | null) => void;
+  onInspectionToggle: (id: ThundartInspectableId) => void;
 }) {
   const mounted = useSyncExternalStore(
     subscribeToHydration,
@@ -99,6 +111,7 @@ export function ThundartScene3D({
   const controlsEnabled =
     !transitionRunning &&
     (sequenceState === "overview" || sequenceState === "inspect");
+  const activeInspection = thundartInspectableById(activeInspectionId);
 
   useEffect(() => {
     useGLTF.preload(THUNDART_ASSET_PATH);
@@ -127,9 +140,12 @@ export function ThundartScene3D({
       className="relative h-[clamp(26rem,62vw,46rem)] min-w-0 overflow-hidden border border-line bg-[#11100c] xl:h-[min(72vh,46rem)]"
       role="group"
       aria-label={`Vue 3D Thundart. État : ${THUNDART_SEQUENCE_COPY[sequenceState].label}.`}
+      aria-describedby="thundart-a11y-description"
       data-thundart-motion={transitionRunning ? "running" : "idle"}
       data-thundart-reduced-motion={reducedMotion ? "true" : "false"}
       data-thundart-asset={assetStatus}
+      data-thundart-model-active={activeInspectionId ?? "none"}
+      data-thundart-model-selected={selectedInspectionId ?? "none"}
     >
       {mounted ? (
         <Canvas
@@ -187,8 +203,12 @@ export function ThundartScene3D({
               <ThundartModel
                 sequenceState={sequenceState}
                 reducedMotion={reducedMotion}
+                activeInspectionId={activeInspectionId}
+                selectedInspectionId={selectedInspectionId}
                 onReady={handleReady}
                 onTransitionChange={handleTransitionChange}
+                onInspectionPreview={onInspectionPreview}
+                onInspectionToggle={onInspectionToggle}
               />
             </Suspense>
           </ModelErrorBoundary>
@@ -225,9 +245,30 @@ export function ThundartScene3D({
       <span className="pointer-events-none absolute bottom-0 left-0 h-8 w-8 border-b border-l border-accent" />
       <span className="pointer-events-none absolute bottom-0 right-0 h-8 w-8 border-b border-r border-accent" />
 
-      <div className="pointer-events-none absolute left-3 top-3 border border-line-bright bg-panel/85 px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.18em] text-ink-dim sm:left-4 sm:top-4 sm:text-[10px]">
-        THD-03 · séquence pilotée par l’état
+      <div className="pointer-events-none absolute left-3 top-3 border border-line-bright bg-panel/90 px-2.5 py-1.5 font-mono uppercase sm:left-4 sm:top-4">
+        <span className="block text-[7px] tracking-[0.18em] text-ink-faint">SYSTEM</span>
+        <span className="mt-0.5 block text-[8px] tracking-[0.12em] text-ink-dim sm:text-[9px]">
+          THUNDART — DEMONSTRATION VIEW
+        </span>
       </div>
+      <div className="pointer-events-none absolute right-3 top-3 border border-line-bright bg-panel/90 px-2.5 py-1.5 text-right font-mono uppercase sm:right-4 sm:top-4">
+        <span className="block text-[7px] tracking-[0.18em] text-ink-faint">STATE</span>
+        <span className="mt-0.5 block text-[8px] tracking-[0.14em] text-accent sm:text-[9px]">
+          {sequenceState}
+        </span>
+      </div>
+
+      {activeInspection ? (
+        <div
+          className="pointer-events-none absolute right-3 top-16 flex max-w-[68%] items-center gap-2 sm:right-4 sm:top-20"
+          aria-hidden="true"
+        >
+          <span className="h-px w-8 shrink-0 bg-accent sm:w-12" />
+          <span className="border-l border-accent bg-panel/90 px-2 py-1 font-mono text-[8px] uppercase tracking-[0.12em] text-ink sm:text-[9px]">
+            {activeInspection.label}
+          </span>
+        </div>
+      ) : null}
       <div
         className="pointer-events-none absolute bottom-3 left-3 max-w-[calc(100%-1.5rem)] border border-line-bright bg-panel/90 px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.13em] text-ink-dim sm:bottom-4 sm:left-4 sm:text-[10px]"
         aria-live="polite"

@@ -23,11 +23,17 @@ export function ThundartControls({
   const copy = THUNDART_SEQUENCE_COPY[state];
 
   return (
-    <aside className="flex min-w-0 flex-col border border-line bg-panel">
+    <section
+      className="flex min-w-0 flex-col border border-line bg-panel"
+      aria-labelledby="thundart-sequence-heading"
+    >
       <div className="border-b border-line px-4 py-3">
-        <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-ink-faint">
+        <h3
+          id="thundart-sequence-heading"
+          className="font-mono text-[9px] uppercase tracking-[0.2em] text-ink-faint"
+        >
           Séquence éditoriale
-        </p>
+        </h3>
         <p
           className="mt-2 font-serif text-xl leading-tight text-ink"
           data-thundart-state={state}
@@ -45,7 +51,7 @@ export function ThundartControls({
         ) : null}
       </div>
 
-      <ol className="grid grid-cols-2 gap-px bg-line sm:grid-cols-5 xl:flex xl:flex-1 xl:flex-col">
+      <ol className="grid grid-cols-2 gap-px bg-line sm:grid-cols-5">
         {THUNDART_SEQUENCE_STATES.map((item, index) => {
           const active = item === state;
           const passed = index < stateIndex;
@@ -53,7 +59,7 @@ export function ThundartControls({
           return (
             <li
               key={item}
-              className={`min-w-0 bg-panel px-3 py-3 xl:flex xl:flex-1 xl:items-center ${
+              className={`min-w-0 bg-panel px-3 py-3 ${
                 active ? "border-l-2 border-accent bg-surface-2" : "border-l-2 border-transparent"
               }`}
               aria-current={active ? "step" : undefined}
@@ -87,7 +93,7 @@ export function ThundartControls({
       <div className="grid grid-cols-3 gap-px border-t border-line bg-line">
         <button
           type="button"
-          className="min-h-12 bg-panel px-2 font-mono text-[9px] uppercase tracking-[0.12em] text-ink-dim transition-colors hover:bg-surface-2 hover:text-ink disabled:cursor-not-allowed disabled:text-ink-faint disabled:opacity-45"
+          className="min-h-12 bg-panel px-2 font-mono text-[9px] uppercase tracking-[0.12em] text-ink-dim motion-safe:transition-colors hover:bg-surface-2 hover:text-ink disabled:cursor-not-allowed disabled:text-ink-faint disabled:opacity-45"
           onClick={() => dispatch({ type: "PREVIOUS" })}
           disabled={isFirst}
         >
@@ -95,20 +101,20 @@ export function ThundartControls({
         </button>
         <button
           type="button"
-          className="min-h-12 bg-panel px-2 font-mono text-[9px] uppercase tracking-[0.12em] text-ink-dim transition-colors hover:bg-surface-2 hover:text-ink"
+          className="min-h-12 bg-panel px-2 font-mono text-[9px] uppercase tracking-[0.12em] text-ink-dim motion-safe:transition-colors hover:bg-surface-2 hover:text-ink"
           onClick={() => dispatch({ type: "RESET" })}
         >
           Réinitialiser
         </button>
         <button
           type="button"
-          className="min-h-12 bg-accent-deep px-2 font-mono text-[9px] uppercase tracking-[0.12em] text-ink transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:bg-panel disabled:text-ink-faint disabled:opacity-45"
+          className="min-h-12 bg-accent-deep px-2 font-mono text-[9px] uppercase tracking-[0.12em] text-[#fff8e8] motion-safe:transition-colors hover:bg-[#8f4319] disabled:cursor-not-allowed disabled:bg-panel disabled:text-ink-faint disabled:opacity-45"
           onClick={() => dispatch({ type: "NEXT" })}
           disabled={isLast}
         >
           Suivant
         </button>
       </div>
-    </aside>
+    </section>
   );
 }

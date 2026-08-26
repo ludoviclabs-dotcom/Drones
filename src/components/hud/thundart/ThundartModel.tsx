@@ -5,13 +5,17 @@
 
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useGLTF } from "@react-three/drei";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import * as THREE from "three";
 import {
   THUNDART_ASSET_MANIFEST,
   THUNDART_ASSET_PATH,
   type ThundartSequenceState,
 } from "@/data/hud/thundart";
+import {
+  thundartInspectionIdForNodeName,
+  type ThundartInspectableId,
+} from "@/data/hud/thundart-inspection";
 import {
   buildThundartMotionPlan,
   framingScaleForAspect,
@@ -28,6 +32,54 @@ import {
 const [CONFIGURE_CLIP, DEPARTURE_CLIP] = THUNDART_ASSET_MANIFEST.animationClips;
 const FLASH_HOST_NODE = "THD_Canister_01";
 const DEFAULT_TARGET = new THREE.Vector3(0, 1.65, 0);
+const INSPECTION_ACCENT = new THREE.Color("#e07a4d");
+
+type InspectableMaterialRecord = {
+  componentId: ThundartInspectableId | null;
+  material: THREE.MeshStandardMaterial;
+  color: THREE.Color;
+  emissive: THREE.Color;
+  emissiveIntensity: number;
+};
+
+function applyInspectionMaterialStyle(
+  records: readonly InspectableMaterialRecord[],
+  activeId: ThundartInspectableId | null,
+  pinned: boolean,
+) {
+  for (const record of records) {
+    const { material } = record;
+    material.color.copy(record.color);
+    material.emissive.copy(record.emissive);
+    material.emissiveIntensity = record.emissiveIntensity;
+
+    if (!activeId) continue;
+    if (record.componentId === activeId) {
+      material.color.lerp(INSPECTION_ACCENT, pinned ? 0.2 : 0.11);
+      material.emissive.copy(INSPECTION_ACCENT);
+      material.emissiveIntensity = pinned ? 0.34 : 0.18;
+    } else {
+      // Atténuation colorimétrique seulement : aucun objet ne disparaît et
+      // aucune transparence ne perturbe l'ordre de rendu du GLB.
+      material.color.multiplyScalar(0.62);
+      material.emissiveIntensity = 0;
+    }
+  }
+}
+
+function inspectionIdForObject(
+  object: THREE.Object3D,
+  root: THREE.Object3D,
+): ThundartInspectableId | null {
+  let current: THREE.Object3D | null = object;
+  while (current) {
+    const id = thundartInspectionIdForNodeName(current.name);
+    if (id) return id;
+    if (current === root) return null;
+    current = current.parent;
+  }
+  return null;
+}
 
 /**
  * Pas de temps maximal appliqué à une frame, en millisecondes (plancher ~15 fps).
@@ -157,13 +209,21 @@ function disposeRuntime(runtime: ThundartRuntime) {
 export function ThundartModel({
   sequenceState,
   reducedMotion,
+  activeInspectionId,
+  selectedInspectionId,
   onReady,
   onTransitionChange,
+  onInspectionPreview,
+  onInspectionToggle,
 }: {
   sequenceState: ThundartSequenceState;
   reducedMotion: boolean;
+  activeInspectionId: ThundartInspectableId | null;
+  selectedInspectionId: ThundartInspectableId | null;
   onReady: () => void;
   onTransitionChange: (running: boolean) => void;
+  onInspectionPreview: (id: ThundartInspectableId | null) => void;
+  onInspectionToggle: (id: ThundartInspectableId) => void;
 }) {
   const { scene, animations } = useGLTF(THUNDART_ASSET_PATH);
 
@@ -172,16 +232,39 @@ export function ThundartModel({
   const invalidate = useThree((state) => state.invalidate);
   const size = useThree((state) => state.size);
 
-  const model = useMemo(() => {
+  const preparedModel = useMemo(() => {
     const clone = scene.clone(true);
+    const materials: InspectableMaterialRecord[] = [];
+
     clone.traverse((child) => {
       if (child instanceof THREE.Mesh) {
         child.castShadow = true;
         child.receiveShadow = true;
+
+        const clonedMaterials = (Array.isArray(child.material)
+          ? child.material
+          : [child.material]
+        ).map((material) => material.clone());
+        child.material = Array.isArray(child.material)
+          ? clonedMaterials
+          : clonedMaterials[0];
+
+        const componentId = inspectionIdForObject(child, clone);
+        for (const material of clonedMaterials) {
+          if (!(material instanceof THREE.MeshStandardMaterial)) continue;
+          materials.push({
+            componentId,
+            material,
+            color: material.color.clone(),
+            emissive: material.emissive.clone(),
+            emissiveIntensity: material.emissiveIntensity,
+          });
+        }
       }
     });
-    return clone;
+    return { model: clone, materials };
   }, [scene]);
+  const model = preparedModel.model;
 
   const clipDurations = useMemo<ThundartClipDurations>(() => {
     const read = (name: string, fallbackMs: number) => {
@@ -208,6 +291,31 @@ export function ThundartModel({
   const posedStateRef = useRef<ThundartSequenceState | null>(null);
   const lastSampleRef = useRef<ThundartMotionSample | null>(null);
   const framingScaleRef = useRef(1);
+  const inspectionMaterialsRef = useRef<InspectableMaterialRecord[]>([]);
+
+  useEffect(() => {
+    inspectionMaterialsRef.current = preparedModel.materials;
+    return () => {
+      for (const record of inspectionMaterialsRef.current) {
+        record.material.dispose();
+      }
+      inspectionMaterialsRef.current = [];
+    };
+  }, [preparedModel.materials]);
+
+  useEffect(() => {
+    const pinned = selectedInspectionId === activeInspectionId;
+    applyInspectionMaterialStyle(
+      inspectionMaterialsRef.current,
+      activeInspectionId,
+      pinned,
+    );
+    invalidate();
+  }, [
+    activeInspectionId,
+    invalidate,
+    selectedInspectionId,
+  ]);
 
   // Déclaré en premier : le recul responsive est connu avant la première pose.
   useEffect(() => {
@@ -365,5 +473,43 @@ export function ThundartModel({
     onReady();
   }, [onReady]);
 
-  return <primitive object={model} dispose={null} />;
+  const handlePointerOver = useCallback(
+    (event: ThreeEvent<PointerEvent>) => {
+      if (event.pointerType === "touch") return;
+      const id = inspectionIdForObject(event.object, model);
+      if (!id) return;
+      event.stopPropagation();
+      onInspectionPreview(id);
+    },
+    [model, onInspectionPreview],
+  );
+
+  const handlePointerOut = useCallback(
+    (event: ThreeEvent<PointerEvent>) => {
+      if (event.pointerType === "touch") return;
+      event.stopPropagation();
+      onInspectionPreview(null);
+    },
+    [onInspectionPreview],
+  );
+
+  const handleClick = useCallback(
+    (event: ThreeEvent<MouseEvent>) => {
+      const id = inspectionIdForObject(event.object, model);
+      if (!id) return;
+      event.stopPropagation();
+      onInspectionToggle(id);
+    },
+    [model, onInspectionToggle],
+  );
+
+  return (
+    <primitive
+      object={model}
+      dispose={null}
+      onPointerOver={handlePointerOver}
+      onPointerOut={handlePointerOut}
+      onClick={handleClick}
+    />
+  );
 }

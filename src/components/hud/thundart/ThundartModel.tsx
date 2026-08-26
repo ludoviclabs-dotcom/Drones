@@ -36,6 +36,7 @@ import {
   THUNDART_PROJECTILE_NODE,
   type ThundartForwardLauncherRig,
 } from "@/data/hud/thundart-orientation";
+import { attachThundartSurfaceDetails } from "./thundart-surface-details";
 
 const [CONFIGURE_CLIP, DEPARTURE_CLIP] = THUNDART_ASSET_MANIFEST.animationClips;
 const FLASH_HOST_NODE = "THD_Canister_01";
@@ -398,7 +399,8 @@ export function ThundartModel({
         }
       }
     });
-    return { model: clone, materials };
+    const surfaceDetails = attachThundartSurfaceDetails(clone);
+    return { model: clone, materials, surfaceDetails };
   }, [scene]);
   const model = preparedModel.model;
 
@@ -447,8 +449,9 @@ export function ThundartModel({
         record.material.dispose();
       }
       inspectionMaterialsRef.current = [];
+      preparedModel.surfaceDetails.dispose();
     };
-  }, [preparedModel.materials]);
+  }, [preparedModel.materials, preparedModel.surfaceDetails]);
 
   useEffect(() => {
     const pinned = selectedInspectionId === activeInspectionId;

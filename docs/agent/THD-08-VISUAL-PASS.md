@@ -13,6 +13,14 @@ reste fixe pendant que son extrémité côté cabine s'élève, puis le projecti
 sépare vers `-Z`. Le GLB reste inchangé (73 036 octets) et le frameloop reste à
 la demande.
 
+## Finition de surface ciblée
+
+Quatre plans de détail R3F, sans raycast, complètent les zones signalées sans
+modifier la géométrie : marquages typographiques sobres sur le projectile et le
+conteneur extérieur 08, panneau de porte et grille frontale sur la cabine. Les
+textures sont générées localement par Canvas 2D, sans téléchargement runtime.
+Chaque marquage reste enfant de sa pièce et suit donc les poses existantes.
+
 ## 1. Référence de travail
 
 | Élément | Valeur |
@@ -103,8 +111,8 @@ survol/clic parasites. Une sélection épinglée n’est pas effacée.
 | Header | recouvrement possible après ancre | offset CSS unique, ancre E2E sous le header |
 | Typographie | ~43 éléments ≤ 9 px, jusqu’à 7 px | interactif 10 px, métadonnées utiles 9–10 px |
 | GLB | 73 036 o | 73 036 o, MD5 identique |
-| Draw calls au repos | ≈45 (THD-05) | ≈45 ; le cadre projectile ajoute au plus un appel lorsqu’il est actif |
-| JavaScript | runtime 3D différé : 994 629 o brut / 265 091 o gzip | aucun package ajouté ; chunk local du correctif R3F : 16 815 o brut |
+| Draw calls au repos | ≈45 (THD-05) | ≈49 avec les quatre détails de surface ; le cadre projectile ajoute au plus un appel lorsqu’il est actif |
+| JavaScript | runtime 3D différé : 994 629 o brut / 265 091 o gzip | aucun package ajouté ; détails générés localement par Canvas 2D |
 | Repos | `frameloop="demand"` | inchangé ; aucune animation CSS infinie (E2E) |
 
 Les compteurs CPU/GPU matériels ne sont pas disponibles dans Chromium headless.

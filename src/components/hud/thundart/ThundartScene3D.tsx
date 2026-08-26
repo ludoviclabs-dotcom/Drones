@@ -13,15 +13,18 @@ import {
   type ReactNode,
 } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Bounds, OrbitControls, useGLTF } from "@react-three/drei";
+import { OrbitControls, useGLTF } from "@react-three/drei";
 import {
   THUNDART_ASSET_PATH,
   THUNDART_SEQUENCE_COPY,
   type ThundartSequenceState,
 } from "@/data/hud/thundart";
+import { THUNDART_CAMERA_POSES } from "@/data/hud/thundart-motion";
 import { ThundartModel } from "./ThundartModel";
 
 type AssetStatus = "loading" | "ready" | "error";
+
+const OVERVIEW_POSE = THUNDART_CAMERA_POSES.overview;
 
 class ModelErrorBoundary extends Component<
   { children: ReactNode; onError: () => void },
@@ -77,8 +80,10 @@ function WebGlFallback() {
 
 export function ThundartScene3D({
   sequenceState,
+  reducedMotion,
 }: {
   sequenceState: ThundartSequenceState;
+  reducedMotion: boolean;
 }) {
   const mounted = useSyncExternalStore(
     subscribeToHydration,
@@ -86,8 +91,14 @@ export function ThundartScene3D({
     getServerHydrationSnapshot,
   );
   const [assetStatus, setAssetStatus] = useState<AssetStatus>("loading");
+  const [transitionRunning, setTransitionRunning] = useState(false);
+
+  // La caméra n'a qu'un propriétaire à la fois : pendant une transition, c'est
+  // le directeur de mouvement ; au repos, et seulement dans les deux états
+  // d'observation, ce sont les contrôles orbitaux.
   const controlsEnabled =
-    sequenceState === "overview" || sequenceState === "inspect";
+    !transitionRunning &&
+    (sequenceState === "overview" || sequenceState === "inspect");
 
   useEffect(() => {
     useGLTF.preload(THUNDART_ASSET_PATH);
@@ -95,24 +106,40 @@ export function ThundartScene3D({
 
   const handleReady = useCallback(() => setAssetStatus("ready"), []);
   const handleError = useCallback(() => setAssetStatus("error"), []);
+  const handleTransitionChange = useCallback(
+    (running: boolean) => setTransitionRunning(running),
+    [],
+  );
 
   const statusCopy =
-    assetStatus === "ready"
-      ? "Asset GLB chargé · vue statique"
-      : assetStatus === "error"
-        ? "Asset indisponible · repère de secours affiché"
-        : "Chargement de l’asset GLB local";
+    assetStatus === "error"
+      ? "Asset indisponible · repère de secours affiché"
+      : assetStatus === "loading"
+        ? "Chargement de l’asset GLB local"
+        : reducedMotion
+          ? "Mouvement réduit · poses appliquées directement"
+          : transitionRunning
+            ? "Transition en cours"
+            : "Pose figée · aucune animation en attente";
 
   return (
     <div
       className="relative h-[clamp(26rem,62vw,46rem)] min-w-0 overflow-hidden border border-line bg-[#11100c] xl:h-[min(72vh,46rem)]"
       role="group"
       aria-label={`Vue 3D Thundart. État : ${THUNDART_SEQUENCE_COPY[sequenceState].label}.`}
+      data-thundart-motion={transitionRunning ? "running" : "idle"}
+      data-thundart-reduced-motion={reducedMotion ? "true" : "false"}
+      data-thundart-asset={assetStatus}
     >
       {mounted ? (
         <Canvas
           aria-hidden="true"
-          camera={{ position: [12.5, 7.5, -14.5], fov: 30, near: 0.1, far: 80 }}
+          camera={{
+            position: [...OVERVIEW_POSE.position],
+            fov: 30,
+            near: 0.1,
+            far: 120,
+          }}
           dpr={[1, 1.5]}
           fallback={<WebGlFallback />}
           frameloop="demand"
@@ -120,7 +147,12 @@ export function ThundartScene3D({
           shadows
         >
           <color attach="background" args={["#11100c"]} />
-          <fog attach="fog" args={["#11100c", 20, 42]} />
+          {/*
+            La brume commence au-delà du plus grand recul de caméra (état
+            « complete », ~28 unités) : elle estompe le fond de grille sans
+            jamais laver le sujet.
+          */}
+          <fog attach="fog" args={["#11100c", 34, 88]} />
 
           <ambientLight intensity={0.65} color="#94a2a7" />
           <hemisphereLight args={["#d8ded9", "#201d14", 1.1]} />
@@ -139,34 +171,45 @@ export function ThundartScene3D({
             position={[9, 4, 7]}
           />
 
+          {/* Sol et grille dimensionnés pour que leur bord reste hors cadre
+              même au recul maximal. Maille de 1 unité, conservée. */}
           <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
-            <planeGeometry args={[36, 36]} />
+            <planeGeometry args={[90, 90]} />
             <meshStandardMaterial color="#14130e" roughness={1} metalness={0} />
           </mesh>
           <gridHelper
-            args={[28, 28, "#6d8a9a", "#33301f"]}
+            args={[60, 60, "#6d8a9a", "#33301f"]}
             position={[0, 0.012, 0]}
           />
 
           <ModelErrorBoundary onError={handleError}>
             <Suspense fallback={<LoadingStandIn />}>
-              <Bounds fit clip observe margin={1.18} maxDuration={0}>
-                <ThundartModel onReady={handleReady} />
-              </Bounds>
+              <ThundartModel
+                sequenceState={sequenceState}
+                reducedMotion={reducedMotion}
+                onReady={handleReady}
+                onTransitionChange={handleTransitionChange}
+              />
             </Suspense>
           </ModelErrorBoundary>
 
+          {/*
+            `Bounds` a été retiré : il recadrait la caméra de son côté et serait
+            entré en concurrence avec les poses par état. Le cadrage responsive
+            est désormais assuré par `framingScaleForAspect`, déterministe.
+            Le `target` n'est plus passé en prop non plus — il appartient au
+            directeur de mouvement, qui le fait suivre l'état courant.
+          */}
           <OrbitControls
             makeDefault
             enabled={controlsEnabled}
             enableDamping
             dampingFactor={0.08}
             enablePan={false}
-            maxDistance={24}
+            maxDistance={38}
             maxPolarAngle={1.45}
-            minDistance={10}
+            minDistance={8}
             minPolarAngle={0.55}
-            target={[0, 1.65, 0]}
           />
         </Canvas>
       ) : (
@@ -183,7 +226,7 @@ export function ThundartScene3D({
       <span className="pointer-events-none absolute bottom-0 right-0 h-8 w-8 border-b border-r border-accent" />
 
       <div className="pointer-events-none absolute left-3 top-3 border border-line-bright bg-panel/85 px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.18em] text-ink-dim sm:left-4 sm:top-4 sm:text-[10px]">
-        THD-02 · GLB statique
+        THD-03 · séquence pilotée par l’état
       </div>
       <div
         className="pointer-events-none absolute bottom-3 left-3 max-w-[calc(100%-1.5rem)] border border-line-bright bg-panel/90 px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.13em] text-ink-dim sm:bottom-4 sm:left-4 sm:text-[10px]"
@@ -192,7 +235,11 @@ export function ThundartScene3D({
         {statusCopy}
       </div>
       <div className="pointer-events-none absolute bottom-3 right-3 hidden border border-line-bright bg-panel/85 px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.13em] text-ink-faint sm:block">
-        {controlsEnabled ? "Glisser · pivoter / molette · zoomer" : "Caméra verrouillée dans cet état"}
+        {controlsEnabled
+          ? "Glisser · pivoter / molette · zoomer"
+          : transitionRunning
+            ? "Recomposition en cours"
+            : "Caméra verrouillée dans cet état"}
       </div>
     </div>
   );

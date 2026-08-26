@@ -30,22 +30,25 @@ export const THUNDART_SEQUENCE_COPY: Record<
   inspect: {
     label: "Inspection extérieure",
     shortLabel: "Inspection",
-    description: "Observation libre des volumes extérieurs visibles.",
+    description:
+      "Cadrage rapproché des sous-ensembles extérieurs visibles. Observation libre.",
   },
   configure: {
     label: "Configuration illustrative",
     shortLabel: "Config.",
-    description: "État préparé pour une future transition de démonstration.",
+    description:
+      "Lecture visuelle d’une seconde configuration de présentation du rack.",
   },
   departure: {
     label: "Séparation illustrative",
     shortLabel: "Séparation",
-    description: "État réservé à une future séquence visuelle non physique.",
+    description:
+      "Écartement graphique du projectile de démonstration, sans physique ni trajectoire.",
   },
   complete: {
     label: "Planche terminée",
     shortLabel: "Fin",
-    description: "Dernier état déterministe du parcours éditorial.",
+    description: "Arrêt sur image. Dernier état déterministe du parcours.",
   },
 };
 

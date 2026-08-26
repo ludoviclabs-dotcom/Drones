@@ -7,12 +7,14 @@ import {
 } from "@/data/hud/thundart";
 import { ThundartControls } from "./ThundartControls";
 import { ThundartScene3D } from "./ThundartScene3D";
+import { usePrefersReducedMotion } from "./usePrefersReducedMotion";
 
 export function ThundartExperience() {
   const [sequenceState, dispatch] = useReducer(
     thundartSequenceReducer,
     THUNDART_INITIAL_STATE,
   );
+  const reducedMotion = usePrefersReducedMotion();
 
   return (
     <section
@@ -23,8 +25,15 @@ export function ThundartExperience() {
       <h2 id="thundart-experience-heading" className="sr-only">
         Prototype 3D interactif Thundart
       </h2>
-      <ThundartScene3D sequenceState={sequenceState} />
-      <ThundartControls state={sequenceState} dispatch={dispatch} />
+      <ThundartScene3D
+        sequenceState={sequenceState}
+        reducedMotion={reducedMotion}
+      />
+      <ThundartControls
+        state={sequenceState}
+        dispatch={dispatch}
+        reducedMotion={reducedMotion}
+      />
     </section>
   );
 }

@@ -11,9 +11,11 @@ import {
 export function ThundartControls({
   state,
   dispatch,
+  reducedMotion,
 }: {
   state: ThundartSequenceState;
   dispatch: (action: ThundartSequenceAction) => void;
+  reducedMotion: boolean;
 }) {
   const stateIndex = THUNDART_SEQUENCE_STATES.indexOf(state);
   const isFirst = state === THUNDART_INITIAL_STATE;
@@ -36,6 +38,11 @@ export function ThundartControls({
         <p className="mt-2 min-h-11 font-mono text-[10px] leading-relaxed text-ink-dim">
           {copy.description}
         </p>
+        {reducedMotion ? (
+          <p className="mt-2 border-l border-stamp pl-2 font-mono text-[9px] uppercase leading-relaxed tracking-[0.12em] text-stamp">
+            Mouvement réduit actif · poses appliquées sans transition
+          </p>
+        ) : null}
       </div>
 
       <ol className="grid grid-cols-2 gap-px bg-line sm:grid-cols-5 xl:flex xl:flex-1 xl:flex-col">

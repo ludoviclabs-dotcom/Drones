@@ -13,7 +13,7 @@ const EDITORIAL_LIMITS = [
   "Représentation illustrative des formes extérieures visibles.",
   "Aucune télémétrie ni donnée connectée.",
   "Aucun ciblage ni aide à la décision.",
-  "Aucun calcul opérationnel ou physique.",
+  "Aucune trajectoire, balistique ni calcul physique.",
 ] as const;
 
 export default function ThundartHudPage() {
@@ -22,21 +22,21 @@ export default function ThundartHudPage() {
       <header className="mb-4 grid gap-5 border-y border-line py-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
         <div className="min-w-0">
           <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent">
-            Planche technique / démonstration · THD-02
+            Planche technique / démonstration · THD-03
           </p>
           <h1 className="mt-2 max-w-4xl font-serif text-3xl leading-[1.05] text-ink sm:text-4xl lg:text-5xl">
             Thundart — inspection extérieure 3D
           </h1>
           <p className="mt-3 max-w-3xl font-serif text-base leading-relaxed text-ink-dim sm:text-lg">
-            Premier prototype Web du modèle Thundart. La vue charge l’asset GLB
-            local et expose les cinq états du futur récit, sans jouer les
-            animations intégrées.
+            Séquence technique en cinq états, jouée uniquement lorsque vous
+            changez d’état. Aucune boucle décorative, aucune animation d’attente :
+            sans changement d’état, rien ne bouge.
           </p>
         </div>
 
         <div className="flex items-center gap-3 border border-line bg-panel px-3 py-2.5 font-mono text-[9px] uppercase tracking-[0.16em] text-ink-dim sm:text-[10px]">
           <span className="h-2 w-2 bg-stamp" aria-hidden="true" />
-          <span>Prototype fonctionnel · asset local</span>
+          <span>Séquence déterministe · asset local</span>
         </div>
       </header>
 
@@ -45,7 +45,9 @@ export default function ThundartHudPage() {
         className="mb-3 border-l border-stamp pl-3 font-mono text-[10px] leading-relaxed text-ink-faint"
       >
         Vue industrielle trois-quarts. Les contrôles orbitaux sont disponibles
-        uniquement dans les états Vue d’ensemble et Inspection extérieure.
+        dans les états Vue d’ensemble et Inspection extérieure, hors transition.
+        Le réglage système « mouvement réduit » remplace les transitions par un
+        passage direct à la pose finale, sans rien retirer à l’information.
       </p>
 
       <ThundartExperience />
@@ -69,8 +71,9 @@ export default function ThundartHudPage() {
             Cadre éditorial
           </h2>
           <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-stamp">
-            {THUNDART_ASSET_MANIFEST.meshNodeCount} objets maillés · 2 clips
-            présents mais inactifs
+            {THUNDART_ASSET_MANIFEST.meshNodeCount} objets maillés ·{" "}
+            {THUNDART_ASSET_MANIFEST.animationClips.length} clips pilotés par
+            l’état
           </span>
         </div>
         <ul className="grid divide-y divide-line sm:grid-cols-2 sm:divide-x sm:divide-y-0 xl:grid-cols-4">

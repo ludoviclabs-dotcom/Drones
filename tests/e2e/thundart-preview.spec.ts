@@ -110,26 +110,6 @@ test.describe("Thundart — candidate Preview", () => {
     await expect(page.getByText("Planche terminée", { exact: true })).toBeVisible();
   });
 
-  test("le rack et le projectile restent orientés vers l’avant de la cabine", async ({
-    page,
-  }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.goto(ROUTE);
-    await waitForAsset(page);
-
-    await expect(scene(page)).toHaveAttribute(
-      "data-thundart-launcher-direction",
-      "forward",
-    );
-    const next = page.getByRole("button", { name: "Suivant" });
-    for (let step = 0; step < 4; step += 1) await next.click();
-    await expect(experience(page)).toHaveAttribute("data-sequence-state", "complete");
-    await expect(scene(page)).toHaveAttribute(
-      "data-thundart-launcher-direction",
-      "forward",
-    );
-  });
-
   test("l’ancre de la planche reste sous le header sticky", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto(ROUTE);

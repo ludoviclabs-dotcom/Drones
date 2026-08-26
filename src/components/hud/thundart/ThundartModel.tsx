@@ -28,7 +28,14 @@ import {
   type ThundartMotionPose,
   type ThundartMotionSample,
 } from "@/data/hud/thundart-motion";
-import { orientThundartLauncherForward } from "@/data/hud/thundart-orientation";
+import {
+  applyThundartForwardLauncherPose,
+  createThundartForwardLauncherRig,
+  setThundartLauncherSourcePose,
+  THUNDART_LAUNCHER_RACK_NODE,
+  THUNDART_PROJECTILE_NODE,
+  type ThundartForwardLauncherRig,
+} from "@/data/hud/thundart-orientation";
 
 const [CONFIGURE_CLIP, DEPARTURE_CLIP] = THUNDART_ASSET_MANIFEST.animationClips;
 const FLASH_HOST_NODE = "THD_Canister_01";
@@ -154,6 +161,9 @@ function asOrbitControls(value: unknown): OrbitLikeControls | null {
 type ThundartRuntime = {
   mixer: THREE.AnimationMixer;
   actions: Map<string, THREE.AnimationAction>;
+  forwardLauncherRig: ThundartForwardLauncherRig | null;
+  configureQuaternionSampler: THREE.Interpolant | null;
+  departurePositionSampler: THREE.Interpolant | null;
   flash: THREE.Mesh;
   flashMaterial: THREE.MeshBasicMaterial;
   flashHost: THREE.Object3D | null;
@@ -171,6 +181,21 @@ function createRuntime(
 ): ThundartRuntime {
   const mixer = new THREE.AnimationMixer(model);
   const actions = new Map<string, THREE.AnimationAction>();
+  const forwardLauncherRig = createThundartForwardLauncherRig(model);
+  const configureClip = clips.find((clip) => clip.name === CONFIGURE_CLIP);
+  const departureClip = clips.find((clip) => clip.name === DEPARTURE_CLIP);
+  const configureQuaternionTrack = configureClip?.tracks.find(
+    (track) => track.name === `${THUNDART_LAUNCHER_RACK_NODE}.quaternion`,
+  );
+  const departurePositionTrack = departureClip?.tracks.find(
+    (track) => track.name === `${THUNDART_PROJECTILE_NODE}.position`,
+  );
+  const configureQuaternionSampler = configureQuaternionTrack
+    ? configureQuaternionTrack.InterpolantFactoryMethodLinear()
+    : null;
+  const departurePositionSampler = departurePositionTrack
+    ? departurePositionTrack.InterpolantFactoryMethodLinear()
+    : null;
 
   // Les actions sont armées une fois puis figées. `play()` les rend actives,
   // `paused` les empêche d'avancer seules : le mixer devient un évaluateur de
@@ -189,6 +214,18 @@ function createRuntime(
     actions.set(name, action);
   }
   mixer.update(0);
+  if (
+    forwardLauncherRig &&
+    configureQuaternionSampler &&
+    departurePositionSampler
+  ) {
+    setThundartLauncherSourcePose(
+      forwardLauncherRig,
+      configureQuaternionSampler.evaluate(0),
+      departurePositionSampler.evaluate(0),
+    );
+    applyThundartForwardLauncherPose(forwardLauncherRig);
+  }
 
   const flashMaterial = new THREE.MeshBasicMaterial({
     color: "#ffd9a8",
@@ -212,7 +249,7 @@ function createRuntime(
   const host = model.getObjectByName(FLASH_HOST_NODE);
   if (host instanceof THREE.Mesh) {
     if (!host.geometry.boundingBox) host.geometry.computeBoundingBox();
-    flash.position.set(0, 0, (host.geometry.boundingBox?.max.z ?? 0) + 0.12);
+    flash.position.set(0, 0, (host.geometry.boundingBox?.min.z ?? 0) - 0.12);
     host.add(flash);
     flashHost = host;
   }
@@ -264,6 +301,9 @@ function createRuntime(
   return {
     mixer,
     actions,
+    forwardLauncherRig,
+    configureQuaternionSampler,
+    departurePositionSampler,
     flash,
     flashMaterial,
     flashHost,
@@ -325,11 +365,6 @@ export function ThundartModel({
 
   const preparedModel = useMemo(() => {
     const clone = scene.clone(true);
-    // Le GLB conserve son export d'origine. Ce pivot local retourne le repère
-    // du rack autour de son articulation avant que l'AnimationMixer n'évalue
-    // les clips : l'élévation et la séparation restent inchangées, mais elles
-    // s'effectuent vers la cabine (avant du véhicule).
-    orientThundartLauncherForward(clone);
     const materials: InspectableMaterialRecord[] = [];
 
     clone.traverse((child) => {
@@ -526,6 +561,26 @@ export function ThundartModel({
           if (action) action.time = progress * action.getClip().duration;
         }
         runtime.mixer.update(0);
+        const configureAction = runtime.actions.get(CONFIGURE_CLIP);
+        const departureAction = runtime.actions.get(DEPARTURE_CLIP);
+        if (
+          runtime.forwardLauncherRig &&
+          runtime.configureQuaternionSampler &&
+          runtime.departurePositionSampler &&
+          configureAction &&
+          departureAction
+        ) {
+          setThundartLauncherSourcePose(
+            runtime.forwardLauncherRig,
+            runtime.configureQuaternionSampler.evaluate(
+              sample.configure * configureAction.getClip().duration,
+            ),
+            runtime.departurePositionSampler.evaluate(
+              sample.departure * departureAction.getClip().duration,
+            ),
+          );
+          applyThundartForwardLauncherPose(runtime.forwardLauncherRig);
+        }
 
         runtime.flash.visible = sample.flash > 0.001;
         runtime.flashMaterial.opacity = sample.flash * 0.85;

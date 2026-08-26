@@ -4,12 +4,14 @@
 
 La validation visuelle a révélé que le rack élevé et le projectile de
 démonstration partaient à l'opposé de la cabine. L'asset place la cabine sur
-`-Z`, tandis que les canisters sont construits vers `+Z` et le clip configure
-applique une rotation X négative. Sans modifier le GLB, le rendu R3F insère
-désormais un pivot local de 180° sur Y au point d'articulation du rack. Les
-clips existants restent strictement les mêmes, mais le rack s'élève et le
-projectile se sépare dans l'axe de la cabine. Le GLB reste inchangé (73 036
-octets) et le frameloop reste à la demande.
+`-Z`, tandis que le clip de séparation progresse vers `+Z`.
+
+La correction ne retourne et ne reparente aucun objet : la pose OVERVIEW et la
+hiérarchie du GLB restent strictement intactes. Après évaluation des clips, R3F
+réfléchit seulement leurs deltas cinématiques : la charnière arrière du rack
+reste fixe pendant que son extrémité côté cabine s'élève, puis le projectile se
+sépare vers `-Z`. Le GLB reste inchangé (73 036 octets) et le frameloop reste à
+la demande.
 
 ## 1. Référence de travail
 

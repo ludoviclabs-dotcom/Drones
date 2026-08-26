@@ -10,13 +10,14 @@ La correction ne retourne et ne reparente aucun objet : la pose OVERVIEW et la
 hiérarchie du GLB restent strictement intactes. Après évaluation des clips, R3F
 réfléchit seulement leurs deltas cinématiques : la charnière arrière du rack
 reste fixe pendant que son extrémité côté cabine s'élève, puis le projectile se
-sépare vers `-Z`. Le GLB reste inchangé (73 036 octets) et le frameloop reste à
-la demande.
+sépare vers `-Z`. Sa rotation locale est retournée sur Y pour aligner sa pointe
+avec ce déplacement et conserver l'empennage côté lanceur. Le GLB reste inchangé
+(73 036 octets) et le frameloop reste à la demande.
 
 ## Finition de surface ciblée
 
-Quatre plans de détail R3F, sans raycast, complètent les zones signalées sans
-modifier la géométrie : marquages typographiques sobres sur le projectile et le
+Quatre détails répartis sur cinq plans R3F, sans raycast, complètent les zones
+signalées sans modifier la géométrie : marquages typographiques sobres sur le projectile et le
 conteneur extérieur 08, panneau de porte et grille frontale sur la cabine. Les
 textures sont générées localement par Canvas 2D, sans téléchargement runtime.
 Chaque marquage reste enfant de sa pièce et suit donc les poses existantes.
@@ -111,7 +112,7 @@ survol/clic parasites. Une sélection épinglée n’est pas effacée.
 | Header | recouvrement possible après ancre | offset CSS unique, ancre E2E sous le header |
 | Typographie | ~43 éléments ≤ 9 px, jusqu’à 7 px | interactif 10 px, métadonnées utiles 9–10 px |
 | GLB | 73 036 o | 73 036 o, MD5 identique |
-| Draw calls au repos | ≈45 (THD-05) | ≈49 avec les quatre détails de surface ; le cadre projectile ajoute au plus un appel lorsqu’il est actif |
+| Draw calls au repos | ≈45 (THD-05) | ≈50 avec les cinq plans de surface ; le cadre projectile ajoute au plus un appel lorsqu’il est actif |
 | JavaScript | runtime 3D différé : 994 629 o brut / 265 091 o gzip | aucun package ajouté ; détails générés localement par Canvas 2D |
 | Repos | `frameloop="demand"` | inchangé ; aucune animation CSS infinie (E2E) |
 

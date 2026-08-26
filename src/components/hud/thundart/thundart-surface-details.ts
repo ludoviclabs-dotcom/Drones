@@ -185,10 +185,18 @@ export function attachThundartSurfaceDetails(model: THREE.Object3D): DetailKit {
     meshes.push(
       addDetailPlane(
         projectile,
-        "THD_UI_Detail_ProjectileMarking",
+        "THD_UI_Detail_ProjectileMarkingRight",
         [2.28, 0.31],
         [0.188, 0, 0.18],
         [0, Math.PI / 2, 0],
+        material,
+      ),
+      addDetailPlane(
+        projectile,
+        "THD_UI_Detail_ProjectileMarkingLeft",
+        [2.28, 0.31],
+        [-0.188, 0, 0.18],
+        [0, -Math.PI / 2, 0],
         material,
       ),
     );

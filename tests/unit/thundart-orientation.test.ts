@@ -5,6 +5,7 @@ import {
   createThundartForwardLauncherRig,
   setThundartLauncherSourcePose,
   THUNDART_LAUNCHER_RACK_NODE,
+  THUNDART_PROJECTILE_FORWARD_ROTATION_Y,
   THUNDART_PROJECTILE_NODE,
 } from "@/data/hud/thundart-orientation";
 
@@ -24,11 +25,15 @@ function createModel() {
 }
 
 describe("cinématique avant du rack Thundart", () => {
-  it("ne modifie ni la hiérarchie ni la pose OVERVIEW", () => {
+  it("préserve la hiérarchie et le rack OVERVIEW tout en orientant le projectile", () => {
     const { root, base, rack, projectile } = createModel();
     const rackPosition = rack.position.clone();
     const rackQuaternion = rack.quaternion.clone();
     const projectilePosition = projectile.position.clone();
+    const expectedProjectileQuaternion = new THREE.Quaternion().setFromAxisAngle(
+      new THREE.Vector3(0, 1, 0),
+      THUNDART_PROJECTILE_FORWARD_ROTATION_Y,
+    );
 
     const rig = createThundartForwardLauncherRig(root);
     expect(rig).not.toBeNull();
@@ -39,6 +44,9 @@ describe("cinématique avant du rack Thundart", () => {
     expect(rack.position.toArray()).toEqual(rackPosition.toArray());
     expect(rack.quaternion.toArray()).toEqual(rackQuaternion.toArray());
     expect(projectile.position.toArray()).toEqual(projectilePosition.toArray());
+    expect(projectile.quaternion.angleTo(expectedProjectileQuaternion)).toBeLessThan(
+      1e-9,
+    );
   });
 
   it("garde la charnière arrière fixe et lève l’extrémité côté cabine", () => {
@@ -66,7 +74,7 @@ describe("cinématique avant du rack Thundart", () => {
     expect(front.z).toBeLessThan(rearHingeAfter.z);
   });
 
-  it("réfléchit seulement la séparation du projectile vers -Z", () => {
+  it("aligne la pointe du projectile avec la séparation réfléchie vers -Z", () => {
     const { root, projectile } = createModel();
     const rig = createThundartForwardLauncherRig(root)!;
     projectile.position.z = 9.55;
@@ -76,6 +84,14 @@ describe("cinématique avant du rack Thundart", () => {
     expect(projectile.position.x).toBeCloseTo(-1, 10);
     expect(projectile.position.y).toBeCloseTo(1.045, 10);
     expect(projectile.position.z).toBeCloseTo(-3.65, 10);
+    const noseDirection = new THREE.Vector3(0, 0, 1).applyQuaternion(
+      projectile.quaternion,
+    );
+    const departureDirection = projectile.position
+      .clone()
+      .sub(rig.projectileRestPosition)
+      .normalize();
+    expect(noseDirection.dot(departureDirection)).toBeGreaterThan(0.999999);
   });
 
   it("rend deux évaluations successives strictement idempotentes", () => {

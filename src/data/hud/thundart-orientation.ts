@@ -2,6 +2,12 @@ import * as THREE from "three";
 
 export const THUNDART_LAUNCHER_RACK_NODE = "THD_Launcher_Rack";
 export const THUNDART_PROJECTILE_NODE = "THD_Rocket_Demo";
+export const THUNDART_PROJECTILE_FORWARD_ROTATION_Y = Math.PI;
+
+const PROJECTILE_FORWARD_QUATERNION = new THREE.Quaternion().setFromAxisAngle(
+  new THREE.Vector3(0, 1, 0),
+  THUNDART_PROJECTILE_FORWARD_ROTATION_Y,
+);
 
 export type ThundartForwardLauncherRig = {
   rack: THREE.Object3D;
@@ -10,6 +16,7 @@ export type ThundartForwardLauncherRig = {
   rearHingeOffset: THREE.Vector3;
   projectile: THREE.Object3D;
   projectileRestPosition: THREE.Vector3;
+  projectileRestQuaternion: THREE.Quaternion;
 };
 
 function rearHingeOffsetForRack(rack: THREE.Object3D): THREE.Vector3 {
@@ -65,6 +72,7 @@ export function createThundartForwardLauncherRig(
     rearHingeOffset: rearHingeOffsetForRack(rack),
     projectile,
     projectileRestPosition: projectile.position.clone(),
+    projectileRestQuaternion: projectile.quaternion.clone(),
   };
 }
 
@@ -134,4 +142,11 @@ export function applyThundartForwardLauncherPose(
       .copy(rig.projectileRestPosition)
       .sub(sourceProjectileDelta);
   }
+
+  // L'asset pointait initialement dans le sens de sa translation +Z. Comme la
+  // séparation est désormais réfléchie vers -Z, la silhouette doit suivre le
+  // même axe : pointe devant, empennage derrière, y compris dans le tube.
+  rig.projectile.quaternion
+    .copy(rig.projectileRestQuaternion)
+    .multiply(PROJECTILE_FORWARD_QUATERNION);
 }

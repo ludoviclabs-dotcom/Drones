@@ -1,0 +1,106 @@
+{
+  "id": "thundart",
+  "label": "THUNDART",
+  "kind": "systeme demonstratif (representation editoriale OSINT)",
+
+  "_units": "RELATIF / SANS UNITE. Aucune dimension reelle n'est disponible dans ce depot : aucune cote n'est donc revendiquee. Toutes les valeurs ci-dessous sont des proportions visuelles arbitraires, lues sur des photos publiques de salon, exprimees en 'asset units' (au). Ce fichier n'est PAS une specification CAO et ne doit jamais etre presente comme telle.",
+  "_sources": "Formes exterieures visibles uniquement (photos de salon fournies par l'utilisateur). Aucun composant interne, aucune charge, aucune electronique, aucun mecanisme n'est modelise ni deduit.",
+  "_frame": "Blender Z-up. +Y = avant du vehicule (cabine). -Y = arriere (bouches des conteneurs). z=0 = plan de contact des roues.",
+
+  "vehicle": {
+    "cab": { "front_y": 5.0, "back_y": 2.55, "half_width": 1.22, "floor_z": 1.18, "roof_z": 3.78, "hood_z": 2.62, "hood_front_y": 5.0, "screen_inset": 0.03 },
+    "chassis": { "front_y": 5.05, "rear_y": -5.0, "rail_half_width": 0.72, "rail_half_height": 0.2, "rail_z": 1.25 },
+    "deck": { "front_y": 2.35, "rear_y": -4.95, "half_width": 1.3, "top_z": 1.45, "thickness": 0.16 },
+    "wheels": { "radius": 0.72, "half_width": 0.22, "track_half": 1.22, "axle_y": [3.55, 1.95, -2.45, -3.95], "segments": 16, "hub_radius_ratio": 0.42 }
+  },
+
+  "launcher": {
+    "base": { "front_y": 1.7, "rear_y": -4.7, "half_width": 1.18, "bottom_z": 1.45, "top_z": 1.87 },
+    "rack": {
+      "hinge_y": 1.45,
+      "hinge_z": 1.87,
+      "front_y_local": 0.1,
+      "rear_y_local": -6.2,
+      "half_width": 1.36,
+      "bottom_z_local": -0.02,
+      "top_z_local": 1.42,
+      "rail_thickness": 0.075,
+      "rib_count": 4,
+      "rib_thickness": 0.1,
+      "_demo_pose_factor": "Facteur normalise 0..1 d'une pose de DEMONSTRATION purement visuelle. Ce n'est PAS un reglage d'elevation, ce n'est calibre sur aucun equipement reel, et aucun angle operationnel n'en est derive ni documente.",
+      "demo_pose_factor": 0.55
+    },
+    "canisters": {
+      "count": 8,
+      "columns": 4,
+      "rows": 2,
+      "outer_radius": 0.3,
+      "rim_thickness": 0.028,
+      "rim_depth": 0.06,
+      "front_y_local": 0.05,
+      "rear_y_local": -6.05,
+      "column_spacing": 0.665,
+      "row_spacing": 0.665,
+      "row_base_z_local": 0.38,
+      "segments": 16,
+      "_numbering": "01..04 = rangee haute, de gauche a droite vue de l'arriere ; 05..08 = rangee basse, meme sens."
+    }
+  },
+
+  "rocket_demo": {
+    "_note": "Projectile de DEMONSTRATION : silhouette exterieure simplifiee uniquement. Aucune charge, aucune propulsion, aucun guidage, aucun composant interne n'est modelise.",
+    "host_canister": 1,
+    "body_radius": 0.185,
+    "total_length": 5.3,
+    "nose_length": 0.95,
+    "nose_tip_radius": 0.022,
+    "nose_sections": 5,
+    "tail_taper_length": 0.28,
+    "tail_radius_ratio": 0.86,
+    "band_count": 2,
+    "band_radius_extra": 0.014,
+    "band_width": 0.07,
+    "fin_count": 4,
+    "fin_span": 0.105,
+    "fin_root_chord": 0.62,
+    "fin_tip_chord": 0.34,
+    "fin_thickness": 0.024,
+    "fin_offset_from_tail": 0.1,
+    "segments": 16
+  },
+
+  "animations": {
+    "fps": 24,
+    "configure_demo": {
+      "name": "THD_CONFIGURE_DEMO",
+      "target": "THD_Launcher_Rack",
+      "frame_start": 1,
+      "frame_end": 60,
+      "_note": "Transition visuelle entre la pose de presentation et une seconde pose demonstrative distincte. Non calibree, non operationnelle, aucune procedure."
+    },
+    "departure_demo": {
+      "name": "THD_DEPARTURE_DEMO",
+      "target": "THD_Rocket_Demo",
+      "frame_start": 1,
+      "frame_end": 48,
+      "travel_local": 6.6,
+      "_note": "Glissement illustratif le long de l'axe local, sur une courte distance. Aucune physique, aucune balistique, aucun profil de vol, aucune portee, aucune cible."
+    }
+  },
+
+  "materials": {
+    "THD_MAT_Vehicle": { "base_color": [0.235, 0.208, 0.155, 1.0], "roughness": 0.82, "metallic": 0.0 },
+    "THD_MAT_Canister": { "base_color": [0.198, 0.176, 0.132, 1.0], "roughness": 0.76, "metallic": 0.05 },
+    "THD_MAT_Rocket": { "base_color": [0.6, 0.615, 0.63, 1.0], "roughness": 0.34, "metallic": 0.85 },
+    "THD_MAT_Tire": { "base_color": [0.042, 0.042, 0.048, 1.0], "roughness": 0.95, "metallic": 0.0 },
+    "THD_MAT_Detail": { "base_color": [0.19, 0.172, 0.135, 1.0], "roughness": 0.66, "metallic": 0.12 },
+    "THD_MAT_Glass": { "base_color": [0.1, 0.125, 0.142, 1.0], "roughness": 0.12, "metallic": 0.35 }
+  },
+
+  "export": {
+    "output": "public/models/hud/thundart.glb",
+    "_draco": "Draco DESACTIVE volontairement (voir README) : le decodeur Draco de drei est telecharge depuis un CDN externe au runtime. Le brief THD-01 exige zero dependance externe au runtime.",
+    "draco": false,
+    "size_budget_kb": 120
+  }
+}

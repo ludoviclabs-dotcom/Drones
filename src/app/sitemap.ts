@@ -17,6 +17,7 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: ChangeFr
   { path: "/simulateur", priority: 0.7, changeFrequency: "monthly" },
   { path: "/console", priority: 0.8, changeFrequency: "weekly" },
   { path: "/hud/drone-airframe", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/hud/thundart", priority: 0.6, changeFrequency: "monthly" },
   { path: "/audit", priority: 0.7, changeFrequency: "weekly" },
   { path: "/couts", priority: 0.7, changeFrequency: "weekly" },
   { path: "/industrial-graph", priority: 0.6, changeFrequency: "monthly" },

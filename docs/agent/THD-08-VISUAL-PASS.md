@@ -1,5 +1,16 @@
 # THD-08 — Correctif visuel ciblé
 
+## Correctif d'orientation ultérieur
+
+La validation visuelle a révélé que le rack élevé et le projectile de
+démonstration partaient à l'opposé de la cabine. L'asset place la cabine sur
+`-Z`, tandis que les canisters sont construits vers `+Z` et le clip configure
+applique une rotation X négative. Sans modifier le GLB, le rendu R3F insère
+désormais un pivot local de 180° sur Y au point d'articulation du rack. Les
+clips existants restent strictement les mêmes, mais le rack s'élève et le
+projectile se sépare dans l'axe de la cabine. Le GLB reste inchangé (73 036
+octets) et le frameloop reste à la demande.
+
 ## 1. Référence de travail
 
 | Élément | Valeur |

@@ -28,6 +28,7 @@ import {
   type ThundartMotionPose,
   type ThundartMotionSample,
 } from "@/data/hud/thundart-motion";
+import { orientThundartLauncherForward } from "@/data/hud/thundart-orientation";
 
 const [CONFIGURE_CLIP, DEPARTURE_CLIP] = THUNDART_ASSET_MANIFEST.animationClips;
 const FLASH_HOST_NODE = "THD_Canister_01";
@@ -324,6 +325,11 @@ export function ThundartModel({
 
   const preparedModel = useMemo(() => {
     const clone = scene.clone(true);
+    // Le GLB conserve son export d'origine. Ce pivot local retourne le repère
+    // du rack autour de son articulation avant que l'AnimationMixer n'évalue
+    // les clips : l'élévation et la séparation restent inchangées, mais elles
+    // s'effectuent vers la cabine (avant du véhicule).
+    orientThundartLauncherForward(clone);
     const materials: InspectableMaterialRecord[] = [];
 
     clone.traverse((child) => {

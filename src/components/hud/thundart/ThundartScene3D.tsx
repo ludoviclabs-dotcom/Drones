@@ -152,6 +152,7 @@ export function ThundartScene3D({
       data-thundart-model-active={activeInspectionId ?? "none"}
       data-thundart-model-selected={selectedInspectionId ?? "none"}
       data-thundart-projectile-visual={projectileInspection ? "active" : "idle"}
+      data-thundart-launcher-direction="forward"
     >
       {mounted ? (
         <Canvas

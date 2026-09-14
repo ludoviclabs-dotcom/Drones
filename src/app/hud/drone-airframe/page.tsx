@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 import HudScene from "@/components/HudScene";
+import { HudBreadcrumb } from "@/components/hud/hud-breadcrumb";
+import { JsonLd } from "@/components/json-ld";
+import { hudBoardBySlug } from "@/data/hud/boards";
+import { hudBreadcrumbLd } from "@/lib/structured-data";
 import { droneAirframeScene } from "../../../../scenes/drone-airframe";
 
 export const metadata: Metadata = {
@@ -29,6 +33,8 @@ const CONNECTION_ROWS = [
 export default function DroneAirframeHudPage() {
   return (
     <div className="mx-auto max-w-[1600px] px-3 py-8 sm:px-5 sm:py-12">
+      <JsonLd data={hudBreadcrumbLd(hudBoardBySlug("drone-airframe"))} />
+      <HudBreadcrumb current="Cellule de drone" />
       <header className="mb-5 grid gap-5 border-y border-line py-5 lg:grid-cols-[1fr_auto] lg:items-end">
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent">

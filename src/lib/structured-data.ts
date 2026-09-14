@@ -54,17 +54,9 @@ export function systemDatasetLd(system: DefenseSystem): Ld {
   };
 }
 
-/** Fil d'Ariane Accueil > Domaine > Système — enrichit les rich results. */
-export function systemBreadcrumbLd(system: DefenseSystem): Ld {
-  const domain = DOMAINS.find((d) => d.category === system.category);
-  const crumbs = [
-    { name: "Accueil", url: SITE_URL },
-    // Le domaine « drone » pointe vers une ancre (#catalogue) : on l'omet.
-    ...(domain && !domain.href.includes("#")
-      ? [{ name: domain.label, url: `${SITE_URL}${domain.href}` }]
-      : []),
-    { name: system.name, url: `${SITE_URL}/systemes/${system.slug}` },
-  ];
+type Crumb = { name: string; url: string };
+
+function breadcrumbListLd(crumbs: readonly Crumb[]): Ld {
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -75,4 +67,26 @@ export function systemBreadcrumbLd(system: DefenseSystem): Ld {
       item: crumb.url,
     })),
   };
+}
+
+/** Fil d'Ariane Accueil > Domaine > Système — enrichit les rich results. */
+export function systemBreadcrumbLd(system: DefenseSystem): Ld {
+  const domain = DOMAINS.find((d) => d.category === system.category);
+  return breadcrumbListLd([
+    { name: "Accueil", url: SITE_URL },
+    // Le domaine « drone » pointe vers une ancre (#catalogue) : on l'omet.
+    ...(domain && !domain.href.includes("#")
+      ? [{ name: domain.label, url: `${SITE_URL}${domain.href}` }]
+      : []),
+    { name: system.name, url: `${SITE_URL}/systemes/${system.slug}` },
+  ]);
+}
+
+/** Fil d'Ariane Accueil > Planches techniques [> planche]. */
+export function hudBreadcrumbLd(board?: { title: string; href: string }): Ld {
+  return breadcrumbListLd([
+    { name: "Accueil", url: SITE_URL },
+    { name: "Planches techniques", url: `${SITE_URL}/hud` },
+    ...(board ? [{ name: board.title, url: `${SITE_URL}${board.href}` }] : []),
+  ]);
 }

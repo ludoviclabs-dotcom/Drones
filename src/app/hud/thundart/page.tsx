@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { ThundartExperience } from "@/components/hud/thundart/ThundartExperience";
+import { HudBreadcrumb } from "@/components/hud/hud-breadcrumb";
+import { JsonLd } from "@/components/json-ld";
+import { hudBoardBySlug } from "@/data/hud/boards";
 import { THUNDART_ASSET_MANIFEST } from "@/data/hud/thundart";
+import { hudBreadcrumbLd } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
   title: "Thundart — planche technique 3D",
@@ -19,6 +23,8 @@ const EDITORIAL_LIMITS = [
 export default function ThundartHudPage() {
   return (
     <div className="mx-auto max-w-[1600px] px-3 py-7 sm:px-5 sm:py-10 lg:px-7">
+      <JsonLd data={hudBreadcrumbLd(hudBoardBySlug("thundart"))} />
+      <HudBreadcrumb current="Thundart" />
       <header className="mb-4 grid gap-5 border-y border-line py-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
         <div className="min-w-0">
           <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent">

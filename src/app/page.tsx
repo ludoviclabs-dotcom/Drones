@@ -11,6 +11,8 @@ import { SectionMarker } from "@/components/primitives";
 import { RegistrationMarks } from "@/components/registration-marks";
 import { Stamp } from "@/components/stamp";
 import { StatGrid, type Stat } from "@/components/stat-cards";
+import { HudBoardTeaser } from "@/components/hud/hud-board-card";
+import { HUD_BOARDS, HUD_INDEX_PATH } from "@/data/hud/boards";
 import { getEvidenceStats } from "@/lib/claims";
 
 export const metadata: Metadata = {
@@ -82,11 +84,25 @@ export default function Home() {
                   Ouvrir le recueil →
                 </Link>
                 <Link
-                  href="/hud/drone-airframe"
+                  href={HUD_INDEX_PATH}
                   className="inline-flex h-11 items-center border border-line-bright px-5 font-mono text-xs uppercase tracking-[0.16em] text-ink-dim transition-colors hover:border-accent hover:text-accent"
                 >
-                  Voir le HUD drone →
+                  Voir les planches techniques →
                 </Link>
+              </div>
+
+              {/* Les planches occupent l'espace laissé libre sous l'accroche,
+                  en regard du sommaire des domaines : visibles dès l'arrivée,
+                  et sur mobile avant la liste des domaines. */}
+              <div className="mt-10 border-t border-line pt-6">
+                <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-faint">
+                  Planches techniques · à manipuler
+                </h2>
+                <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                  {HUD_BOARDS.map((board) => (
+                    <HudBoardTeaser key={board.slug} board={board} />
+                  ))}
+                </div>
               </div>
             </div>
 

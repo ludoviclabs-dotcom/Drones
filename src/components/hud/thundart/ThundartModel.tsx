@@ -734,10 +734,10 @@ export function ThundartModel({
 
   const handleClick = useCallback(
     (event: ThreeEvent<MouseEvent>) => {
-      if (orbitGestureRef.current.suppressClick) {
-        orbitGestureRef.current.suppressClick = false;
-        return;
-      }
+      // R3F livre un même clic à chaque mesh traversé par le rayon : celui qui
+      // clôt un drag doit être ignoré par tous. Le drapeau n'est donc pas
+      // consommé ici ; le prochain pointerdown le remet à zéro.
+      if (orbitGestureRef.current.suppressClick) return;
       const id = inspectionIdForObject(event.object, model);
       if (!id) return;
       event.stopPropagation();

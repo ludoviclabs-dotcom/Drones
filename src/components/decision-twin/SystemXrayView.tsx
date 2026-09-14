@@ -4,7 +4,11 @@ import dynamic from "next/dynamic";
 import { useMemo, useState } from "react";
 import type { PanoplieXrayScenario } from "@/data/decision-twin/types";
 import type { DefenseSystem } from "@/data/types";
-import { WIREFRAME_3D_SPECS, GLB_AVAILABLE_SLUGS } from "@/data/aviation-3d";
+import {
+  GLB_AVAILABLE_SLUGS,
+  WIREFRAME_3D_SPECS,
+  XRAY_MODEL_OVERRIDES,
+} from "@/data/aviation-3d";
 import { SectionMarker } from "@/components/primitives";
 import { RegistrationMarks } from "@/components/registration-marks";
 import { Stamp } from "@/components/stamp";
@@ -42,6 +46,7 @@ export function SystemXrayView({
 
   const wireframeSpec = WIREFRAME_3D_SPECS[system.slug];
   const hasGlb = GLB_AVAILABLE_SLUGS.has(system.slug);
+  const modelOverride = XRAY_MODEL_OVERRIDES[system.slug];
   // Le bouton « Vue 3D » apparaît dès qu'une représentation 3D existe — soit
   // wireframe procédural, soit asset GLB Blender. Les radars n'ont que des GLB.
   const has3D = Boolean(wireframeSpec) || hasGlb;
@@ -164,6 +169,7 @@ export function SystemXrayView({
               <SystemXray3DView
                 spec={wireframeSpec}
                 glbPath={hasGlb ? `/models/${glbDir}/${system.slug}.glb` : undefined}
+                modelOverride={modelOverride}
                 nodes={filteredNodes}
                 selectedNodeId={selectedNode?.id}
                 onSelectNode={(node) => setSelectedNodeId(node.id)}

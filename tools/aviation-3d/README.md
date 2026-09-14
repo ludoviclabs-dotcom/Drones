@@ -1,6 +1,6 @@
 # Aviation 3D — Pipeline Wireframe
 
-Génère des meshes 3D simples (`.glb` Draco, < 100 Ko) pour les avions de Panoplie.
+Génère des meshes 3D simples (`.glb` meshopt, < 100 Ko) pour les avions de Panoplie.
 L'apparence "filaire" est appliquée **côté Three.js** (`MeshBasicMaterial` avec
 `wireframe=true`) — le `.glb` contient un mesh solide normal avec des faces, ce
 qui est requis par GLTF 2.0 (les meshes edges-only sont ignorés à l'export).
@@ -64,18 +64,50 @@ export const WIREFRAME_3D_SPECS = {
 };
 ```
 
-Dans `src/components/decision-twin/SystemXray3DView.tsx` :
-- Le composant charge automatiquement `public/models/aviation/<slug>.glb` via `useGLTF`
-  si le fichier existe, sinon il utilise la spec procédurale comme fallback.
+Toujours dans `src/data/aviation-3d/index.ts` :
+- Ajouter le slug à `GLB_AVAILABLE_SLUGS` : `SystemXray3DView` charge alors
+  `public/models/aviation/<slug>.glb` (sinon la spec procédurale sert seule).
+- Ajouter son placement à `XRAY_MODEL_OVERRIDES` (voir « Placement X-Ray »).
 
 Dans `src/data/decision-twin/panoplie-xray.ts` :
 - Ajouter `mirage2000Nodes(system)` + entrée dans `SYSTEM_NODE_BUILDERS`.
 
+## Placement X-Ray
+
+Les repères (`position3d`) s'écrivent dans le repère des specs procédurales
+(X envergure, Y longueur nez +, Z hauteur, ~1 unité = 5 m). Le GLB, lui, est
+exporté en glTF Y haut, nez vers -Z, ~7 m par unité. `XRAY_MODEL_OVERRIDES`
+porte le passage de l'un à l'autre : la vue tourne les repères d'un quart de
+tour autour de X et applique au GLB la rotation et l'échelle de son type
+(avions ×1,4 ; missiles nez -X → -Z et ×0,6 ; radars ×0,5).
+
+Pour poser un repère sur une pièce, lire la boîte du nœud dans le GLB placé
+(segment JSON : bornes `POSITION` + transformation du nœud), puis convertir le
+point de la scène `(x, y, z)` en repère X-Ray `(x, -z, y)`. Déclarer ensuite la
+pièce visée dans `tests/data/xray-models.test.ts`.
+
+## Compression : meshopt, jamais Draco
+
+Le décodeur Draco de drei est téléchargé depuis le CDN gstatic à l'exécution ;
+le décodeur meshopt est embarqué par three-stdlib. Les GLB X-Ray (aviation,
+missiles, radars) sont donc chargés par `useGLTF(path, false, true)` et
+compressés par la passe épinglée :
+
+```bash
+npx --yes @gltf-transform/cli@4.5.0 meshopt <brut.glb> <sortie.glb> --level high
+```
+
+`generate-wireframe.py` exporte sans Draco dans `tools/aviation-3d/build/`
+(ignoré par git) puis lance cette passe. Pour un ancien asset encore en Draco,
+le décoder d'abord avec `@gltf-transform/core` + `draco3dgltf` (lecture avec
+le décodeur, suppression de l'extension `KHR_draco_mesh_compression`,
+écriture), puis appliquer la passe meshopt.
+
 ## Validation
 
 ```bash
-# Vérifie taille < 100 Ko et présence des mesh ASCII
-npx ts-node scripts/check-models.ts
+# GLB sans Draco, repères posés sur leurs pièces une fois le modèle placé
+npx vitest run tests/data/xray-models.test.ts
 ```
 
 ## Conventions de naming (OBLIGATOIRES pour le mapping JS)

@@ -8,6 +8,7 @@ import { Canvas, type ThreeEvent } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import type { DecisionTwinNode } from "@/data/decision-twin/types";
+import type { XrayModelOverride } from "@/data/aviation-3d";
 import type { Wireframe3DSpec } from "@/data/aviation-3d/types";
 import { PanoplieXrayBackdrop } from "./PanoplieXrayBackdrop";
 
@@ -51,7 +52,9 @@ const RAFALE = {
 } as const;
 
 function GlbWireframe({ path }: { path: string }) {
-  const { scene } = useGLTF(path);
+  // GLB meshopt : décodeur embarqué par three-stdlib, aucune requête réseau.
+  // Draco désactivé — son décodeur drei viendrait du CDN gstatic.
+  const { scene } = useGLTF(path, false, true);
 
   const styledScene = useMemo(() => {
     const clone = scene.clone(true);
@@ -172,26 +175,33 @@ function Hotspot({
  * Viewer 3D orbitale pour le System X-Ray.
  *
  * Priorité de rendu :
- *   1. glbPath → charge l'asset Blender (.glb Draco) via useGLTF
+ *   1. glbPath → charge l'asset Blender (.glb meshopt) via useGLTF
  *   2. spec    → wireframe procédural (fallback JS, 0 Ko réseau)
  *
  * L'un des deux doit être fourni ; si glbPath est fourni sans spec,
  * le Suspense affiche un état de chargement neutre.
  */
-// Paramètres caméra par type de modèle. Les chasseurs sont allongés
-// horizontalement (silhouette plan trois-quarts), les radars sont des
-// structures verticales compactes (superstructure + mât), les missiles
-// sont très allongés sur un axe (long et fins) — pour chaque type, on
-// ajuste la position, l'élévation et le fov.
+// Paramètres caméra par type de modèle. Avec un placement (XRAY_MODEL_OVERRIDES),
+// missiles et radars tiennent dans ~3 unités, comme un chasseur : la caméra
+// trois-quarts, un peu latérale, recule assez pour cadrer aussi les repères
+// de contexte qui orbitent autour du modèle. La position « aircraft » reste
+// celle des chasseurs sans placement ; un placement peut fournir la sienne.
 const CAMERA_PRESETS = {
   aircraft: { position: [3.8, 2.6, 4.1] as [number, number, number], fov: 22, minDist: 3.5, maxDist: 10 },
-  radar: { position: [6.2, 4.2, 6.6] as [number, number, number], fov: 24, minDist: 4.5, maxDist: 14 },
-  missile: { position: [3.6, 2.0, 3.6] as [number, number, number], fov: 26, minDist: 3.0, maxDist: 10 },
+  radar: { position: [6.7, 4.7, 4.7] as [number, number, number], fov: 24, minDist: 4.5, maxDist: 14 },
+  missile: { position: [6.3, 4.2, 3.6] as [number, number, number], fov: 26, minDist: 3.0, maxDist: 10 },
 } as const;
+
+/**
+ * Repère des repères X-Ray (X envergure, Y longueur nez +, Z hauteur) vers le
+ * repère glTF (Y haut, nez vers -Z) : un quart de tour autour de X.
+ */
+const SPEC_TO_GLTF_ROTATION: [number, number, number] = [-Math.PI / 2, 0, 0];
 
 export function SystemXray3DView({
   spec,
   glbPath,
+  modelOverride,
   nodes,
   selectedNodeId,
   onSelectNode,
@@ -199,18 +209,30 @@ export function SystemXray3DView({
 }: {
   spec?: Wireframe3DSpec;
   glbPath?: string;
+  /** Placement du GLB dans le repère des repères (voir XRAY_MODEL_OVERRIDES). */
+  modelOverride?: XrayModelOverride;
   nodes: DecisionTwinNode[];
   selectedNodeId?: string;
   onSelectNode: (node: DecisionTwinNode) => void;
   modelType?: keyof typeof CAMERA_PRESETS;
 }) {
   const cam = CAMERA_PRESETS[modelType];
+  // Avec un placement, repères et filaire de repli sont tournés dans le
+  // repère glTF du modèle ; sans placement, rien ne change.
+  const specRotation = modelOverride ? SPEC_TO_GLTF_ROTATION : undefined;
   return (
     <div className="relative aspect-square w-full overflow-hidden border border-line bg-surface">
       {/* fov réduit (~110mm équivalent) : focale longue → moins de distorsion
           du nez, silhouette plus proche d'une vue plan-trois-quart industrielle.
           Caméra reculée en conséquence pour conserver le cadrage. */}
-      <Canvas camera={{ position: cam.position, fov: cam.fov }}>
+      <Canvas
+        camera={{
+          position: modelOverride?.cameraPosition
+            ? [...modelOverride.cameraPosition]
+            : cam.position,
+          fov: cam.fov,
+        }}
+      >
         <color attach="background" args={["#16150f"]} />
 
         {/* Éclairage X-Ray premium :
@@ -225,21 +247,36 @@ export function SystemXray3DView({
         <PanoplieXrayBackdrop />
 
         {glbPath ? (
-          <Suspense fallback={spec ? <ProceduralWireframe spec={spec} /> : null}>
-            <GlbWireframe path={glbPath} />
+          <Suspense
+            fallback={
+              spec ? (
+                <group rotation={specRotation}>
+                  <ProceduralWireframe spec={spec} />
+                </group>
+              ) : null
+            }
+          >
+            <group
+              rotation={modelOverride?.rotation ? [...modelOverride.rotation] : undefined}
+              scale={modelOverride?.scale ?? 1}
+            >
+              <GlbWireframe path={glbPath} />
+            </group>
           </Suspense>
         ) : spec ? (
           <ProceduralWireframe spec={spec} />
         ) : null}
 
-        {nodes.map((node) => (
-          <Hotspot
-            key={node.id}
-            node={node}
-            isSelected={node.id === selectedNodeId}
-            onSelect={onSelectNode}
-          />
-        ))}
+        <group rotation={specRotation}>
+          {nodes.map((node) => (
+            <Hotspot
+              key={node.id}
+              node={node}
+              isSelected={node.id === selectedNodeId}
+              onSelect={onSelectNode}
+            />
+          ))}
+        </group>
 
         <OrbitControls
           enablePan={false}

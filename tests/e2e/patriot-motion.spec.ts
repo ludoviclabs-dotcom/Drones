@@ -17,18 +17,17 @@ const scene = (page: Page) => page.locator("[data-patriot-motion]");
 const experience = (page: Page) => page.locator("[data-sequence-state]");
 const motionOf = (page: Page) => scene(page).getAttribute("data-patriot-motion");
 
-async function hasWebGl(page: Page) {
-  return page.evaluate(() => {
-    const canvas = document.createElement("canvas");
-    return Boolean(canvas.getContext("webgl2") ?? canvas.getContext("webgl"));
-  });
-}
-
-async function openScene(page: Page) {
+/**
+ * Charge la route et attend que la scène tranche : GLB monté (`ready`) ou
+ * WebGL 2 absent (`unavailable`, détecté par la page elle-même). Renvoie vrai
+ * si la scène 3D est disponible ; un échec de chargement (`error`) échoue.
+ */
+async function openScene(page: Page): Promise<boolean> {
   await page.goto(ROUTE);
-  await expect(scene(page)).toHaveAttribute("data-patriot-asset", "ready", {
+  await expect(scene(page)).toHaveAttribute("data-patriot-asset", /^(ready|unavailable)$/, {
     timeout: 45_000,
   });
+  return (await scene(page).getAttribute("data-patriot-asset")) === "ready";
 }
 
 /**
@@ -88,8 +87,7 @@ test.describe.configure({ mode: "default", timeout: 4 * TRANSITION_BUDGET_MS + 3
 
 test.describe("Patriot — séquence pilotée par l’état", () => {
   test("met en batterie puis élève le lanceur, et ne bouge plus au repos", async ({ page }) => {
-    await openScene(page);
-    test.skip(!(await hasWebGl(page)), "WebGL indisponible sur cet agent");
+    test.skip(!(await openScene(page)), "WebGL 2 indisponible sur cet agent");
     await recordTransitions(page);
     expect(await motionOf(page)).toBe("idle");
 
@@ -119,8 +117,7 @@ test.describe("Patriot — séquence pilotée par l’état", () => {
     // Mise en place directe (mouvement réduit), puis retour au mouvement
     // normal : changer le réglage ne doit lancer aucune transition.
     await page.emulateMedia({ reducedMotion: "reduce" });
-    await openScene(page);
-    test.skip(!(await hasWebGl(page)), "WebGL indisponible sur cet agent");
+    test.skip(!(await openScene(page)), "WebGL 2 indisponible sur cet agent");
     await page.locator("label", { hasText: "Salve « ripple »" }).click();
     await page.locator('[data-patriot-step="elevate"]').click();
     await expect(experience(page)).toHaveAttribute("data-sequence-state", "elevate");
@@ -144,8 +141,7 @@ test.describe("Patriot — séquence pilotée par l’état", () => {
   test("réinitialiser pendant la mise en batterie ramène proprement à la batterie", async ({
     page,
   }) => {
-    await openScene(page);
-    test.skip(!(await hasWebGl(page)), "WebGL indisponible sur cet agent");
+    test.skip(!(await openScene(page)), "WebGL 2 indisponible sur cet agent");
     await recordTransitions(page);
 
     await page.getByRole("button", { name: NEXT }).click();
@@ -164,8 +160,7 @@ test.describe("Patriot — séquence pilotée par l’état", () => {
   });
 
   test("une rafale de clics converge vers un état unique et stable", async ({ page }) => {
-    await openScene(page);
-    test.skip(!(await hasWebGl(page)), "WebGL indisponible sur cet agent");
+    test.skip(!(await openScene(page)), "WebGL 2 indisponible sur cet agent");
     const errors: string[] = [];
     page.on("pageerror", (error) => errors.push(error.message));
 

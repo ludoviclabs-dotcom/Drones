@@ -37,12 +37,13 @@ async function openScene(page: Page) {
  * Budget d'une transition en navigateur de test.
  *
  * Les navigateurs de test rendent le WebGL en logiciel (SwiftShader, sur CPU).
- * Chaque frame y est lente, et le pas de temps plafonné à 64 ms par frame (voir
- * `MAX_FRAME_STEP_MS`) étire alors la transition en temps réel au lieu de la
- * sauter. Depuis l'ajout du détail de surface, « configure » (2,6 s nominales)
- * prend ~7,5 s en local et dépassait les 15 s de l'ancien budget en CI.
- * Un GPU réel n'est pas concerné. Le budget reste borné : une transition qui ne
- * se termine jamais échoue toujours.
+ * La scène y prend le profil de rendu `software` (voir `render-profile.ts`) :
+ * sans anticrénelage ni ombres, une frame coûte ~80 ms au lieu de ~160 ms, et
+ * le pas de temps plafonné à 200 ms (au lieu de 64 ms, voir
+ * `MAX_FRAME_STEP_MS`) garde « configure » (2,6 s nominales) à ~2,6 s en local,
+ * contre ~7 s auparavant et plus de 15 s sur les runners CI. Le budget reste
+ * large pour les runners lents, et borné : une transition qui ne se termine
+ * jamais échoue toujours.
  */
 const TRANSITION_BUDGET_MS = 45_000;
 

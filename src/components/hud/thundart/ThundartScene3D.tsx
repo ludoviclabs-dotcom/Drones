@@ -24,9 +24,11 @@ import {
   type ThundartInspectableId,
 } from "@/data/hud/thundart-inspection";
 import { THUNDART_CAMERA_POSES } from "@/data/hud/thundart-motion";
+import { SOFTWARE_MAX_FRAME_STEP_MS, useRenderProfile } from "../render-profile";
 import { ThundartModel } from "./ThundartModel";
 
-type AssetStatus = "loading" | "ready" | "error";
+type LoadStatus = "loading" | "ready" | "error";
+type AssetStatus = LoadStatus | "unavailable";
 
 const OVERVIEW_POSE = THUNDART_CAMERA_POSES.overview;
 
@@ -75,9 +77,12 @@ function ModelErrorStandIn() {
 
 function WebGlFallback() {
   return (
-    <div className="grid h-full place-items-center px-6 text-center font-mono text-xs leading-relaxed text-ink-dim">
-      La vue 3D requiert WebGL. La structure éditoriale et les contrôles restent
-      disponibles dans la page.
+    <div className="grid h-full place-items-center px-6 text-center">
+      <p className="max-w-sm border border-line bg-panel/70 px-5 py-4 font-mono text-[11px] leading-relaxed text-ink-dim">
+        La vue 3D requiert WebGL 2, indisponible dans ce navigateur. La séquence
+        éditoriale et l’inspection des sous-ensembles restent utilisables dans
+        la page.
+      </p>
     </div>
   );
 }
@@ -102,7 +107,14 @@ export function ThundartScene3D({
     getClientHydrationSnapshot,
     getServerHydrationSnapshot,
   );
-  const [assetStatus, setAssetStatus] = useState<AssetStatus>("loading");
+  // Profil décidé avant la création du contexte WebGL : complet, allégé
+  // (rendu logiciel : ni anticrénelage, ni ombres) ou indisponible (pas de
+  // WebGL 2 : repli explicite, GLB non téléchargé).
+  const renderProfile = useRenderProfile();
+  const softwareRendering = renderProfile === "software";
+  const webGlAvailable = renderProfile !== "none";
+  const [loadStatus, setLoadStatus] = useState<LoadStatus>("loading");
+  const assetStatus: AssetStatus = webGlAvailable ? loadStatus : "unavailable";
   const [transitionRunning, setTransitionRunning] = useState(false);
 
   // La caméra n'a qu'un propriétaire à la fois : pendant une transition, c'est
@@ -119,26 +131,28 @@ export function ThundartScene3D({
     : activeInspection?.label;
 
   useEffect(() => {
-    useGLTF.preload(THUNDART_ASSET_PATH);
-  }, []);
+    if (mounted && webGlAvailable) useGLTF.preload(THUNDART_ASSET_PATH);
+  }, [mounted, webGlAvailable]);
 
-  const handleReady = useCallback(() => setAssetStatus("ready"), []);
-  const handleError = useCallback(() => setAssetStatus("error"), []);
+  const handleReady = useCallback(() => setLoadStatus("ready"), []);
+  const handleError = useCallback(() => setLoadStatus("error"), []);
   const handleTransitionChange = useCallback(
     (running: boolean) => setTransitionRunning(running),
     [],
   );
 
   const statusCopy =
-    assetStatus === "error"
-      ? "Asset indisponible · repère de secours affiché"
-      : assetStatus === "loading"
-        ? "Chargement de l’asset GLB local"
-        : reducedMotion
-          ? "Mouvement réduit · poses appliquées directement"
-          : transitionRunning
-            ? "Transition en cours"
-            : "Pose figée · aucune animation en attente";
+    assetStatus === "unavailable"
+      ? "Vue 3D indisponible sans WebGL 2 · contrôles et inspection utilisables"
+      : assetStatus === "error"
+        ? "Asset indisponible · repère de secours affiché"
+        : assetStatus === "loading"
+          ? "Chargement de l’asset GLB local"
+          : reducedMotion
+            ? "Mouvement réduit · poses appliquées directement"
+            : transitionRunning
+              ? "Transition en cours"
+              : "Pose figée · aucune animation en attente";
 
   return (
     <div
@@ -152,8 +166,9 @@ export function ThundartScene3D({
       data-thundart-model-active={activeInspectionId ?? "none"}
       data-thundart-model-selected={selectedInspectionId ?? "none"}
       data-thundart-projectile-visual={projectileInspection ? "active" : "idle"}
+      data-thundart-render-profile={renderProfile}
     >
-      {mounted ? (
+      {mounted && webGlAvailable ? (
         <Canvas
           aria-hidden="true"
           camera={{
@@ -162,11 +177,15 @@ export function ThundartScene3D({
             near: 0.1,
             far: 120,
           }}
-          dpr={[1, 1.5]}
+          dpr={softwareRendering ? 1 : [1, 1.5]}
           fallback={<WebGlFallback />}
           frameloop="demand"
-          gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
-          shadows="percentage"
+          gl={{
+            antialias: !softwareRendering,
+            alpha: false,
+            powerPreference: "high-performance",
+          }}
+          shadows={softwareRendering ? false : "percentage"}
         >
           <color attach="background" args={["#11100c"]} />
           {/*
@@ -182,7 +201,7 @@ export function ThundartScene3D({
           <ambientLight intensity={0.52} color="#94a2a7" />
           <hemisphereLight args={["#d8ded9", "#201d14", 0.95]} />
           <directionalLight
-            castShadow
+            castShadow={!softwareRendering}
             color="#ece6d5"
             intensity={2.05}
             position={[-7, 12, -8]}
@@ -223,6 +242,7 @@ export function ThundartScene3D({
                 onTransitionChange={handleTransitionChange}
                 onInspectionPreview={onInspectionPreview}
                 onInspectionToggle={onInspectionToggle}
+                maxFrameStepMs={softwareRendering ? SOFTWARE_MAX_FRAME_STEP_MS : undefined}
               />
             </Suspense>
           </ModelErrorBoundary>
@@ -246,6 +266,8 @@ export function ThundartScene3D({
             minPolarAngle={0.55}
           />
         </Canvas>
+      ) : mounted ? (
+        <WebGlFallback />
       ) : (
         <div className="grid h-full place-items-center px-8 text-center">
           <div className="max-w-sm border border-line bg-panel/70 px-5 py-4 font-mono text-[11px] uppercase leading-relaxed tracking-[0.14em] text-ink-dim">
@@ -289,13 +311,15 @@ export function ThundartScene3D({
       >
         {statusCopy}
       </div>
-      <div className="pointer-events-none absolute bottom-3 right-3 hidden border border-line-bright bg-panel/85 px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.13em] text-ink-faint sm:block">
-        {controlsEnabled
-          ? "Glisser · pivoter / molette · zoomer"
-          : transitionRunning
-            ? "Recomposition en cours"
-            : "Caméra verrouillée dans cet état"}
-      </div>
+      {webGlAvailable ? (
+        <div className="pointer-events-none absolute bottom-3 right-3 hidden border border-line-bright bg-panel/85 px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.13em] text-ink-faint sm:block">
+          {controlsEnabled
+            ? "Glisser · pivoter / molette · zoomer"
+            : transitionRunning
+              ? "Recomposition en cours"
+              : "Caméra verrouillée dans cet état"}
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -215,6 +215,10 @@ Garanties structurelles :
    plafonné à 64 ms par frame (`MAX_FRAME_STEP_MS`) : sous charge, la transition
    dure plus longtemps en temps réel mais reste **vue**, et la pose finale reste
    exacte puisque le temps écoulé est borné à la durée du plan.
+   *Addendum :* en rendu logiciel (SwiftShader, llvmpipe…), le profil de rendu
+   `software` (`src/components/hud/render-profile.ts`) retire anticrénelage et
+   ombres (~80 ms par image au lieu de ~160 ms) et relève ce plafond à 200 ms :
+   les transitions y gardent leur durée nominale.
 
 2. **La scène bougeait sans changement d’état.** L’effet de mouvement se
    réexécute aussi pour des raisons qui n’en sont pas : montage initial, arrivée

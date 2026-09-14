@@ -130,6 +130,8 @@ function isWithinNode(
  *
  * La pose finale reste exacte quoi qu'il arrive : le temps écoulé est borné à
  * la durée du plan, et l'échantillonnage à cette borne rend exactement `plan.to`.
+ * Le profil de rendu logiciel passe un plafond plus haut (voir
+ * `render-profile.ts`).
  */
 const MAX_FRAME_STEP_MS = 64;
 
@@ -346,6 +348,7 @@ export function ThundartModel({
   onTransitionChange,
   onInspectionPreview,
   onInspectionToggle,
+  maxFrameStepMs = MAX_FRAME_STEP_MS,
 }: {
   sequenceState: ThundartSequenceState;
   reducedMotion: boolean;
@@ -355,6 +358,7 @@ export function ThundartModel({
   onTransitionChange: (running: boolean) => void;
   onInspectionPreview: (id: ThundartInspectableId | null) => void;
   onInspectionToggle: (id: ThundartInspectableId) => void;
+  maxFrameStepMs?: number;
 }) {
   const { scene, animations } = useGLTF(THUNDART_ASSET_PATH);
 
@@ -684,7 +688,7 @@ export function ThundartModel({
     if (!plan) return;
 
     const frameAt = now();
-    const step = Math.min(frameAt - lastFrameAtRef.current, MAX_FRAME_STEP_MS);
+    const step = Math.min(frameAt - lastFrameAtRef.current, maxFrameStepMs);
     lastFrameAtRef.current = frameAt;
     elapsedRef.current = Math.min(elapsedRef.current + step, plan.totalMs);
 

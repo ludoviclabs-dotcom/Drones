@@ -365,7 +365,12 @@ export function ThundartModel({
   const camera = useThree((state) => state.camera);
   const controls = useThree((state) => asOrbitControls(state.controls));
   const invalidate = useThree((state) => state.invalidate);
-  const size = useThree((state) => state.size);
+  // Largeur et hauteur seules : R3F remesure son conteneur au défilement et
+  // renouvelle `size` (top/left) à chaque scroll. Suivre l'objet entier
+  // relancerait le recadrage, qui ramène la caméra à la pose de l'état et
+  // efface l'orbite de l'utilisateur.
+  const width = useThree((state) => state.size.width);
+  const height = useThree((state) => state.size.height);
   const gl = useThree((state) => state.gl);
 
   const preparedModel = useMemo(() => {
@@ -485,9 +490,9 @@ export function ThundartModel({
   // Déclaré en premier : le recul responsive est connu avant la première pose.
   useEffect(() => {
     framingScaleRef.current = framingScaleForAspect(
-      size.height > 0 ? size.width / size.height : 1,
+      height > 0 ? width / height : 1,
     );
-  }, [size]);
+  }, [width, height]);
 
   useEffect(() => {
     const runtime = createRuntime(model, animations);
@@ -681,7 +686,7 @@ export function ThundartModel({
     if (planRef.current || !lastSampleRef.current) return;
     applySample(lastSampleRef.current);
     invalidate();
-  }, [applySample, invalidate, size]);
+  }, [applySample, invalidate, width, height]);
 
   useFrame(() => {
     const plan = planRef.current;

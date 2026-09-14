@@ -48,6 +48,20 @@ const component = (page: Page, name: string) =>
   page.getByRole("button", { name, exact: true });
 const modeLabel = (page: Page, text: string) => page.locator("label", { hasText: text });
 
+/**
+ * Budget du test de glisser orbital en navigateur de test.
+ *
+ * C'est le seul test de cette spec qui fait rendre la scène en continu : chaque
+ * pointermove relance une frame, et l'amortissement des contrôles en enchaîne
+ * des dizaines d'autres après le relâchement. Ces frames sont rendues en
+ * logiciel (SwiftShader, sur CPU : ~0,25 s l'image à cette taille, voir
+ * PatriotScene3D) ; quand un autre worker rend une scène au même moment (une
+ * transition de patriot-motion.spec.ts, par exemple), les navigateurs se
+ * disputent le CPU et le test peut durer plusieurs fois plus longtemps que seul.
+ * Le budget reste borné : un glisser qui ne se termine jamais échoue toujours.
+ */
+const ORBIT_DRAG_BUDGET_MS = 120_000;
+
 function isLocalVercelTelemetry(message: ConsoleMessage) {
   const url = message.location().url;
   return (
@@ -83,6 +97,48 @@ async function openWithoutWebGl(page: Page) {
   await page.goto(ROUTE);
   // La scène est montée (hydratée) et a constaté l'absence de WebGL.
   await expect(scene(page)).toHaveAttribute("data-patriot-asset", "unavailable");
+}
+
+/**
+ * Charge la route et attend que la scène tranche : GLB monté (`ready`) ou
+ * WebGL 2 absent (`unavailable`, détecté par la page elle-même). Renvoie vrai
+ * si la scène 3D est disponible ; un échec de chargement (`error`) échoue.
+ */
+async function openScene(page: Page): Promise<boolean> {
+  await page.goto(ROUTE);
+  await expect(scene(page)).toHaveAttribute("data-patriot-asset", /^(ready|unavailable)$/, {
+    timeout: 45_000,
+  });
+  return (await scene(page).getAttribute("data-patriot-asset")) === "ready";
+}
+
+/**
+ * Attend que le modèle chargé ait été rendu au moins une fois.
+ *
+ * `data-patriot-asset="ready"` est posé dès le montage du modèle, qui peut
+ * précéder sa première frame : le rayon d'un pointeur reçu entre les deux
+ * partirait d'une caméra pas encore cadrée. Cette frame est demandée au
+ * montage, donc avant nos deux rAF : quand le second s'exécute, elle est rendue.
+ */
+async function waitForModelFrame(page: Page) {
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+      }),
+  );
+}
+
+/**
+ * Le point du viewport atteint-il le canvas ? Comme un vrai pointeur,
+ * `elementFromPoint` traverse les calques en `pointer-events: none` mais pas le
+ * header sticky, et ne renvoie rien hors du viewport.
+ */
+function isOnCanvas(page: Page, point: { x: number; y: number }) {
+  return page.evaluate(
+    ({ x, y }) => document.elementFromPoint(x, y) instanceof HTMLCanvasElement,
+    point,
+  );
 }
 
 test.describe.configure({ mode: "default", timeout: 90_000 });
@@ -198,12 +254,45 @@ test.describe("Patriot — chargement et scène 3D", () => {
   });
 
   test("un glisser sur la vue ne déclenche ni aperçu ni épingle", async ({ page }) => {
-    await page.goto(ROUTE);
-    await waitForAsset(page);
-    const box = (await page.locator("canvas").boundingBox())!;
-    await page.mouse.move(box.x + box.width * 0.4, box.y + box.height * 0.55);
+    test.setTimeout(ORBIT_DRAG_BUDGET_MS);
+    test.skip(!(await openScene(page)), "WebGL 2 indisponible sur cet agent");
+    // Le geste doit revenir aux contrôles orbitaux : ils ne sont actifs qu'au
+    // repos, dans les états d'observation.
+    await expect(page.getByText("Glisser · pivoter / molette · zoomer")).toBeVisible();
+    await waitForModelFrame(page);
+
+    // La planche est amenée sous le header, comme par son ancre (`instant`, car
+    // le document défile en douceur) : le canvas y tient entier (~890 × 531 à
+    // 1280 × 720), et c'est dans ce cadrage que les points du geste sont choisis.
+    await page
+      .locator("#patriot-experience")
+      .evaluate((element) => element.scrollIntoView({ block: "start", behavior: "instant" }));
+    const box = await page.locator("canvas").boundingBox();
+    expect(box).not.toBeNull();
+    // Le geste part des conteneurs du lanceur de tête. R3F ne livre `onClick`
+    // qu'aux objets touchés au pointerdown : parti du sol nu entre les véhicules,
+    // le geste ne recevrait aucun clic et ce test ne garderait rien. 20 px
+    // franchissent le seuil de drag (6 px) sans quitter les conteneurs.
+    const start = { x: box!.x + box!.width * 0.64, y: box!.y + box!.height * 0.6 };
+    const end = { x: start.x + 20, y: start.y };
+    for (const point of [start, end]) {
+      expect(
+        await isOnCanvas(page, point),
+        `(${Math.round(point.x)}, ${Math.round(point.y)}) hors du canvas`,
+      ).toBe(true);
+    }
+
+    // Le survol ouvre l'aperçu transitoire du sous-ensemble visé…
+    await page.mouse.move(start.x, start.y);
+    await expect(experience(page)).not.toHaveAttribute("data-patriot-inspection", "none");
+
+    // … que le drag doit effacer dès le seuil franchi, avant tout relâchement.
     await page.mouse.down();
-    await page.mouse.move(box.x + box.width * 0.62, box.y + box.height * 0.6, { steps: 8 });
+    await page.mouse.move(end.x, end.y);
+    await expect(experience(page)).toHaveAttribute("data-patriot-inspection", "none");
+
+    // R3F livre le clic qui clôt le geste à chaque mesh traversé par le rayon :
+    // aucun ne doit épingler son sous-ensemble.
     await page.mouse.up();
     await expect(experience(page)).toHaveAttribute("data-patriot-inspection", "none");
     await expect(experience(page)).toHaveAttribute("data-patriot-inspection-selected", "none");

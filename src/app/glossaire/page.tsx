@@ -91,7 +91,7 @@ export default function GlossairePage() {
             <div
               key={org.slug}
               id={`org-${org.slug}`}
-              className="scroll-mt-28 border-b border-line px-5 py-4 last:border-0"
+              className="border-b border-line px-5 py-4 last:border-0"
             >
               <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                 <span className="font-serif text-lg text-ink">{org.name}</span>

@@ -8,6 +8,7 @@ import { Canvas, type ThreeEvent } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import type { DecisionTwinNode } from "@/data/decision-twin/types";
+import type { XrayModelOverride } from "@/data/aviation-3d";
 import type { Wireframe3DSpec } from "@/data/aviation-3d/types";
 import { PanoplieXrayBackdrop } from "./PanoplieXrayBackdrop";
 
@@ -50,19 +51,40 @@ const RAFALE = {
   canopyColor: "#172022", // cockpit-smoke — verrière fumée
 } as const;
 
-function GlbWireframe({ path }: { path: string }) {
-  const { scene } = useGLTF(path);
+/** Référence stable : un `[]` par défaut relancerait le clonage à chaque rendu. */
+const NO_HIDDEN_NODES: readonly string[] = [];
+
+function GlbWireframe({
+  path,
+  meshopt = false,
+  hiddenNodes = NO_HIDDEN_NODES,
+}: {
+  path: string;
+  meshopt?: boolean;
+  hiddenNodes?: readonly string[];
+}) {
+  // Asset de planche : meshopt seul (décodeur embarqué), jamais le Draco du CDN.
+  // Sans surcharge, les réglages par défaut de drei restent inchangés.
+  const { scene } = useGLTF(path, meshopt ? false : undefined);
 
   const styledScene = useMemo(() => {
     const clone = scene.clone(true);
+    // Retirés du clone, pas seulement masqués : la passe d'arêtes ci-dessous
+    // parcourt aussi les nœuds invisibles et accroche ses contours au parent.
+    for (const name of hiddenNodes) {
+      clone.getObjectByName(name)?.removeFromParent();
+    }
     // Collecte des paires (mesh source → edges overlay) à ajouter en post-traversal
     // pour éviter de muter l'arbre pendant qu'on l'itère.
     const edgeOverlays: Array<{ parent: THREE.Object3D; line: THREE.LineSegments }> = [];
 
     clone.traverse((child) => {
       if (child instanceof THREE.Mesh) {
-        const name = child.name.toLowerCase();
-        const isCanopy = name.includes("verriere") || name.includes("canopy");
+        // La compression meshopt peut glisser un nœud sans nom sous le nœud
+        // nommé : on lit alors le nom du parent.
+        const name = (child.name || child.parent?.name || "").toLowerCase();
+        const isCanopy =
+          name.includes("verriere") || (name.includes("canopy") && !name.includes("frame"));
 
         // 1. Coque solide
         child.material = isCanopy
@@ -112,7 +134,7 @@ function GlbWireframe({ path }: { path: string }) {
     }
 
     return clone;
-  }, [scene]);
+  }, [hiddenNodes, scene]);
 
   return <primitive object={styledScene} />;
 }
@@ -189,9 +211,16 @@ const CAMERA_PRESETS = {
   missile: { position: [3.6, 2.0, 3.6] as [number, number, number], fov: 26, minDist: 3.0, maxDist: 10 },
 } as const;
 
+/**
+ * Repère des repères X-Ray (X envergure, Y longueur nez +, Z hauteur) vers le
+ * repère glTF (Y haut, nez vers -Z) : un quart de tour autour de X.
+ */
+const SPEC_TO_GLTF_ROTATION: [number, number, number] = [-Math.PI / 2, 0, 0];
+
 export function SystemXray3DView({
   spec,
   glbPath,
+  modelOverride,
   nodes,
   selectedNodeId,
   onSelectNode,
@@ -199,18 +228,30 @@ export function SystemXray3DView({
 }: {
   spec?: Wireframe3DSpec;
   glbPath?: string;
+  /** Asset de planche technique à la place du GLB X-Ray (repères réalignés). */
+  modelOverride?: XrayModelOverride;
   nodes: DecisionTwinNode[];
   selectedNodeId?: string;
   onSelectNode: (node: DecisionTwinNode) => void;
   modelType?: keyof typeof CAMERA_PRESETS;
 }) {
   const cam = CAMERA_PRESETS[modelType];
+  // Avec un asset de planche, repères et filaire de repli sont tournés dans le
+  // repère glTF du modèle ; sans surcharge, rien ne change.
+  const specRotation = modelOverride ? SPEC_TO_GLTF_ROTATION : undefined;
   return (
     <div className="relative aspect-square w-full overflow-hidden border border-line bg-surface">
       {/* fov réduit (~110mm équivalent) : focale longue → moins de distorsion
           du nez, silhouette plus proche d'une vue plan-trois-quart industrielle.
           Caméra reculée en conséquence pour conserver le cadrage. */}
-      <Canvas camera={{ position: cam.position, fov: cam.fov }}>
+      <Canvas
+        camera={{
+          position: modelOverride?.cameraPosition
+            ? [...modelOverride.cameraPosition]
+            : cam.position,
+          fov: cam.fov,
+        }}
+      >
         <color attach="background" args={["#16150f"]} />
 
         {/* Éclairage X-Ray premium :
@@ -225,21 +266,37 @@ export function SystemXray3DView({
         <PanoplieXrayBackdrop />
 
         {glbPath ? (
-          <Suspense fallback={spec ? <ProceduralWireframe spec={spec} /> : null}>
-            <GlbWireframe path={glbPath} />
+          <Suspense
+            fallback={
+              spec ? (
+                <group rotation={specRotation}>
+                  <ProceduralWireframe spec={spec} />
+                </group>
+              ) : null
+            }
+          >
+            <group scale={modelOverride?.scale ?? 1}>
+              <GlbWireframe
+                path={glbPath}
+                meshopt={modelOverride?.meshopt}
+                hiddenNodes={modelOverride?.hiddenNodes}
+              />
+            </group>
           </Suspense>
         ) : spec ? (
           <ProceduralWireframe spec={spec} />
         ) : null}
 
-        {nodes.map((node) => (
-          <Hotspot
-            key={node.id}
-            node={node}
-            isSelected={node.id === selectedNodeId}
-            onSelect={onSelectNode}
-          />
-        ))}
+        <group rotation={specRotation}>
+          {nodes.map((node) => (
+            <Hotspot
+              key={node.id}
+              node={node}
+              isSelected={node.id === selectedNodeId}
+              onSelect={onSelectNode}
+            />
+          ))}
+        </group>
 
         <OrbitControls
           enablePan={false}

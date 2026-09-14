@@ -1,0 +1,499 @@
+{
+  "id": "rafale-f4",
+  "label": "RAFALE C F4 - METEOR",
+  "kind": "chasseur omnirole (representation editoriale OSINT des formes exterieures)",
+  "_units": "Metres. Gabarits exterieurs approches, cales sur les dimensions publiees par Dassault Aviation (longueur 15,30 m, envergure 10,90 m, hauteur 5,30 m ; surface alaire 45,7 m2 d'apres Wikipedia) et sur des photographies publiques. Ce fichier n'est PAS une specification constructeur ni un plan : aucune cote fine n'est revendiquee.",
+  "_frame": "Blender Z-up. +Y = nez, +X = aile droite, z = 0 au plan de la corde d'emplanture. Les cotes longitudinales sont des STATIONS s (distance au nez), converties en y = y0 - s.",
+  "_sources": {
+    "Dassault Aviation, Rafale - caracteristiques": "longueur 15,30 m ; envergure 10,90 m ; hauteur 5,30 m ; 14 points d'emport (Rafale C)",
+    "MBDA, Meteor": "longueur 3,7 m (MBDA) ou 3,65 m (DGA) ; diametre 0,178 m ; statoreacteur a propergol solide et a debit variable ; stations de livree mesurees sur le rendu officiel MBDA",
+    "MBDA, MICA": "longueur 3,1 m ; diametre 0,16 m ; autodirecteur IR ou EM",
+    "Safran, AASM Hammer": "kit de guidage et kit propulsif sur corps de bombe de 125 a 1 000 kg",
+    "Photographies de reference fournies par l'utilisateur (non publiees ici)": "lecture des formes et de la livree seulement, jamais de cotes : Rafale B de profil et de trois-quarts, vue de face en configuration air-air, configuration air-sol vue de dessous, infographie Thales 'On board the Rafale'"
+  },
+  "frame": {
+    "y0": 8.3
+  },
+  "fuselage": {
+    "_note": "Six points de controle par demi-section, du dos au ventre : [dos, epaule, flanc haut, flanc bas, epaule basse, ventre]. Interpolation PCHIP d'une station a l'autre.",
+    "nose_tip": [0.0, 0.2],
+    "radome_joint_s": 2.55,
+    "samples_per_segment": 6,
+    "breaks": [2.55, 4.6, 8.6, 13.2, 14.6],
+    "spacing": [0.2, 0.12, 0.25, 0.2],
+    "stations": [
+      { "s": 0.0, "pts": [[0.0, 0.2], [0.0, 0.2], [0.0, 0.2], [0.0, 0.2], [0.0, 0.2], [0.0, 0.2]] },
+      { "s": 0.35, "pts": [[0, 0.345], [0.12, 0.315], [0.17, 0.235], [0.17, 0.16], [0.115, 0.085], [0, 0.06]] },
+      { "s": 1.0, "pts": [[0, 0.52], [0.25, 0.47], [0.355, 0.29], [0.355, 0.12], [0.24, -0.07], [0, -0.13]] },
+      { "s": 1.8, "pts": [[0, 0.62], [0.34, 0.56], [0.47, 0.3], [0.47, 0.05], [0.33, -0.21], [0, -0.28]] },
+      { "s": 2.55, "pts": [[0, 0.67], [0.39, 0.6], [0.53, 0.3], [0.53, -0.02], [0.38, -0.32], [0, -0.4]] },
+      { "s": 3.3, "pts": [[0, 0.7], [0.41, 0.65], [0.57, 0.3], [0.57, -0.08], [0.42, -0.42], [0, -0.5]] },
+      { "s": 4.2, "pts": [[0, 0.72], [0.44, 0.69], [0.6, 0.31], [0.6, -0.15], [0.45, -0.52], [0, -0.6]] },
+      { "s": 4.75, "pts": [[0, 0.735], [0.45, 0.7], [0.67, 0.29], [0.6, 0.04], [0.48, -0.54], [0, -0.62]] },
+      { "s": 5.2, "pts": [[0, 0.75], [0.47, 0.71], [0.95, 0.24], [0.61, 0.08], [0.52, -0.57], [0, -0.65]] },
+      { "s": 5.8, "pts": [[0, 0.76], [0.5, 0.72], [1.16, 0.19], [0.62, 0.06], [0.55, -0.6], [0, -0.68]] },
+      { "s": 6.6, "pts": [[0, 0.77], [0.56, 0.69], [1.25, 0.13], [0.63, 0.02], [0.56, -0.62], [0, -0.7]] },
+      { "s": 7.5, "pts": [[0, 0.77], [0.64, 0.63], [1.32, 0.05], [0.66, -0.04], [0.58, -0.64], [0, -0.71]] },
+      { "s": 8.5, "pts": [[0, 0.75], [0.7, 0.58], [1.3, 0.0], [1.0, -0.3], [0.72, -0.66], [0, -0.71]] },
+      { "s": 9.5, "pts": [[0, 0.72], [0.74, 0.55], [1.2, -0.02], [1.16, -0.28], [0.82, -0.63], [0, -0.69]] },
+      { "s": 11.0, "pts": [[0, 0.67], [0.76, 0.53], [1.18, -0.03], [1.17, -0.25], [0.84, -0.58], [0, -0.63]] },
+      { "s": 12.5, "pts": [[0, 0.6], [0.74, 0.51], [1.13, -0.02], [1.12, -0.22], [0.82, -0.53], [0, -0.56]] },
+      { "s": 13.6, "pts": [[0, 0.45], [0.6, 0.52], [1.04, 0.05], [1.04, -0.17], [0.63, -0.49], [0, -0.43]] },
+      { "s": 14.6, "pts": [[0, 0.28], [0.52, 0.46], [0.96, 0.04], [0.96, -0.1], [0.55, -0.45], [0, -0.28]] }
+    ]
+  },
+  "canopy": {
+    "_note": "Verriere monobloc de Rafale C : [s, demi-largeur au seuil, hauteur du seuil, hauteur du sommet].",
+    "arc_segments": 18,
+    "profile": [
+      [3.1, 0.3, 0.66, 0.67],
+      [3.45, 0.38, 0.69, 0.98],
+      [3.95, 0.43, 0.71, 1.25],
+      [4.5, 0.45, 0.72, 1.4],
+      [5.1, 0.45, 0.73, 1.42],
+      [5.7, 0.43, 0.74, 1.32],
+      [6.25, 0.38, 0.75, 1.1]
+    ],
+    "arches_s": [3.98, 6.22],
+    "arch_radius": 0.028,
+    "sill_radius": 0.022
+  },
+  "spine": {
+    "_note": "Carenage dorsal derriere la verriere : [s, demi-largeur, seuil (sous la peau), sommet].",
+    "exponent": 2.6,
+    "profile": [
+      [6.18, 0.39, 0.7, 1.11],
+      [6.9, 0.46, 0.66, 1.0],
+      [7.8, 0.54, 0.6, 0.9],
+      [8.8, 0.6, 0.56, 0.8],
+      [9.8, 0.62, 0.55, 0.74]
+    ]
+  },
+  "cockpit": {
+    "_note": "Interieur vu a travers la glace : siege, pilote, casquette et collimateur. Silhouettes seulement.",
+    "floor": { "s0": 3.8, "s1": 5.9, "half_w": 0.4, "z": 0.62 },
+    "glareshield": { "z_base": 0.72, "profile": [[3.72, 0.3, 0.8], [3.95, 0.34, 0.87], [4.22, 0.32, 0.86]] },
+    "hud": { "s": 4.18, "half_w": 0.075, "z0": 0.87, "z1": 1.0, "lean": 0.05 },
+    "seat": {
+      "s": 5.44,
+      "profile": [[0.66, 0.2, 0.14], [0.95, 0.21, 0.13], [1.12, 0.19, 0.12], [1.25, 0.17, 0.11], [1.3, 0.12, 0.08]]
+    },
+    "helmet": { "s": 5.08, "z": 1.19, "r": 0.13 },
+    "torso": [[0.7, 0.2, 0.13], [0.95, 0.23, 0.14], [1.04, 0.2, 0.12], [1.08, 0.08, 0.06]]
+  },
+  "intakes": {
+    "_note": "Entrees d'air semi-ventrales : super-ellipse [centre xc, zc, demi-axes a, b] par station ; levre inclinee (levre basse en avant).",
+    "exponent": 3.0,
+    "segments": 36,
+    "phase": 0.0,
+    "lip_s": 5.0,
+    "lip_thickness": 0.05,
+    "lip_steps": 5,
+    "lip_slant_z": 0.55,
+    "lip_slant_x": 0.25,
+    "shell": [
+      { "s": 5.0, "xc": 0.97, "zc": -0.33, "a": 0.34, "b": 0.38 },
+      { "s": 6.0, "xc": 0.98, "zc": -0.32, "a": 0.36, "b": 0.4 },
+      { "s": 7.5, "xc": 0.95, "zc": -0.31, "a": 0.38, "b": 0.4 },
+      { "s": 8.5, "xc": 0.9, "zc": -0.31, "a": 0.35, "b": 0.37 },
+      { "s": 9.5, "xc": 0.78, "zc": -0.3, "a": 0.29, "b": 0.33 },
+      { "s": 10.2, "xc": 0.7, "zc": -0.29, "a": 0.24, "b": 0.28 }
+    ],
+    "duct": {
+      "_note": "[profondeur depuis la levre, echelle du contour, recul vers l'axe]",
+      "rings": [[0.05, 0.99, 0.0], [0.3, 0.96, 0.02], [0.8, 0.9, 0.06], [1.5, 0.82, 0.1]]
+    }
+  },
+  "engines": {
+    "_note": "Deux tuyeres M88 : [profondeur depuis s0, rayon, materiau].",
+    "x": 0.52,
+    "z": 0.0,
+    "s0": 14.5,
+    "segments": 32,
+    "petals": 16,
+    "petal_start": 0.3,
+    "petal_depth": 0.018,
+    "profile": [
+      [0.0, 0.46, "RAF_MAT_Nozzle"],
+      [0.25, 0.44, "RAF_MAT_Nozzle"],
+      [0.52, 0.415, "RAF_MAT_Nozzle"],
+      [0.72, 0.4, "RAF_MAT_Nozzle"],
+      [0.74, 0.365, "RAF_MAT_NozzleInner"],
+      [0.55, 0.345, "RAF_MAT_NozzleInner"],
+      [0.25, 0.32, "RAF_MAT_NozzleInner"]
+    ],
+    "center_fairing": [[13.6, 0.16, 0.3, -0.3], [14.5, 0.12, 0.22, -0.26], [15.05, 0.05, 0.1, -0.12]]
+  },
+  "wing": {
+    "_note": "Delta a bord d'attaque unique (48 deg) et bord de fuite quasi droit. Corde : s_BA(x) = le_s_at_x0 + tan(fleche) * x ; s_BF(x) = te_s_at_x0 + te_slope * x.",
+    "z": -0.1,
+    "dihedral_deg": 0.0,
+    "le_sweep_deg": 48.0,
+    "le_s_at_x0": 6.4,
+    "te_s_at_x0": 13.85,
+    "te_slope": -0.045,
+    "x_root": 0.85,
+    "x_tip": 5.15,
+    "profile_points": 36,
+    "thickness": [[0.85, 0.046], [3.0, 0.041], [5.15, 0.036]],
+    "elevons": { "x_inner": 1.3, "x_split": 3.15, "x_outer": 4.95, "chord": 0.62 },
+    "tip_rail": { "offset": 0.04, "half_width": 0.035, "half_height": 0.05, "s0": 11.95, "s1": 13.55 }
+  },
+  "canard": {
+    "_note": "Plans canard monoblocs, articules sur un axe transversal.",
+    "x_root": 0.72,
+    "x_tip": 2.55,
+    "pivot_x": 0.95,
+    "z_root": 0.3,
+    "root_le_s": 5.75,
+    "root_chord": 1.8,
+    "tip_chord": 0.52,
+    "le_sweep_deg": 50.0,
+    "dihedral_deg": -2.0,
+    "thickness": 0.045,
+    "pivot_fraction": 0.45,
+    "profile_points": 28
+  },
+  "fin": {
+    "root_le_s": 10.3,
+    "root_chord": 4.1,
+    "tip_chord": 1.12,
+    "z_root": 0.5,
+    "z_tip": 3.2,
+    "le_sweep_deg": 47.0,
+    "thickness_root": 0.05,
+    "thickness_tip": 0.04,
+    "profile_points": 30
+  },
+  "spectra": {
+    "_note": "Carenages SPECTRA visibles (formes approchees) : sommet de derive, cotes avant sous les plans canard, pied de derive.",
+    "pods": [
+      { "s0": 12.72, "s1": 14.38, "x": 0.0, "z": 3.27, "half_w": 0.09, "half_h": 0.14, "nose": 0.22, "tail": 0.28 },
+      { "s0": 5.35, "s1": 6.25, "x": 1.34, "z": -0.1, "half_w": 0.07, "half_h": 0.07, "nose": 0.22, "tail": 0.35 },
+      { "s0": 5.35, "s1": 6.25, "x": -1.34, "z": -0.1, "half_w": 0.07, "half_h": 0.07, "nose": 0.22, "tail": 0.35 },
+      { "s0": 14.1, "s1": 15.2, "x": 0.0, "z": 0.62, "half_w": 0.12, "half_h": 0.1, "nose": 0.3, "tail": 0.4 }
+    ]
+  },
+  "osf": {
+    "_note": "Optronique secteur frontal : carenage devant le pare-brise, deux hublots.",
+    "profile": [
+      [2.72, 0.05, 0.64, 0.66],
+      [2.85, 0.16, 0.64, 0.76],
+      [3.2, 0.2, 0.66, 0.8],
+      [3.45, 0.17, 0.69, 0.77]
+    ],
+    "windows": [[0.075, 2.86, 0.73, 0.045], [-0.075, 2.86, 0.73, 0.045]]
+  },
+  "probe": {
+    "_note": "Perche de ravitaillement fixe, cote droit.",
+    "path": [
+      [0.43, 3.55, 0.5],
+      [0.47, 3.3, 0.72],
+      [0.49, 3.0, 0.92],
+      [0.5, 2.7, 1.02],
+      [0.5, 2.35, 1.07],
+      [0.5, 2.1, 1.08]
+    ],
+    "radii": [0.075, 0.065, 0.055, 0.05, 0.047, 0.047],
+    "nozzle_radius": 0.058
+  },
+  "gun": {
+    "muzzle": [1.27, 6.35, 0.12],
+    "fairing_radius": 0.07,
+    "fairing_length": 0.7
+  },
+  "details": {
+    "pitots": [[0.46, 2.3, 0.2, 0.35, 0.018], [-0.46, 2.3, 0.2, 0.35, 0.018]],
+    "blades": [[0.0, 7.2, 0.83, 0.3, 0.02, 0.16], [0.0, 3.05, -0.47, 0.22, 0.016, -0.1]],
+    "lights": [
+      [5.19, 12.06, -0.052, 0.026, "RAF_MAT_LightGreen"],
+      [-5.19, 12.06, -0.052, 0.026, "RAF_MAT_LightRed"]
+    ]
+  },
+  "roundels": {
+    "radius": 0.3,
+    "skin_gap": 0.0015,
+    "placements": [
+      [1.4, 7.5, -0.32, 1.0, 0.0, -0.1],
+      [-1.4, 7.5, -0.32, -1.0, 0.0, -0.1],
+      [3.95, 12.25, -0.04, 0.0, 0.0, 1.0],
+      [-3.95, 12.25, -0.04, 0.0, 0.0, 1.0],
+      [3.95, 12.25, -0.16, 0.0, 0.0, -1.0],
+      [-3.95, 12.25, -0.16, 0.0, 0.0, -1.0]
+    ]
+  },
+  "stores": {
+    "meteor": {
+      "_note": "MBDA Meteor : 3,65 m, diametre 0,178 m. Stations mesurees sur le rendu officiel MBDA (+/- 5 %) : radome blanc sur 0,57 m, bande jaune a 1,25 m du nez, bandes marron a 1,93 et 2,52 m, entrees d'air de 1,72 a 3,18 m (moitie arriere, a +/-45 deg du ventre), quatre ailettes en X (corde 0,32 / 0,07 m, envergure totale ~0,72 m).",
+      "length": 3.65,
+      "radius": 0.089,
+      "segments": 24,
+      "nose_length": 0.5,
+      "bands": [
+        [0.568, 0.583, "RAF_MAT_BandYellow"],
+        [-0.113, -0.098, "RAF_MAT_BandBrown"],
+        [-0.703, -0.688, "RAF_MAT_BandBrown"]
+      ],
+      "intakes": {
+        "angle_from_bottom_deg": 45.0,
+        "half_width": 0.034,
+        "height": 0.07,
+        "stations": [[-1.36, 0.3], [-1.1, 0.85], [-0.4, 1.0], [0.105, 1.0]]
+      },
+      "fins": { "y_offset": 0.01, "root_chord": 0.32, "tip_chord": 0.07, "span": 0.27, "sweep": 0.0, "thickness": 0.01 },
+      "radome_length": 0.57
+    },
+    "mica": {
+      "_note": "MBDA MICA : 3,1 m, diametre 0,16 m. Longues ailes de fuselage, quatre gouvernes arriere.",
+      "length": 3.1,
+      "radius": 0.08,
+      "segments": 20,
+      "nose_length": 0.42,
+      "bands": [[0.45, 0.5, "RAF_MAT_BandYellow"], [-0.4, -0.35, "RAF_MAT_BandBrown"]],
+      "strakes": { "y0": -0.95, "y1": 0.85, "tip_chord": 1.55, "span": 0.045, "sweep": 0.1, "thickness": 0.008 },
+      "fins": { "y_offset": 0.02, "root_chord": 0.24, "tip_chord": 0.12, "span": 0.125, "sweep": 0.03, "thickness": 0.01 }
+    },
+    "hammer": {
+      "_note": "AASM Hammer (250 kg) : [y, rayon, materiau] de la tuyere au nez.",
+      "segments": 22,
+      "profile": [
+        [-1.55, 0.07, "RAF_MAT_Exhaust"],
+        [-1.54, 0.105, "RAF_MAT_HammerKit"],
+        [-1.1, 0.112, "RAF_MAT_HammerKit"],
+        [-0.95, 0.125, "RAF_MAT_Hammer"],
+        [-0.55, 0.137, "RAF_MAT_Hammer"],
+        [0.35, 0.137, "RAF_MAT_Hammer"],
+        [0.8, 0.12, "RAF_MAT_Hammer"],
+        [1.05, 0.1, "RAF_MAT_HammerKit"],
+        [1.35, 0.082, "RAF_MAT_HammerKit"],
+        [1.5, 0.06, "RAF_MAT_HammerKit"],
+        [1.56, 0.035, "RAF_MAT_HammerKit"]
+      ],
+      "window_radius": 0.03,
+      "canards": {
+        "r": 0.1,
+        "y_te": 1.0,
+        "root_chord": 0.2,
+        "tip_chord": 0.08,
+        "span": 0.08,
+        "sweep": 0.06,
+        "thickness": 0.01
+      },
+      "tail_fins": {
+        "r": 0.112,
+        "y_te": -1.5,
+        "root_chord": 0.36,
+        "tip_chord": 0.16,
+        "span": 0.14,
+        "sweep": 0.08,
+        "thickness": 0.012
+      }
+    },
+    "tank_wing": { "length": 5.2, "radius": 0.41, "nose_length": 1.5, "tail_length": 1.3, "segments": 28 },
+    "tank_center": { "length": 4.3, "radius": 0.36, "nose_length": 1.25, "tail_length": 1.05, "segments": 28 },
+    "talios": {
+      "length": 2.5,
+      "radius": 0.165,
+      "head_length": 0.42,
+      "head_radius": 0.19,
+      "windows": [[10, 0.07], [-25, 0.05]]
+    }
+  },
+  "pylons": {
+    "Inner": {
+      "chord_top": 2.3,
+      "chord_bottom": 1.8,
+      "bottom_shift": 0.05,
+      "height": 0.3,
+      "z_top": 0.05,
+      "half_thickness": 0.07
+    },
+    "Mid": {
+      "chord_top": 1.8,
+      "chord_bottom": 1.4,
+      "bottom_shift": 0.05,
+      "height": 0.26,
+      "z_top": 0.05,
+      "half_thickness": 0.06
+    },
+    "Outer": {
+      "chord_top": 1.5,
+      "chord_bottom": 1.2,
+      "bottom_shift": 0.0,
+      "height": 0.2,
+      "z_top": 0.05,
+      "half_thickness": 0.05,
+      "launcher": { "half_width": 0.04, "length": 1.8, "height": 0.07, "shift": -0.05 }
+    },
+    "Center": {
+      "chord_top": 1.8,
+      "chord_bottom": 1.4,
+      "bottom_shift": 0.0,
+      "height": 0.16,
+      "z_top": 0.05,
+      "half_thickness": 0.07
+    },
+    "Meteor": {
+      "chord_top": 1.5,
+      "chord_bottom": 1.35,
+      "bottom_shift": 0.0,
+      "height": 0.1,
+      "z_top": 0.05,
+      "half_thickness": 0.06,
+      "launcher": { "half_width": 0.045, "length": 1.9, "height": 0.06, "shift": 0.1 }
+    },
+    "Fwd": {
+      "chord_top": 1.2,
+      "chord_bottom": 0.9,
+      "bottom_shift": 0.0,
+      "height": 0.12,
+      "z_top": 0.05,
+      "half_thickness": 0.06
+    }
+  },
+  "loadout": {
+    "_note": "Points d'emport : [x, s, z du point d'accrochage]. Le groupe dit dans quelle configuration l'emport est visible cote Web.",
+    "stations": {
+      "Inner_R": {
+        "pylon": "Inner",
+        "at": [2.0, 10.35, -0.18],
+        "store": "tank_wing",
+        "store_drop": 0.72,
+        "store_shift": 0.0,
+        "group": "sead"
+      },
+      "Inner_L": {
+        "pylon": "Inner",
+        "at": [-2.0, 10.35, -0.18],
+        "store": "tank_wing",
+        "store_drop": 0.72,
+        "store_shift": 0.0,
+        "group": "sead"
+      },
+      "Center": {
+        "pylon": "Center",
+        "at": [0.0, 9.3, -0.7],
+        "store": "tank_center",
+        "store_drop": 0.53,
+        "store_shift": 0.0,
+        "group": "common"
+      },
+      "Outer_R": {
+        "pylon": "Outer",
+        "at": [4.1, 12.1, -0.18],
+        "store": "mica_em",
+        "store_drop": 0.36,
+        "store_shift": 0.15,
+        "group": "common"
+      },
+      "Outer_L": {
+        "pylon": "Outer",
+        "at": [-4.1, 12.1, -0.18],
+        "store": "mica_em",
+        "store_drop": 0.36,
+        "store_shift": 0.15,
+        "group": "common"
+      },
+      "Tip_R": {
+        "pylon": null,
+        "at": [5.31, 12.3, -0.12],
+        "store": "mica_ir",
+        "store_drop": 0.0,
+        "store_shift": 0.2,
+        "group": "common",
+        "tip": true
+      },
+      "Tip_L": {
+        "pylon": null,
+        "at": [-5.31, 12.3, -0.12],
+        "store": "mica_ir",
+        "store_drop": 0.0,
+        "store_shift": 0.2,
+        "group": "common",
+        "tip": true
+      },
+      "Meteor_R": {
+        "pylon": "Meteor",
+        "at": [0.74, 10.9, -0.64],
+        "store": "meteor",
+        "store_drop": 0.25,
+        "store_shift": 0.0,
+        "group": "air"
+      },
+      "Meteor_L": {
+        "pylon": "Meteor",
+        "at": [-0.74, 10.9, -0.64],
+        "store": "meteor",
+        "store_drop": 0.25,
+        "store_shift": 0.0,
+        "group": "air"
+      },
+      "Mid_R": {
+        "pylon": "Mid",
+        "at": [3.05, 11.3, -0.18],
+        "store": "hammer",
+        "store_drop": 0.4,
+        "store_shift": 0.05,
+        "group": "sead"
+      },
+      "Mid_L": {
+        "pylon": "Mid",
+        "at": [-3.05, 11.3, -0.18],
+        "store": "hammer",
+        "store_drop": 0.4,
+        "store_shift": 0.05,
+        "group": "sead"
+      },
+      "Fwd_R": {
+        "pylon": "Fwd",
+        "at": [0.62, 6.3, -0.64],
+        "store": "talios",
+        "store_drop": 0.285,
+        "store_shift": 0.1,
+        "group": "sead"
+      }
+    }
+  },
+  "materials": {
+    "_note": "PBR simples, sans texture. Gris de la livree de l'Armee de l'Air et de l'Espace (approche).",
+    "RAF_MAT_Skin": { "color": "#8e979c", "roughness": 0.58, "metallic": 0.12 },
+    "RAF_MAT_Radome": { "color": "#848d92", "roughness": 0.52, "metallic": 0.05 },
+    "RAF_MAT_Dielectric": { "color": "#6e767a", "roughness": 0.6, "metallic": 0.02 },
+    "RAF_MAT_Spectra": { "color": "#858e93", "roughness": 0.55, "metallic": 0.1 },
+    "RAF_MAT_Glass": { "color": "#2e2c20", "roughness": 0.05, "metallic": 0.4, "alpha": 0.55 },
+    "RAF_MAT_Frame": { "color": "#3a3f42", "roughness": 0.5, "metallic": 0.3 },
+    "RAF_MAT_Cockpit": { "color": "#1c1e20", "roughness": 0.8, "metallic": 0.0 },
+    "RAF_MAT_Helmet": { "color": "#b9bcb6", "roughness": 0.45, "metallic": 0.05 },
+    "RAF_MAT_Visor": { "color": "#2a2617", "roughness": 0.1, "metallic": 0.6 },
+    "RAF_MAT_Sensor": { "color": "#1a1d26", "roughness": 0.08, "metallic": 0.5 },
+    "RAF_MAT_Probe": { "color": "#7d868b", "roughness": 0.45, "metallic": 0.35 },
+    "RAF_MAT_Intake": { "color": "#141618", "roughness": 0.85, "metallic": 0.0 },
+    "RAF_MAT_Nozzle": { "color": "#58534d", "roughness": 0.42, "metallic": 0.75 },
+    "RAF_MAT_NozzleInner": { "color": "#231f1c", "roughness": 0.7, "metallic": 0.4 },
+    "RAF_MAT_Pylon": { "color": "#8a9398", "roughness": 0.6, "metallic": 0.1 },
+    "RAF_MAT_Tank": { "color": "#8b9499", "roughness": 0.55, "metallic": 0.12 },
+    "RAF_MAT_Missile": { "color": "#c9ccc7", "roughness": 0.5, "metallic": 0.05 },
+    "RAF_MAT_MissileRadome": { "color": "#ecece6", "roughness": 0.45, "metallic": 0.0 },
+    "RAF_MAT_Exhaust": { "color": "#262422", "roughness": 0.7, "metallic": 0.5 },
+    "RAF_MAT_Seeker": { "color": "#1e232b", "roughness": 0.06, "metallic": 0.4 },
+    "RAF_MAT_BandYellow": { "color": "#c9a227", "roughness": 0.55, "metallic": 0.0 },
+    "RAF_MAT_BandBrown": { "color": "#7a4f2a", "roughness": 0.6, "metallic": 0.0 },
+    "RAF_MAT_Hammer": { "color": "#5b5d3b", "roughness": 0.62, "metallic": 0.05 },
+    "RAF_MAT_HammerKit": { "color": "#4a4c3a", "roughness": 0.6, "metallic": 0.1 },
+    "RAF_MAT_Pod": { "color": "#80888d", "roughness": 0.55, "metallic": 0.12 },
+    "RAF_MAT_PodGlass": { "color": "#161b24", "roughness": 0.05, "metallic": 0.5 },
+    "RAF_MAT_RoundelBlue": { "color": "#23408e", "roughness": 0.55, "metallic": 0.0 },
+    "RAF_MAT_RoundelWhite": { "color": "#e6e8e3", "roughness": 0.55, "metallic": 0.0 },
+    "RAF_MAT_RoundelRed": { "color": "#c52a30", "roughness": 0.55, "metallic": 0.0 },
+    "RAF_MAT_LightGreen": { "color": "#3fbf6a", "roughness": 0.3, "metallic": 0.0, "emission": "#3fbf6a", "emission_strength": 1.5 },
+    "RAF_MAT_LightRed": { "color": "#d9433b", "roughness": 0.3, "metallic": 0.0, "emission": "#d9433b", "emission_strength": 1.5 },
+    "RAF_MAT_HudGlass": { "color": "#9fb7a8", "roughness": 0.05, "metallic": 0.1, "alpha": 0.3 },
+    "RAF_MAT_Seat": { "color": "#2a2c2e", "roughness": 0.75, "metallic": 0.05 },
+    "RAF_MAT_Suit": { "color": "#55594c", "roughness": 0.85, "metallic": 0.0 }
+  },
+  "export": {
+    "output": "public/models/hud/rafale-f4.glb",
+    "size_budget_kb": 900,
+    "optimize": { "tool": "@gltf-transform/cli@4.5.0", "level": "high" }
+  }
+}

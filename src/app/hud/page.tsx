@@ -9,7 +9,7 @@ import { hudBreadcrumbLd } from "@/lib/structured-data";
 export const metadata: Metadata = {
   title: "Planches techniques — HUD et modélisation 3D",
   description:
-    "Index des planches techniques Panoplie : batterie Patriot PAC-3 MSE et démonstrateur Thundart en 3D interactive, vue éclatée d’une cellule de drone, en mode démonstration illustrative.",
+    "Index des planches techniques Panoplie : Rafale F4 et tir de Meteor, batterie Patriot PAC-3 MSE et démonstrateur Thundart en 3D interactive, vue éclatée d’une cellule de drone, en mode démonstration illustrative.",
   alternates: { canonical: "/hud" },
 };
 

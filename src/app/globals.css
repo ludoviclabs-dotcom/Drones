@@ -71,7 +71,8 @@ html {
 }
 
 .thundartExperience,
-.patriotExperience {
+.patriotExperience,
+.rafaleExperience {
   scroll-margin-top: calc(var(--site-header-offset) + 0.75rem);
 }
 
@@ -312,7 +313,9 @@ body:has(.hudScene) .transmission-dot,
 body:has(.thundartExperience) .film-grain,
 body:has(.thundartExperience) .transmission-dot,
 body:has(.patriotExperience) .film-grain,
-body:has(.patriotExperience) .transmission-dot {
+body:has(.patriotExperience) .transmission-dot,
+body:has(.rafaleExperience) .film-grain,
+body:has(.rafaleExperience) .transmission-dot {
   animation: none;
 }
 

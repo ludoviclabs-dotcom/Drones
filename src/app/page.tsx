@@ -11,7 +11,7 @@ import { SectionMarker } from "@/components/primitives";
 import { RegistrationMarks } from "@/components/registration-marks";
 import { Stamp } from "@/components/stamp";
 import { StatGrid, type Stat } from "@/components/stat-cards";
-import { HudBoardTeaser } from "@/components/hud/hud-board-card";
+import { HudBoardSpotlight, HudBoardTeaser } from "@/components/hud/hud-board-card";
 import { HUD_BOARDS, HUD_INDEX_PATH } from "@/data/hud/boards";
 import { getEvidenceStats } from "@/lib/claims";
 
@@ -35,6 +35,10 @@ export default function Home() {
     count: systems.filter((s) => s.category === domain.category).length,
   }));
 
+  // La planche la plus récente (en tête du registre) devient la grande
+  // vignette du bas ; les autres gardent leur grille, dans le même ordre.
+  const [spotlightBoard, ...leadBoards] = HUD_BOARDS;
+
   return (
     <div className="mx-auto max-w-[1180px] px-5">
       <section className="reveal py-14">
@@ -51,7 +55,7 @@ export default function Home() {
           </div>
 
           <div className="grid lg:grid-cols-[1.55fr_1fr]">
-            <div className="border-b border-line p-8 sm:p-10 lg:border-b-0 lg:border-r">
+            <div className="border-b border-line p-8 sm:p-10 lg:flex lg:flex-col lg:border-b-0 lg:border-r">
               <h1 className="font-serif text-5xl leading-[1.03] tracking-tight text-ink sm:text-6xl">
                 Un système d'armes n'est jamais un{" "}
                 <span className="italic text-accent">simple achat</span>.
@@ -93,19 +97,23 @@ export default function Home() {
 
               {/* Les planches occupent l'espace laissé libre sous l'accroche,
                   en regard du sommaire des domaines : visibles dès l'arrivée,
-                  et sur mobile avant la liste des domaines. */}
-              <div className="mt-10 border-t border-line pt-6">
+                  et sur mobile avant la liste des domaines. La grande
+                  vignette du bas s'étire jusqu'au pied du sommaire. */}
+              <div className="mt-10 border-t border-line pt-6 lg:flex lg:grow lg:flex-col">
                 <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-faint">
                   Planches techniques · à manipuler
                 </h2>
-                <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                  {HUD_BOARDS.map((board, index) => (
-                    <HudBoardTeaser
-                      key={board.slug}
-                      board={board}
-                      featured={index === 0 && HUD_BOARDS.length % 2 === 1}
-                    />
-                  ))}
+                <div className="mt-4 flex flex-col gap-4 lg:grow">
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {leadBoards.map((board, index) => (
+                      <HudBoardTeaser
+                        key={board.slug}
+                        board={board}
+                        featured={index === 0 && leadBoards.length % 2 === 1}
+                      />
+                    ))}
+                  </div>
+                  {spotlightBoard ? <HudBoardSpotlight board={spotlightBoard} /> : null}
                 </div>
               </div>
             </div>

@@ -9,6 +9,10 @@ import { expect, test, type Page } from "@playwright/test";
 
 const BOARDS = [
   {
+    name: "Rafale F4 — chasseur et tir Meteor en 3D",
+    href: "/hud/rafale-f4-meteor",
+  },
+  {
     name: "Patriot PAC-3 MSE — batterie et lanceur en 3D",
     href: "/hud/patriot-pac3-mse",
   },
@@ -170,8 +174,11 @@ test.describe("Planches techniques — point d’entrée", () => {
       .evaluate((el) => el.getBoundingClientRect().top);
     expect(teaserTop).toBeLessThan(900);
 
-    // Nombre impair : la première vignette occupe toute la largeur, les
-    // suivantes vont par deux — aucune vignette orpheline en fin de grille.
+    // La planche la plus récente (tête du registre) devient la grande vignette
+    // du bas ; les autres gardent la grille, dans l'ordre du DOM : [Patriot en
+    // pleine largeur, Thundart, Drone, Rafale]. Nombre impair dans la grille :
+    // la première vignette occupe toute la largeur, les suivantes vont par
+    // deux — aucune vignette orpheline en fin de grille.
     const boxes = await teasers.evaluateAll((els) =>
       els.map((el) => {
         const { top, left, right, width } = el.getBoundingClientRect();
@@ -183,6 +190,61 @@ test.describe("Planches techniques — point d’entrée", () => {
       Math.round(boxes[2].right - boxes[1].left),
     );
     expect(Math.round(boxes[1].top)).toBe(Math.round(boxes[2].top));
+
+    // La grande vignette ferme la colonne : même largeur que la grille, sous
+    // elle, et son pied rejoint celui de la colonne gauche du hero, sans bande
+    // vide face au sommaire des domaines.
+    const spotlight = page.locator('article[data-hud-teaser="spotlight"]');
+    await expect(spotlight).toHaveCount(1);
+    await expect(spotlight).toHaveAttribute("data-hud-board", "rafale-f4-meteor");
+    expect(await teasers.last().getAttribute("data-hud-teaser")).toBe(
+      "spotlight",
+    );
+    expect(Math.round(boxes[3].width)).toBe(Math.round(boxes[0].width));
+    expect(boxes[3].top).toBeGreaterThan(boxes[2].top);
+    // Les deux pieds sont mesurés ensemble : un échange de police qui
+    // relancerait la mise en page les déplacerait d'un même mouvement.
+    const feet = await spotlight.evaluate((article) => {
+      // Colonne gauche du hero : l'ancêtre qui porte le titre de l'accueil.
+      const hero = article.closest("div:has(> h1)");
+      if (!hero) return null;
+      const box = hero.getBoundingClientRect();
+      const style = getComputedStyle(hero);
+      return {
+        spotlight: article.getBoundingClientRect().bottom,
+        column:
+          box.bottom -
+          parseFloat(style.paddingBottom) -
+          parseFloat(style.borderBottomWidth),
+      };
+    });
+    expect(feet).not.toBeNull();
+    expect(Math.abs(feet!.spotlight - feet!.column)).toBeLessThanOrEqual(2);
+
+    // Ses entrées directes ouvrent la planche dans chacun des trois scénarios,
+    // et passent au-dessus du lien étiré de la carte.
+    const entries = spotlight
+      .getByRole("list", { name: "Entrer directement dans un scénario" })
+      .getByRole("link");
+    await expect(entries).toHaveCount(3);
+    expect(
+      await entries.evaluateAll((links) =>
+        links.map((link) => link.getAttribute("href")),
+      ),
+    ).toEqual([
+      "/hud/rafale-f4-meteor?scenario=bvr",
+      "/hud/rafale-f4-meteor?scenario=wvr",
+      "/hud/rafale-f4-meteor?scenario=sead",
+    ]);
+    const sead = entries.nth(2);
+    await sead.scrollIntoViewIfNeeded();
+    const seadBox = (await sead.boundingBox())!;
+    const topmost = await page.evaluate(
+      ([px, py]) =>
+        document.elementFromPoint(px, py)?.closest("a")?.getAttribute("href"),
+      [seadBox.x + seadBox.width / 2, seadBox.y + seadBox.height / 2],
+    );
+    expect(topmost).toBe("/hud/rafale-f4-meteor?scenario=sead");
   });
 
   for (const board of BOARDS) {
@@ -202,7 +264,7 @@ test.describe("Planches techniques — point d’entrée", () => {
   }) => {
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto("/hud");
-    const layout = await page.evaluate(() => {
+    const layout = await page.evaluate((count) => {
       const cards = [...document.querySelectorAll("article[data-hud-board]")];
       const boxes = cards.map((c) => c.getBoundingClientRect());
       return {
@@ -210,13 +272,33 @@ test.describe("Planches techniques — point d’entrée", () => {
           document.documentElement.scrollWidth -
           document.documentElement.clientWidth,
         stacked:
-          boxes.length === 3 &&
+          boxes.length === count &&
           boxes.every((box, i) => i === 0 || box.top >= boxes[i - 1].bottom),
         minWidth: Math.min(...boxes.map((b) => b.width)),
       };
-    });
+    }, BOARDS.length);
     expect(layout.overflow).toBe(0);
     expect(layout.stacked).toBe(true);
     expect(layout.minWidth).toBeGreaterThan(300);
+  });
+
+  test("1440px — la grille de l’index ne laisse aucune carte orpheline", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/hud");
+    // Cartes par rangée, dans l'ordre du DOM : trois colonnes seulement quand
+    // elles tombent juste (4 planches = 2 × 2), jamais une carte seule en bas.
+    const rows = await page.evaluate(() => {
+      const counts = new Map<number, number>();
+      for (const card of document.querySelectorAll("article[data-hud-board]")) {
+        const top = Math.round(card.getBoundingClientRect().top);
+        counts.set(top, (counts.get(top) ?? 0) + 1);
+      }
+      return [...counts.values()];
+    });
+    expect(rows.reduce((sum, count) => sum + count, 0)).toBe(BOARDS.length);
+    expect(rows[0]).toBeGreaterThan(1);
+    expect(rows).toEqual(rows.map(() => rows[0]));
   });
 });

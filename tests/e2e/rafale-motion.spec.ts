@@ -306,11 +306,33 @@ test.describe("Rafale — séquence pilotée par l’état", () => {
     await expect(scene(page)).toHaveAttribute("data-rafale-reduced-motion", "false");
     await recordTransitions(page);
 
-    // Le départ vers la fin dure plusieurs secondes : on coupe réellement en
-    // plein vol.
+    // Le départ vers la fin dure environ 5 s : on coupe réellement en plein
+    // vol. La coupure part de la page même, dès que la transition démarre :
+    // les attentes d'actionnabilité de Playwright (deux images stables)
+    // peuvent dépasser la transition quand le WebGL est rendu en logiciel sur
+    // un poste chargé.
+    await page.evaluate((resetLabel) => {
+      const box = document.querySelector("[data-rafale-motion]");
+      const host = document.querySelector("[data-sequence-state]");
+      if (!box || !host) throw new Error("scène introuvable");
+      const observer = new MutationObserver(() => {
+        if (
+          host.getAttribute("data-sequence-state") !== "complete" ||
+          box.getAttribute("data-rafale-motion") !== "running"
+        ) {
+          return;
+        }
+        observer.disconnect();
+        const reset = [...document.querySelectorAll("button")].find(
+          (button) => button.textContent?.trim() === resetLabel,
+        );
+        if (!reset) throw new Error("bouton de réinitialisation introuvable");
+        reset.click();
+      });
+      observer.observe(box, { attributes: true, attributeFilter: ["data-rafale-motion"] });
+    }, RESET);
     await page.getByRole("button", { name: NEXT }).click();
     await waitForTransition(page, "complete/running");
-    await page.getByRole("button", { name: RESET }).click();
     await expect(experience(page)).toHaveAttribute("data-sequence-state", "overview");
     await settle(page);
     const log = await readTransitions(page);

@@ -51,27 +51,27 @@ Intégration au site, toute additive :
 - `src/app/globals.css` : `.rafaleExperience` reprend la marge d’ancre et le
   gel du grain décoratif (`.film-grain`, `.transmission-dot`) des planches
   Thundart et Patriot.
-- System X-Ray du Rafale : `XRAY_MODEL_OVERRIDES.rafale`
-  (`src/data/aviation-3d/index.ts`) remplace l’ancien GLB filaire
-  (`public/models/aviation/rafale.glb`, 28 Ko, compressé Draco) par l’asset de
-  la planche, chargé en meshopt seul, Draco désactivé : **plus aucune requête
-  au CDN du décodeur Draco** pour ce système. Le modèle est ramené à l’échelle
-  0,2, la caméra initiale reculée (`[4,6 ; 3,1 ; 5,0]`), et la configuration
-  air-sol (AASM, Talios, bidons de voilure et leurs pylônes) retirée du
-  clone, contours d’arêtes compris : la vue montre la configuration air-air
-  documentée. `SystemXray3DView` tourne les
-  repères et le filaire de repli d’un quart de tour autour de X (repère des
-  spécifications filaires vers repère glTF), et huit des treize repères du
-  Rafale sont **réalignés** sur les pièces dans
-  `src/data/decision-twin/panoplie-xray.ts` (cellule, verrière, radar,
-  SPECTRA, plans canard, voilure, moteur, emport central) ; les cinq repères
-  qui ne désignent pas une pièce (Dassault, Thales, autonomie stratégique,
-  régime hors ITAR, confiance globale) sont replacés au-dessus et au-dessous
-  du modèle, dans le champ de la caméra initiale. La
-  détection de la verrière ignore désormais `RAF_CanopyFrame` et lit le nom du
-  parent si la compression glisse un nœud sans nom. Sans surcharge, les autres
-  systèmes gardent les réglages par défaut. L’ancien `rafale.glb` reste dans
-  le dépôt mais n’est plus chargé.
+- System X-Ray du Rafale : la branche reprend le mécanisme de placement
+  `XRAY_MODEL_OVERRIDES` arrivé sur `main` (tous les GLB X-Ray en meshopt,
+  repères tournés d’un quart de tour vers le repère glTF) et l’étend de deux
+  champs, `glbPath` et `hiddenNodes`. `XRAY_MODEL_OVERRIDES.rafale` charge
+  l’asset de la planche au lieu de l’ancien GLB filaire
+  `public/models/aviation/rafale.glb`, qui reste dans le dépôt mais n’est plus
+  lu ; modèle à l’échelle 0,2, caméra initiale reculée (`[4,6 ; 3,1 ; 5,0]`),
+  configuration air-sol (AASM, Talios, bidons de voilure et leurs pylônes)
+  retirée du clone, contours d’arêtes compris : la vue montre la
+  configuration air-air documentée. Huit des treize repères du Rafale sont
+  **réalignés** sur les pièces dans `src/data/decision-twin/panoplie-xray.ts`
+  (cellule, verrière, radar, SPECTRA, plans canard, voilure, moteur, emport
+  central) ; les cinq repères qui ne désignent pas une pièce (Dassault,
+  Thales, autonomie stratégique, régime hors ITAR, confiance globale) sont
+  replacés au-dessus et au-dessous du modèle, dans le champ de la caméra
+  initiale. La détection de la verrière ignore `RAF_CanopyFrame` et lit le nom
+  du parent si la compression glisse un nœud sans nom. Le test
+  `tests/data/xray-models.test.ts` de `main` suit désormais `glbPath` et
+  `hiddenNodes`, déclare les pièces du Rafale et écarte les pièces planes
+  (vitre du collimateur, disques de l’OSF et de la bouche du canon), dont
+  l’enveloppe convexe dégénérée donnait des écarts arbitraires.
 - `tests/unit/hud-boards.test.ts` : chaque entrée directe ouvre sa propre
   planche, sans doublon.
 - `tests/e2e/hud-hub.spec.ts` (quatre planches, grande vignette de
@@ -405,9 +405,9 @@ geste ou changement d’inspection.
 |---|---|
 | `npm run typecheck` | OK, aucune erreur |
 | `npm run lint` | OK, aucun avertissement |
-| `npm test` | OK — 23 fichiers, 259 tests ; dont `tests/unit/rafale-*.test.ts` (5 fichiers : séquence, mouvement, départ, inspection et contrat GLB, cadrages projetés) et `tests/unit/hud-boards.test.ts` |
+| `npm test` | OK — 24 fichiers, 263 tests après fusion de `main` (dont `tests/data/xray-models.test.ts`) ; dont `tests/unit/rafale-*.test.ts` (5 fichiers : séquence, mouvement, départ, inspection et contrat GLB, cadrages projetés) et `tests/unit/hud-boards.test.ts` |
 | `npm run build` | OK — 499 pages générées, `/hud/rafale-f4-meteor` pré-rendue (○) |
-| `npm run test:e2e` | OK — 142 tests. Passe complète sur un port isolé (3117) : 140 verts, le port 3000 étant alors tenu par le serveur d’une autre session ; les deux restants (`thundart-preview.spec.ts`, qui vise `localhost:3000` en dur, et le premier test sans WebGL de `patriot-board.spec.ts`, expiré à froid sous charge) repassés verts sur le port 3000 libéré (37 sur 37) |
+| `npm run test:e2e` | OK — 142 tests. Passe complète sur un port isolé (3117) : 140 verts, le port 3000 étant alors tenu par le serveur d’une autre session ; les deux restants (`thundart-preview.spec.ts`, qui vise `localhost:3000` en dur, et le premier test sans WebGL de `patriot-board.spec.ts`, expiré à froid sous charge) repassés verts sur le port 3000 libéré (37 sur 37). Après fusion de `main` : specs Rafale, Patriot, hub et smoke rejouées ; le test « réinitialiser pendant le départ », instable sous charge (les attentes d’actionnabilité de Playwright dépassaient la transition en rendu logiciel), déclenche désormais la coupure depuis la page : `rafale-motion.spec.ts` 30 sur 30 en trois répétitions |
 | `"C:/Program Files/Blender Foundation/Blender 5.1/blender.exe" --background --factory-startup --python tools/rafale-3d/generate-rafale.py -- --spec rafale-f4` | OK — `inverted_normals` vide, 32 266 triangles uniques, 66 nœuds, 34 matériaux ; GLB de 235 312 octets (~230 Ko) |
 
 Le test de contrat `tests/unit/rafale-inspection.test.ts` lit le segment

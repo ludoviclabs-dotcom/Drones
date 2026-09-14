@@ -70,7 +70,8 @@ html {
   scroll-padding-top: calc(var(--site-header-offset) + 0.75rem);
 }
 
-.thundartExperience {
+.thundartExperience,
+.patriotExperience {
   scroll-margin-top: calc(var(--site-header-offset) + 0.75rem);
 }
 
@@ -309,7 +310,9 @@ body {
 body:has(.hudScene) .film-grain,
 body:has(.hudScene) .transmission-dot,
 body:has(.thundartExperience) .film-grain,
-body:has(.thundartExperience) .transmission-dot {
+body:has(.thundartExperience) .transmission-dot,
+body:has(.patriotExperience) .film-grain,
+body:has(.patriotExperience) .transmission-dot {
   animation: none;
 }
 

@@ -8,6 +8,10 @@ import { expect, test, type Page } from "@playwright/test";
  */
 
 const BOARDS = [
+  {
+    name: "Patriot PAC-3 MSE — batterie et lanceur en 3D",
+    href: "/hud/patriot-pac3-mse",
+  },
   { name: "Thundart — inspection extérieure 3D", href: "/hud/thundart" },
   { name: "Cellule de drone — vue éclatée", href: "/hud/drone-airframe" },
 ] as const;
@@ -149,7 +153,7 @@ test.describe("Planches techniques — point d’entrée", () => {
     });
   }
 
-  test("l’accueil montre les deux planches dès l’arrivée", async ({ page }) => {
+  test("l’accueil montre chaque planche dès l’arrivée", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/");
     await expect(
@@ -160,10 +164,25 @@ test.describe("Planches techniques — point d’entrée", () => {
       await expect(link).toHaveAttribute("href", board.href);
     }
     // Les vignettes commencent dans le premier écran, sans défilement.
-    const teaserTop = await page
-      .locator('article[data-hud-board="thundart"]')
+    const teasers = page.locator("article[data-hud-board]");
+    const teaserTop = await teasers
+      .first()
       .evaluate((el) => el.getBoundingClientRect().top);
     expect(teaserTop).toBeLessThan(900);
+
+    // Nombre impair : la première vignette occupe toute la largeur, les
+    // suivantes vont par deux — aucune vignette orpheline en fin de grille.
+    const boxes = await teasers.evaluateAll((els) =>
+      els.map((el) => {
+        const { top, left, right, width } = el.getBoundingClientRect();
+        return { top, left, right, width };
+      }),
+    );
+    expect(boxes).toHaveLength(BOARDS.length);
+    expect(Math.round(boxes[0].width)).toBe(
+      Math.round(boxes[2].right - boxes[1].left),
+    );
+    expect(Math.round(boxes[1].top)).toBe(Math.round(boxes[2].top));
   });
 
   for (const board of BOARDS) {
@@ -190,7 +209,9 @@ test.describe("Planches techniques — point d’entrée", () => {
         overflow:
           document.documentElement.scrollWidth -
           document.documentElement.clientWidth,
-        stacked: boxes.length === 2 && boxes[1].top >= boxes[0].bottom,
+        stacked:
+          boxes.length === 3 &&
+          boxes.every((box, i) => i === 0 || box.top >= boxes[i - 1].bottom),
         minWidth: Math.min(...boxes.map((b) => b.width)),
       };
     });

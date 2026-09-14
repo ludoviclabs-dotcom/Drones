@@ -1,0 +1,217 @@
+{
+  "id": "patriot-pac3-mse",
+  "label": "PATRIOT PAC-3 MSE",
+  "kind": "batterie sol-air (representation editoriale OSINT des formes exterieures)",
+
+  "_units": "Metres. Gabarits exterieurs approximatifs, cales sur des photographies publiques et sur les ordres de grandeur publies. Ce fichier n'est PAS une specification constructeur ni un plan : aucune cote fine n'est revendiquee.",
+  "_frame": "Blender Z-up. +Y = avant des vehicules = direction de tir du lanceur a gisement nul. z = 0 au plan de contact des roues.",
+  "_sources": {
+    "FM 3-01.85 (2002), annexe B": "gabarits lanceur 10,26 x 2,87 m ; pile de 4 conteneurs 1,98 x 2,15 x 6,10 m ; tracteur M983 8,93 x 2,58 x 2,82 m ; groupe 15 kW ; EPP 2 x 150 kW ; mat OE-349 30,76 m ; radar a 67,5 deg",
+    "Lockheed Martin, PAC-3 MSE partner brief (2024)": "One-Pack individuel ; 12 MSE en 3 x 4 ; mixte 6 MSE + 8 CRI ; moteur 11,4 in ; gouvernes repliables",
+    "FM 44 / STP 44-14T14": "gisement +/-110 deg ; 4 stabilisateurs ; tir commande a distance depuis l'ECS",
+    "Wikipedia DE MIM-104": "site fixe de 38 deg (confiance moyenne)"
+  },
+
+  "hemtt": {
+    "_note": "Tracteur HEMTT M983A4 (LET). Gabarit public : 8,93 x 2,58 x 2,82 m.",
+    "axles_y": [5.62, 4.1, 0.76, -0.76],
+    "tire_radius": 0.635,
+    "tire_half_width": 0.215,
+    "rim_radius": 0.3,
+    "track_half": 1.07,
+    "frame": { "rear_y": -1.9, "cargo_rear_y": -3.25, "front_y": 6.72, "rail_half": 0.46, "rail_z0": 0.92, "rail_z1": 1.22 },
+    "cab": { "back_y": 4.32, "front_y": 6.78, "half_width": 1.22, "floor_z": 1.32, "roof_z": 2.76, "belt_z": 1.98, "windshield_rake": 0.18 },
+    "engine": { "back_y": 2.85, "top_z": 2.52 },
+    "fifth_wheel": { "y": 0.0, "z": 1.42, "radius": 0.62 },
+    "bumper": { "front_y": 6.98, "z0": 0.72, "z1": 1.06 }
+  },
+
+  "trailer": {
+    "_note": "Semi-remorque M860A1 porte-lanceur. Origine au sol, au milieu du tandem.",
+    "axles_y": [0.68, -0.68],
+    "tire_radius": 0.61,
+    "tire_half_width": 0.19,
+    "rim_radius": 0.29,
+    "track_half": 0.98,
+    "half_width": 1.22,
+    "rear_y": -1.5,
+    "deck_front_y": 5.95,
+    "deck_z": 1.36,
+    "rail_half": 0.52,
+    "rail_z0": 0.96,
+    "gooseneck": { "y1": 8.45, "z_bottom": 1.44, "z_top": 1.86, "kingpin_y": 7.05 },
+    "side_boxes_y": [1.4, 4.5],
+    "outrigger_arm_len": 1.45,
+    "outriggers": {
+      "RL": { "hinge": [-1.3, -1.35, 1.02], "stowed_yaw_deg": 0, "deployed_yaw_deg": 135 },
+      "RR": { "hinge": [1.3, -1.35, 1.02], "stowed_yaw_deg": 0, "deployed_yaw_deg": -135 },
+      "FL": { "hinge": [-1.3, 5.45, 1.02], "stowed_yaw_deg": 180, "deployed_yaw_deg": 45 },
+      "FR": { "hinge": [1.3, 5.45, 1.02], "stowed_yaw_deg": -180, "deployed_yaw_deg": -45 }
+    },
+    "outrigger_foot_drop": 0.56,
+    "landing_leg_x": 0.62,
+    "landing_leg_y": 4.85,
+    "landing_leg_stowed_z": 0.5,
+    "power_unit": { "y0": 6.3, "y1": 8.3, "half_width": 1.18, "height": 1.42 },
+    "eles": { "x0": -1.12, "x1": 1.12, "y0": 4.94, "y1": 5.6, "height": 1.02 }
+  },
+
+  "launcher": {
+    "_note": "Lanceur M903 : tourelle (gisement), masse elevee articulee a l'arriere, deux verins.",
+    "turret": { "origin": [0.0, 0.3, 1.36], "y0": -1.2, "y1": 1.3, "half_width": 1.02, "height": 0.26, "ring_radius": 0.96 },
+    "hinge": [0.0, -0.55, 1.84],
+    "hinge_half_span": 0.6,
+    "beam_half_span": 0.5,
+    "rear_overhang": -0.7,
+    "actuator_base": [0.8, 0.9, 1.66],
+    "actuator_attach": [3.2, 0.05],
+    "actuator": { "barrel_len": 1.45, "barrel_r": 0.1, "rod_len": 1.5, "rod_r": 0.062 },
+    "elevation_deg": 38,
+    "traverse_limit_deg": 110,
+    "missile_tail_offset": 0.3,
+    "live_cells": { "4": "A", "3": "B" },
+    "mast": { "base": [-1.34, -0.85, 0.26], "lower_len": 2.5, "lower_r": 0.06, "upper_len": 2.4, "upper_r": 0.036, "whip_len": 1.5, "stowed_drop": 2.0 }
+  },
+
+  "canister": {
+    "_note": "Conteneur individuel PAC-3 MSE (One-Pack). Pile de 3 rangees x 4 dans l'enveloppe publique 2,15 x 1,98 x 6,10 m.",
+    "cols": 4,
+    "rows": 3,
+    "width": 0.5375,
+    "height": 0.66,
+    "length": 6.1,
+    "z0": 0.14,
+    "frames": [0.16, 2.05, 4.05, 5.94]
+  },
+
+  "missile": {
+    "_note": "Intercepteur PAC-3 MSE : silhouette exterieure seulement. ~5,2 m ; moteur 11,4 in (LM) ; avant-corps ~10 in avec decrochement a ~42 % depuis la pointe.",
+    "length": 5.2,
+    "motor_radius": 0.145,
+    "forebody_radius": 0.1275,
+    "step_y": 3.0,
+    "step_len": 0.1,
+    "nose_length": 0.62,
+    "radome_length": 0.45,
+    "segments": 28,
+    "joint_stations": [0.66, 1.45, 2.52, 3.72, 4.16],
+    "white_band": [3.3, 3.52],
+    "acm_section": { "y0": 3.79, "y1": 4.13, "rows": 9, "per_row": 18, "port_radius": 0.0085 },
+    "raceway": { "y0": 0.72, "y1": 4.2, "half_width": 0.017, "height": 0.016 },
+    "strakes": { "y0": 1.45, "y1": 2.5, "height": 0.078, "thickness": 0.01 },
+    "control_fins": { "y0": 0.35, "y1": 0.64, "tip_chord": 0.12, "tip_sweep": 0.1, "span": 0.165, "thickness": 0.012, "folded_deg": 90 }
+  },
+
+  "radar": {
+    "_note": "Ensemble radar AN/MPQ-65 sur M860 : reseau dresse a 67,5 deg (FM 3-01.85), abri d'equipements, stabilisateurs deployes.",
+    "array_hinge": [6.62, 2.0],
+    "array_elevation_deg": 67.5,
+    "array": { "half_width": 1.45, "length": 4.1, "thickness": 0.35, "chamfer": 0.55, "main_center": 2.56, "main_radius": 1.22, "iff_z": 1.08, "lower_z": 0.62, "tvm_radius": 0.24 },
+    "shelter": { "y0": -1.3, "y1": 5.55, "half_width": 1.2, "height": 2.06 }
+  },
+
+  "fmtv": {
+    "_note": "Camion 5 t 6x6 (famille FMTV) porteur de l'ECS et du mat d'antennes. Gabarit ECS publie : 9,78 x 2,73 x 3,63 m.",
+    "axles_y": [4.62, 0.73, -0.73],
+    "tire_radius": 0.55,
+    "tire_half_width": 0.2,
+    "rim_radius": 0.26,
+    "track_half": 1.02,
+    "frame": { "rear_y": -3.2, "front_y": 5.8, "rail_half": 0.44, "rail_z0": 0.82, "rail_z1": 1.1 },
+    "cab": { "back_y": 3.95, "front_y": 5.95, "half_width": 1.2, "floor_z": 1.18, "roof_z": 2.86 },
+    "bed": { "y0": -3.15, "y1": 3.8, "z": 1.3 }
+  },
+
+  "ecs": {
+    "_note": "Poste de conduite de tir AN/MSQ-132 : abri sur camion 5 t, 3 operateurs.",
+    "shelter": { "y0": -2.95, "y1": 3.1, "half_width": 1.14, "height": 2.25 }
+  },
+
+  "epp": {
+    "_note": "Centrale electrique EPP III : deux groupes de 150 kW / 400 Hz sur HEMTT M977.",
+    "genset": { "length": 2.25, "half_width": 1.12, "height": 1.62 },
+    "positions_y": [-2.05, 0.24]
+  },
+
+  "amg": {
+    "_note": "Groupe mat d'antennes OE-349 : mat telescopique jusqu'a 30,76 m, 4 antennes en 2 paires (represente partiellement deploye).",
+    "mast_height": 19.0,
+    "sections": 5
+  },
+
+  "battery": {
+    "_note": "Disposition ILLUSTRATIVE et compressee pour la lisibilite de la planche : aucune implantation reelle n'est representee.",
+    "launchers": [
+      { "name": "PAT_LS2", "location": [-24.0, -9.0], "yaw_deg": 6 },
+      { "name": "PAT_LS3", "location": [23.0, -12.0], "yaw_deg": -8 },
+      { "name": "PAT_LS4", "location": [-12.0, -27.0], "yaw_deg": 3 }
+    ],
+    "radar": { "location": [8.0, -34.0], "yaw_deg": 0 },
+    "radar_tractor": { "location": [14.5, -46.0], "yaw_deg": 90 },
+    "ecs": { "location": [-4.0, -44.0], "yaw_deg": 90 },
+    "epp": { "location": [-4.0, -53.0], "yaw_deg": 90 },
+    "amg": { "location": [-18.0, -46.0], "yaw_deg": 180 }
+  },
+
+  "animation": {
+    "_note": "Durees de lecture visuelle, calees sur rien de reel : aucune procedure, aucun chronometrage.",
+    "fps": 24,
+    "emplace": {
+      "name": "PAT_EMPLACE",
+      "frames": 160,
+      "legs": [1, 20],
+      "tractor": [16, 100],
+      "_tractor_path": "Le tracteur degage vers la gauche, a l'oppose du secteur vers lequel la tourelle s'oriente.",
+      "tractor_path": { "straight0": 5.0, "radius": 9.0, "turn_deg": 72, "straight1": 9.0, "turn_sign": -1 },
+      "outriggers": [84, 128],
+      "feet": [116, 148],
+      "mast": [124, 160]
+    },
+    "elevate": {
+      "name": "PAT_ELEVATE",
+      "frames": 96,
+      "traverse": [1, 42],
+      "traverse_deg": -14,
+      "elevation": [12, 96]
+    },
+    "fins": {
+      "name_prefix": "PAT_FINS",
+      "frames": 9
+    }
+  },
+
+  "materials": {
+    "PAT_MAT_Paint": { "color": "#56603f", "roughness": 0.72, "metallic": 0.0 },
+    "PAT_MAT_PaintDark": { "color": "#363c29", "roughness": 0.8, "metallic": 0.0 },
+    "PAT_MAT_Black": { "color": "#161713", "roughness": 0.7, "metallic": 0.0 },
+    "PAT_MAT_Metal": { "color": "#80827c", "roughness": 0.45, "metallic": 0.75 },
+    "PAT_MAT_Chrome": { "color": "#d8d9d8", "roughness": 0.18, "metallic": 1.0 },
+    "PAT_MAT_Rubber": { "color": "#1b1b1a", "roughness": 0.93, "metallic": 0.0 },
+    "PAT_MAT_Glass": { "color": "#1c252a", "roughness": 0.08, "metallic": 0.3 },
+    "PAT_MAT_LampAmber": { "color": "#d98c1f", "roughness": 0.3, "emission": "#ff9a1f", "emission_strength": 0.35 },
+    "PAT_MAT_LampRed": { "color": "#a3161a", "roughness": 0.3, "emission": "#ff2a1f", "emission_strength": 0.35 },
+    "PAT_MAT_LampWhite": { "color": "#e8e6dc", "roughness": 0.2 },
+    "PAT_MAT_Reflector": { "color": "#d9772b", "roughness": 0.35 },
+    "PAT_MAT_HoseRed": { "color": "#a8322a", "roughness": 0.6 },
+    "PAT_MAT_HoseBlue": { "color": "#2f5b8f", "roughness": 0.6 },
+    "PAT_MAT_CanisterTan": { "color": "#b7a47b", "roughness": 0.74, "metallic": 0.0 },
+    "PAT_MAT_CanisterTanDark": { "color": "#8f7f5c", "roughness": 0.78, "metallic": 0.0 },
+    "PAT_MAT_CanisterCover": { "color": "#6f6a4c", "roughness": 0.85, "metallic": 0.0 },
+    "PAT_MAT_MissileOrange": { "color": "#c4501f", "roughness": 0.45, "metallic": 0.05 },
+    "PAT_MAT_MissileSand": { "color": "#c8b58d", "roughness": 0.55, "metallic": 0.0 },
+    "PAT_MAT_MissileWhite": { "color": "#e6e4dc", "roughness": 0.45, "metallic": 0.0 },
+    "PAT_MAT_MissileSilver": { "color": "#b9bdc0", "roughness": 0.3, "metallic": 0.65 },
+    "PAT_MAT_Radome": { "color": "#2d2f2b", "roughness": 0.35, "metallic": 0.0 },
+    "PAT_MAT_Canvas": { "color": "#23251f", "roughness": 0.96, "metallic": 0.0 },
+    "PAT_MAT_ArrayPanel": { "color": "#5a6445", "roughness": 0.7, "metallic": 0.0 },
+    "PAT_MAT_ArrayFace": { "color": "#5f6a4a", "roughness": 0.62, "metallic": 0.05 }
+  },
+
+  "export": {
+    "output": "public/models/hud/patriot-pac3-mse.glb",
+    "_optimize": "Compression meshopt + quantification par gltf-transform (outil de build, version epinglee). Decodeur meshopt embarque par three-stdlib : aucune requete reseau a l'execution. Draco reste desactive (son decodeur drei vient d'un CDN).",
+    "optimize": { "tool": "@gltf-transform/cli@4.5.0", "level": "high" },
+    "draco": false,
+    "size_budget_kb": 1200
+  }
+}

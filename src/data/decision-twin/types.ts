@@ -37,6 +37,12 @@ export interface DecisionTwinNode {
   limitation: string;
   nextAction: string;
   position2d: DecisionTwinPosition2d;
+  /**
+   * Repère des spécifications filaires (`src/data/aviation-3d`) : X envergure
+   * (gauche -, droite +), Y longueur (nez +), Z hauteur. Quand le GLB du
+   * système a un placement (`XRAY_MODEL_OVERRIDES`), la vue 3D tourne ce
+   * repère vers celui du modèle : les points s'écrivent sur le GLB placé.
+   */
   position3d?: DecisionTwinPosition3d;
   metadata?: Record<string, string | number | boolean | null>;
 }

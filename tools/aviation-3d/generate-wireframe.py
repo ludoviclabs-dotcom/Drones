@@ -1,6 +1,6 @@
 """
 generate-wireframe.py — Script Blender paramétré pour générer des mesh 3D
-filaires d'avions de chasse, exportés en GLB Draco pour Panoplie.
+filaires d'avions de chasse, exportés en GLB meshopt pour Panoplie.
 
 Usage :
   Mode interactif (via MCP Claude Code) :
@@ -11,7 +11,12 @@ Usage :
     blender --background --python tools/aviation-3d/generate-wireframe.py -- --spec rafale
 
   Sortie :
-    public/models/aviation/<slug>.glb  (< 100 Ko, mesh solide, Draco)
+    public/models/aviation/<slug>.glb  (< 100 Ko, mesh solide, meshopt)
+
+Compression : export brut Blender (tools/aviation-3d/build/, ignoré par git),
+puis passe meshopt + quantification par gltf-transform (version épinglée,
+MESHOPT_TOOL). Jamais Draco : le décodeur Draco de drei vient d'un CDN, alors
+que le décodeur meshopt est embarqué par three-stdlib.
 
 Pourquoi des meshes avec faces et pas seulement des arêtes ?
     GLTF 2.0 ignore les meshes sans faces lors de l'export — d'où ce choix.
@@ -922,8 +927,22 @@ AIRCRAFT_BUILDERS = {
 
 
 # ---------------------------------------------------------------------------
-# Export GLB Draco
+# Export GLB (brut Blender, puis compression meshopt)
 # ---------------------------------------------------------------------------
+
+# Même passe que tools/patriot-3d : décodeur meshopt embarqué côté client.
+MESHOPT_TOOL = "@gltf-transform/cli@4.5.0"
+
+
+def compress_meshopt(raw_path: Path, output_path: Path) -> None:
+    import subprocess
+
+    cmd = 'npx --yes %s meshopt "%s" "%s" --level high' % (
+        MESHOPT_TOOL, raw_path, output_path)
+    run = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=600)
+    if run.returncode != 0:
+        raise RuntimeError("gltf-transform a échoué : " + (run.stderr or run.stdout)[-800:])
+
 
 def export_glb(output_path: Path) -> int:
     bpy.ops.object.select_all(action="DESELECT")
@@ -931,8 +950,12 @@ def export_glb(output_path: Path) -> int:
         if o.type == "MESH":
             o.select_set(True)
 
-    kwargs = dict(
-        filepath=str(output_path),
+    build_dir = get_repo_root() / "tools" / "aviation-3d" / "build"
+    build_dir.mkdir(parents=True, exist_ok=True)
+    raw_path = build_dir / (output_path.stem + ".raw.glb")
+
+    bpy.ops.export_scene.gltf(
+        filepath=str(raw_path),
         use_selection=True,
         export_format="GLB",
         export_apply=True,
@@ -940,14 +963,9 @@ def export_glb(output_path: Path) -> int:
         export_lights=False,
         export_cameras=False,
         export_materials="NONE",
+        export_draco_mesh_compression_enable=False,
     )
-    try:
-        kwargs["export_draco_mesh_compression_enable"] = True
-        kwargs["export_draco_mesh_compression_level"] = 6
-    except Exception:
-        pass
-
-    bpy.ops.export_scene.gltf(**kwargs)
+    compress_meshopt(raw_path, output_path)
     size = output_path.stat().st_size
     print(f"[generate-wireframe] Exported: {output_path} ({size / 1024:.1f} KB)")
     if size > 100 * 1024:

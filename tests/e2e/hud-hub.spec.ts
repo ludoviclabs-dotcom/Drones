@@ -127,19 +127,24 @@ test.describe("Planches techniques — point d’entrée", () => {
     }) => {
       await page.setViewportSize({ width, height: 900 });
       await page.goto("/");
+      // Mesure en régime établi : pendant l'échange de police, la police de
+      // repli est bien plus large et ferait déborder n'importe quelle barre.
+      await page.evaluate(() => document.fonts.ready);
       const nav = await page.evaluate(() => {
         const el = document.querySelector("header nav")!;
-        const right = el.getBoundingClientRect().right;
+        const box = el.getBoundingClientRect();
+        const links = [...el.querySelectorAll("a")];
         return {
           overflow: el.scrollWidth - el.clientWidth,
-          cut: [...el.querySelectorAll("a")]
-            .filter((a) => a.getBoundingClientRect().right > right + 1)
+          cut: links
+            .filter((a) => a.getBoundingClientRect().right > box.right + 1)
             .map((a) => a.textContent?.trim()),
+          headroom: Math.round(links[0].getBoundingClientRect().left - box.left),
         };
       });
       // Sur bureau, l'en-tête plafonne à 1180 px : les neuf liens doivent y
       // tenir entiers, sans qu'aucun ne soit rogné à droite.
-      expect(nav.cut).toEqual([]);
+      expect(nav.cut, `marge avant le premier lien : ${nav.headroom}px`).toEqual([]);
       expect(nav.overflow).toBeLessThanOrEqual(0);
     });
   }

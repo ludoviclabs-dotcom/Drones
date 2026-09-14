@@ -113,13 +113,17 @@ export default function RootLayout({
             {/* `justify-end-safe` et non `justify-end` : quand les liens
                 débordent (tablette), un alignement à droite simple pousse les
                 premiers hors du bord gauche, où le défilement ne peut plus les
-                atteindre. L'alignement « safe » retombe sur le début. */}
+                atteindre. L'alignement « safe » retombe sur le début.
+                Espacement des liens (7 px, interlettrage 0,1 em) : les neuf
+                liens tiennent dans l'en-tête de 1180 px avec ~75 px de marge,
+                ce qui absorbe l'arrondi des chasses sous Linux — à 12 px de
+                marge, « Glossaire » était rogné en CI. */}
             <nav className="-mx-2 flex w-full min-w-0 flex-1 items-center overflow-x-auto pb-1 sm:mx-0 sm:w-auto sm:justify-end-safe sm:pb-0">
               {NAV.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="shrink-0 px-2 py-2 text-[11px] uppercase tracking-[0.15em] text-ink-dim transition-colors hover:text-ink"
+                  className="shrink-0 px-[7px] py-2 text-[11px] uppercase tracking-[0.1em] text-ink-dim transition-colors hover:text-ink"
                 >
                   {item.label}
                 </Link>

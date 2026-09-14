@@ -481,6 +481,7 @@ const A11Y_PAGES = [
   "/hud/drone-airframe",
   "/hud/thundart",
   "/hud/patriot-pac3-mse",
+  "/hud/rafale-f4-meteor",
 ];
 for (const path of A11Y_PAGES) {
   test(`axe — a11y structurelle (WCAG 2.2 AA) : ${path}`, async ({

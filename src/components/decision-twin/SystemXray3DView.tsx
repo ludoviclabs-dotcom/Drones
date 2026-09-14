@@ -51,21 +51,38 @@ const RAFALE = {
   canopyColor: "#172022", // cockpit-smoke — verrière fumée
 } as const;
 
-function GlbWireframe({ path }: { path: string }) {
+/** Référence stable : un `[]` par défaut relancerait le clonage à chaque rendu. */
+const NO_HIDDEN_NODES: readonly string[] = [];
+
+function GlbWireframe({
+  path,
+  hiddenNodes = NO_HIDDEN_NODES,
+}: {
+  path: string;
+  hiddenNodes?: readonly string[];
+}) {
   // GLB meshopt : décodeur embarqué par three-stdlib, aucune requête réseau.
   // Draco désactivé — son décodeur drei viendrait du CDN gstatic.
   const { scene } = useGLTF(path, false, true);
 
   const styledScene = useMemo(() => {
     const clone = scene.clone(true);
+    // Retirés du clone, pas seulement masqués : la passe d'arêtes ci-dessous
+    // parcourt aussi les nœuds invisibles et accroche ses contours au parent.
+    for (const name of hiddenNodes) {
+      clone.getObjectByName(name)?.removeFromParent();
+    }
     // Collecte des paires (mesh source → edges overlay) à ajouter en post-traversal
     // pour éviter de muter l'arbre pendant qu'on l'itère.
     const edgeOverlays: Array<{ parent: THREE.Object3D; line: THREE.LineSegments }> = [];
 
     clone.traverse((child) => {
       if (child instanceof THREE.Mesh) {
-        const name = child.name.toLowerCase();
-        const isCanopy = name.includes("verriere") || name.includes("canopy");
+        // La compression meshopt peut glisser un nœud sans nom sous le nœud
+        // nommé : on lit alors le nom du parent.
+        const name = (child.name || child.parent?.name || "").toLowerCase();
+        const isCanopy =
+          name.includes("verriere") || (name.includes("canopy") && !name.includes("frame"));
 
         // 1. Coque solide
         child.material = isCanopy
@@ -115,7 +132,7 @@ function GlbWireframe({ path }: { path: string }) {
     }
 
     return clone;
-  }, [scene]);
+  }, [hiddenNodes, scene]);
 
   return <primitive object={styledScene} />;
 }
@@ -260,7 +277,7 @@ export function SystemXray3DView({
               rotation={modelOverride?.rotation ? [...modelOverride.rotation] : undefined}
               scale={modelOverride?.scale ?? 1}
             >
-              <GlbWireframe path={glbPath} />
+              <GlbWireframe path={glbPath} hiddenNodes={modelOverride?.hiddenNodes} />
             </group>
           </Suspense>
         ) : spec ? (

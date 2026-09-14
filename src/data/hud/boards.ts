@@ -16,6 +16,11 @@ export type HudBoardPreview = {
   alt: string;
   width: number;
   height: number;
+  /**
+   * Point focal horizontal (0–100 %) quand la vignette est recadrée (grande
+   * vignette de l'accueil) ; centre par défaut.
+   */
+  focusX?: number;
 };
 
 export type HudBoard = {
@@ -31,11 +36,60 @@ export type HudBoard = {
   preview: HudBoardPreview;
   /** Dossiers système illustrés par la planche (liens croisés, optionnel). */
   systemSlugs?: readonly string[];
+  /**
+   * Entrées directes de la planche (optionnel) : l'accueil les propose sous la
+   * grande vignette. Chaque lien ouvre la planche dans un scénario donné.
+   */
+  entries?: readonly HudBoardEntry[];
+};
+
+export type HudBoardEntry = {
+  href: `/hud/${string}`;
+  label: string;
+  detail: string;
 };
 
 export const HUD_INDEX_PATH = "/hud";
 
 export const HUD_BOARDS: readonly HudBoard[] = [
+  {
+    slug: "rafale-f4-meteor",
+    href: "/hud/rafale-f4-meteor",
+    title: "Rafale F4 — chasseur et tir Meteor en 3D",
+    kind: "Modélisation 3D · tir illustratif",
+    summary:
+      "Un Rafale C au standard F4 modélisé d’après les dimensions publiées, avec ses emports : capteurs, séparation et départ illustratifs d’un Meteor au-delà du contact visuel, d’un MICA IR en combat rapproché ou d’un AASM Hammer en mission SEAD.",
+    features: [
+      "Séquence en 6 états",
+      "3 scénarios · 15 sous-ensembles",
+      "Mouvement réduit respecté",
+    ],
+    preview: {
+      src: "/images/hud/rafale-f4-meteor-preview.webp",
+      alt: "Modèle 3D d’un Rafale F4 vu de l’arrière, en vol : un missile Meteor, propulseur allumé, s’éloigne devant l’avion en laissant un sillage de fumée ; un pointillé symbolise la liaison de données.",
+      width: 1280,
+      height: 720,
+      focusX: 38,
+    },
+    systemSlugs: ["rafale", "meteor"],
+    entries: [
+      {
+        href: "/hud/rafale-f4-meteor?scenario=bvr",
+        label: "Interception BVR · Meteor",
+        detail: "Éjection sous le fuselage, statoréacteur.",
+      },
+      {
+        href: "/hud/rafale-f4-meteor?scenario=wvr",
+        label: "Combat rapproché · MICA IR",
+        detail: "Avion en virage, départ du rail de saumon.",
+      },
+      {
+        href: "/hud/rafale-f4-meteor?scenario=sead",
+        label: "SEAD · AASM Hammer",
+        detail: "Largage sous voilure, SPECTRA en avant.",
+      },
+    ],
+  },
   {
     slug: "patriot-pac3-mse",
     href: "/hud/patriot-pac3-mse",

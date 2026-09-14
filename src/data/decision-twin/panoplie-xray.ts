@@ -422,7 +422,7 @@ function rafaleNodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Distinguer prix d'appel, cout systeme et cout politique pour eviter la lecture trompeuse d'un seul chiffre.",
       position2d: { x: 50, y: 50 },
-      position3d: { x: 0, y: 0, z: 0 },
+      position3d: { x: 0, y: -0.2, z: 0.17 },
     }),
     makeNode({
       id: `${system.slug}-verriere`,
@@ -438,7 +438,7 @@ function rafaleNodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Lire la repartition C/B/M des contrats export pour reperer l'usage prevu par chaque client.",
       position2d: { x: 50, y: 22 },
-      position3d: { x: 0, y: 1.15, z: 0.1 },
+      position3d: { x: 0, y: 0.76, z: 0.3 },
     }),
     makeNode({
       id: `${system.slug}-radar`,
@@ -454,7 +454,7 @@ function rafaleNodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Suivre la trajectoire RBE2 XG (standard F5) pour reperer la prochaine etape capteur.",
       position2d: { x: 50, y: 10 },
-      position3d: { x: 0, y: 1.6, z: 0.3 },
+      position3d: { x: 0, y: 1.42, z: 0.07 },
     }),
     makeNode({
       id: `${system.slug}-spectra`,
@@ -470,7 +470,7 @@ function rafaleNodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Comparer la logique SPECTRA (brouillage actif) aux choix furtifs des plateformes de 5e generation.",
       position2d: { x: 38, y: 38 },
-      position3d: { x: -0.4, y: 0.4, z: 0.05 },
+      position3d: { x: 0, y: -1.04, z: 0.68 },
     }),
     makeNode({
       id: `${system.slug}-canards`,
@@ -487,7 +487,7 @@ function rafaleNodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Garder cette lecture comme reperage visuel, pas comme parametre d'emploi.",
       position2d: { x: 30, y: 36 },
-      position3d: { x: -0.8, y: 0.55, z: 0.05 },
+      position3d: { x: -0.36, y: 0.3, z: 0.06 },
     }),
     makeNode({
       id: `${system.slug}-voilure`,
@@ -503,7 +503,7 @@ function rafaleNodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Documenter par contrat les armements autorises et l'ecart avec la configuration nationale.",
       position2d: { x: 22, y: 60 },
-      position3d: { x: -1.1, y: -0.2, z: 0 },
+      position3d: { x: -0.72, y: -0.66, z: 0 },
     }),
     makeNode({
       id: `${system.slug}-moteur`,
@@ -519,7 +519,7 @@ function rafaleNodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Suivre la trajectoire M88 vers une motorisation plus puissante (standard F5) comme indicateur de continuite industrielle.",
       position2d: { x: 50, y: 86 },
-      position3d: { x: 0, y: -1.2, z: -0.2 },
+      position3d: { x: 0, y: -1.38, z: 0 },
     }),
     makeNode({
       id: `${system.slug}-asmpa`,
@@ -537,7 +537,7 @@ function rafaleNodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Distinguer le role national (composante nucleaire) du standard export (configurations adaptees, sans ASMPA).",
       position2d: { x: 50, y: 68 },
-      position3d: { x: 0, y: -0.4, z: -0.3 },
+      position3d: { x: 0, y: -0.2, z: -0.22 },
     }),
     makeNode({
       id: `${system.slug}-dassault`,
@@ -553,7 +553,7 @@ function rafaleNodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Croiser le carnet Dassault avec la cadence de production: 175 export sur 220 changent la nature du programme.",
       position2d: { x: 14, y: 78 },
-      position3d: { x: -1.4, y: -0.9, z: -0.1 },
+      position3d: { x: -0.9, y: -0.3, z: 0.9 },
     }),
     makeNode({
       id: `${system.slug}-thales`,
@@ -569,7 +569,7 @@ function rafaleNodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Suivre la trajectoire Thales sur le RBE2 XG et la guerre electronique du standard F5.",
       position2d: { x: 86, y: 18 },
-      position3d: { x: 1.5, y: 1.1, z: 0.2 },
+      position3d: { x: 0.4, y: 0.9, z: 0.9 },
     }),
     makeNode({
       id: `${system.slug}-france`,
@@ -585,7 +585,7 @@ function rafaleNodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Lire la liste des clients export (Egypte, Inde, Qatar, Grece, Emirats, Indonesie, Serbie) comme celle de ceux qui ont choisi cette logique.",
       position2d: { x: 84, y: 60 },
-      position3d: { x: 1.4, y: -0.2, z: -0.1 },
+      position3d: { x: -0.1, y: 0.5, z: 1 },
     }),
     makeNode({
       id: `${system.slug}-itar`,
@@ -601,7 +601,7 @@ function rafaleNodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Verifier que cette autonomie reste vraie contrat par contrat: sous-traitants, paliers de standard, accords specifiques.",
       position2d: { x: 16, y: 16 },
-      position3d: { x: -1.4, y: 1.4, z: -0.1 },
+      position3d: { x: -0.5, y: 0.1, z: 1 },
     }),
     makeNode({
       id: `${system.slug}-global-confidence`,
@@ -620,7 +620,7 @@ function rafaleNodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Prioriser dans la Console OSINT les indicateurs marques 'variable', a commencer par le cout d'acquisition unitaire.",
       position2d: { x: 16, y: 88 },
-      position3d: { x: -1.4, y: -1.4, z: 0.1 },
+      position3d: { x: 0.3, y: -0.3, z: -0.95 },
     }),
   ];
 }

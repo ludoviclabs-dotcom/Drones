@@ -93,6 +93,21 @@ describe("registre des planches techniques", () => {
     expect(board.features.length).toBeLessThanOrEqual(3);
   });
 
+  it("n’ouvre les entrées directes d’une planche que sur cette planche", () => {
+    for (const board of HUD_BOARDS) {
+      const entries = board.entries ?? [];
+      for (const entry of entries) {
+        expect(entry.href.startsWith(board.href), entry.href).toBe(true);
+        expect(new URL(entry.href, "https://panoplie.test").pathname, entry.href).toBe(
+          board.href,
+        );
+        expect(entry.label.trim().length, entry.href).toBeGreaterThan(0);
+        expect(entry.detail.trim().length, entry.href).toBeGreaterThan(0);
+      }
+      expect(new Set(entries.map((entry) => entry.href)).size, board.slug).toBe(entries.length);
+    }
+  });
+
   it("retrouve une planche par son slug", () => {
     expect(hudBoardBySlug("thundart")?.href).toBe("/hud/thundart");
     expect(hudBoardBySlug("inconnue")).toBeUndefined();

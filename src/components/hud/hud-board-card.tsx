@@ -128,6 +128,96 @@ export function HudBoardTeaser({
   );
 }
 
+/**
+ * Grande vignette de l'accueil : la planche la plus récente, sous la grille des
+ * autres. En colonne large (≥ 1024 px), elle s'étire jusqu'au bas du sommaire
+ * des domaines : l'image absorbe d'abord la hauteur disponible, jusqu'à un
+ * plafond de 1,1 fois sa largeur (au-delà, le recadrage mangerait l'avion) ;
+ * l'excédent éventuel passe dans le bloc texte, entrées poussées vers le bas.
+ * Les entrées directes ouvrent la planche dans un scénario ; elles passent
+ * au-dessus du lien étiré de la carte.
+ */
+export function HudBoardSpotlight({ board }: { board: HudBoard }) {
+  return (
+    <article
+      className="@container group relative flex min-w-0 flex-col border border-line bg-bg/40 motion-safe:transition-colors hover:border-accent has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-accent lg:grow"
+      data-hud-board={board.slug}
+      data-hud-teaser="spotlight"
+    >
+      <div className="relative aspect-video overflow-hidden border-b border-line bg-[#11100c] lg:aspect-auto lg:max-h-[110cqw] lg:min-h-[17rem] lg:grow-[1000]">
+        <Image
+          src={board.preview.src}
+          alt={board.preview.alt}
+          width={board.preview.width}
+          height={board.preview.height}
+          unoptimized
+          loading="eager"
+          className="absolute inset-0 h-full w-full object-cover opacity-90 motion-safe:transition-opacity group-hover:opacity-100"
+          style={{ objectPosition: `${board.preview.focusX ?? 50}% 50%` }}
+        />
+        <RegistrationMarks className="m-3" />
+        <span className="absolute bottom-3 left-3 border border-line-bright bg-panel/90 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-accent">
+          Nouvelle planche
+        </span>
+      </div>
+      <div className="flex flex-col px-4 py-4 sm:px-5 lg:grow">
+        <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-accent">
+          {board.kind}
+        </p>
+        <h3 className="mt-1 font-serif text-xl leading-snug text-ink">
+          <Link
+            href={board.href}
+            className="after:absolute after:inset-0 after:content-[''] focus-visible:outline-none"
+          >
+            {board.title}
+          </Link>
+        </h3>
+        <p className="mt-2 font-serif text-[0.95rem] leading-relaxed text-ink-dim">
+          {board.summary}
+        </p>
+        <div className="min-h-4 lg:grow" aria-hidden="true" />
+        {board.entries?.length ? (
+          <ul
+            className="relative z-10 grid gap-px border border-line bg-line"
+            aria-label="Entrer directement dans un scénario"
+          >
+            {board.entries.map((entry) => (
+              <li key={entry.href} className="bg-panel">
+                <Link
+                  href={entry.href}
+                  className="flex min-h-11 items-center justify-between gap-3 px-3 py-2 motion-safe:transition-colors hover:bg-surface-2 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent"
+                >
+                  <span className="min-w-0">
+                    <span className="block font-mono text-[10px] uppercase tracking-[0.12em] text-ink">
+                      {entry.label}
+                    </span>
+                    <span className="mt-0.5 block font-mono text-[10px] leading-snug text-ink-faint">
+                      {entry.detail}
+                    </span>
+                  </span>
+                  <span className="shrink-0 font-mono text-[11px] text-accent" aria-hidden="true">
+                    →
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+        <ul className="mt-4 flex flex-wrap gap-2" aria-label="Repères de la planche">
+          {board.features.map((feature) => (
+            <li
+              key={feature}
+              className="border border-line px-2 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-faint"
+            >
+              {feature}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </article>
+  );
+}
+
 export function HudBoardGrid({
   boards,
   headingLevel = 2,
@@ -138,7 +228,15 @@ export function HudBoardGrid({
   eager?: boolean;
 }) {
   return (
-    <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+    // Trois colonnes seulement quand elles tombent juste : jamais de carte
+    // orpheline sur une dernière rangée (4 planches = 2 × 2).
+    <div
+      className={
+        boards.length % 3 === 0
+          ? "grid gap-5 md:grid-cols-2 lg:grid-cols-3"
+          : "grid gap-5 md:grid-cols-2"
+      }
+    >
       {boards.map((board) => (
         <HudBoardCard
           key={board.slug}

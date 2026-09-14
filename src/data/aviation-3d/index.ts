@@ -17,7 +17,9 @@ export const WIREFRAME_3D_SPECS: Record<string, Wireframe3DSpec> = {
  * jamais de Draco, dont le décodeur drei viendrait d'un CDN à l'exécution.
  */
 export const GLB_AVAILABLE_SLUGS = new Set<string>([
-  "rafale", // public/models/aviation/rafale.glb (~32 KB)
+  // Rafale : son placement X-Ray charge l'asset de la planche (glbPath) ;
+  // public/models/aviation/rafale.glb n'est plus lu par la vue X-Ray.
+  "rafale",
   "f-35", // public/models/aviation/f-35.glb (~23 KB)
   "sea-fire", // public/models/radars/sea-fire.glb (~23 KB)
   "gm400-alpha", // public/models/radars/gm400-alpha.glb (~17 KB)
@@ -46,6 +48,10 @@ export type XrayModelOverride = {
   rotation?: readonly [number, number, number];
   /** Position initiale de la caméra, si le préréglage coupe le modèle. */
   cameraPosition?: readonly [number, number, number];
+  /** GLB chargé à la place de `public/models/<catégorie>/<slug>.glb`. */
+  glbPath?: string;
+  /** Nœuds retirés du modèle dans la vue X-Ray (autre configuration d'emport). */
+  hiddenNodes?: readonly string[];
 };
 
 // Placements par type de modèle. Les GLB X-Ray sont exportés Y haut et
@@ -60,10 +66,28 @@ const MISSILE_SCALE = 0.6;
 const RADAR_SCALE = 0.5;
 
 /**
- * Placements X-Ray par slug. Le Rafale n'a pas encore de placement : son GLB
- * et ses repères restent affichés tels quels.
+ * Placements X-Ray par slug. Le Rafale charge le GLB de la planche
+ * `/hud/rafale-f4-meteor` (en mètres, nez vers -Z), ramené à l'échelle 0,2.
  */
 export const XRAY_MODEL_OVERRIDES: Record<string, XrayModelOverride> = {
+  rafale: {
+    glbPath: "/models/hud/rafale-f4.glb",
+    scale: 0.2,
+    cameraPosition: [4.6, 3.1, 5.0],
+    // Configuration air-air documentée : la configuration air-sol est retirée.
+    hiddenNodes: [
+      "RAF_Hammer_L",
+      "RAF_Hammer_R",
+      "RAF_Pylon_Mid_L",
+      "RAF_Pylon_Mid_R",
+      "RAF_Talios",
+      "RAF_Pylon_Fwd_R",
+      "RAF_Tank_L",
+      "RAF_Tank_R",
+      "RAF_Pylon_Inner_L",
+      "RAF_Pylon_Inner_R",
+    ],
+  },
   // Les repères de contexte (fournisseur, pays, sources) orbitent jusqu'à
   // ~2 unités de l'axe : caméra plus reculée et plus latérale que « aircraft ».
   "f-35": { scale: AIRCRAFT_SCALE, cameraPosition: [7.8, 5.0, 3.6] },

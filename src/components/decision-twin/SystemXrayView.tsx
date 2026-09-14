@@ -168,7 +168,10 @@ export function SystemXrayView({
             {has3D && viewMode === "3d" ? (
               <SystemXray3DView
                 spec={wireframeSpec}
-                glbPath={hasGlb ? `/models/${glbDir}/${system.slug}.glb` : undefined}
+                glbPath={
+                  modelOverride?.glbPath ??
+                  (hasGlb ? `/models/${glbDir}/${system.slug}.glb` : undefined)
+                }
                 modelOverride={modelOverride}
                 nodes={filteredNodes}
                 selectedNodeId={selectedNode?.id}

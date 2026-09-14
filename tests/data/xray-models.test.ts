@@ -24,6 +24,18 @@ import type { DecisionTwinNode } from "@/data/decision-twin/types";
 
 /** Pièce du GLB (nom de nœud) sous chaque repère, par suffixe d'id. */
 const HOTSPOT_PARTS: Record<string, Record<string, string>> = {
+  // Asset de la planche Rafale : un maillage à plusieurs matériaux devient un
+  // groupe dont chaque primitive est nommée `<maillage>_<n>`.
+  rafale: {
+    fuselage: "RAF_Spine",
+    verriere: "RAF_Canopy",
+    radar: "RAF_Radome",
+    spectra: "RAF_Spectra_1",
+    canards: "RAF_Canard_L_1",
+    voilure: "RAF_Wing_L_1",
+    moteur: "RAF_Engines_1",
+    asmpa: "RAF_TankCenter_Mesh",
+  },
   "f-35": {
     fuselage: "F35A_Fuselage_Main",
     verriere: "F35A_Canopy",
@@ -99,6 +111,13 @@ const CLEARANCE = 0.1;
 const SPEC_TO_GLTF = new THREE.Euler(-Math.PI / 2, 0, 0);
 const MODEL_DIRS = ["aviation", "missiles", "radars"];
 
+/** GLB lu par la vue : celui du placement s'il en désigne un, sinon celui du dossier. */
+function viewGlbFile(slug: string, override: XrayModelOverride): string {
+  return override.glbPath
+    ? path.join(process.cwd(), "public", override.glbPath)
+    : glbFile(slug);
+}
+
 function glbFile(slug: string): string {
   const found = MODEL_DIRS.map((dir) =>
     path.join(process.cwd(), "public", "models", dir, `${slug}.glb`),
@@ -124,6 +143,10 @@ async function placedPartHulls(
   const gltf = await new GLTFLoader()
     .setMeshoptDecoder(MeshoptDecoder)
     .parseAsync(glb.buffer.slice(glb.byteOffset, glb.byteOffset + glb.byteLength), "");
+  // Nœuds retirés par la vue (autre configuration d'emport).
+  for (const name of override.hiddenNodes ?? []) {
+    gltf.scene.getObjectByName(name)?.removeFromParent();
+  }
   const placed = new THREE.Group();
   const [rx, ry, rz] = override.rotation ?? [0, 0, 0];
   placed.rotation.set(rx, ry, rz);
@@ -143,8 +166,20 @@ async function placedPartHulls(
     }
     points.set(name, list);
   });
+  // Une pièce plane (vitre, disque) n'a pas d'intérieur : les plans de son
+  // enveloppe dégénérée sont arbitraires et fausseraient les écarts.
   return new Map(
-    [...points].map(([name, list]) => [name, new ConvexHull().setFromPoints(list)]),
+    [...points]
+      .map(([name, list]) => [name, new ConvexHull().setFromPoints(list)] as const)
+      .filter(([, hull]) => hullVolume(hull) > 1e-7),
+  );
+}
+
+/** Volume d'une enveloppe convexe fermée (théorème de la divergence). */
+function hullVolume(hull: ConvexHull): number {
+  return hull.faces.reduce(
+    (sum, face) => sum + (face.area * face.normal.dot(face.midpoint)) / 3,
+    0,
   );
 }
 
@@ -176,7 +211,7 @@ async function loadPlacedScenarios() {
           node.type === "component" ||
           node.id.slice(slug.length + 1) in declared,
       );
-      const hulls = await placedPartHulls(glbFile(slug), override);
+      const hulls = await placedPartHulls(viewGlbFile(slug, override), override);
       return { slug, scenario, anchored, hulls };
     }),
   );

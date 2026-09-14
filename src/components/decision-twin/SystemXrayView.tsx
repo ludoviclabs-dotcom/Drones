@@ -45,8 +45,8 @@ export function SystemXrayView({
   const [viewMode, setViewMode] = useState<ViewMode>("2d");
 
   const wireframeSpec = WIREFRAME_3D_SPECS[system.slug];
+  const hasGlb = GLB_AVAILABLE_SLUGS.has(system.slug);
   const modelOverride = XRAY_MODEL_OVERRIDES[system.slug];
-  const hasGlb = Boolean(modelOverride) || GLB_AVAILABLE_SLUGS.has(system.slug);
   // Le bouton « Vue 3D » apparaît dès qu'une représentation 3D existe — soit
   // wireframe procédural, soit asset GLB Blender. Les radars n'ont que des GLB.
   const has3D = Boolean(wireframeSpec) || hasGlb;

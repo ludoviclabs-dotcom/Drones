@@ -12,6 +12,7 @@ import { getAllClaims } from "@/lib/claims";
 import type {
   DecisionTwinLayerDefinition,
   DecisionTwinNode,
+  DecisionTwinPosition3d,
   DecisionTwinRisk,
   PanoplieXrayScenario,
 } from "./types";
@@ -671,7 +672,7 @@ function f35Nodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Comparer prix d'appel et cout de possession pour eviter la lecture trompeuse d'un seul chiffre unitaire.",
       position2d: { x: 50, y: 50 },
-      position3d: { x: 0, y: 0, z: 0 },
+      position3d: { x: 0, y: -0.25, z: 0.15 },
     }),
     makeNode({
       id: `${system.slug}-verriere`,
@@ -687,7 +688,7 @@ function f35Nodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Lire la charge cognitive et la dependance au logiciel comme contrepartie de la formule monoplace.",
       position2d: { x: 50, y: 22 },
-      position3d: { x: 0, y: 1.15, z: 0.1 },
+      position3d: { x: 0, y: 0.73, z: 0.27 },
     }),
     makeNode({
       id: `${system.slug}-sensor-fusion`,
@@ -703,7 +704,7 @@ function f35Nodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Suivre la trajectoire Block 4 — chaque ajout capteur depend de mises a jour logicielles validees par Lockheed.",
       position2d: { x: 50, y: 10 },
-      position3d: { x: 0, y: 1.6, z: 0.3 },
+      position3d: { x: 0, y: 1.3, z: -0.03 },
     }),
     makeNode({
       id: `${system.slug}-stealth`,
@@ -719,7 +720,7 @@ function f35Nodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Distinguer furtivite face aux radars de defense aerienne modernes et face aux radars VHF — la lecture varie.",
       position2d: { x: 38, y: 38 },
-      position3d: { x: -0.4, y: 0.4, z: 0.05 },
+      position3d: { x: -0.34, y: 0.45, z: 0.02 },
     }),
     makeNode({
       id: `${system.slug}-internal-bay`,
@@ -736,7 +737,7 @@ function f35Nodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Lire l'arbitrage furtivite/charge utile comme un choix doctrinal, pas comme une faiblesse.",
       position2d: { x: 24, y: 56 },
-      position3d: { x: -1.0, y: -0.1, z: 0 },
+      position3d: { x: -0.12, y: 0.05, z: -0.12 },
     }),
     makeNode({
       id: `${system.slug}-wing-edge`,
@@ -753,7 +754,7 @@ function f35Nodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Reperer cette logique comme un trait de famille des 5e generation (F-22, F-35, J-20, J-35).",
       position2d: { x: 76, y: 56 },
-      position3d: { x: 1.0, y: -0.1, z: 0 },
+      position3d: { x: 0.63, y: -0.17, z: 0 },
     }),
     makeNode({
       id: `${system.slug}-engine-f135`,
@@ -769,7 +770,7 @@ function f35Nodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Suivre les debats ECU (Engine Core Upgrade) et la trajectoire vers une motorisation adaptative — choix dimensionnant pour la flotte.",
       position2d: { x: 50, y: 86 },
-      position3d: { x: 0, y: -1.2, z: -0.2 },
+      position3d: { x: 0, y: -1.33, z: 0 },
     }),
     makeNode({
       id: `${system.slug}-tr3`,
@@ -785,7 +786,7 @@ function f35Nodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Inclure le calendrier Block 4 dans toute lecture financiere: le risque programmatique pese autant que le cout de possession.",
       position2d: { x: 50, y: 78 },
-      position3d: { x: 0, y: -0.6, z: -0.1 },
+      position3d: { x: 0, y: 1, z: 0.05 },
     }),
     makeNode({
       id: `${system.slug}-lockheed`,
@@ -3512,7 +3513,7 @@ function seaFireNodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Comparer Sea Fire (panneaux fixes Thales) et SPY-6 (panneaux fixes RTX) comme deux reponses paralleles a la meme question doctrinale.",
       position2d: { x: 50, y: 38 },
-      position3d: { x: 0, y: 0.4, z: 0 },
+      position3d: { x: 0.9, y: -0.04, z: -0.25 },
     }),
     makeNode({
       id: `${system.slug}-range`,
@@ -3528,7 +3529,7 @@ function seaFireNodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Conserver les chiffres au niveau capacitaire annonce; ne pas extrapoler vers une comparaison fine avec SPY-6.",
       position2d: { x: 38, y: 26 },
-      position3d: { x: -0.55, y: 1.05, z: 0.2 },
+      position3d: { x: 0.15, y: -0.15, z: 0.3 },
     }),
     makeNode({
       id: `${system.slug}-multi-mission`,
@@ -3544,7 +3545,7 @@ function seaFireNodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Lire la simultaneite comme caracteristique structurante; la BMD partielle est explicitement bornee dans le dossier.",
       position2d: { x: 62, y: 26 },
-      position3d: { x: 0.55, y: 1.05, z: 0.2 },
+      position3d: { x: 0.3, y: -0.3, z: -0.45 },
     }),
     makeNode({
       id: `${system.slug}-gan-thales`,
@@ -3560,7 +3561,7 @@ function seaFireNodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Croiser avec les autres programmes radar Thales (GM200, GM400, MS-MMR) pour situer la cadence semi-conducteurs RF europeens.",
       position2d: { x: 28, y: 50 },
-      position3d: { x: -0.85, y: 0, z: 0.1 },
+      position3d: { x: 0.04, y: -0.9, z: -0.25 },
     }),
     makeNode({
       id: `${system.slug}-platforms`,
@@ -3576,7 +3577,8 @@ function seaFireNodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Lire les fiches FREMM, FDI en regard — Sea Fire est un noeud du systeme naval francais, pas un produit isole.",
       position2d: { x: 72, y: 50 },
-      position3d: { x: 0.85, y: 0, z: 0.1 },
+      // Sur le pont du modèle : les frégates porteuses.
+      position3d: { x: 0, y: -0.66, z: -0.86 },
     }),
     makeNode({
       id: `${system.slug}-install-cost`,
@@ -4071,7 +4073,7 @@ function meteorNodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Lire le ramjet comme noeud techno-critique souverain europeen — l'un des rares ou l'Europe maitrise un domaine de bout en bout.",
       position2d: { x: 50, y: 50 },
-      position3d: { x: 0, y: 0, z: 0 },
+      position3d: { x: 0, y: -1.05, z: 0.05 },
     }),
     makeNode({
       id: `${system.slug}-seeker`,
@@ -4087,7 +4089,7 @@ function meteorNodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Comparer Meteor (RF actif + datalink + ramjet) et AIM-260 (US, en developpement) comme reponses paralleles a la NEZ.",
       position2d: { x: 50, y: 14 },
-      position3d: { x: 0, y: 1.5, z: 0.3 },
+      position3d: { x: 0, y: 1.28, z: 0.04 },
     }),
     makeNode({
       id: `${system.slug}-range`,
@@ -4103,7 +4105,7 @@ function meteorNodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Conserver la NEZ au niveau capacitaire annonce; ne pas extrapoler vers une table de performance comparee.",
       position2d: { x: 38, y: 38 },
-      position3d: { x: -0.4, y: 0.4, z: 0.05 },
+      position3d: { x: -0.11, y: -0.2, z: 0.07 },
     }),
     makeNode({
       id: `${system.slug}-warhead`,
@@ -4119,7 +4121,7 @@ function meteorNodes(system: DefenseSystem): DecisionTwinNode[] {
       nextAction:
         "Conserver la charge au niveau public; ne pas en deduire des protocoles d'emploi.",
       position2d: { x: 36, y: 30 },
-      position3d: { x: -0.55, y: 0.85, z: 0.2 },
+      position3d: { x: 0, y: 0.62, z: 0.05 },
     }),
     makeNode({
       id: `${system.slug}-platforms`,
@@ -4558,10 +4560,64 @@ function micaNgNodes(system: DefenseSystem): DecisionTwinNode[] {
   ];
 }
 
+/**
+ * Ancrages 3D des lectures auto pour les systèmes dont le GLB X-Ray est placé
+ * (`XRAY_MODEL_OVERRIDES`) : sans eux, la grille 2D projetée à plat flotte à
+ * mi-hauteur du modèle. Même repère que les builders édités (X largeur,
+ * Y longueur nez +, Z hauteur, GLB placé). Chaque point se pose sur une pièce
+ * distincte ; les briques ne désignent pas de pièce, l'ancrage sert seulement
+ * la lecture.
+ */
+const GENERIC_ANCHORS_3D: Partial<
+  Record<string, Record<BrickKey | "system", DecisionTwinPosition3d>>
+> = {
+  "scalp-storm-shadow": {
+    system: { x: 0, y: -0.05, z: 0.04 }, // écope dorsale
+    cout: { x: 0, y: 1.15, z: -0.12 }, // nez
+    finance: { x: -0.55, y: 0.06, z: -0.19 }, // aile gauche
+    "supply-chain": { x: 0.55, y: 0.06, z: -0.19 }, // aile droite
+    geopolitique: { x: 0, y: -1.15, z: 0.15 }, // dérive
+    export: { x: -0.28, y: -1.25, z: -0.22 }, // stabilisateur gauche
+  },
+  "gm400-alpha": {
+    system: { x: 0.06, y: -0.08, z: 0.42 }, // moyeu guide d'ondes
+    cout: { x: 0.14, y: -0.04, z: 1.12 }, // antenne IFF
+    finance: { x: 0.075, y: -0.81, z: 0.27 }, // épaule gauche
+    "supply-chain": { x: 0.075, y: 0.81, z: 0.27 }, // épaule droite
+    geopolitique: { x: 0.1, y: -0.32, z: -0.45 }, // plateforme rotative
+    export: { x: -0.55, y: -0.38, z: -0.85 }, // shelter
+  },
+  "an-tpy-2": {
+    system: { x: 0, y: -0.05, z: 0.1 }, // antenne principale
+    cout: { x: 0.42, y: -0.06, z: 0.63 }, // antenne, partie haute (panneau incliné)
+    finance: { x: -1.18, y: -0.29, z: -0.22 }, // cabine de commande
+    "supply-chain": { x: 1.07, y: -0.41, z: -0.25 }, // module annexe
+    geopolitique: { x: 0.3, y: -0.4, z: -0.45 }, // remorque
+    export: { x: -0.15, y: -0.77, z: -0.2 }, // chape
+  },
+  "giraffe-4a": {
+    system: { x: 0.14, y: -0.05, z: 0.48 }, // mât, section médiane
+    cout: { x: 0.14, y: -0.09, z: 1.2 }, // tête d'antenne
+    finance: { x: -0.47, y: -0.13, z: -1.25 }, // module de génération
+    "supply-chain": { x: 0.46, y: -0.1, z: -1.22 }, // porte d'accès
+    geopolitique: { x: 0.14, y: -0.06, z: -0.35 }, // mât, section basse
+    export: { x: 0.14, y: -0.12, z: -0.9 }, // embase du mât
+  },
+  ltamds: {
+    system: { x: 0.47, y: -0.05, z: 0.25 }, // panneau principal
+    cout: { x: 0.34, y: -0.07, z: 0.675 }, // panneau principal, sous le bord haut
+    finance: { x: -0.25, y: -0.53, z: 0.1 }, // panneau secondaire, côté caméra
+    "supply-chain": { x: 0.95, y: -0.44, z: -0.6 }, // remorque, arrière
+    geopolitique: { x: 0.2, y: -0.3, z: -0.36 }, // embase tournante
+    export: { x: -0.8, y: -0.44, z: -0.6 }, // remorque, avant
+  },
+};
+
 function genericNodes(system: DefenseSystem): DecisionTwinNode[] {
   const sources = sourceById(system);
   const claims = getAllClaims().filter((claim) => claim.systemSlug === system.slug);
   const confidenceScore = scoreEvidence(system, "confiance-donnees");
+  const anchors = GENERIC_ANCHORS_3D[system.slug];
   const positions = [
     { x: 50, y: 28 },
     { x: 30, y: 43 },
@@ -4588,7 +4644,7 @@ function genericNodes(system: DefenseSystem): DecisionTwinNode[] {
       evidence: evidenceFromIndicator(indicator),
       ...sourceFromIndicator(sources, indicator),
       position2d: positions[index] ?? { x: 50, y: 50 },
-      position3d: {
+      position3d: anchors?.[brick.key] ?? {
         x: ((positions[index]?.x ?? 50) - 50) / 50,
         y: (50 - (positions[index]?.y ?? 50)) / 50,
         z: 0,
@@ -4610,7 +4666,7 @@ function genericNodes(system: DefenseSystem): DecisionTwinNode[] {
       metadata: confidenceScore.metadata,
       sourceLabel: "Console OSINT Panoplie",
       position2d: { x: 50, y: 50 },
-      position3d: { x: 0, y: 0, z: 0 },
+      position3d: anchors?.system ?? { x: 0, y: 0, z: 0 },
     }),
     ...brickNodes,
   ];

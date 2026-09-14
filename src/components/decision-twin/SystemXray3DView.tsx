@@ -56,16 +56,14 @@ const NO_HIDDEN_NODES: readonly string[] = [];
 
 function GlbWireframe({
   path,
-  meshopt = false,
   hiddenNodes = NO_HIDDEN_NODES,
 }: {
   path: string;
-  meshopt?: boolean;
   hiddenNodes?: readonly string[];
 }) {
-  // Asset de planche : meshopt seul (décodeur embarqué), jamais le Draco du CDN.
-  // Sans surcharge, les réglages par défaut de drei restent inchangés.
-  const { scene } = useGLTF(path, meshopt ? false : undefined);
+  // GLB meshopt : décodeur embarqué par three-stdlib, aucune requête réseau.
+  // Draco désactivé — son décodeur drei viendrait du CDN gstatic.
+  const { scene } = useGLTF(path, false, true);
 
   const styledScene = useMemo(() => {
     const clone = scene.clone(true);
@@ -194,21 +192,21 @@ function Hotspot({
  * Viewer 3D orbitale pour le System X-Ray.
  *
  * Priorité de rendu :
- *   1. glbPath → charge l'asset Blender (.glb Draco) via useGLTF
+ *   1. glbPath → charge l'asset Blender (.glb meshopt) via useGLTF
  *   2. spec    → wireframe procédural (fallback JS, 0 Ko réseau)
  *
  * L'un des deux doit être fourni ; si glbPath est fourni sans spec,
  * le Suspense affiche un état de chargement neutre.
  */
-// Paramètres caméra par type de modèle. Les chasseurs sont allongés
-// horizontalement (silhouette plan trois-quarts), les radars sont des
-// structures verticales compactes (superstructure + mât), les missiles
-// sont très allongés sur un axe (long et fins) — pour chaque type, on
-// ajuste la position, l'élévation et le fov.
+// Paramètres caméra par type de modèle. Avec un placement (XRAY_MODEL_OVERRIDES),
+// missiles et radars tiennent dans ~3 unités, comme un chasseur : la caméra
+// trois-quarts, un peu latérale, recule assez pour cadrer aussi les repères
+// de contexte qui orbitent autour du modèle. La position « aircraft » reste
+// celle des chasseurs sans placement ; un placement peut fournir la sienne.
 const CAMERA_PRESETS = {
   aircraft: { position: [3.8, 2.6, 4.1] as [number, number, number], fov: 22, minDist: 3.5, maxDist: 10 },
-  radar: { position: [6.2, 4.2, 6.6] as [number, number, number], fov: 24, minDist: 4.5, maxDist: 14 },
-  missile: { position: [3.6, 2.0, 3.6] as [number, number, number], fov: 26, minDist: 3.0, maxDist: 10 },
+  radar: { position: [6.7, 4.7, 4.7] as [number, number, number], fov: 24, minDist: 4.5, maxDist: 14 },
+  missile: { position: [6.3, 4.2, 3.6] as [number, number, number], fov: 26, minDist: 3.0, maxDist: 10 },
 } as const;
 
 /**
@@ -228,7 +226,7 @@ export function SystemXray3DView({
 }: {
   spec?: Wireframe3DSpec;
   glbPath?: string;
-  /** Asset de planche technique à la place du GLB X-Ray (repères réalignés). */
+  /** Placement du GLB dans le repère des repères (voir XRAY_MODEL_OVERRIDES). */
   modelOverride?: XrayModelOverride;
   nodes: DecisionTwinNode[];
   selectedNodeId?: string;
@@ -236,8 +234,8 @@ export function SystemXray3DView({
   modelType?: keyof typeof CAMERA_PRESETS;
 }) {
   const cam = CAMERA_PRESETS[modelType];
-  // Avec un asset de planche, repères et filaire de repli sont tournés dans le
-  // repère glTF du modèle ; sans surcharge, rien ne change.
+  // Avec un placement, repères et filaire de repli sont tournés dans le
+  // repère glTF du modèle ; sans placement, rien ne change.
   const specRotation = modelOverride ? SPEC_TO_GLTF_ROTATION : undefined;
   return (
     <div className="relative aspect-square w-full overflow-hidden border border-line bg-surface">
@@ -275,12 +273,11 @@ export function SystemXray3DView({
               ) : null
             }
           >
-            <group scale={modelOverride?.scale ?? 1}>
-              <GlbWireframe
-                path={glbPath}
-                meshopt={modelOverride?.meshopt}
-                hiddenNodes={modelOverride?.hiddenNodes}
-              />
+            <group
+              rotation={modelOverride?.rotation ? [...modelOverride.rotation] : undefined}
+              scale={modelOverride?.scale ?? 1}
+            >
+              <GlbWireframe path={glbPath} hiddenNodes={modelOverride?.hiddenNodes} />
             </group>
           </Suspense>
         ) : spec ? (

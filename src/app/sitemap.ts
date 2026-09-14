@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/site";
 import { SYSTEMS_BY_SLUG, getSystemSlugs } from "@/data/systems";
 import { getEvidenceStats } from "@/lib/claims";
+import { HUD_BOARDS, HUD_INDEX_PATH } from "@/data/hud/boards";
 
 type ChangeFrequency = NonNullable<
   MetadataRoute.Sitemap[number]["changeFrequency"]
@@ -16,8 +17,14 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: ChangeFr
   { path: "/matrice", priority: 0.7, changeFrequency: "monthly" },
   { path: "/simulateur", priority: 0.7, changeFrequency: "monthly" },
   { path: "/console", priority: 0.8, changeFrequency: "weekly" },
-  { path: "/hud/drone-airframe", priority: 0.6, changeFrequency: "monthly" },
-  { path: "/hud/thundart", priority: 0.6, changeFrequency: "monthly" },
+  { path: HUD_INDEX_PATH, priority: 0.7, changeFrequency: "monthly" },
+  // Chaque planche vient du registre : une nouvelle planche y est ajoutée une
+  // seule fois et apparaît ici sans lien à recopier.
+  ...HUD_BOARDS.map((board) => ({
+    path: board.href,
+    priority: 0.6,
+    changeFrequency: "monthly" as const,
+  })),
   { path: "/audit", priority: 0.7, changeFrequency: "weekly" },
   { path: "/couts", priority: 0.7, changeFrequency: "weekly" },
   { path: "/industrial-graph", priority: 0.6, changeFrequency: "monthly" },

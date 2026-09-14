@@ -6,10 +6,13 @@ test("parcours home → domaine naval → fiche → console (export) → compara
 }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Voir le HUD drone →" })).toHaveAttribute(
-    "href",
-    "/hud/drone-airframe",
-  );
+  // L'accueil mène à l'index des planches, puis directement à chacune.
+  await expect(
+    page.getByRole("link", { name: "Voir les planches techniques →" }),
+  ).toHaveAttribute("href", "/hud");
+  await expect(
+    page.getByRole("link", { name: "Cellule de drone — vue éclatée" }),
+  ).toHaveAttribute("href", "/hud/drone-airframe");
 
   await page.goto("/batiments-navals");
   await expect(page.getByText("Chine").first()).toBeVisible();
@@ -359,7 +362,7 @@ test("HUD drone : la route fige les animations décoratives, sans fuite ailleurs
   expect(home.grain).toBe("grain");
   expect(home.dot).toBe("transmission");
   await expect(
-    page.getByRole("link", { name: "Voir le HUD drone →" }),
+    page.getByRole("link", { name: "Cellule de drone — vue éclatée" }),
   ).toHaveAttribute("href", "/hud/drone-airframe");
 
   // Sur la planche : grain figé mais toujours visible, point de statut figé.
@@ -437,11 +440,11 @@ test("HUD drone : SSR, hydratation sans erreur, sitemap et lien de pied de page"
 test("HUD drone : ordre de tabulation en ordre de lecture", async ({ page }) => {
   await page.goto("/hud/drone-airframe");
 
-  // Dernier lien de la barre de navigation : la tabulation entre ensuite dans
-  // la planche. Le même libellé existe aussi en pied de page, d'où le cadrage.
+  // Dernier lien du fil d'Ariane, juste avant la planche : la tabulation entre
+  // ensuite dans la planche. Le même libellé existe ailleurs, d'où le cadrage.
   await page
-    .getByRole("navigation")
-    .getByRole("link", { name: "Glossaire" })
+    .getByRole("navigation", { name: "Fil d’Ariane" })
+    .getByRole("link", { name: "Planches techniques" })
     .focus();
 
   const order: string[] = [];
@@ -474,6 +477,7 @@ const A11Y_PAGES = [
   "/systemes/fujian",
   "/console",
   "/comparateur",
+  "/hud",
   "/hud/drone-airframe",
   "/hud/thundart",
 ];

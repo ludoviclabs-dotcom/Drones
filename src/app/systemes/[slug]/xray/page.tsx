@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SystemXrayView } from "@/components/decision-twin/SystemXrayView";
 import { buildPanoplieXrayScenario } from "@/data/decision-twin/panoplie-xray";
+import { hudBoardForSystem } from "@/data/hud/boards";
 import { getSystem, getSystemSlugs } from "@/data/systems";
 import { ReadingProgress } from "@/components/reading-progress";
 
@@ -36,6 +37,7 @@ export default async function SystemXrayPage({
   if (!system) notFound();
 
   const scenario = buildPanoplieXrayScenario(system);
+  const board = hudBoardForSystem(system.slug);
 
   return (
     <>
@@ -54,6 +56,14 @@ export default async function SystemXrayPage({
           >
             Console OSINT
           </Link>
+          {board ? (
+            <Link
+              href={board.href}
+              className="font-mono text-[11px] uppercase tracking-[0.16em] text-accent transition-colors hover:text-ink"
+            >
+              Planche 3D interactive →
+            </Link>
+          ) : null}
         </nav>
       </div>
       <SystemXrayView system={system} scenario={scenario} />

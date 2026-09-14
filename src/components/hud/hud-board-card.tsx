@@ -85,12 +85,19 @@ export function HudBoardCard({
 /**
  * Vignette compacte pour l'accueil : image et titre seulement. Elle occupe la
  * colonne du hero laissée vide par le sommaire des domaines, pour que les
- * planches soient visibles dès l'arrivée, sans défilement.
+ * planches soient visibles dès l'arrivée, sans défilement. `featured` l'étend
+ * sur les deux colonnes de la grille (nombre impair de planches).
  */
-export function HudBoardTeaser({ board }: { board: HudBoard }) {
+export function HudBoardTeaser({
+  board,
+  featured = false,
+}: {
+  board: HudBoard;
+  featured?: boolean;
+}) {
   return (
     <article
-      className="group relative min-w-0 border border-line bg-bg/40 motion-safe:transition-colors hover:border-accent has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-accent"
+      className={`group relative min-w-0 border border-line bg-bg/40 motion-safe:transition-colors hover:border-accent has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-accent${featured ? " sm:col-span-2" : ""}`}
       data-hud-board={board.slug}
     >
       <div className="aspect-video overflow-hidden border-b border-line bg-[#11100c]">
@@ -131,7 +138,7 @@ export function HudBoardGrid({
   eager?: boolean;
 }) {
   return (
-    <div className="grid gap-5 md:grid-cols-2">
+    <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
       {boards.map((board) => (
         <HudBoardCard
           key={board.slug}

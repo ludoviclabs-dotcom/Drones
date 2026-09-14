@@ -49,3 +49,6 @@ next-env.d.ts
 # fichiers Blender de travail (les assets sont reconstruits par tools/*/generate-*.py)
 *.blend
 *.blend[0-9]
+# exports bruts intermédiaires (avant compression meshopt) et cache Python
+/tools/*/build/
+__pycache__/

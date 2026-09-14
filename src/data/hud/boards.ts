@@ -29,11 +29,33 @@ export type HudBoard = {
   /** Trois repères factuels au plus, vérifiables sur la planche. */
   features: readonly string[];
   preview: HudBoardPreview;
+  /** Dossiers système illustrés par la planche (liens croisés, optionnel). */
+  systemSlugs?: readonly string[];
 };
 
 export const HUD_INDEX_PATH = "/hud";
 
 export const HUD_BOARDS: readonly HudBoard[] = [
+  {
+    slug: "patriot-pac3-mse",
+    href: "/hud/patriot-pac3-mse",
+    title: "Patriot PAC-3 MSE — batterie et lanceur en 3D",
+    kind: "Modélisation 3D · tir illustratif",
+    summary:
+      "Une batterie Patriot en disposition illustrative et son lanceur M903 détaillé : mise en batterie, élévation, mise à feu et départ illustratifs, en tir unitaire ou en salve.",
+    features: [
+      "Séquence en 7 états",
+      "12 sous-ensembles sourcés",
+      "Tir unitaire ou salve",
+    ],
+    preview: {
+      src: "/images/hud/patriot-pac3-mse-preview.webp",
+      alt: "Modèle 3D d’un lanceur Patriot M903 relevé au site de tir : un intercepteur PAC-3 MSE sort de son conteneur dans un nuage de fumée, deux autres lanceurs de la batterie en arrière-plan.",
+      width: 1280,
+      height: 720,
+    },
+    systemSlugs: ["patriot-pac3-mse", "pac-3-mse"],
+  },
   {
     slug: "thundart",
     href: "/hud/thundart",
@@ -76,4 +98,9 @@ export const HUD_BOARDS: readonly HudBoard[] = [
 
 export function hudBoardBySlug(slug: string): HudBoard | undefined {
   return HUD_BOARDS.find((board) => board.slug === slug);
+}
+
+/** Planche illustrant un dossier système donné, s'il en existe une. */
+export function hudBoardForSystem(systemSlug: string): HudBoard | undefined {
+  return HUD_BOARDS.find((board) => board.systemSlugs?.includes(systemSlug));
 }

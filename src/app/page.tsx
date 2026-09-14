@@ -99,8 +99,12 @@ export default function Home() {
                   Planches techniques · à manipuler
                 </h2>
                 <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                  {HUD_BOARDS.map((board) => (
-                    <HudBoardTeaser key={board.slug} board={board} />
+                  {HUD_BOARDS.map((board, index) => (
+                    <HudBoardTeaser
+                      key={board.slug}
+                      board={board}
+                      featured={index === 0 && HUD_BOARDS.length % 2 === 1}
+                    />
                   ))}
                 </div>
               </div>

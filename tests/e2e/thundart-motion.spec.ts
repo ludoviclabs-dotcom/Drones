@@ -34,11 +34,24 @@ async function openScene(page: Page) {
 }
 
 /**
+ * Budget d'une transition en navigateur de test.
+ *
+ * Les navigateurs de test rendent le WebGL en logiciel (SwiftShader, sur CPU).
+ * Chaque frame y est lente, et le pas de temps plafonné à 64 ms par frame (voir
+ * `MAX_FRAME_STEP_MS`) étire alors la transition en temps réel au lieu de la
+ * sauter. Depuis l'ajout du détail de surface, « configure » (2,6 s nominales)
+ * prend ~7,5 s en local et dépassait les 15 s de l'ancien budget en CI.
+ * Un GPU réel n'est pas concerné. Le budget reste borné : une transition qui ne
+ * se termine jamais échoue toujours.
+ */
+const TRANSITION_BUDGET_MS = 45_000;
+
+/**
  * Attend un repos STABLE. Juste après un clic, l'attribut vaut encore « idle »
  * tant que React n'a pas commité le passage à « running » : exiger plusieurs
  * lectures consécutives évite de conclure trop tôt.
  */
-async function settle(page: Page, timeoutMs = 15_000) {
+async function settle(page: Page, timeoutMs = TRANSITION_BUDGET_MS) {
   const deadline = Date.now() + timeoutMs;
   let stable = 0;
   while (Date.now() < deadline) {
@@ -85,7 +98,11 @@ const readTransitions = (page: Page) =>
  * transitoire comme « running » peut échapper à un sondage régulier, alors que
  * l'observateur, lui, ne rate rien.
  */
-async function waitForTransition(page: Page, entry: string, timeoutMs = 15_000) {
+async function waitForTransition(
+  page: Page,
+  entry: string,
+  timeoutMs = TRANSITION_BUDGET_MS,
+) {
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
     if ((await readTransitions(page)).includes(entry)) return;
@@ -103,7 +120,11 @@ async function waitForTransition(page: Page, entry: string, timeoutMs = 15_000) 
 // mesures deviennent ininterprétables. `mode: "default"` les sérialise dans un
 // seul worker — contrairement à `"serial"`, un échec n'entraîne pas le saut des
 // suivants, donc rien n'est masqué.
-test.describe.configure({ mode: "default", timeout: 90_000 });
+// Quatre transitions au plus par test, chacune bornée par son budget.
+test.describe.configure({
+  mode: "default",
+  timeout: 4 * TRANSITION_BUDGET_MS + 30_000,
+});
 
 test.describe("Thundart — séquence pilotée par l’état", () => {
   test("progresse état par état, puis retombe au repos", async ({ page }) => {

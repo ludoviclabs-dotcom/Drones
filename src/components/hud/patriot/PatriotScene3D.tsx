@@ -27,7 +27,7 @@ import {
 } from "@/data/hud/patriot-inspection";
 import { PATRIOT_CAMERA_POSES } from "@/data/hud/patriot-motion";
 import { PatriotModel } from "./PatriotModel";
-import { SOFTWARE_MAX_FRAME_STEP_MS, useRenderProfile } from "./render-profile";
+import { SOFTWARE_MAX_FRAME_STEP_MS, useRenderProfile } from "@/components/hud/render-profile";
 
 type AssetStatus = "loading" | "ready" | "error" | "unavailable";
 
@@ -119,6 +119,9 @@ export function PatriotScene3D({
   // Profil décidé avant la création du contexte WebGL : complet, allégé
   // (rendu logiciel : ni environnement, ni anticrénelage, ni ombres) ou
   // indisponible (pas de WebGL 2 : repli explicite, GLB non téléchargé).
+  // Mesuré sur SwiftShader à ~890 × 530 px : une image complète coûte ~1,25 s,
+  // dont la moitié pour l'environnement et un quart pour l'anticrénelage ;
+  // allégée, ~0,25 s.
   const renderProfile = useRenderProfile();
   const softwareRendering = renderProfile === "software";
   const webGlAvailable = renderProfile !== "none";

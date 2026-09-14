@@ -525,28 +525,34 @@ test.describe("Rafale — sans WebGL, la planche reste utilisable", () => {
 });
 
 test.describe("Rafale — mise en page et accessibilité", () => {
-  test("l’ancre de la planche reste sous l’en-tête collant", async ({ page }) => {
-    await page.setViewportSize({ width: 375, height: 812 });
-    await page.goto(ROUTE);
-    await waitForScene(page);
-    // `instant` : le document défile en douceur, la mesure doit porter sur la
-    // position d'arrivée et non sur un point du trajet.
-    await page
-      .locator("#rafale-experience")
-      .evaluate((element) => element.scrollIntoView({ block: "start", behavior: "instant" }));
-    const layout = await page.evaluate(() => {
-      const sceneBox = document.querySelector("[data-rafale-motion]")?.getBoundingClientRect();
-      const headerBox = document.querySelector("header")?.getBoundingClientRect();
-      return sceneBox && headerBox
-        ? { sceneTop: sceneBox.top, headerBottom: headerBox.bottom }
-        : null;
+  for (const viewport of [
+    { width: 375, height: 812 },
+    { width: 1440, height: 900 },
+  ]) {
+    test(`${viewport.width}px — l’ancre pose la planche juste sous l’en-tête collant`, async ({
+      page,
+    }) => {
+      await page.setViewportSize(viewport);
+      await page.goto(ROUTE);
+      await waitForScene(page);
+      // `instant` : le document défile en douceur, la mesure doit porter sur la
+      // position d'arrivée et non sur un point du trajet.
+      await page
+        .locator("#rafale-experience")
+        .evaluate((element) => element.scrollIntoView({ block: "start", behavior: "instant" }));
+      const gap = await page.evaluate(() => {
+        const sceneBox = document.querySelector("[data-rafale-motion]")?.getBoundingClientRect();
+        const headerBox = document.querySelector("header")?.getBoundingClientRect();
+        return sceneBox && headerBox ? sceneBox.top - headerBox.bottom : null;
+      });
+      // Un seul décalage d'ancre, le `scroll-padding-top` du document : la vue
+      // s'arrête 0,75 rem (12 px) sous l'en-tête. Un `scroll-margin-top` posé sur
+      // la planche s'y ajoutait et la laissait ~89 px plus bas.
+      expect(gap).not.toBeNull();
+      expect(gap!).toBeGreaterThanOrEqual(0);
+      expect(gap!).toBeLessThanOrEqual(24);
     });
-    expect(layout).not.toBeNull();
-    // La vue commence sous l'en-tête collant, et l'ancre l'a bien amenée dans
-    // la moitié haute de l'écran (le trajet seul ne prouverait rien).
-    expect(layout!.sceneTop).toBeGreaterThanOrEqual(layout!.headerBottom);
-    expect(layout!.sceneTop).toBeLessThan(812 / 2);
-  });
+  }
 
   test("les liens croisés mènent à la planche", async ({ page }) => {
     for (const system of ["rafale", "meteor"]) {

@@ -290,7 +290,12 @@ export function PatriotModel({
   const camera = useThree((state) => state.camera);
   const controls = useThree((state) => asOrbitControls(state.controls));
   const invalidate = useThree((state) => state.invalidate);
-  const size = useThree((state) => state.size);
+  // Largeur et hauteur seules : R3F remesure son conteneur au défilement et
+  // renouvelle `size` (top/left) à chaque scroll. Suivre l'objet entier
+  // relancerait le recadrage, qui ramène la caméra à la pose de l'état et
+  // efface l'orbite de l'utilisateur.
+  const width = useThree((state) => state.size.width);
+  const height = useThree((state) => state.size.height);
   const gl = useThree((state) => state.gl);
 
   const preparedModel = useMemo(() => {
@@ -394,9 +399,9 @@ export function PatriotModel({
 
   useEffect(() => {
     framingScaleRef.current = framingScaleForAspect(
-      size.height > 0 ? size.width / size.height : 1,
+      height > 0 ? width / height : 1,
     );
-  }, [size]);
+  }, [width, height]);
 
   useEffect(() => {
     const runtime = createRuntime(model, animations);
@@ -587,7 +592,7 @@ export function PatriotModel({
     if (planRef.current || !lastSampleRef.current) return;
     applySample(lastSampleRef.current);
     invalidate();
-  }, [applySample, invalidate, size]);
+  }, [applySample, invalidate, width, height]);
 
   useFrame(() => {
     const plan = planRef.current;
@@ -634,10 +639,10 @@ export function PatriotModel({
 
   const handleClick = useCallback(
     (event: ThreeEvent<MouseEvent>) => {
-      if (orbitGestureRef.current.suppressClick) {
-        orbitGestureRef.current.suppressClick = false;
-        return;
-      }
+      // R3F livre un même clic à chaque mesh traversé par le rayon : celui qui
+      // clôt un drag doit être ignoré par tous. Le drapeau n'est donc pas
+      // consommé ici ; le prochain pointerdown le remet à zéro.
+      if (orbitGestureRef.current.suppressClick) return;
       const id = inspectionIdForObject(event.object, model);
       if (!id) return;
       event.stopPropagation();

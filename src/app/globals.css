@@ -67,13 +67,10 @@
 
 html {
   scroll-behavior: smooth;
+  /* Seul décalage des ancres sous le header sticky (#ancre, scrollIntoView).
+     Un scroll-margin-top sur la cible s'y ajouterait au lieu de le remplacer :
+     les planches HUD n'en portent pas. */
   scroll-padding-top: calc(var(--site-header-offset) + 0.75rem);
-}
-
-.thundartExperience,
-.patriotExperience,
-.rafaleExperience {
-  scroll-margin-top: calc(var(--site-header-offset) + 0.75rem);
 }
 
 body {

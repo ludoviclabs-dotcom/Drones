@@ -250,6 +250,8 @@ test.describe("Thundart — HUD technique accessible", () => {
       await rack.click();
       await expect(rack).toHaveAttribute("aria-pressed", "true");
 
+      // La sélection recale la planche à son ancre, en défilement doux : la vue
+      // finit 0,75 rem (12 px) sous le header, entière dans le viewport.
       await expect.poll(async () =>
         page.evaluate(() => {
           const sceneBox = document
@@ -259,6 +261,7 @@ test.describe("Thundart — HUD technique accessible", () => {
           if (!sceneBox || !headerBox) return false;
           return (
             sceneBox.top >= headerBox.bottom &&
+            sceneBox.top <= headerBox.bottom + 24 &&
             sceneBox.bottom <= window.innerHeight
           );
         }),

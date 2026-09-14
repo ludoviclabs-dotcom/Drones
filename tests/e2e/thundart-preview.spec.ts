@@ -110,23 +110,39 @@ test.describe("Thundart — candidate Preview", () => {
     await expect(page.getByText("Planche terminée", { exact: true })).toBeVisible();
   });
 
-  test("l’ancre de la planche reste sous le header sticky", async ({ page }) => {
-    await page.setViewportSize({ width: 375, height: 812 });
-    await page.goto(ROUTE);
-    await waitForAsset(page);
-    await page.locator("#thundart-experience").evaluate((element) =>
-      element.scrollIntoView(),
-    );
+  for (const viewport of [
+    { width: 375, height: 812 },
+    { width: 1440, height: 900 },
+  ]) {
+    test(`${viewport.width}px — l’ancre pose la planche juste sous le header sticky`, async ({
+      page,
+    }) => {
+      await page.setViewportSize(viewport);
+      await page.goto(ROUTE);
+      await waitForAsset(page);
+      // `instant` : le document défile en douceur, la mesure doit porter sur la
+      // position d'arrivée et non sur un point du trajet.
+      await page
+        .locator("#thundart-experience")
+        .evaluate((element) =>
+          element.scrollIntoView({ block: "start", behavior: "instant" }),
+        );
 
-    const clearOfHeader = await page.evaluate(() => {
-      const sceneBox = document
-        .querySelector("[data-thundart-motion]")
-        ?.getBoundingClientRect();
-      const headerBox = document.querySelector("header")?.getBoundingClientRect();
-      return Boolean(sceneBox && headerBox && sceneBox.top >= headerBox.bottom);
+      const gap = await page.evaluate(() => {
+        const sceneBox = document
+          .querySelector("[data-thundart-motion]")
+          ?.getBoundingClientRect();
+        const headerBox = document.querySelector("header")?.getBoundingClientRect();
+        return sceneBox && headerBox ? sceneBox.top - headerBox.bottom : null;
+      });
+      // Un seul décalage d'ancre, le `scroll-padding-top` du document : la vue
+      // s'arrête 0,75 rem (12 px) sous le header. Un `scroll-margin-top` posé sur
+      // la planche s'y ajoutait et la laissait ~89 px plus bas.
+      expect(gap).not.toBeNull();
+      expect(gap!).toBeGreaterThanOrEqual(0);
+      expect(gap!).toBeLessThanOrEqual(24);
     });
-    expect(clearOfHeader).toBe(true);
-  });
+  }
 
   test("navigation, retour, reload et resize conservent une page stable", async ({
     page,

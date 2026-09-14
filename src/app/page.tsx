@@ -200,7 +200,7 @@ export default function Home() {
 
       <section
         id="catalogue"
-        className="relative scroll-mt-24 overflow-hidden border-t border-line py-16"
+        className="relative overflow-hidden border-t border-line py-16"
       >
         <RadarSweep className="pointer-events-none absolute -right-40 -top-32 h-[660px] w-[660px] opacity-[0.55]" />
         <div className="relative z-10">

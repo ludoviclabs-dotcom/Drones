@@ -8,6 +8,7 @@ import {
   RAFALE_SCENARIO_COPY,
   RAFALE_SEQUENCE_COPY,
   RAFALE_SEQUENCE_STATES,
+  biomeForScenario,
   isRafaleScenario,
   isRafaleSequenceState,
   isScenarioLocked,
@@ -126,6 +127,13 @@ describe("scénarios d’illustration", () => {
     const loadouts: Record<string, RafaleLoadout> = {};
     for (const scenario of RAFALE_SCENARIOS) loadouts[scenario] = loadoutForScenario(scenario);
     expect(loadouts).toEqual({ bvr: "air", wvr: "air", sead: "sead" });
+  });
+
+  it("survole la mer en air-air et le désert en mission air-sol", () => {
+    const biomes = Object.fromEntries(
+      RAFALE_SCENARIOS.map((scenario) => [scenario, biomeForScenario(scenario)]),
+    );
+    expect(biomes).toEqual({ bvr: "sea", wvr: "sea", sead: "desert" });
   });
 
   it("verrouille le scénario dès la séparation, et pas avant", () => {

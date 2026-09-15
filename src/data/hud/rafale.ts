@@ -120,6 +120,17 @@ export function loadoutForScenario(scenario: RafaleScenario): RafaleLoadout {
   return RAFALE_SCENARIO_COPY[scenario].loadout;
 }
 
+/** Décor de vol, sans géographie réelle. */
+export type RafaleBiome = "sea" | "desert";
+
+/**
+ * Mer en air-air (interception et combat rapproché, haute altitude figurée),
+ * désert en mission air-sol, plus basse : le relief s'y lit.
+ */
+export function biomeForScenario(scenario: RafaleScenario): RafaleBiome {
+  return loadoutForScenario(scenario) === "sead" ? "desert" : "sea";
+}
+
 /** Le scénario se choisit avant la séparation ; il est verrouillé ensuite. */
 export function isScenarioLocked(state: RafaleSequenceState): boolean {
   return state === "release" || state === "launch" || state === "complete";

@@ -15,7 +15,7 @@ inspection accessible, mouvement réduit respecté. Branche
 | Page éditoriale (Server Component) | `src/app/hud/rafale-f4-meteor/page.tsx` |
 | Expérience 3D client (scène, modèle, effets, capteurs, décor de vol) | `src/components/hud/rafale/` |
 | Logique pure (séquence et scénarios, mouvement, chronologie de départ, inspection) | `src/data/hud/rafale*.ts` |
-| Vignette 1280 × 720 (17,6 Ko) | `public/images/hud/rafale-f4-meteor-preview.webp` |
+| Vignette 1280 × 720 (17,7 Ko) | `public/images/hud/rafale-f4-meteor-preview.webp` |
 | Tests | `tests/unit/rafale-*.test.ts` (5 fichiers, dont les cadrages projetés), `tests/e2e/rafale-board.spec.ts` et `rafale-motion.spec.ts` (35 tests) |
 
 La page suit le gabarit Patriot : fil d’Ariane, « Cadre éditorial » (quatre
@@ -270,14 +270,35 @@ pose finale en format carré, 1,55 et 16:9, et exige que ce qu’annonce
 l’état reste dans le cadre : l’avion entier en vue d’ensemble, aux
 capteurs, au départ et à la fin ; la munition à la séparation et au départ.
 
-**Décor.** `rafale-world.ts` : dôme de ciel, terrain procédural à grille
-technique (mailles de 400 et 100 m), 72 nuages en billboards triés, brume ;
-hauteur de vol figurée de 1 500 m en air-air, 480 m en mission SEAD. Le
-décor **ne défile que pendant une transition** : il recule à la vitesse de
-l’écoulement d’air, en temps réel, ou au rythme de la chronologie pendant un
-départ, ralenti compris ; terrain, nuages et fumée reculent ensemble vers la
-queue. Au repos, rien ne bouge. Sous l’horizon, le dôme prend la couleur de la
-brume, si bien que le bord du terrain, entièrement embrumé, ne se voit pas.
+**Décor.** `rafale-world.ts` : un dôme de ciel qui porte aussi la surface,
+72 nuages en billboards triés, brume ; hauteur de vol figurée de 1 500 m en
+air-air, 480 m en mission SEAD. Le décor suit le scénario
+(`biomeForScenario`) : **mer** en air-air (BVR, combat rapproché), **désert**
+en SEAD, où la hauteur plus basse fait lire le relief. La surface n’a pas de
+maillage : le shader du dôme coupe chaque rayon de vue avec le plan
+y = −altitude et l’ombre par pixel, jusqu’à l’horizon, sans bord ; une
+perspective aérienne exponentielle la fond dans la couleur du ciel à
+l’horizon, dans le même azimut (aucune arête).
+
+- **Mer** : houle en sept octaves de bruit à dérivées analytiques, crêtes
+  allongées ; les vagues trop fines pour le pixel sont retirées et leur
+  variance passe dans la rugosité d’un reflet solaire à microfacettes
+  (Beckmann), avec épaule douce ; Fresnel sur le ciel réfléchi, risées qui
+  morcellent le reflet, écume clairsemée remplacée au loin par sa moyenne.
+- **Désert** : erg de dunes transverses (versant au vent ≈ 8°, face
+  d’avalanche ≈ 35°, crête vive), crêtes sinueuses et hauteur variable
+  (dunes barkhanoïdes), second réseau presque perpendiculaire, petites dunes
+  obliques, grands cordons ; normales par différences finies, ombres portées
+  des crêtes (quatre pas vers le soleil), plaques de reg ; ombres éclairées
+  par le ciel et le sable, jamais grises.
+
+Changer de scénario ne change que des uniformes (aucune recompilation) ;
+l’environnement de réflexion est rendu une fois par décor, pour que le
+dessous de la cellule renvoie la mer ou le sable. Le décor **ne défile que
+pendant une transition** : il recule à la vitesse de l’écoulement d’air, en
+temps réel, ou au rythme de la chronologie pendant un départ, ralenti
+compris ; surface, nuages et fumée reculent ensemble vers la queue. Au repos,
+rien ne bouge.
 
 **Tempos.** Caméra 1 s ; mise en virage 1,3 s (retour à plat en 0,9 s) ;
 secteurs des capteurs en 0,7 s à l’apparition (après 0,35 s), 0,4 s à la
@@ -387,9 +408,12 @@ est exposé dans `data-rafale-render-profile` :
   anticrénelage, ni ombres ; `dpr` à 1 ; ambiance remontée pour compenser
   (lumière ambiante à 0,5 au lieu de 0,24, hémisphère à 1,2 au lieu de 0,9) ;
   plafond de pas de temps à 200 ms (`SOFTWARE_MAX_FRAME_STEP_MS`), pour que
-  les transitions gardent leur durée ; décor allégé (terrain à une seule
-  couche de bruit, 18 nuages au lieu de 72). Coût par image non mesuré pour
-  cette planche.
+  les transitions gardent leur durée ; décor allégé (houle à trois octaves
+  sans écume, dunes sans second réseau, petites dunes ni ombres portées,
+  18 nuages au lieu de 72). Coût par image non mesuré en rendu logiciel ; en
+  rendu matériel, sur le poste de développement (écran 144 Hz, canevas de
+  1 038 × 664), les transitions tiennent la cadence de l’écran en mer comme
+  au désert (médiane 7 ms par image).
 - **`none`** : pas de WebGL 2. Repli explicite (« La vue 3D requiert
   WebGL 2… »), statut « Vue 3D indisponible sans WebGL 2 · contrôles et
   inspection utilisables » ; le GLB n’est jamais téléchargé (préchargement
@@ -460,8 +484,10 @@ porter aucun identifiant de ticket (`RAF-`, `HANDOFF`).
 - Attitude : vol en palier, sauf en combat rapproché (55° d’inclinaison,
   braquages de lecture de 5° et 8°) ; aucune mécanique du vol : l’avion ne se
   déplace pas, c’est le décor qui recule.
-- Décor : terrain stylisé à grille technique, sans géographie réelle ;
-  hauteurs de vol figurées.
+- Décor : mer et désert procéduraux, sans géographie réelle ni courbure
+  terrestre ; hauteurs de vol figurées ; soleil fixe, bas sur l’horizon ;
+  pas d’ombre des nuages sur la surface ; la houle ne s’anime pas, elle
+  recule seulement avec le décor.
 - Ralenti : écoulement d’air de 55 m/s, horloge de départ à ×0,35 puis ×0,6 ;
   accélérations et durées de combustion choisies pour la lecture ; l’aspect
   du panache d’un statoréacteur n’est décrit par aucune source publique.

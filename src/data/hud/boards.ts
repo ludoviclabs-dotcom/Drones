@@ -66,7 +66,7 @@ export const HUD_BOARDS: readonly HudBoard[] = [
     ],
     preview: {
       src: "/images/hud/rafale-f4-meteor-preview.webp",
-      alt: "Modèle 3D d’un Rafale F4 vu de l’arrière, en vol : un missile Meteor, propulseur allumé, s’éloigne devant l’avion en laissant un sillage de fumée ; un pointillé symbolise la liaison de données.",
+      alt: "Modèle 3D d’un Rafale F4 vu de l’arrière, en vol au-dessus de la mer : un missile Meteor, propulseur allumé, s’éloigne devant l’avion en laissant un sillage de fumée ; un pointillé symbolise la liaison de données.",
       width: 1280,
       height: 720,
       focusX: 38,

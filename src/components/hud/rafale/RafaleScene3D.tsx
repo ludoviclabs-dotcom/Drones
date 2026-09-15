@@ -20,7 +20,9 @@ import {
   RAFALE_ASSET_PATH,
   RAFALE_SCENARIO_COPY,
   RAFALE_SEQUENCE_COPY,
+  biomeForScenario,
   loadoutForScenario,
+  type RafaleBiome,
   type RafaleScenario,
   type RafaleSequenceState,
 } from "@/data/hud/rafale";
@@ -33,8 +35,8 @@ import { SOFTWARE_MAX_FRAME_STEP_MS, useRenderProfile } from "@/components/hud/r
 import { RafaleModel } from "./RafaleModel";
 import * as THREE from "three";
 import {
+  RAFALE_BIOMES,
   RAFALE_SUN_DIRECTION,
-  RAFALE_WORLD_PALETTE,
   createRafaleWorld,
   type RafaleWorld,
 } from "./rafale-world";
@@ -109,10 +111,12 @@ function WebGlFallback() {
  */
 function WorldLayer({
   altitude,
+  biome,
   scrollRef,
   lite,
 }: {
   altitude: number;
+  biome: RafaleBiome;
   scrollRef: RefObject<number>;
   lite: boolean;
 }) {
@@ -133,8 +137,9 @@ function WorldLayer({
   }, [invalidate, lite]);
   useEffect(() => {
     worldRef.current?.setAltitude(altitude);
+    worldRef.current?.setBiome(biome);
     invalidate();
-  }, [altitude, invalidate, lite]);
+  }, [altitude, biome, invalidate, lite]);
   useFrame(({ camera }) => {
     const world = worldRef.current;
     if (!world) return;
@@ -185,6 +190,8 @@ export function RafaleScene3D({
   const controlsEnabled = !transitionRunning && isObservationState(sequenceState);
   const activeInspection = rafaleInspectableById(activeInspectionId);
   const altitude = ALTITUDE[loadoutForScenario(scenario)];
+  const biome = biomeForScenario(scenario);
+  const look = RAFALE_BIOMES[biome];
   const sensorsLegend = sequenceState === "sensors";
   const linkLegend =
     scenario === "bvr" && (sequenceState === "launch" || sequenceState === "complete");
@@ -241,16 +248,17 @@ export function RafaleScene3D({
           }}
           shadows={softwareRendering ? false : "percentage"}
         >
-          <color attach="background" args={[RAFALE_WORLD_PALETTE.fog]} />
-          {/* La brume commence au-delà de l'avion : elle fond le terrain
-              lointain et la fin du sillage dans l'horizon. */}
-          <fog attach="fog" args={[RAFALE_WORLD_PALETTE.fog, 700, 5600]} />
+          <color attach="background" args={[look.horizon]} />
+          {/* La brume commence au-delà de l'avion : elle fond les nuages
+              lointains dans la couleur de l'horizon. La surface (mer ou
+              désert) porte sa propre perspective aérienne. */}
+          <fog attach="fog" args={[look.horizon, look.fogNear, look.fogFar]} />
 
           {/* Éclairage local fixe : aucune ressource externe. L'environnement
-              de réflexion est rendu UNE fois au montage (frames = 1). Sans
+              de réflexion est rendu UNE fois par décor (frames = 1). Sans
               lui, le profil allégé remonte l'ambiance. */}
           <ambientLight intensity={softwareRendering ? 0.5 : 0.24} color="#9fb0b8" />
-          <hemisphereLight args={["#c3ccd2", "#3b3528", softwareRendering ? 1.2 : 0.9]} />
+          <hemisphereLight args={["#c3ccd2", look.ground, softwareRendering ? 1.2 : 0.9]} />
           <directionalLight
             castShadow={!softwareRendering}
             color="#f3e2c6"
@@ -270,15 +278,22 @@ export function RafaleScene3D({
           <directionalLight color="#84a8b8" intensity={0.55} position={[30, -18, 20]} />
           <directionalLight color="#c8793f" intensity={0.45} position={[-30, 8, 40]} />
           {softwareRendering ? null : (
-            <Environment frames={1} resolution={128} environmentIntensity={0.7}>
+            // Remonté à chaque changement de décor : le dessous de la cellule
+            // reflète la mer ou le sable.
+            <Environment key={biome} frames={1} resolution={128} environmentIntensity={0.7}>
               <Lightformer form="rect" intensity={1.6} color="#b8c4cc" position={[0, 14, 0]} rotation-x={Math.PI / 2} scale={[26, 26, 1]} />
               <Lightformer form="rect" intensity={1.4} color="#e8c090" position={[-12, 3, -14]} rotation-y={Math.PI / 4} scale={[18, 3, 1]} />
-              <Lightformer form="rect" intensity={0.5} color="#3a3a32" position={[0, -12, 0]} rotation-x={-Math.PI / 2} scale={[30, 30, 1]} />
+              <Lightformer form="rect" intensity={look.groundIntensity} color={look.ground} position={[0, -12, 0]} rotation-x={-Math.PI / 2} scale={[30, 30, 1]} />
               <Lightformer form="rect" intensity={0.8} color="#84a8b8" position={[16, 2, 10]} rotation-y={-Math.PI / 2} scale={[14, 4, 1]} />
             </Environment>
           )}
 
-          <WorldLayer altitude={altitude} scrollRef={scrollRef} lite={softwareRendering} />
+          <WorldLayer
+            altitude={altitude}
+            biome={biome}
+            scrollRef={scrollRef}
+            lite={softwareRendering}
+          />
 
           <ModelErrorBoundary onError={handleError}>
             <Suspense fallback={<LoadingStandIn />}>

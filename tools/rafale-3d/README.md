@@ -398,7 +398,7 @@ vue X-Ray. Cette vue reconnaît aussi la verrière à son nom (`canopy`, hors
   exclues. **Cette liste doit être vide** avant de publier ; un loft retourné
   se corrige par son drapeau `flip`.
 - La vignette `public/images/hud/rafale-f4-meteor-preview.webp` (1280 × 720,
-  17,6 Ko ; le registre exige moins de 150 Ko) est une capture de la planche à
+  17,7 Ko ; le registre exige moins de 150 Ko) est une capture de la planche à
   l’état « Allumage et départ », scénario BVR, surimpressions HUD masquées,
   canevas forcé à 1280 × 720. Sur la grande vignette de l’accueil, elle est
   recadrée autour de `preview.focusX` (38 %). À refaire si le modèle ou le

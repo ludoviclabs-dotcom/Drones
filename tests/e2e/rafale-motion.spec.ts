@@ -1,4 +1,5 @@
 import { expect, test, type ConsoleMessage, type Page } from "@playwright/test";
+import { autoPlayStepDurationMs } from "@/data/hud/rafale-autoplay";
 
 /**
  * La séquence Rafale est pilotée UNIQUEMENT par les changements d'état, comme
@@ -125,6 +126,42 @@ async function waitForTransition(page: Page, entry: string, timeoutMs = TRANSITI
     `bascule « ${entry} » jamais observée — journal : ${(await readTransitions(page)).join(" | ")}`,
   );
 }
+
+type AutoPlayEntry = { entry: string; at: number };
+
+/**
+ * Journal horodaté de la lecture automatique : « état/mouvement/décompte » à
+ * chaque bascule, le décompte étant l'attribut du filet sous l'étape active.
+ */
+async function recordAutoPlay(page: Page) {
+  await page.evaluate(() => {
+    const box = document.querySelector("[data-rafale-motion]");
+    const host = document.querySelector("[data-sequence-state]");
+    if (!box || !host) throw new Error("scène introuvable");
+    const entry = () => {
+      const progress = host
+        .querySelector("[data-rafale-autoplay-progress]")
+        ?.getAttribute("data-rafale-autoplay-progress");
+      return `${host.getAttribute("data-sequence-state")}/${box.getAttribute("data-rafale-motion")}/${progress ?? "none"}`;
+    };
+    const log: { entry: string; at: number }[] = [{ entry: entry(), at: performance.now() }];
+    (window as unknown as { __autoPlayLog: typeof log }).__autoPlayLog = log;
+    new MutationObserver(() => {
+      const next = entry();
+      if (log[log.length - 1].entry !== next) log.push({ entry: next, at: performance.now() });
+    }).observe(host, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      attributeFilter: ["data-sequence-state", "data-rafale-motion", "data-rafale-autoplay-progress"],
+    });
+  });
+}
+
+const readAutoPlayLog = (page: Page) =>
+  page.evaluate(
+    () => (window as unknown as { __autoPlayLog?: AutoPlayEntry[] }).__autoPlayLog ?? [],
+  );
 
 /**
  * Deux rAF : la frame demandée au montage du modèle est rendue, la caméra est
@@ -367,6 +404,37 @@ test.describe("Rafale — séquence pilotée par l’état", () => {
     await page.getByRole("button", { name: RESET }).click();
     await settle(page);
     await expect(experience(page)).toHaveAttribute("data-sequence-state", "overview");
+  });
+
+  test("lecture automatique : le décompte d’une étape attend la fin de sa recomposition", async ({
+    page,
+  }) => {
+    test.skip(!(await openScene(page)), "WebGL 2 indisponible sur cet agent");
+    await settle(page);
+    await recordAutoPlay(page);
+    const inspect = autoPlayStepDurationMs("inspect", false);
+
+    // 01 est au repos : son décompte part aussitôt. La séquence passe à 02 et la
+    // scène se recompose ; le décompte de 02 attend, puis dure en entier.
+    await page.getByRole("button", { name: "Lecture auto" }).click();
+    await expect(experience(page)).toHaveAttribute("data-sequence-state", "sensors", {
+      timeout: autoPlayStepDurationMs("overview", false) + TRANSITION_BUDGET_MS + inspect,
+    });
+    await page.getByRole("button", { name: "Pause" }).click();
+
+    const log = await readAutoPlayLog(page);
+    const trail = log.map(({ entry }) => entry).join(" | ");
+    const advance = log.findIndex(({ entry }) => entry.startsWith("sensors/"));
+    const inspectEntries = log.slice(0, advance).filter(({ entry }) => entry.startsWith("inspect/"));
+    // Pendant la recomposition, le filet attend, vide.
+    expect(inspectEntries.map(({ entry }) => entry), trail).toContain("inspect/running/waiting");
+    // Le décompte n'a repris qu'au repos de la vue, et a duré en entier.
+    const resumed = inspectEntries.findLast(({ entry }) => entry === "inspect/idle/running");
+    expect(resumed, trail).toBeDefined();
+    expect(inspectEntries.indexOf(resumed!)).toBeGreaterThan(
+      inspectEntries.findIndex(({ entry }) => entry === "inspect/running/waiting"),
+    );
+    expect(log[advance].at - resumed!.at).toBeGreaterThanOrEqual(inspect - 20);
   });
 });
 

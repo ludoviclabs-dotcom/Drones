@@ -129,15 +129,18 @@ def build_canopy(spec, mats):
     cs = spec["canopy"]
     ss, fw, fsill, ftop = _canopy_tables(cs)
     count = cs["arc_segments"]
+    exponent = cs.get("exponent", 2.3)
     stations = station_series([ss[0], ss[-1]], [0.08])
 
     glass = MeshBuilder("RAF_Canopy")
-    rings = [canopy_arc(frame, s, fw(s), fsill(s), ftop(s), count) for s in stations]
+    rings = [canopy_arc(frame, s, fw(s), fsill(s), ftop(s), count, exponent=exponent)
+             for s in stations]
     glass.loft(rings, "RAF_MAT_Glass", closed=False, flip=True)
 
     frame_mb = MeshBuilder("RAF_CanopyFrame")
     for s in cs["arches_s"]:
-        arc = canopy_arc(frame, s, fw(s) + 0.012, fsill(s), ftop(s) + 0.012, count)
+        arc = canopy_arc(frame, s, fw(s) + 0.012, fsill(s), ftop(s) + 0.012, count,
+                         exponent=exponent)
         frame_mb.tube(arc, cs["arch_radius"], "RAF_MAT_Frame", segments=8)
     for side in (1.0, -1.0):
         sill = [frame.p(side * (fw(s) + 0.01), s, fsill(s) + 0.01)
@@ -331,17 +334,26 @@ def build_engines(spec, mats):
 # ---------------------------------------------------------------------------
 
 def build_osf(spec, mats):
-    """Optronique secteur frontal : carénage à facettes et deux hublots."""
+    """Optronique secteur frontal : blister arrondi (arcs de seuil à seuil) et deux hublots."""
     frame = Frame(spec)
     o = spec["osf"]
     mb = MeshBuilder("RAF_OSF")
     rings = []
     for s, hw, z0, z1 in o["profile"]:
-        rings.append([frame.p(hw, s, z0), frame.p(hw * 0.7, s, z1), frame.p(-hw * 0.7, s, z1),
-                      frame.p(-hw, s, z0)])
-    mb.loft(rings, "RAF_MAT_Skin", cap0=True, cap1=True, flip=True)
+        # arc parcouru du seuil droit au seuil gauche, ouvert vers le bas :
+        # ``closed=False`` laisse la base dans la peau du fuselage
+        rings.append(canopy_arc(frame, s, hw, z0, z1, 10, exponent=2.0))
+    mb.loft(rings, "RAF_MAT_Skin", cap0=True, cap1=True, closed=False, flip=True)
     for x, s, z, r in o["windows"]:
         mb.disc(frame.p(x, s, z), (0.0, 1.0, 0.18), r, "RAF_MAT_Sensor", segments=14)
+    head = o.get("head")
+    if head:
+        # tête capteur en boîte sur le blister, glace sombre sur sa face avant
+        y = frame.y0 - head["s"]
+        mb.boxc(head["x"], y, head["z"] + head["h"] / 2, head["w"], head["l"], head["h"],
+                "RAF_MAT_Skin")
+        mb.disc((head["x"], y + head["l"] / 2 + 0.002, head["z"] + head["h"] / 2),
+                (0.0, 1.0, 0.0), head["window_r"], "RAF_MAT_Sensor", segments=12)
     return mb.finish(mats)
 
 
@@ -354,7 +366,8 @@ def build_probe(spec, mats):
     radii = pr["radii"]
     mb.tube(pts, radii[0], "RAF_MAT_Probe", segments=12, radii=radii)
     tip = pr["path"][-1]
-    mb.cyl(frame.p(tip[0], tip[1] - 0.001, tip[2]), frame.p(tip[0], tip[1] - 0.12, tip[2]),
+    length = pr.get("nozzle_length", 0.12)
+    mb.cyl(frame.p(tip[0], tip[1] - 0.001, tip[2]), frame.p(tip[0], tip[1] - length, tip[2]),
            pr["nozzle_radius"], "RAF_MAT_Frame", segments=12, r1=pr["nozzle_radius"] * 0.6)
     return mb.finish(mats)
 
@@ -388,6 +401,13 @@ def build_details(spec, mats):
                r1=r * 0.5)
     for x, s, z, length, w, h in d["blades"]:
         mb.boxc(x, frame.y0 - s, z + h / 2, w, length, h, "RAF_MAT_Skin")
+    # boîtiers capteurs des flancs du nez : petite boîte qui sort de la peau,
+    # face extérieure sombre
+    for x, s, z, w, length, h in d.get("flank_sensors", ()):
+        side = 1.0 if x >= 0 else -1.0
+        mb.boxc(x, frame.y0 - s, z, w, length, h, "RAF_MAT_Skin")
+        mb.disc((x + side * (w / 2 + 0.002), frame.y0 - s, z), (side, 0.0, 0.0),
+                min(length, h) * 0.38, "RAF_MAT_Sensor", segments=12)
     # Feux de position : dômes posés sur le dessus des rails de saumon, derrière
     # leur carénage avant (qui les enfermerait), à côté du MICA IR emporté.
     for x, s, z, r, mat in d["lights"]:

@@ -27,9 +27,10 @@ Modélisé, en formes **extérieures visibles** seulement :
   collimateur tête haute, siège, silhouette du pilote ;
 - surfaces : voilure delta (caisson fixe et deux élevons par demi-aile), plans
   canard monoblocs, dérive, rails lance-missile de saumon ;
-- équipements : optronique secteur frontal (OSF), perche de ravitaillement
-  fixe, bouche du canon de 30 mm, carénages SPECTRA (sommet et pied de dérive,
-  flancs avant), sondes, antennes et feux de position ;
+- équipements : optronique secteur frontal (OSF : blister, hublot et tête
+  capteur en boîte), perche de ravitaillement fixe à pied caréné, bouche du
+  canon de 30 mm, carénages SPECTRA (sommet et pied de dérive, flancs avant),
+  boîtiers capteurs des flancs du nez, sondes, antennes et feux de position ;
 - emports : deux Meteor, deux MICA EM, deux MICA IR, deux AASM Hammer, une
   nacelle Talios, trois bidons (ventral et voilure), leurs pylônes et
   adaptateurs.
@@ -121,7 +122,7 @@ reconstruite par le script. `build/` et `__pycache__/` sont ignorés par Git.
   canard, entrées d’air et emplanture. Le radôme (`s` ≤ 2,55 m) est un objet à
   part : c’est le sous-ensemble « radar » de l’inspection.
 - **Entrées d’air** (`airframe.py`). Une super-ellipse par rang de
-  `intakes.shell` (centre, demi-axes, exposant 3), interpolée par PCHIP et
+  `intakes.shell` (centre, demi-axes, exposant 2,6), interpolée par PCHIP et
   échantillonnée tous les 0,35 m de la lèvre vers l’arrière : la coque garde
   le renflement de flanc des photographies. `station_series` exige des bornes
   croissantes et lève une erreur sinon (une série inversée ne rendait que ses
@@ -132,7 +133,9 @@ reconstruite par le script. `build/` et `__pycache__/` sont ignorés par Git.
   La bouche du canon et son carénage sortent de la peau à la jonction du
   dessus de l’entrée d’air droite et du fuselage, sous le plan canard ; les
   feux de position sont des dômes sur le dessus des rails de saumon, derrière
-  leur carénage avant.
+  leur carénage avant ; les boîtiers capteurs des flancs du nez
+  (`details.flank_sensors`) sortent de la peau de quelques centimètres, face
+  extérieure sombre.
 - **Surfaces portantes** (`surfaces.py`). Voilure, plans canard et dérive sont
   des lofts de profils symétriques type NACA 00xx (répartition en cosinus :
   bord d’attaque arrondi, bord de fuite net). La voilure est découpée dans la
@@ -186,7 +189,7 @@ compressée.
   --preview <dossier> [--views ref_side_right,meteor_side] [--engine BLENDER_WORKBENCH] --no-export
 ```
 
-Sans `--views`, les seize vues de `preview.VIEWS` sont rendues (PNG,
+Sans `--views`, les dix-sept vues de `preview.VIEWS` sont rendues (PNG,
 1280 × 720). `BLENDER_EEVEE` est le moteur par défaut ; `BLENDER_WORKBENCH`
 (éclairage studio, couleurs des matériaux, cavités) est plus rapide pour
 vérifier des formes. Sans `--no-export`, les rendus sont faits, leurs objets
@@ -223,7 +226,7 @@ octets.
 
 ### Export et compression
 
-1. Export glTF brut de Blender vers `build/rafale-f4.raw.glb` (~702 Ko), sans
+1. Export glTF brut de Blender vers `build/rafale-f4.raw.glb` (~707 Ko), sans
    animation, caméra ni lumière.
 2. `npx --yes @gltf-transform/cli@4.5.0 meshopt <brut> <sortie> --level high` :
    `EXT_meshopt_compression` + `KHR_mesh_quantization` (~230 Ko).
@@ -262,14 +265,15 @@ l’ignore affiche des feux moins lumineux) et le test ne la contraint pas.
 
 `preview.py` place une caméra par vue (`VIEWS` : position, point visé,
 focale, roulis, dans le repère Blender), un ciel uniforme, un soleil et une
-lumière de contre-jour. Seize vues :
+lumière de contre-jour. Dix-sept vues :
 
 - huit vues génériques : face, face basse, profil gauche, dessus, dessous,
   trois-quarts avant (gauche, haute), trois-quarts arrière droit ;
-- quatre **vues de référence `ref_*`**, qui reprennent les angles des
+- cinq **vues de référence `ref_*`**, qui reprennent les angles des
   photographies de l’utilisateur pour confronter la silhouette aux clichés :
   `ref_front_left_below`, `ref_front_banked` (roulis de 14°),
-  `ref_side_right`, `ref_rear_right_below` ;
+  `ref_side_right`, `ref_rear_right_below`, `ref_nose_on` (nez à nez, à
+  hauteur de verrière : perche, OSF, boîtiers de flanc) ;
 - trois gros plans (`close_nose`, `close_rear`, `close_under`) et
   `meteor_side`, le Meteor sous le fuselage.
 
@@ -382,8 +386,8 @@ vue X-Ray. Cette vue reconnaît aussi la verrière à son nom (`canopy`, hors
 
 - Budget de taille : `export.size_budget_kb` (900 Ko), vérifié par le script ;
   le test de contrat échoue au-delà de 1 Mo (1 048 576 octets). Asset
-  publié : 235 312 octets (~230 Ko), pour ~702 Ko brut.
-- ~32 000 triangles uniques (32 266 au dernier build), 36 maillages uniques
+  publié : 237 576 octets (~232 Ko), pour ~707 Ko brut.
+- ~32 000 triangles uniques (32 418 au dernier build), 36 maillages uniques
   pour 45 nœuds maillés, 34 matériaux sans texture. Estimation Blender : ~97
   appels de rendu ; le GLB publié compte 73 primitives, dont une partie est
   masquée selon la configuration d’emport (décor et effets de la planche en

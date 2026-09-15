@@ -162,7 +162,7 @@ export function RafaleScene3D({
   selectedInspectionId,
   onInspectionPreview,
   onInspectionToggle,
-  onTransitionChange,
+  onBusyChange,
 }: {
   sequenceState: RafaleSequenceState;
   scenario: RafaleScenario;
@@ -171,8 +171,12 @@ export function RafaleScene3D({
   selectedInspectionId: RafaleInspectableId | null;
   onInspectionPreview: (id: RafaleInspectableId | null) => void;
   onInspectionToggle: (id: RafaleInspectableId) => void;
-  /** Recomposition en cours ou terminée (la lecture automatique l'attend). */
-  onTransitionChange?: (running: boolean) => void;
+  /**
+   * Vue occupée : GLB en chargement ou recomposition en cours. La lecture
+   * automatique attend qu'elle se libère ; les replis (sans WebGL 2, asset
+   * en erreur) n'ont rien à attendre.
+   */
+  onBusyChange?: (busy: boolean) => void;
 }) {
   const mounted = useSyncExternalStore(
     subscribeToHydration,
@@ -211,12 +215,13 @@ export function RafaleScene3D({
   );
   // Remonté par un effet plutôt que depuis handleTransitionChange : celui-ci
   // doit garder la même identité, RafaleModel relançant sa pose s'il change.
-  // Au démontage, plus rien ne bouge.
+  // Au démontage, plus rien n'est à attendre.
+  const busy = assetStatus === "loading" || transitionRunning;
   useEffect(() => {
-    if (!onTransitionChange) return;
-    onTransitionChange(transitionRunning);
-    return () => onTransitionChange(false);
-  }, [onTransitionChange, transitionRunning]);
+    if (!onBusyChange) return;
+    onBusyChange(busy);
+    return () => onBusyChange(false);
+  }, [busy, onBusyChange]);
 
   const statusCopy =
     assetStatus === "unavailable"

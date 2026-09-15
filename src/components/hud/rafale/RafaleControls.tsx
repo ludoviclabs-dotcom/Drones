@@ -244,8 +244,8 @@ function AutoPlayIcon({ playing }: { playing: boolean }) {
 
 /**
  * Décompte de l'étape active pendant la lecture automatique : un filet qui se
- * remplit en `durationMs`, la durée même du minuteur. Il reste vide pendant
- * une recomposition 3D (`null`), que le décompte attend.
+ * remplit en `durationMs`, la durée même du minuteur. Il reste vide (`null`)
+ * tant que la vue 3D se charge ou se recompose : le décompte l'attend.
  */
 function AutoPlayProgress({ durationMs }: { durationMs: number | null }) {
   return (

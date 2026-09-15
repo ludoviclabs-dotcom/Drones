@@ -436,6 +436,47 @@ test.describe("Rafale — séquence pilotée par l’état", () => {
     );
     expect(log[advance].at - resumed!.at).toBeGreaterThanOrEqual(inspect - 20);
   });
+
+  test("lecture automatique : lancée pendant le chargement du GLB, elle attend la vue", async ({
+    page,
+  }) => {
+    // Le GLB est retenu : la scène reste en chargement tant qu'on ne le libère pas.
+    let releaseAsset = () => {};
+    const assetHeld = new Promise<void>((resolve) => {
+      releaseAsset = resolve;
+    });
+    await page.route(`**${ASSET_PATH}`, async (route) => {
+      await assetHeld;
+      await route.continue();
+    });
+    await page.goto(ROUTE);
+    // Profil posé : la scène elle-même est montée, et plus seulement son écran d'attente.
+    await expect(scene(page)).toHaveAttribute("data-rafale-render-profile", /^(hardware|software|none)$/, {
+      timeout: 45_000,
+    });
+    test.skip(
+      (await scene(page).getAttribute("data-rafale-render-profile")) === "none",
+      "WebGL 2 indisponible sur cet agent",
+    );
+    await expect(scene(page)).toHaveAttribute("data-rafale-asset", "loading");
+
+    const progress = page.locator("[data-rafale-autoplay-progress]");
+    const overview = autoPlayStepDurationMs("overview", false);
+    await page.getByRole("button", { name: "Lecture auto" }).click();
+    await expect(progress).toHaveAttribute("data-rafale-autoplay-progress", "waiting");
+    // Au-delà de la durée de 01, rien n'a avancé : la vue n'est pas là.
+    await page.waitForTimeout(overview + 500);
+    await expect(experience(page)).toHaveAttribute("data-sequence-state", "overview");
+    await expect(progress).toHaveAttribute("data-rafale-autoplay-progress", "waiting");
+
+    releaseAsset();
+    await expect(scene(page)).toHaveAttribute("data-rafale-asset", "ready", { timeout: 45_000 });
+    await expect(progress).toHaveAttribute("data-rafale-autoplay-progress", "running");
+    await expect(experience(page)).toHaveAttribute("data-sequence-state", "inspect", {
+      timeout: overview + 10_000,
+    });
+    await page.getByRole("button", { name: "Pause" }).click();
+  });
 });
 
 test.describe("Rafale — caméra et gestes orbitaux", () => {

@@ -165,6 +165,15 @@ async function openWithPausedClock(page: Page) {
 }
 
 /**
+ * Lance la lecture et attend que le décompte de l'étape ait démarré : il
+ * attend lui-même que la scène se soit signalée (ici, repli sans WebGL).
+ */
+async function startAutoPlay(page: Page) {
+  await autoPlayButton(page).click();
+  await expect(autoPlayProgress(page)).toHaveAttribute("data-rafale-autoplay-progress", "running");
+}
+
+/**
  * L'état est toujours `state`. Le délai réel laisse à React le temps de rendre
  * une avance qui aurait eu lieu : sans lui, l'assertion lirait l'ancien état.
  */
@@ -607,7 +616,7 @@ test.describe("Rafale — lecture automatique", () => {
     const autoPlay = autoPlayButton(page);
     const overview = autoPlayStepDurationMs("overview", false);
 
-    await autoPlay.click();
+    await startAutoPlay(page);
     await page.clock.runFor(overview - 1000);
     await autoPlay.click();
     await expect(autoPlay).toHaveAttribute("data-rafale-autoplay", "idle");
@@ -616,7 +625,7 @@ test.describe("Rafale — lecture automatique", () => {
     await expectStillOn(page, "overview");
 
     // Le décompte de l'étape courante repart de zéro.
-    await autoPlay.click();
+    await startAutoPlay(page);
     await page.clock.runFor(overview - 1);
     await expectStillOn(page, "overview");
     await page.clock.runFor(1);
@@ -630,7 +639,8 @@ test.describe("Rafale — lecture automatique", () => {
     const autoPlay = autoPlayButton(page);
     // Lecture, pause, lecture, pause, lecture : un décompte empilé à chaque
     // lancement ferait avancer la séquence de plusieurs étapes d'un coup.
-    for (let click = 0; click < 5; click += 1) await autoPlay.click();
+    for (let click = 0; click < 4; click += 1) await autoPlay.click();
+    await startAutoPlay(page);
     await expect(autoPlay).toHaveAttribute("data-rafale-autoplay", "playing");
 
     await page.clock.runFor(autoPlayStepDurationMs("overview", false));
@@ -671,7 +681,7 @@ test.describe("Rafale — lecture automatique", () => {
   test("lancée depuis Fin, la lecture repart de 01", async ({ page }) => {
     await openWithPausedClock(page);
     await step(page, "complete").click();
-    await autoPlayButton(page).click();
+    await startAutoPlay(page);
     await expect(experience(page)).toHaveAttribute("data-sequence-state", "overview");
     await expect(autoPlayButton(page)).toHaveAttribute("data-rafale-autoplay", "playing");
     await page.clock.runFor(autoPlayStepDurationMs("overview", false));

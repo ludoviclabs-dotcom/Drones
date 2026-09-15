@@ -9,7 +9,7 @@ export type RafaleAutoPlay = {
   playing: boolean;
   /**
    * Durée (ms) du décompte de l'étape active, ou null s'il n'y en a pas :
-   * lecture arrêtée, ou recomposition 3D en cours (le décompte l'attend).
+   * lecture arrêtée, ou vue 3D occupée (le décompte l'attend).
    */
   countdownMs: number | null;
   toggle: () => void;
@@ -23,14 +23,17 @@ export type RafaleAutoPlay = {
 export function useRafaleAutoPlay({
   state,
   reducedMotion,
-  transitionRunning,
+  viewBusy,
   nextStep,
   restart,
 }: {
   state: RafaleSequenceState;
   reducedMotion: boolean;
-  /** Recomposition 3D en cours : le décompte de l'étape ne part qu'à son terme. */
-  transitionRunning: boolean;
+  /**
+   * Vue 3D occupée (en préparation, GLB en chargement, recomposition en
+   * cours) : le décompte de l'étape ne part qu'une fois la vue au repos.
+   */
+  viewBusy: boolean;
   nextStep: () => void;
   /** Retour à 01, quand la lecture est lancée depuis la dernière étape. */
   restart: () => void;
@@ -63,11 +66,11 @@ export function useRafaleAutoPlay({
   // Dérivé dans le même rendu que le bouton et la barre de progression : ils
   // montrent un décompte si et seulement si l'effet ci-dessous en pose un.
   const countdownMs =
-    playing && !transitionRunning ? autoPlayStepDurationMs(state, reducedMotion) : null;
+    playing && !viewBusy ? autoPlayStepDurationMs(state, reducedMotion) : null;
 
   // Effet de mise en page, pas effet passif : le minuteur est posé dans le
   // commit même qui affiche l'étape, jamais un instant après. Le nettoyage
-  // l'annule à chaque changement (étape, pause, transition, démontage).
+  // l'annule à chaque changement (étape, pause, vue occupée, démontage).
   useLayoutEffect(() => {
     if (countdownMs === null) return;
     clearTimer();

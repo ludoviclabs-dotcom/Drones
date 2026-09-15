@@ -83,7 +83,9 @@ export function RafaleExperience() {
   );
   const reducedMotion = usePrefersReducedMotion();
   const activeInspectionId = activeRafaleInspectionId(inspection);
-  const [transitionRunning, setTransitionRunning] = useState(false);
+  // Vrai jusqu'à ce que la scène, chargée à part, se monte et dise le contraire :
+  // la lecture automatique n'avance pas face au seul écran de préparation.
+  const [viewBusy, setViewBusy] = useState(true);
 
   // Avance d'une étape. Le bouton Suivant et la lecture automatique passent
   // tous deux par cette fonction ; la logique des étapes reste dans le réducteur.
@@ -92,7 +94,7 @@ export function RafaleExperience() {
   const autoPlay = useRafaleAutoPlay({
     state: sequenceState,
     reducedMotion,
-    transitionRunning,
+    viewBusy,
     nextStep,
     restart: restartSequence,
   });
@@ -200,7 +202,7 @@ export function RafaleExperience() {
             selectedInspectionId={inspection.selectedId}
             onInspectionPreview={previewInspection}
             onInspectionToggle={toggleInspection}
-            onTransitionChange={setTransitionRunning}
+            onBusyChange={setViewBusy}
           />
         </div>
 

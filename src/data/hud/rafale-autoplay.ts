@@ -3,9 +3,10 @@
  *
  * Régler les durées : STEP_DURATIONS_MS donne une durée (ms) par étape,
  * numérotée comme la barre 01 → 06. C'est le temps de lecture de l'étape au
- * repos : le décompte ne démarre qu'une fois la recomposition 3D de l'étape
- * terminée (jusqu'à ~5 s pour le départ). Il est doublé quand l'utilisateur
- * demande un mouvement réduit. La lecture s'arrête au terme du décompte de 06.
+ * repos : le décompte ne démarre qu'une fois la vue 3D chargée et la
+ * recomposition de l'étape terminée (jusqu'à ~5 s pour le départ). Il est
+ * doublé quand l'utilisateur demande un mouvement réduit. La lecture s'arrête
+ * au terme du décompte de 06.
  */
 
 import { RAFALE_SEQUENCE_STATES, rafaleStateIndex, type RafaleSequenceState } from "./rafale";

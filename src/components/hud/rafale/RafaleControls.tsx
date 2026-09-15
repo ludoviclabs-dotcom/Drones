@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, type MouseEvent } from "react";
+import { useEffect, useRef, type MouseEvent } from "react";
 import {
   RAFALE_INITIAL_STATE,
   RAFALE_SCENARIOS,
@@ -13,6 +13,7 @@ import {
   type RafaleSequenceAction,
   type RafaleSequenceState,
 } from "@/data/hud/rafale";
+import type { RafaleAutoPlay } from "./useRafaleAutoPlay";
 
 export function RafaleControls({
   state,
@@ -20,12 +21,14 @@ export function RafaleControls({
   scenario,
   onScenarioChange,
   reducedMotion,
+  autoPlay,
 }: {
   state: RafaleSequenceState;
   dispatch: (action: RafaleSequenceAction) => void;
   scenario: RafaleScenario;
   onScenarioChange: (scenario: RafaleScenario) => void;
   reducedMotion: boolean;
+  autoPlay: Pick<RafaleAutoPlay, "playing" | "countdownMs" | "toggle">;
 }) {
   const stateIndex = rafaleStateIndex(state);
   const isFirst = state === RAFALE_INITIAL_STATE;
@@ -34,6 +37,20 @@ export function RafaleControls({
   const scenarioLocked = isScenarioLocked(state);
   const previousRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
+  const autoPlayRef = useRef<HTMLButtonElement>(null);
+  // La lecture automatique peut atteindre Fin pendant que Suivant a le focus :
+  // le navigateur l'en prive dès qu'il est désactivé, et le focus passe alors
+  // au bouton de lecture au lieu de retomber sur <body>. Écouteur natif : ce
+  // blur survient pendant le commit de React, qui n'émet alors aucun onBlur.
+  useEffect(() => {
+    const next = nextRef.current;
+    if (!next) return;
+    const handOver = () => {
+      if (next.disabled) autoPlayRef.current?.focus();
+    };
+    next.addEventListener("blur", handOver);
+    return () => next.removeEventListener("blur", handOver);
+  }, []);
   // Atteindre une extrémité désactive le bouton qui a le focus : il passe à
   // l'autre bouton au lieu de retomber sur <body>.
   const step = (
@@ -124,7 +141,7 @@ export function RafaleControls({
           const active = item === state;
           const passed = index < stateIndex;
           return (
-            <li key={item} className="min-w-0 bg-panel">
+            <li key={item} className="relative min-w-0 bg-panel">
               <button
                 type="button"
                 className={`flex min-h-12 w-full min-w-0 items-center gap-2 border-l-2 px-3 py-2.5 text-left motion-safe:transition-colors hover:bg-surface ${
@@ -156,12 +173,18 @@ export function RafaleControls({
                   {RAFALE_SEQUENCE_COPY[item].shortLabel}
                 </span>
               </button>
+              {active && autoPlay.playing ? (
+                // Clé : une nouvelle durée (mouvement réduit basculé) relance la barre.
+                <AutoPlayProgress key={autoPlay.countdownMs ?? "hold"} durationMs={autoPlay.countdownMs} />
+              ) : null}
             </li>
           );
         })}
       </ol>
 
-      <div className="grid grid-cols-3 gap-px border-t border-line bg-line">
+      {/* Sous 640 px, quatre boutons ne tiennent pas sur une ligne : la lecture
+          automatique passe dessous, sur toute la largeur. */}
+      <div className="grid grid-cols-3 gap-px border-t border-line bg-line sm:grid-cols-4">
         <button
           type="button"
           className="min-h-12 bg-panel px-2 font-mono text-[10px] uppercase tracking-[0.1em] text-ink-dim motion-safe:transition-colors hover:bg-surface-2 hover:text-ink disabled:cursor-not-allowed disabled:text-ink-faint disabled:opacity-45"
@@ -187,7 +210,56 @@ export function RafaleControls({
         >
           Suivant
         </button>
+        <button
+          type="button"
+          className={`col-span-3 flex min-h-12 items-center justify-center gap-2 px-2 font-mono text-[10px] uppercase tracking-[0.1em] motion-safe:transition-colors sm:col-span-1 ${
+            autoPlay.playing
+              ? "bg-surface-2 text-ink shadow-[inset_0_-2px_0_var(--color-accent)] hover:bg-surface"
+              : "bg-panel text-ink-dim hover:bg-surface-2 hover:text-ink"
+          }`}
+          ref={autoPlayRef}
+          data-rafale-autoplay={autoPlay.playing ? "playing" : "idle"}
+          onClick={autoPlay.toggle}
+        >
+          <AutoPlayIcon playing={autoPlay.playing} />
+          {autoPlay.playing ? "Pause" : "Lecture auto"}
+        </button>
       </div>
     </section>
+  );
+}
+
+function AutoPlayIcon({ playing }: { playing: boolean }) {
+  return (
+    <svg
+      viewBox="0 0 10 10"
+      className="h-2.5 w-2.5 shrink-0 fill-current"
+      aria-hidden="true"
+      focusable="false"
+    >
+      {playing ? <path d="M2 1h2.2v8H2zM5.8 1H8v8H5.8z" /> : <path d="M2.5 1 9 5 2.5 9z" />}
+    </svg>
+  );
+}
+
+/**
+ * Décompte de l'étape active pendant la lecture automatique : un filet qui se
+ * remplit en `durationMs`, la durée même du minuteur. Il reste vide pendant
+ * une recomposition 3D (`null`), que le décompte attend.
+ */
+function AutoPlayProgress({ durationMs }: { durationMs: number | null }) {
+  return (
+    <span
+      className="pointer-events-none absolute inset-x-0 bottom-0 h-0.5 bg-line-bright"
+      aria-hidden="true"
+      data-rafale-autoplay-progress={durationMs === null ? "waiting" : "running"}
+    >
+      {durationMs === null ? null : (
+        <span
+          className="block h-full origin-left bg-accent"
+          style={{ animation: `hud-autoplay-fill ${durationMs}ms linear forwards` }}
+        />
+      )}
+    </span>
   );
 }

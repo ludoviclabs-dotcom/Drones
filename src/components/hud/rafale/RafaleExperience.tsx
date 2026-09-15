@@ -17,6 +17,7 @@ import {
   rafaleSequenceReducer,
   scenarioFromSearch,
   type RafaleScenario,
+  type RafaleSequenceAction,
 } from "@/data/hud/rafale";
 import {
   RAFALE_INITIAL_INSPECTION_STATE,
@@ -30,6 +31,7 @@ import {
 import { usePrefersReducedMotion } from "../thundart/usePrefersReducedMotion";
 import { RafaleControls } from "./RafaleControls";
 import { RafaleInspectionPanel } from "./RafaleInspectionPanel";
+import { useRafaleAutoPlay } from "./useRafaleAutoPlay";
 
 const RafaleScene3D = dynamic(
   () => import("./RafaleScene3D").then((module) => module.RafaleScene3D),
@@ -81,6 +83,20 @@ export function RafaleExperience() {
   );
   const reducedMotion = usePrefersReducedMotion();
   const activeInspectionId = activeRafaleInspectionId(inspection);
+  const [transitionRunning, setTransitionRunning] = useState(false);
+
+  // Avance d'une étape. Le bouton Suivant et la lecture automatique passent
+  // tous deux par cette fonction ; la logique des étapes reste dans le réducteur.
+  const nextStep = useCallback(() => dispatch({ type: "NEXT" }), []);
+  const restartSequence = useCallback(() => dispatch({ type: "RESET" }), []);
+  const autoPlay = useRafaleAutoPlay({
+    state: sequenceState,
+    reducedMotion,
+    transitionRunning,
+    nextStep,
+    restart: restartSequence,
+  });
+  const stopAutoPlay = autoPlay.stop;
 
   const changeScenario = useCallback(
     (next: RafaleScenario) => {
@@ -94,6 +110,24 @@ export function RafaleExperience() {
       setChosenScenario(next);
     },
     [activeInspectionId, sequenceState],
+  );
+  // Toute commande manuelle (Précédent, Suivant, Réinitialiser, liste des
+  // états, scénario) reprend la main : la lecture automatique s'arrête avant
+  // que l'action ne s'applique.
+  const dispatchManually = useCallback(
+    (action: RafaleSequenceAction) => {
+      stopAutoPlay();
+      if (action.type === "NEXT") nextStep();
+      else dispatch(action);
+    },
+    [nextStep, stopAutoPlay],
+  );
+  const changeScenarioManually = useCallback(
+    (next: RafaleScenario) => {
+      stopAutoPlay();
+      changeScenario(next);
+    },
+    [changeScenario, stopAutoPlay],
   );
   const previewInspection = useCallback((id: RafaleInspectableId | null) => {
     dispatchInspection({ type: "PREVIEW", id });
@@ -149,8 +183,9 @@ export function RafaleExperience() {
       <p id="rafale-a11y-description" className="sr-only">
         Représentation illustrative. Aucun ciblage ou calcul opérationnel. Les
         six états de la séquence se parcourent avec les boutons Précédent et
-        Suivant ou directement par la liste des états ; le scénario se choisit
-        avant la séparation. Les sous-ensembles se parcourent avec Tab et
+        Suivant ou directement par la liste des états ; Lecture auto les
+        enchaîne seule, et toute autre commande l’interrompt. Le scénario se
+        choisit avant la séparation. Les sous-ensembles se parcourent avec Tab et
         Shift+Tab, se prévisualisent au focus, s’épinglent avec Entrée ou Espace
         et se désélectionnent avec Échap.
       </p>
@@ -165,16 +200,18 @@ export function RafaleExperience() {
             selectedInspectionId={inspection.selectedId}
             onInspectionPreview={previewInspection}
             onInspectionToggle={toggleInspection}
+            onTransitionChange={setTransitionRunning}
           />
         </div>
 
         <div className="order-3 lg:col-start-1 lg:row-start-2">
           <RafaleControls
             state={sequenceState}
-            dispatch={dispatch}
+            dispatch={dispatchManually}
             scenario={scenario}
-            onScenarioChange={changeScenario}
+            onScenarioChange={changeScenarioManually}
             reducedMotion={reducedMotion}
+            autoPlay={autoPlay}
           />
         </div>
 

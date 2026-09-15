@@ -1,5 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type ConsoleMessage, type Page } from "@playwright/test";
+// Durées lues à la source : les régler ne demande pas de réécrire ces tests.
+import { autoPlayStepDurationMs } from "@/data/hud/rafale-autoplay";
 
 /**
  * Planche Rafale F4 · Meteor : rendu serveur, récit en six états, scénarios
@@ -99,6 +101,11 @@ const panelIds = (page: Page) =>
   panelComponents(page).evaluateAll((buttons) =>
     buttons.map((button) => button.getAttribute("data-rafale-component")),
   );
+const autoPlayButton = (page: Page) => page.locator("[data-rafale-autoplay]");
+const autoPlayProgress = (page: Page) => page.locator("[data-rafale-autoplay-progress]");
+/** Filet de décompte sous l'étape `state` (présent seulement si elle est active). */
+const stepProgress = (page: Page, state: RafaleState) =>
+  page.locator("li", { has: step(page, state) }).locator("[data-rafale-autoplay-progress]");
 
 function isLocalVercelTelemetry(message: ConsoleMessage) {
   const url = message.location().url;
@@ -142,6 +149,28 @@ async function openWithoutWebGl(page: Page, path: string = ROUTE) {
   await expect(scene(page)).toHaveAttribute("data-rafale-asset", "unavailable", {
     timeout: 15_000,
   });
+}
+
+const CLOCK_START = new Date("2026-09-15T08:00:00Z").getTime();
+
+/**
+ * Sans WebGL (aucune recomposition 3D à attendre), horloge simulée : installée
+ * avant le chargement, qui se fait en temps réel, puis figée. Chaque décompte
+ * de la lecture automatique n'avance ensuite qu'avec `page.clock.runFor`.
+ */
+async function openWithPausedClock(page: Page) {
+  await page.clock.install({ time: CLOCK_START });
+  await openWithoutWebGl(page);
+  await page.clock.pauseAt(CLOCK_START + 10 * 60_000);
+}
+
+/**
+ * L'état est toujours `state`. Le délai réel laisse à React le temps de rendre
+ * une avance qui aurait eu lieu : sans lui, l'assertion lirait l'ancien état.
+ */
+async function expectStillOn(page: Page, state: RafaleState) {
+  await page.waitForTimeout(250);
+  await expect(experience(page)).toHaveAttribute("data-sequence-state", state);
 }
 
 test.describe.configure({ mode: "default", timeout: 90_000 });
@@ -464,7 +493,14 @@ test.describe("Rafale — sans WebGL, la planche reste utilisable", () => {
   test("la tabulation suit l’ordre de lecture de la planche", async ({ page }) => {
     await openWithoutWebGl(page);
     await page.locator('[data-rafale-scenario-option="bvr"]').focus();
-    const expected = ["bvr", ...STATES, "Réinitialiser", "Suivant", ...AIR_COMPONENTS];
+    const expected = [
+      "bvr",
+      ...STATES,
+      "Réinitialiser",
+      "Suivant",
+      "Lecture auto",
+      ...AIR_COMPONENTS,
+    ];
     const order: string[] = [];
     for (let i = 0; i < expected.length; i += 1) {
       order.push(
@@ -521,6 +557,142 @@ test.describe("Rafale — sans WebGL, la planche reste utilisable", () => {
     });
     await expect(scene(page)).toHaveAttribute("data-rafale-scenario", "wvr");
     await expect(scenarioRadio(page, "wvr")).toBeChecked();
+  });
+});
+
+test.describe("Rafale — lecture automatique", () => {
+  test("LECTURE AUTO enchaîne les six étapes, puis s’arrête d’elle-même sur Fin", async ({
+    page,
+  }) => {
+    await openWithPausedClock(page);
+    const autoPlay = autoPlayButton(page);
+    await expect(autoPlay).toHaveAccessibleName("Lecture auto");
+    await expect(autoPlay).toHaveAttribute("data-rafale-autoplay", "idle");
+    await expect(autoPlayProgress(page)).toHaveCount(0);
+
+    await autoPlay.click();
+    await expect(autoPlay).toHaveAccessibleName("Pause");
+    for (const state of STATES) {
+      const duration = autoPlayStepDurationMs(state, false);
+      await expect(experience(page)).toHaveAttribute("data-sequence-state", state);
+      await expect(step(page, state)).toHaveAttribute("aria-current", "step");
+      // Un seul filet, sous l'étape active, rempli à la durée même du minuteur.
+      await expect(autoPlayProgress(page)).toHaveCount(1);
+      await expect(stepProgress(page, state)).toHaveAttribute(
+        "data-rafale-autoplay-progress",
+        "running",
+      );
+      await expect(stepProgress(page, state).locator("span")).toHaveCSS(
+        "animation-duration",
+        `${duration / 1000}s`,
+      );
+      // Suivant a le focus quand la lecture atteint Fin et le désactive.
+      if (state === "launch") await page.getByRole("button", { name: "Suivant" }).focus();
+      await page.clock.runFor(duration - 1);
+      await expectStillOn(page, state);
+      await page.clock.runFor(1);
+    }
+
+    await expect(autoPlay).toHaveAttribute("data-rafale-autoplay", "idle");
+    await expect(autoPlay).toHaveAccessibleName("Lecture auto");
+    await expect(autoPlayProgress(page)).toHaveCount(0);
+    await expect(experience(page)).toHaveAttribute("data-sequence-state", "complete");
+    await expect(page.getByRole("button", { name: "Suivant" })).toBeDisabled();
+    // Le focus est passé au bouton de lecture au lieu de retomber sur <body>.
+    await expect(autoPlay).toBeFocused();
+  });
+
+  test("Pause fige l’étape ; relancée, la lecture reprend son décompte", async ({ page }) => {
+    await openWithPausedClock(page);
+    const autoPlay = autoPlayButton(page);
+    const overview = autoPlayStepDurationMs("overview", false);
+
+    await autoPlay.click();
+    await page.clock.runFor(overview - 1000);
+    await autoPlay.click();
+    await expect(autoPlay).toHaveAttribute("data-rafale-autoplay", "idle");
+    await expect(autoPlayProgress(page)).toHaveCount(0);
+    await page.clock.runFor(60_000);
+    await expectStillOn(page, "overview");
+
+    // Le décompte de l'étape courante repart de zéro.
+    await autoPlay.click();
+    await page.clock.runFor(overview - 1);
+    await expectStillOn(page, "overview");
+    await page.clock.runFor(1);
+    await expect(experience(page)).toHaveAttribute("data-sequence-state", "inspect");
+  });
+
+  test("un seul minuteur : relancer la lecture ne cumule jamais les décomptes", async ({
+    page,
+  }) => {
+    await openWithPausedClock(page);
+    const autoPlay = autoPlayButton(page);
+    // Lecture, pause, lecture, pause, lecture : un décompte empilé à chaque
+    // lancement ferait avancer la séquence de plusieurs étapes d'un coup.
+    for (let click = 0; click < 5; click += 1) await autoPlay.click();
+    await expect(autoPlay).toHaveAttribute("data-rafale-autoplay", "playing");
+
+    await page.clock.runFor(autoPlayStepDurationMs("overview", false));
+    await expect(experience(page)).toHaveAttribute("data-sequence-state", "inspect");
+    const inspect = autoPlayStepDurationMs("inspect", false);
+    await page.clock.runFor(inspect - 1);
+    await expectStillOn(page, "inspect");
+    await page.clock.runFor(1);
+    await expect(experience(page)).toHaveAttribute("data-sequence-state", "sensors");
+  });
+
+  test("Suivant, Précédent, la liste des états, le scénario et Réinitialiser l’arrêtent", async ({
+    page,
+  }) => {
+    await openWithPausedClock(page);
+    const takeovers: readonly (readonly [string, () => Promise<void>, RafaleState])[] = [
+      ["Suivant", () => page.getByRole("button", { name: "Suivant" }).click(), "inspect"],
+      ["Précédent", () => page.getByRole("button", { name: "Précédent" }).click(), "overview"],
+      ["liste des états", () => step(page, "sensors").click(), "sensors"],
+      ["scénario", () => scenarioLabel(page, "wvr").click(), "sensors"],
+      ["Réinitialiser", () => page.getByRole("button", { name: "Réinitialiser" }).click(), "overview"],
+    ];
+    for (const [command, takeOver, expected] of takeovers) {
+      await autoPlayButton(page).click();
+      await expect(autoPlayButton(page), command).toHaveAttribute("data-rafale-autoplay", "playing");
+      await takeOver();
+      await expect(autoPlayButton(page), command).toHaveAttribute("data-rafale-autoplay", "idle");
+      await expect(autoPlayButton(page), command).toHaveAccessibleName("Lecture auto");
+      await expect(autoPlayProgress(page), command).toHaveCount(0);
+      await expect(experience(page), command).toHaveAttribute("data-sequence-state", expected);
+      // Plus aucun décompte : rien n'avance, même longtemps après.
+      await page.clock.runFor(60_000);
+      await expectStillOn(page, expected);
+    }
+    await expect(scene(page)).toHaveAttribute("data-rafale-scenario", "wvr");
+  });
+
+  test("lancée depuis Fin, la lecture repart de 01", async ({ page }) => {
+    await openWithPausedClock(page);
+    await step(page, "complete").click();
+    await autoPlayButton(page).click();
+    await expect(experience(page)).toHaveAttribute("data-sequence-state", "overview");
+    await expect(autoPlayButton(page)).toHaveAttribute("data-rafale-autoplay", "playing");
+    await page.clock.runFor(autoPlayStepDurationMs("overview", false));
+    await expect(experience(page)).toHaveAttribute("data-sequence-state", "inspect");
+  });
+
+  test("mouvement réduit : chaque étape reste deux fois plus longtemps", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await openWithPausedClock(page);
+    const doubled = autoPlayStepDurationMs("overview", true);
+    expect(doubled).toBe(2 * autoPlayStepDurationMs("overview", false));
+
+    await autoPlayButton(page).click();
+    await expect(stepProgress(page, "overview").locator("span")).toHaveCSS(
+      "animation-duration",
+      `${doubled / 1000}s`,
+    );
+    await page.clock.runFor(doubled - 1);
+    await expectStillOn(page, "overview");
+    await page.clock.runFor(1);
+    await expect(experience(page)).toHaveAttribute("data-sequence-state", "inspect");
   });
 });
 
@@ -586,6 +758,17 @@ test.describe("Rafale — mise en page et accessibilité", () => {
 
       expect((await component(page, "radar").boundingBox())?.height).toBeGreaterThanOrEqual(48);
       expect((await step(page, "release").boundingBox())?.height).toBeGreaterThanOrEqual(48);
+      // Lecture auto : à droite de Suivant, sur la même ligne ; sous 640 px,
+      // où quatre boutons ne tiennent pas, sur sa propre ligne en dessous.
+      const nextBox = (await page.getByRole("button", { name: "Suivant" }).boundingBox())!;
+      const autoPlayBox = (await autoPlayButton(page).boundingBox())!;
+      expect(autoPlayBox.height).toBeGreaterThanOrEqual(48);
+      if (width >= 640) {
+        expect(autoPlayBox.x).toBeGreaterThan(nextBox.x + nextBox.width - 1);
+        expect(Math.abs(autoPlayBox.y - nextBox.y)).toBeLessThan(1);
+      } else {
+        expect(autoPlayBox.y).toBeGreaterThan(nextBox.y + nextBox.height - 1);
+      }
       for (const scenario of Object.keys(SCENARIO_LABELS) as Scenario[]) {
         expect(
           (await scenarioLabel(page, scenario).boundingBox())?.height,

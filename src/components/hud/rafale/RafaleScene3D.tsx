@@ -162,6 +162,7 @@ export function RafaleScene3D({
   selectedInspectionId,
   onInspectionPreview,
   onInspectionToggle,
+  onTransitionChange,
 }: {
   sequenceState: RafaleSequenceState;
   scenario: RafaleScenario;
@@ -170,6 +171,8 @@ export function RafaleScene3D({
   selectedInspectionId: RafaleInspectableId | null;
   onInspectionPreview: (id: RafaleInspectableId | null) => void;
   onInspectionToggle: (id: RafaleInspectableId) => void;
+  /** Recomposition en cours ou terminée (la lecture automatique l'attend). */
+  onTransitionChange?: (running: boolean) => void;
 }) {
   const mounted = useSyncExternalStore(
     subscribeToHydration,
@@ -206,6 +209,14 @@ export function RafaleScene3D({
     (running: boolean) => setTransitionRunning(running),
     [],
   );
+  // Remonté par un effet plutôt que depuis handleTransitionChange : celui-ci
+  // doit garder la même identité, RafaleModel relançant sa pose s'il change.
+  // Au démontage, plus rien ne bouge.
+  useEffect(() => {
+    if (!onTransitionChange) return;
+    onTransitionChange(transitionRunning);
+    return () => onTransitionChange(false);
+  }, [onTransitionChange, transitionRunning]);
 
   const statusCopy =
     assetStatus === "unavailable"

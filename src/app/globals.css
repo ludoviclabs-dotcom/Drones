@@ -316,6 +316,18 @@ body:has(.rafaleExperience) .transmission-dot {
   animation: none;
 }
 
+/* Lecture automatique d'une planche : le filet sous l'étape active se remplit
+   pendant son décompte. Durée posée en ligne par le composant, celle du
+   minuteur ; animation finie, présente seulement pendant la lecture. */
+@keyframes hud-autoplay-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

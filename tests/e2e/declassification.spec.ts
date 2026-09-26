@@ -17,6 +17,7 @@ test("catalogue → fiche en surimpression → Échap rend la carte", async ({
   await expect(dialog).toBeVisible();
   await expect(page).toHaveURL(/\/systemes\/rafale$/);
   await expect(page.locator("#dossier-titre")).toBeFocused();
+  await expect(page).toHaveTitle("Rafale — Panoplie");
   await expect(dialog.locator("[data-dossier-panel]")).toHaveAttribute(
     "aria-busy",
     "false",
@@ -36,6 +37,7 @@ test("catalogue → fiche en surimpression → Échap rend la carte", async ({
   await expect(dialog).toHaveCount(0);
   await expect(page).toHaveURL(/\/$/);
   await expect(card).toBeFocused();
+  await expect(page).not.toHaveTitle("Rafale — Panoplie");
   await expect(card).toHaveAttribute("data-dossier-visited", "");
   expect(await page.evaluate(() => window.scrollY)).toBe(scrollBefore);
 });

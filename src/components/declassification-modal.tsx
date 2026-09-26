@@ -458,7 +458,15 @@ function createStage(
   return { open, skip, close, dispose };
 }
 
-function DossierStage({ slug, children }: { slug: string; children: ReactNode }) {
+function DossierStage({
+  slug,
+  title,
+  children,
+}: {
+  slug: string;
+  title: string;
+  children: ReactNode;
+}) {
   const router = useRouter();
   const overlayRef = useRef<HTMLDivElement>(null);
   const veilRef = useRef<HTMLDivElement>(null);
@@ -473,11 +481,16 @@ function DossierStage({ slug, children }: { slug: string; children: ReactNode })
     const stage = createStage(overlay, veil, chemise, slug, () => router.back());
     stageRef.current = stage;
     stage.open();
+    // Les métadonnées d'un emplacement parallèle ne sont pas appliquées par
+    // Next.js : le titre du document suit donc la fiche à la main.
+    const previousTitle = document.title;
+    document.title = title;
     return () => {
+      document.title = previousTitle;
       stage.dispose();
       stageRef.current = null;
     };
-  }, [slug, router]);
+  }, [slug, title, router]);
 
   const close = useCallback(() => stageRef.current?.close(), []);
 
@@ -526,15 +539,17 @@ function DossierStage({ slug, children }: { slug: string; children: ReactNode })
  */
 export function DeclassificationModal({
   slug,
+  title,
   children,
 }: {
   slug: string;
+  title: string;
   children: ReactNode;
 }) {
   const pathname = usePathname();
   if (pathname.replace(/\/$/, "") !== `/systemes/${slug}`) return null;
   return (
-    <DossierStage key={slug} slug={slug}>
+    <DossierStage key={slug} slug={slug} title={title}>
       {children}
     </DossierStage>
   );

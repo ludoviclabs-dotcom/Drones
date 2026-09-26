@@ -22,7 +22,10 @@ export default async function SystemDossierModal({
   const system = getSystem(slug);
   if (!system) notFound();
   return (
-    <DeclassificationModal slug={slug}>
+    <DeclassificationModal
+      slug={slug}
+      title={`${system.name} — Panoplie`}
+    >
       <SystemDossier system={system} variant="modal" topBar={<DossierTopBar />} />
     </DeclassificationModal>
   );

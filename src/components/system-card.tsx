@@ -20,6 +20,14 @@ export function SystemCard({ system }: { system: DefenseSystem }) {
       >
         Déclassifié
       </span>
+      {/* Trace estompée du tampon, laissée après consultation du dossier. */}
+      <span
+        aria-hidden="true"
+        data-dossier-trace=""
+        className="pointer-events-none absolute right-3 top-[4.5rem] z-[9] -rotate-[9deg] border-[1.5px] border-accent px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-accent blur-[0.3px]"
+      >
+        Déclassifié
+      </span>
 
       <div className="flex items-center justify-between border-b border-line px-5 py-2.5">
         <div className="flex items-center gap-2">

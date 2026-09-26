@@ -5,6 +5,7 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { MotionController } from "@/components/motion-controller";
+import { DossierOriginTracker } from "@/components/dossier-origin-tracker";
 import { SafetyBoundaryBanner } from "@/components/safety-boundary-banner";
 import { JsonLd } from "@/components/json-ld";
 import { organizationLd, webSiteLd } from "@/lib/structured-data";
@@ -82,7 +83,8 @@ const FOOTER_LINKS = [
 
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+  modal,
+}: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
   return (
     <html
       lang="fr"
@@ -99,6 +101,7 @@ export default function RootLayout({
         <JsonLd data={organizationLd()} />
         <JsonLd data={webSiteLd()} />
         <MotionController />
+        <DossierOriginTracker />
         <div className="film-grain" aria-hidden="true" />
         <SafetyBoundaryBanner />
 
@@ -179,6 +182,8 @@ export default function RootLayout({
             </p>
           </div>
         </footer>
+        {/* Fiche dossier ouverte en surimpression (route interceptée). */}
+        {modal}
         <Analytics />
         <SpeedInsights />
       </body>

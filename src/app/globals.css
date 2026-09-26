@@ -333,3 +333,17 @@ body:has(.rafaleExperience) .transmission-dot {
     scroll-behavior: auto;
   }
 }
+
+/* === Transition « Déclassification » ===
+   Trace estompée du tampon sur une carte dont le dossier a été consulté
+   (attribut posé à la fermeture de la fiche). Le survol la remplace par le
+   tampon vif de la carte. */
+[data-dossier-trace] {
+  opacity: 0;
+}
+[data-dossier-visited] [data-dossier-trace] {
+  opacity: 0.22;
+}
+[data-dossier-visited]:hover [data-dossier-trace] {
+  opacity: 0;
+}

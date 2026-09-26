@@ -139,7 +139,18 @@ export function BrickSection({
   );
 }
 
-export function ScoreGrid({ scores }: { scores: Score[] }) {
+// Cerne manuscrit autour d'une lettre de palier — la mention « cochée » de la
+// fiche ouverte depuis le catalogue.
+const CHECK_PATH =
+  "M10 30 C6 16 20 5 33 6 C47 7 56 17 53 30 C50 43 36 51 23 48 C11 45 5 36 9 25 C11 19 16 15 22 12";
+
+export function ScoreGrid({
+  scores,
+  annotated = false,
+}: {
+  scores: Score[];
+  annotated?: boolean;
+}) {
   return (
     <div className="grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
       {scores.map((score) => (
@@ -148,7 +159,32 @@ export function ScoreGrid({ scores }: { scores: Score[] }) {
             <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-dim">
               {SCORE_LABELS[score.key]}
             </span>
-            <GradeBadge grade={score.grade} />
+            {annotated ? (
+              <span className="relative shrink-0">
+                <span className="inline-flex" data-dossier-letter="">
+                  <GradeBadge grade={score.grade} />
+                </span>
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 60 56"
+                  fill="none"
+                  className="pointer-events-none absolute -left-2.5 -top-2 h-14 w-[60px] overflow-visible"
+                >
+                  <path
+                    data-dossier-check=""
+                    d={CHECK_PATH}
+                    stroke="var(--color-accent)"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeDasharray="170"
+                    strokeDashoffset="0"
+                    opacity="0.55"
+                  />
+                </svg>
+              </span>
+            ) : (
+              <GradeBadge grade={score.grade} />
+            )}
           </div>
           <p className="mt-3 font-serif text-sm leading-relaxed text-ink-dim">
             {score.rationale}

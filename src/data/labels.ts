@@ -64,6 +64,15 @@ export const BRICK_ORDER: BrickKey[] = [
   "export",
 ];
 
+/** Les mêmes briques, nommées comme des angles de lecture (démonstration de l'accueil). */
+export const BRICK_ANGLE_LABELS: Record<BrickKey, string> = {
+  cout: "Coût",
+  finance: "Financement",
+  "supply-chain": "Chaîne industrielle",
+  geopolitique: "Géopolitique",
+  export: "Export",
+};
+
 export const CATEGORY_LABELS: Record<SystemCategory, string> = {
   drone: "Drones",
   "directed-energy": "Énergie dirigée",

@@ -27,6 +27,9 @@
   /* Remonté de #d2683c → 4.5:1 sur surface-2 / tuiles accent-10 (WCAG AA). */
   --color-accent: #e07a4d;
   --color-accent-deep: #a8521f;
+  /* Cuivre d'encre pour les inserts papier : 4.9:1 sur --color-paper
+     (accent-deep n'y atteint que 3.4:1). */
+  --color-accent-paper: #8a3f12;
   --color-stamp: #6d8a9a;
 
   --color-grade-a: #61805a;
@@ -52,6 +55,8 @@
 
   --font-serif: var(--font-newsreader), Georgia, "Times New Roman", serif;
   --font-mono: var(--font-plex-mono), ui-monospace, "SF Mono", Menlo, monospace;
+  /* Texte courant et commandes (accueil, navigation) : linéale lisible. */
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
@@ -326,6 +331,40 @@ body:has(.rafaleExperience) .transmission-dot {
   to {
     transform: scaleX(1);
   }
+}
+
+/* === Accueil — entrées courtes des panneaux ===
+   Le panneau de la démonstration et l'aperçu de domaine sont remontés à
+   chaque changement : leur fondu (220 ms, 4 px) et le remplissage des barres
+   de confiance (550 ms) rejouent sur place. Sans .motion-ready, rien ne bouge :
+   le changement d'état reste instantané. */
+@keyframes home-fade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+@keyframes home-fill {
+  from {
+    transform: scaleX(0);
+  }
+}
+.motion-ready .home-fade {
+  animation: home-fade 0.22s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.motion-ready .home-fill {
+  transform-origin: left;
+  animation: home-fill 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Planche du hero : les étiquettes des repères suivent le tracé des lignes
+   de rappel ([data-draw], 1,2 s) et apparaissent une fois les lignes posées. */
+.motion-ready [data-draw] .hero-callout {
+  opacity: 0;
+}
+.motion-ready [data-draw].in-view .hero-callout {
+  opacity: 1;
+  transition: opacity 0.4s ease 1.1s;
 }
 
 @media (prefers-reduced-motion: reduce) {

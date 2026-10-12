@@ -1,3 +1,5 @@
+import { formatCount } from "@/lib/format";
+
 export interface Stat {
   label: string;
   value: string | number;
@@ -15,7 +17,7 @@ export function StatGrid({ stats }: { stats: Stat[] }) {
               typeof stat.value === "number" ? stat.value : undefined
             }
           >
-            {stat.value}
+            {typeof stat.value === "number" ? formatCount(stat.value) : stat.value}
           </div>
           <div className="mt-2 font-mono text-[10px] uppercase tracking-[0.16em] text-ink-faint">
             {stat.label}

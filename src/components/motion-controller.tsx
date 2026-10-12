@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { formatCount } from "@/lib/format";
 
 /** Compte de 0 à la valeur cible, en ease-out, via requestAnimationFrame. */
 function animateCount(el: HTMLElement) {
@@ -12,7 +13,7 @@ function animateCount(el: HTMLElement) {
   const step = (now: number) => {
     const progress = Math.min(1, (now - startTime) / duration);
     const eased = 1 - Math.pow(1 - progress, 3);
-    el.textContent = String(Math.round(target * eased));
+    el.textContent = formatCount(target * eased);
     if (progress < 1) requestAnimationFrame(step);
   };
   requestAnimationFrame(step);

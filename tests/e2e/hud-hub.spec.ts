@@ -102,62 +102,100 @@ test.describe("Planches techniques — point d’entrée", () => {
   test("la navigation principale mène aux planches", async ({ page }) => {
     await page.goto("/");
     const nav = page.getByRole("banner").getByRole("navigation");
-    await expect(nav.getByRole("link", { name: "Planches" })).toHaveAttribute(
-      "href",
-      "/hud",
-    );
-    await nav.getByRole("link", { name: "Planches" }).click();
+    // « Planches techniques » vit dans le groupe Visualisations : fermé au
+    // repos, ouvert au clic (et au survol, au focus), avec son état annoncé.
+    const group = nav.getByRole("button", { name: "Visualisations" });
+    await expect(group).toHaveAttribute("aria-expanded", "false");
+    await group.click();
+    await expect(group).toHaveAttribute("aria-expanded", "true");
+    const link = nav.getByRole("link", { name: "Planches techniques" });
+    await expect(link).toHaveAttribute("href", "/hud");
+    await link.click();
     await expect(page).toHaveURL(/\/hud$/);
   });
 
-  for (const width of [768, 1024]) {
-    test(`${width}px — aucun lien de navigation n’est rogné à gauche`, async ({
-      page,
-    }) => {
-      await page.setViewportSize({ width, height: 900 });
-      await page.goto("/");
-      const clipped = await page.evaluate(() => {
-        const nav = document.querySelector("header nav")!;
-        const left = nav.getBoundingClientRect().left;
-        return [...nav.querySelectorAll("a")]
-          .filter((a) => a.getBoundingClientRect().left < left - 1)
-          .map((a) => a.textContent?.trim());
-      });
-      // Avant correction, EuroSatory (et à 768 px Domaines et Comparateur)
-      // débordait à gauche, hors de portée du défilement.
-      expect(clipped).toEqual([]);
-    });
-  }
+  test("la navigation se parcourt au clavier : flèches, Échap, focus rendu", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const nav = page.getByRole("banner").getByRole("navigation");
+    const group = nav.getByRole("button", { name: "Visualisations" });
+    await group.focus();
+    // Le focus sur le bouton déplie le groupe ; Flèche bas entre dans la liste.
+    await expect(group).toHaveAttribute("aria-expanded", "true");
+    await page.keyboard.press("ArrowDown");
+    await expect(
+      nav.getByRole("link", { name: "Planches techniques" }),
+    ).toBeFocused();
+    await page.keyboard.press("ArrowDown");
+    await expect(nav.getByRole("link", { name: "Matrice" })).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(group).toBeFocused();
+    await expect(group).toHaveAttribute("aria-expanded", "false");
+  });
 
-  for (const width of [1280, 1440]) {
-    test(`${width}px — tous les liens de navigation tiennent sans défilement`, async ({
+  for (const width of [1024, 1280, 1440]) {
+    test(`${width}px — les quatre groupes tiennent dans l’en-tête, sans rognage`, async ({
       page,
     }) => {
       await page.setViewportSize({ width, height: 900 });
       await page.goto("/");
-      // Mesure en régime établi : pendant l'échange de police, la police de
-      // repli est bien plus large et ferait déborder n'importe quelle barre.
       await page.evaluate(() => document.fonts.ready);
       const nav = await page.evaluate(() => {
         const el = document.querySelector("header nav")!;
         const box = el.getBoundingClientRect();
-        const links = [...el.querySelectorAll("a")];
+        const visible = [...el.querySelectorAll("a, button")].filter(
+          (node) => node.getClientRects().length > 0,
+        );
         return {
           overflow: el.scrollWidth - el.clientWidth,
-          cut: links
-            .filter((a) => a.getBoundingClientRect().right > box.right + 1)
-            .map((a) => a.textContent?.trim()),
-          headroom: Math.round(links[0].getBoundingClientRect().left - box.left),
+          groups: visible
+            .filter((node) => node.tagName === "BUTTON")
+            .map((node) => node.textContent?.trim()),
+          clipped: visible
+            .filter((node) => {
+              const rect = node.getBoundingClientRect();
+              return rect.left < box.left - 1 || rect.right > box.right + 1;
+            })
+            .map((node) => node.textContent?.trim()),
         };
       });
-      // Sur bureau, l'en-tête plafonne à 1180 px : les neuf liens doivent y
-      // tenir entiers, sans qu'aucun ne soit rogné à droite.
-      expect(nav.cut, `marge avant le premier lien : ${nav.headroom}px`).toEqual([]);
+      expect(nav.groups).toEqual([
+        "Explorer",
+        "Visualisations",
+        "Outils d’analyse",
+        "Méthodologie",
+      ]);
+      expect(nav.clipped).toEqual([]);
       expect(nav.overflow).toBeLessThanOrEqual(0);
     });
   }
 
-  test("l’accueil montre chaque planche dès l’arrivée", async ({ page }) => {
+  for (const width of [375, 768]) {
+    test(`${width}px — le volet mobile liste toutes les entrées des groupes`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto("/");
+      const nav = page.getByRole("banner").getByRole("navigation");
+      // Sur petit écran, les groupes ne sont pas affichés en ligne.
+      await expect(nav.getByRole("button", { name: "Visualisations" })).toBeHidden();
+      const menu = nav.getByRole("button", { name: "Menu" });
+      await expect(menu).toHaveAttribute("aria-expanded", "false");
+      await menu.click();
+      await expect(menu).toHaveAttribute("aria-expanded", "true");
+      const planches = nav.getByRole("link", { name: "Planches techniques" });
+      await expect(planches).toBeVisible();
+      await expect(planches).toHaveAttribute("href", "/hud");
+      await expect(nav.getByRole("link", { name: "Glossaire" })).toBeVisible();
+      await planches.click();
+      await expect(page).toHaveURL(/\/hud$/);
+    });
+  }
+
+  test("l’accueil montre la planche de tête dès l’arrivée, et mène à chacune", async ({
+    page,
+  }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/");
     await expect(
@@ -167,63 +205,26 @@ test.describe("Planches techniques — point d’entrée", () => {
       const link = page.getByRole("link", { name: board.name });
       await expect(link).toHaveAttribute("href", board.href);
     }
-    // Les vignettes commencent dans le premier écran, sans défilement.
-    const teasers = page.locator("article[data-hud-board]");
-    const teaserTop = await teasers
-      .first()
-      .evaluate((el) => el.getBoundingClientRect().top);
-    expect(teaserTop).toBeLessThan(900);
-
-    // La planche la plus récente (tête du registre) devient la grande vignette
-    // du bas ; les autres gardent la grille, dans l'ordre du DOM : [Patriot en
-    // pleine largeur, Thundart, Drone, Rafale]. Nombre impair dans la grille :
-    // la première vignette occupe toute la largeur, les suivantes vont par
-    // deux — aucune vignette orpheline en fin de grille.
-    const boxes = await teasers.evaluateAll((els) =>
-      els.map((el) => {
-        const { top, left, right, width } = el.getBoundingClientRect();
-        return { top, left, right, width };
-      }),
-    );
-    expect(boxes).toHaveLength(BOARDS.length);
-    expect(Math.round(boxes[0].width)).toBe(
-      Math.round(boxes[2].right - boxes[1].left),
-    );
-    expect(Math.round(boxes[1].top)).toBe(Math.round(boxes[2].top));
-
-    // La grande vignette ferme la colonne : même largeur que la grille, sous
-    // elle, et son pied rejoint celui de la colonne gauche du hero, sans bande
-    // vide face au sommaire des domaines.
-    const spotlight = page.locator('article[data-hud-teaser="spotlight"]');
-    await expect(spotlight).toHaveCount(1);
-    await expect(spotlight).toHaveAttribute("data-hud-board", "rafale-f4-meteor");
-    expect(await teasers.last().getAttribute("data-hud-teaser")).toBe(
-      "spotlight",
-    );
-    expect(Math.round(boxes[3].width)).toBe(Math.round(boxes[0].width));
-    expect(boxes[3].top).toBeGreaterThan(boxes[2].top);
-    // Les deux pieds sont mesurés ensemble : un échange de police qui
-    // relancerait la mise en page les déplacerait d'un même mouvement.
-    const feet = await spotlight.evaluate((article) => {
-      // Colonne gauche du hero : l'ancêtre qui porte le titre de l'accueil.
-      const hero = article.closest("div:has(> h1)");
-      if (!hero) return null;
-      const box = hero.getBoundingClientRect();
-      const style = getComputedStyle(hero);
-      return {
-        spotlight: article.getBoundingClientRect().bottom,
-        column:
-          box.bottom -
-          parseFloat(style.paddingBottom) -
-          parseFloat(style.borderBottomWidth),
-      };
-    });
-    expect(feet).not.toBeNull();
-    expect(Math.abs(feet!.spotlight - feet!.column)).toBeLessThanOrEqual(2);
+    // La planche de tête du registre est le visuel du hero : visible dans le
+    // premier écran, sans défilement, à côté du titre et des actions.
+    const plate = cardOf(page, "/hud/rafale-f4-meteor");
+    const plateTop = await plate.evaluate((el) => el.getBoundingClientRect().top);
+    expect(plateTop).toBeLessThan(900);
+    const h1 = await page
+      .getByRole("heading", { level: 1 })
+      .evaluate((el) => el.getBoundingClientRect().bottom);
+    expect(h1).toBeLessThan(900);
+    // Sa vignette est une vraie image, annotée de repères tirés du dossier.
+    const image = plate.locator("img");
+    await expect(image).toHaveAttribute("alt", /.{20,}/);
+    await expect
+      .poll(() => image.evaluate((img: HTMLImageElement) => img.naturalWidth))
+      .toBeGreaterThan(0);
+    await expect(plate.locator(".hero-callout")).toHaveCount(3);
 
     // Ses entrées directes ouvrent la planche dans chacun des trois scénarios,
     // et passent au-dessus du lien étiré de la carte.
-    const entries = spotlight
+    const entries = plate
       .getByRole("list", { name: "Entrer directement dans un scénario" })
       .getByRole("link");
     await expect(entries).toHaveCount(3);
@@ -245,6 +246,15 @@ test.describe("Planches techniques — point d’entrée", () => {
       [seadBox.x + seadBox.width / 2, seadBox.y + seadBox.height / 2],
     );
     expect(topmost).toBe("/hud/rafale-f4-meteor?scenario=sead");
+
+    // Les autres planches vivent dans la séquence Instruments : la deuxième du
+    // registre en vedette, les suivantes en lignes, dans l'ordre du registre.
+    const spotlight = cardOf(page, "/hud/patriot-pac3-mse");
+    await expect(spotlight).toHaveCount(1);
+    const order = await page
+      .locator("#instruments a[href^='/hud/']")
+      .evaluateAll((links) => links.map((link) => link.getAttribute("href")));
+    expect(order).toEqual(["/hud/patriot-pac3-mse", "/hud/thundart", "/hud/drone-airframe"]);
   });
 
   for (const board of BOARDS) {

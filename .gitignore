@@ -52,3 +52,6 @@ next-env.d.ts
 # exports bruts intermédiaires (avant compression meshopt) et cache Python
 /tools/*/build/
 __pycache__/
+
+# Configuration locale du navigateur intégré
+/.claude/launch.json

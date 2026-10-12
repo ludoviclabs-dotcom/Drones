@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Newsreader, IBM_Plex_Mono } from "next/font/google";
+import { Newsreader, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { MotionController } from "@/components/motion-controller";
 import { DossierOriginTracker } from "@/components/dossier-origin-tracker";
 import { SafetyBoundaryBanner } from "@/components/safety-boundary-banner";
+import { SiteNav } from "@/components/site-nav";
 import { JsonLd } from "@/components/json-ld";
 import { organizationLd, webSiteLd } from "@/lib/structured-data";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
+import { FOOTER_LINKS } from "@/data/navigation";
 import { systems } from "@/data/systems";
 
 const newsreader = Newsreader({
@@ -23,6 +25,15 @@ const plexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-plex-mono",
+  display: "swap",
+});
+
+// Texte courant et commandes de l'accueil et de la navigation : une linéale
+// lisible, de la même famille que la mono des annotations.
+const plexSans = IBM_Plex_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-plex-sans",
   display: "swap",
 });
 
@@ -51,36 +62,6 @@ export const metadata: Metadata = {
   },
 };
 
-const NAV = [
-  { href: "/eurosatory", label: "EuroSatory" },
-  { href: "/domaines", label: "Domaines" },
-  { href: "/hud", label: "Planches" },
-  { href: "/comparateur", label: "Comparateur" },
-  { href: "/matrice", label: "Matrice" },
-  { href: "/simulateur", label: "Simulateur" },
-  { href: "/console", label: "Console" },
-  { href: "/methodologie", label: "Méthodologie" },
-  { href: "/glossaire", label: "Glossaire" },
-];
-
-// « Planches » figure déjà dans NAV : le pied de page ajoute l'accès direct à
-// chaque planche.
-const FOOTER_LINKS = [
-  ...NAV,
-  { href: "/hud/drone-airframe", label: "HUD Drone" },
-  { href: "/hud/thundart", label: "HUD Thundart" },
-  { href: "/hud/patriot-pac3-mse", label: "HUD Patriot" },
-  { href: "/hud/rafale-f4-meteor", label: "HUD Rafale" },
-  { href: "/audit", label: "Audit" },
-  { href: "/couts", label: "Coûts publics" },
-  { href: "/industrial-graph", label: "Graphe industriel" },
-  { href: "/updates", label: "File de revue" },
-  { href: "/export-briefs", label: "Briefs export" },
-  { href: "/portefeuille", label: "Portefeuille" },
-  { href: "/roadmap", label: "Roadmap" },
-  { href: "/changelog", label: "Changelog" },
-];
-
 export default function RootLayout({
   children,
   modal,
@@ -89,7 +70,7 @@ export default function RootLayout({
     <html
       lang="fr"
       suppressHydrationWarning
-      className={`${newsreader.variable} ${plexMono.variable}`}
+      className={`${newsreader.variable} ${plexMono.variable} ${plexSans.variable}`}
     >
       <body className="flex min-h-dvh flex-col">
         <script
@@ -103,41 +84,33 @@ export default function RootLayout({
         <MotionController />
         <DossierOriginTracker />
         <div className="film-grain" aria-hidden="true" />
+        <a
+          href="#contenu"
+          className="sr-only z-50 border border-accent bg-bg px-4 py-2 font-mono text-xs uppercase tracking-[0.16em] text-accent focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+        >
+          Aller au contenu
+        </a>
         <SafetyBoundaryBanner />
 
         <header className="sticky top-0 z-40 border-b border-line bg-bg/90 backdrop-blur">
-          <div className="mx-auto flex min-h-[var(--site-header-content-height)] max-w-[1180px] flex-wrap items-center justify-between gap-x-4 gap-y-1 px-5 py-2 sm:flex-nowrap">
+          <div className="mx-auto flex min-h-[var(--site-header-content-height)] max-w-[1180px] items-center justify-between gap-x-6 px-5 py-2">
             <Link href="/" className="flex shrink-0 items-baseline gap-3">
               <span className="font-serif text-2xl leading-none tracking-tight text-ink">
                 Panoplie
               </span>
-              <span className="hidden font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint sm:inline">
+              <span className="hidden font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint md:inline">
                 Renseignement open source
               </span>
             </Link>
-            {/* `justify-end-safe` et non `justify-end` : quand les liens
-                débordent (tablette), un alignement à droite simple pousse les
-                premiers hors du bord gauche, où le défilement ne peut plus les
-                atteindre. L'alignement « safe » retombe sur le début.
-                Espacement des liens (7 px, interlettrage 0,1 em) : les neuf
-                liens tiennent dans l'en-tête de 1180 px avec ~75 px de marge,
-                ce qui absorbe l'arrondi des chasses sous Linux — à 12 px de
-                marge, « Glossaire » était rogné en CI. */}
-            <nav className="-mx-2 flex w-full min-w-0 flex-1 items-center overflow-x-auto pb-1 sm:mx-0 sm:w-auto sm:justify-end-safe sm:pb-0">
-              {NAV.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="shrink-0 px-[7px] py-2 text-[11px] uppercase tracking-[0.1em] text-ink-dim transition-colors hover:text-ink"
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
+            {/* Quatre groupes (Explorer, Visualisations, Outils d'analyse,
+                Méthodologie) et l'accès à la recherche ; volet sous 1024 px. */}
+            <SiteNav />
           </div>
         </header>
 
-        <main className="flex-1">{children}</main>
+        <main id="contenu" className="flex-1">
+          {children}
+        </main>
 
         <footer className="mt-24 border-t border-line">
           <div className="mx-auto grid max-w-[1180px] gap-8 px-5 py-12 sm:grid-cols-[1.6fr_1fr_1.2fr]">

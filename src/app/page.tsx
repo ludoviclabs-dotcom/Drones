@@ -1,216 +1,383 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { systems } from "@/data/systems";
+import { systems, SYSTEMS_BY_SLUG } from "@/data/systems";
 import { DOMAINS } from "@/data/domains";
-import { BRICK_BLURBS, BRICK_LABELS, BRICK_ORDER } from "@/data/labels";
-import { DomainEmblem } from "@/components/domain-emblem";
+import {
+  BRICK_ANGLE_LABELS,
+  BRICK_ORDER,
+  SCORE_LABELS,
+  SOURCE_TYPE_LABELS,
+} from "@/data/labels";
+import { HUD_BOARDS, HUD_INDEX_PATH } from "@/data/hud/boards";
+import { INDUSTRIAL_GRAPH_PILOT } from "@/data/panoplie-workflows";
+import { HudBoardCard } from "@/components/hud/hud-board-card";
 import { SystemCard } from "@/components/system-card";
 import { CatalogueFilter } from "@/components/catalogue-filter";
-import { RadarSweep } from "@/components/radar-sweep";
 import { SectionMarker } from "@/components/primitives";
-import { RegistrationMarks } from "@/components/registration-marks";
-import { Stamp } from "@/components/stamp";
-import { StatGrid, type Stat } from "@/components/stat-cards";
-import { HudBoardSpotlight, HudBoardTeaser } from "@/components/hud/hud-board-card";
-import { HUD_BOARDS, HUD_INDEX_PATH } from "@/data/hud/boards";
+import { HeroPlate, heroCallouts } from "@/components/home/hero-plate";
+import { DossierDemo, type DemoAngle } from "@/components/home/dossier-demo";
+import { DomainIndex } from "@/components/home/domain-index";
+import {
+  HudBoardRow,
+  IndustrialGraphExcerpt,
+  ScoreCompareTable,
+} from "@/components/home/instruments";
+import { EvidencePanel } from "@/components/home/evidence-panel";
 import { getEvidenceStats } from "@/lib/claims";
+import { formatCount, formatDateFr } from "@/lib/format";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
+/** Dossier de la démonstration quand la planche de tête n'en illustre aucun. */
+const DEMO_FALLBACK_SLUG = "rafale";
+/** Second dossier de l'extrait du comparateur — même domaine, lecture contrastée. */
+const COMPARE_SLUG = "gripen";
+/** Systèmes du graphe pilote repris dans l'extrait de l'accueil. */
+const GRAPH_SYSTEM_IDS = ["mq9", "tb2", "eurodrone"] as const;
+/** Cartes visibles avant dépliage du catalogue. */
+const CATALOGUE_PREVIEW = 6;
+
+const BTN_PRIMARY =
+  "inline-flex min-h-12 items-center justify-center border border-accent bg-accent px-6 font-mono text-xs uppercase tracking-[0.16em] text-bg transition-colors hover:border-ink hover:bg-ink";
+const BTN_SECONDARY =
+  "inline-flex min-h-12 items-center justify-center border border-line-bright px-6 font-mono text-xs uppercase tracking-[0.16em] text-ink transition-colors hover:border-accent hover:text-accent";
+const LINK_ACCENT =
+  "inline-flex min-h-11 items-center font-mono text-[11px] uppercase tracking-[0.16em] text-accent transition-colors hover:text-ink";
+const LINK_DIM =
+  "inline-flex min-h-11 items-center font-mono text-[11px] uppercase tracking-[0.16em] text-ink-dim transition-colors hover:text-accent";
+
+const pad = (n: number) => String(n).padStart(2, "0");
+
+/** Première phrase d'un narratif — l'accroche de l'onglet. */
+function firstSentence(text: string): string {
+  const match = text.match(/^[^.!?]+[.!?]/);
+  return match ? match[0].trim() : text;
+}
+
 export default function Home() {
   const stats = getEvidenceStats();
-  const observatory: Stat[] = [
-    { label: "Systèmes documentés", value: stats.systems },
-    { label: "Sources indexées", value: stats.sources },
-    { label: "Affirmations tracées", value: stats.claims },
-    { label: "Affirmations vérifiées", value: stats.byStatus.verifie },
-  ];
 
-  // Index par domaine — le catalogue complet vit dans sa propre section,
-  // plus bas ; le hero n'en donne que la structure. Source : data/domains.
+  // La planche de tête du registre est le visuel du hero ; le dossier qu'elle
+  // illustre devient celui de la démonstration et des repères annotés.
+  const [heroBoard, spotlightBoard, ...otherBoards] = HUD_BOARDS;
+  const demoSystem =
+    SYSTEMS_BY_SLUG[heroBoard.systemSlugs?.[0] ?? DEMO_FALLBACK_SLUG] ??
+    systems[0];
+  const compareSystem = SYSTEMS_BY_SLUG[COMPARE_SLUG];
+
+  const sourceById = new Map(demoSystem.sources.map((s) => [s.id, s] as const));
+  const angles: DemoAngle[] = BRICK_ORDER.flatMap((key, i) => {
+    const brick = demoSystem.bricks.find((b) => b.key === key);
+    if (!brick) return [];
+    return [
+      {
+        key,
+        num: pad(i + 1),
+        label: BRICK_ANGLE_LABELS[key],
+        lede: firstSentence(brick.narrative),
+        narrative: brick.narrative,
+        indicators: brick.indicators.map((indicator) => ({
+          label: indicator.label,
+          value: indicator.value,
+          confidence: indicator.confidence,
+          // Même règle que le registre de preuves : explicite, sinon dérivé.
+          status:
+            indicator.status ??
+            (indicator.confidence === "haute" ? "verifie" : "a-recouper"),
+          note: indicator.note,
+          sources: (indicator.sources ?? []).flatMap((id) => {
+            const source = sourceById.get(id);
+            return source
+              ? [
+                  {
+                    publisher: source.publisher,
+                    type: SOURCE_TYPE_LABELS[source.type].toLowerCase(),
+                    reliability: source.reliability,
+                  },
+                ]
+              : [];
+          }),
+        })),
+      },
+    ];
+  });
+  const demoScores = demoSystem.scores.map((score) => ({
+    key: score.key,
+    label: SCORE_LABELS[score.key],
+    grade: score.grade,
+  }));
+  const exampleSource =
+    demoSystem.sources.find((s) => s.reliability === "A") ??
+    demoSystem.sources[0];
+
   const domains = DOMAINS.map((domain) => ({
     ...domain,
     count: systems.filter((s) => s.category === domain.category).length,
   }));
 
-  // La planche la plus récente (en tête du registre) devient la grande
-  // vignette du bas ; les autres gardent leur grille, dans le même ordre.
-  const [spotlightBoard, ...leadBoards] = HUD_BOARDS;
+  const ribbon = [
+    { label: "Systèmes documentés", value: stats.systems },
+    { label: "Domaines", value: domains.length },
+    { label: "Sources indexées", value: stats.sources },
+    { label: "Affirmations tracées", value: stats.claims },
+    { label: "Affirmations vérifiées", value: stats.byStatus.verifie, accent: true },
+  ];
 
   return (
-    <div className="mx-auto max-w-[1180px] px-5">
-      <section className="reveal py-14">
-        <div className="relative border border-line-bright bg-panel">
-          <RegistrationMarks />
-
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line px-6 py-2.5">
-            <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-accent">
-              Panoplie — Recueil de renseignement ouvert
-            </span>
-            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-faint">
-              Éd. 2026 · Systèmes de défense
-            </span>
+    <div>
+      {/* ===== 01 · Hero asymétrique ===== */}
+      <section
+        aria-labelledby="hero-title"
+        className="mx-auto max-w-[1180px] px-5 pb-14 pt-12 sm:pt-16 lg:pb-16 lg:pt-20"
+      >
+        <div className="grid gap-12 lg:grid-cols-[7fr_5fr] lg:items-start lg:gap-16">
+          <div className="flex flex-col gap-7">
+            <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-accent">
+              01 — Observatoire en sources ouvertes · Éd. 2026
+            </p>
+            <h1
+              id="hero-title"
+              className="max-w-[12ch] font-serif text-[2.75rem] leading-[1.02] tracking-[-0.02em] text-ink sm:text-6xl lg:text-[4.75rem] xl:text-[5.25rem]"
+            >
+              Un système d'armes n'est jamais un{" "}
+              <em className="italic text-accent">simple achat</em>.
+            </h1>
+            <p className="max-w-[54ch] font-sans text-lg leading-relaxed text-ink-dim">
+              Coût, financement, chaîne industrielle, géopolitique, export :
+              cinq lectures appliquées à {stats.systems} systèmes de défense, à
+              partir de sources ouvertes, notées et datées.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Link href="#catalogue" className={BTN_PRIMARY}>
+                Ouvrir le recueil →
+              </Link>
+              <Link href={HUD_INDEX_PATH} className={BTN_SECONDARY}>
+                Voir les planches techniques →
+              </Link>
+            </div>
+            <p className="flex flex-wrap gap-x-5 gap-y-1 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint">
+              <span>OSINT</span>
+              <span aria-hidden="true">·</span>
+              <span>Sources ouvertes</span>
+              <span aria-hidden="true">·</span>
+              <span>Analyse — pas d'usage opérationnel</span>
+            </p>
           </div>
 
-          <div className="grid lg:grid-cols-[1.55fr_1fr]">
-            <div className="border-b border-line p-8 sm:p-10 lg:flex lg:flex-col lg:border-b-0 lg:border-r">
-              <h1 className="font-serif text-5xl leading-[1.03] tracking-tight text-ink sm:text-6xl">
-                Un système d'armes n'est jamais un{" "}
-                <span className="italic text-accent">simple achat</span>.
-              </h1>
-              <p className="mt-7 max-w-xl font-serif text-lg leading-relaxed text-ink-dim">
-                Derrière chaque système de défense : un coût réel, un
-                financement, une chaîne industrielle, une dépendance
-                géopolitique, un régime d'export. Panoplie rend cette réalité
-                lisible à partir de sources ouvertes, tous domaines confondus :
-                drones, énergie dirigée, aviation, missiles, radars, naval,
-                spatial, systèmes de combat et feux terrestres documentés et
-                comparables.
-              </p>
-              <div className="mt-7 flex flex-wrap items-center gap-4">
-                <Stamp tone="accent" rotate={-3}>
-                  OSINT
-                </Stamp>
-                <Stamp tone="ink" rotate={2}>
-                  Sources ouvertes
-                </Stamp>
-                <Stamp tone="dim" rotate={-1}>
-                  Analyse — pas d'usage opérationnel
-                </Stamp>
-              </div>
-              <div className="mt-9 flex flex-wrap gap-3">
-                <Link
-                  href="#catalogue"
-                  className="inline-flex h-11 items-center border border-accent px-5 font-mono text-xs uppercase tracking-[0.16em] text-accent transition-colors hover:bg-accent hover:text-bg"
-                >
-                  Ouvrir le recueil →
-                </Link>
-                <Link
-                  href={HUD_INDEX_PATH}
-                  className="inline-flex h-11 items-center border border-line-bright px-5 font-mono text-xs uppercase tracking-[0.16em] text-ink-dim transition-colors hover:border-accent hover:text-accent"
-                >
-                  Voir les planches techniques →
-                </Link>
-              </div>
+          <HeroPlate
+            board={heroBoard}
+            index={1}
+            total={HUD_BOARDS.length}
+            callouts={heroCallouts(demoSystem)}
+          />
+        </div>
 
-              {/* Les planches occupent l'espace laissé libre sous l'accroche,
-                  en regard du sommaire des domaines : visibles dès l'arrivée,
-                  et sur mobile avant la liste des domaines. La grande
-                  vignette du bas s'étire jusqu'au pied du sommaire. */}
-              <div className="mt-10 border-t border-line pt-6 lg:flex lg:grow lg:flex-col">
-                <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-faint">
-                  Planches techniques · à manipuler
-                </h2>
-                <div className="mt-4 flex flex-col gap-4 lg:grow">
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    {leadBoards.map((board, index) => (
-                      <HudBoardTeaser
-                        key={board.slug}
-                        board={board}
-                        featured={index === 0 && leadBoards.length % 2 === 1}
-                      />
-                    ))}
-                  </div>
-                  {spotlightBoard ? <HudBoardSpotlight board={spotlightBoard} /> : null}
-                </div>
-              </div>
+        {/* Ruban de compteurs — dérivés du registre de preuves, jamais saisis. */}
+        <dl className="mt-14 grid gap-px border border-line bg-line sm:grid-cols-3 lg:grid-cols-5">
+          {ribbon.map((stat) => (
+            <div key={stat.label} className="bg-panel px-5 py-4">
+              <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-faint">
+                {stat.label}
+              </dt>
+              <dd
+                className={`mt-1.5 font-mono text-[1.75rem] leading-none ${
+                  stat.accent ? "text-accent" : "text-ink"
+                }`}
+                data-countup={stat.value}
+              >
+                {formatCount(stat.value)}
+              </dd>
             </div>
+          ))}
+        </dl>
+      </section>
 
-            <div className="flex flex-col justify-center gap-4 p-6 sm:p-8">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-faint">
-                Au sommaire — {systems.length} dossiers, {domains.length}{" "}
-                domaines
-              </p>
-              <div className="grid gap-px border border-line bg-line">
-                {domains.map((domain) => (
-                  <Link
-                    key={domain.href}
-                    href={domain.href}
-                    className="group flex items-center gap-4 bg-panel p-5 transition-colors hover:bg-surface-2"
-                  >
-                    <DomainEmblem
-                      category={domain.category}
-                      className="h-14 w-14 shrink-0 text-ink-faint transition-colors group-hover:text-accent"
-                    />
-                    <div className="min-w-0 flex-1">
-                      <p className="font-mono text-xs uppercase tracking-[0.16em] text-accent">
-                        {domain.label}
-                      </p>
-                      <p className="mt-1 font-mono text-[11px] text-ink-faint">
-                        {domain.count} dossiers documentés
-                      </p>
-                      <p className="mt-2.5 font-serif text-[0.95rem] leading-relaxed text-ink-dim">
-                        {domain.blurb}
-                      </p>
-                      <span className="mt-3 inline-block font-mono text-[10px] uppercase tracking-[0.16em] text-ink-faint transition-colors group-hover:text-accent">
-                        {domain.cta} →
-                      </span>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
+      {/* ===== 02 · Démonstration : un dossier, cinq angles ===== */}
+      <section
+        id="demonstration"
+        aria-labelledby="demo-title"
+        className="border-y border-line bg-surface py-16 sm:py-20"
+      >
+        <div className="reveal mx-auto max-w-[1180px] px-5">
+          <SectionMarker index="02" label="Démonstration" />
+          <h2
+            id="demo-title"
+            className="mt-5 font-serif text-4xl leading-[1.08] tracking-tight text-ink sm:text-5xl"
+          >
+            Un dossier, cinq angles.
+          </h2>
+          <p className="mt-3 max-w-[60ch] font-sans text-[17px] leading-relaxed text-ink-dim">
+            Le {demoSystem.name}, lu comme Panoplie lit chaque système : le
+            même parcours, de la facture au régime d'export. Choisissez un
+            angle.
+          </p>
+          <div className="mt-10">
+            <DossierDemo
+              system={{
+                slug: demoSystem.slug,
+                name: demoSystem.name,
+                reference: demoSystem.reference,
+                manufacturer: demoSystem.manufacturer,
+                classLabel: demoSystem.classLabel,
+                updatedLabel: demoSystem.updated
+                  ? formatDateFr(demoSystem.updated)
+                  : undefined,
+              }}
+              angles={angles}
+              scores={demoScores}
+            />
           </div>
         </div>
       </section>
 
-      <section className="border-t border-line py-14">
-        <SectionMarker
-          index="—"
-          label="L'observatoire en chiffres"
-          blurb="Compteurs dérivés du registre de preuves — aucun n'est saisi à la main."
-        />
-        <div className="mt-8">
-          <StatGrid stats={observatory} />
-        </div>
-        <div className="mt-5">
-          <Link
-            href="/console"
-            className="font-mono text-[11px] uppercase tracking-[0.16em] text-accent transition-colors hover:text-ink"
+      {/* ===== 03 · Index éditorial des domaines ===== */}
+      <section
+        id="domaines"
+        aria-labelledby="domaines-title"
+        className="py-16 sm:py-20"
+      >
+        <div className="reveal mx-auto max-w-[1180px] px-5">
+          <SectionMarker index="03" label="Index" />
+          <h2
+            id="domaines-title"
+            className="mt-5 font-serif text-4xl leading-[1.08] tracking-tight text-ink sm:text-5xl"
           >
-            Ouvrir la Console OSINT →
+            {domains.length === 11 ? "Onze" : domains.length} domaines, une
+            même grille.
+          </h2>
+          <p className="mt-3 max-w-[56ch] font-sans text-[17px] leading-relaxed text-ink-dim">
+            Chaque domaine est lu avec les cinq mêmes angles. Survolez ou
+            sélectionnez un domaine pour en lire l'aperçu.
+          </p>
+          <div className="mt-10">
+            <DomainIndex domains={domains} initial={demoSystem.category} />
+          </div>
+          <Link href="/domaines" className={`${LINK_ACCENT} mt-6`}>
+            Tous les domaines →
           </Link>
         </div>
       </section>
 
-      <section className="border-t border-line py-16">
-        <SectionMarker
-          index="—"
-          label="La grille de lecture"
-          blurb="Cinq briques d'analyse, appliquées à chaque système — la trame qui relie l'objet technique à son contexte stratégique."
-        />
-        <div className="mt-8 grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-5">
-          {BRICK_ORDER.map((key, i) => (
-            <div key={key} className="bg-panel p-5">
-              <span className="font-mono text-xs text-accent">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <h3 className="mt-2 font-mono text-sm uppercase tracking-[0.1em] text-ink">
-                {BRICK_LABELS[key]}
-              </h3>
-              <p className="mt-2 font-serif text-[0.92rem] leading-relaxed text-ink-dim">
-                {BRICK_BLURBS[key]}
-              </p>
+      {/* ===== 04 · Instruments : planches, comparateur, graphe ===== */}
+      <section
+        id="instruments"
+        aria-labelledby="instruments-title"
+        className="border-y border-line bg-panel py-16 sm:py-20"
+      >
+        <div className="reveal mx-auto max-w-[1180px] px-5">
+          <SectionMarker index="04" label="Instruments" />
+          <h2
+            id="instruments-title"
+            className="mt-5 font-serif text-4xl leading-[1.08] tracking-tight text-ink sm:text-5xl"
+          >
+            Manipuler, comparer, relier.
+          </h2>
+          <p className="mt-3 max-w-[60ch] font-sans text-[17px] leading-relaxed text-ink-dim">
+            Trois instruments pour passer du dossier à l'analyse : les planches
+            techniques, le comparateur et le graphe des dépendances
+            industrielles.
+          </p>
+
+          <div className="mt-10 grid gap-6 lg:grid-cols-[7fr_5fr] lg:items-start">
+            <div className="flex flex-col border border-line bg-bg">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint">
+                <span className="text-accent">Planches techniques</span>
+                <span>
+                  {HUD_BOARDS.length} planches · WebGL 2 ou vignette statique
+                </span>
+              </div>
+              <div className="p-4 sm:p-5">
+                <HudBoardCard board={spotlightBoard} headingLevel={3} />
+                <div className="mt-4">
+                  {otherBoards.map((board) => (
+                    <HudBoardRow key={board.slug} board={board} />
+                  ))}
+                </div>
+                <Link href={HUD_INDEX_PATH} className={`${LINK_ACCENT} mt-3`}>
+                  Toutes les planches →
+                </Link>
+              </div>
             </div>
-          ))}
+
+            <div className="flex flex-col gap-6">
+              <div className="border border-line bg-bg">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint">
+                  <span className="text-accent">Comparateur</span>
+                  <span>2 à 3 dossiers</span>
+                </div>
+                <div className="p-5">
+                  <h3 className="font-serif text-2xl leading-tight text-ink">
+                    Comparer vaut mieux que décrire.
+                  </h3>
+                  {compareSystem ? (
+                    <div className="mt-4">
+                      <ScoreCompareTable left={demoSystem} right={compareSystem} />
+                    </div>
+                  ) : null}
+                  <Link href="/comparateur" className={`${LINK_ACCENT} mt-3`}>
+                    Ouvrir le comparateur →
+                  </Link>
+                </div>
+              </div>
+
+              <div className="border border-line bg-bg">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint">
+                  <span className="text-accent">Graphe industriel</span>
+                  <span>Pilote · {INDUSTRIAL_GRAPH_PILOT.title}</span>
+                </div>
+                <div className="p-5">
+                  <h3 className="font-serif text-2xl leading-tight text-ink">
+                    Qui dépend de qui.
+                  </h3>
+                  <IndustrialGraphExcerpt systemIds={GRAPH_SYSTEM_IDS} />
+                  <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-faint">
+                    Systèmes · industriels · pays — niveau public, sans détail
+                    de fabrication
+                  </p>
+                  <div className="flex flex-wrap gap-x-6">
+                    <Link href="/industrial-graph" className={LINK_ACCENT}>
+                      Ouvrir le graphe →
+                    </Link>
+                    <Link href="/matrice" className={LINK_DIM}>
+                      Matrice
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
+      {/* ===== 05 · Sources, datation, confiance — insert papier ===== */}
+      <section id="methode" aria-labelledby="methode-title">
+        <EvidencePanel example={exampleSource} />
+      </section>
+
+      {/* ===== 06 · Recherche et catalogue ===== */}
       <section
         id="catalogue"
-        className="relative overflow-hidden border-t border-line py-16"
+        aria-labelledby="catalogue-title"
+        className="border-t border-line py-16 sm:py-20"
       >
-        <RadarSweep className="pointer-events-none absolute -right-40 -top-32 h-[660px] w-[660px] opacity-[0.55]" />
-        <div className="relative z-10">
-          <SectionMarker
-            index="—"
-            label="Catalogue des systèmes"
-            blurb={`${systems.length} systèmes contrastés — du drone MALE à la munition rôdeuse, du laser haute énergie au chasseur de combat, du missile au bâtiment naval.`}
-          />
+        <div className="mx-auto max-w-[1180px] px-5">
+          <SectionMarker index="06" label="Catalogue" />
+          <h2
+            id="catalogue-title"
+            className="mt-5 font-serif text-4xl leading-[1.08] tracking-tight text-ink sm:text-5xl"
+          >
+            Chercher dans les {systems.length} dossiers.
+          </h2>
+          <p className="mt-3 max-w-[60ch] font-sans text-[17px] leading-relaxed text-ink-dim">
+            Du drone MALE à la munition rôdeuse, du laser haute énergie au
+            chasseur de combat, du missile au bâtiment naval — chaque dossier
+            ouvre sur place.
+          </p>
           <div className="mt-8">
             <CatalogueFilter
+              initialLimit={CATALOGUE_PREVIEW}
               entries={systems.map((system) => {
                 const autonomyProfile = system.autonomyProfile;
                 const battlefieldFunctions =
@@ -222,44 +389,23 @@ export default function Home() {
                   autonomyModes,
                   battlefieldFunctions,
                   hasCounterUas: battlefieldFunctions.includes("counter-uas"),
-                  haystack: `${system.name} ${system.country} ${system.manufacturer} ${system.classLabel} ${battlefieldFunctions.join(" ")} ${autonomyModes.join(" ")}`.toLowerCase(),
+                  haystack:
+                    `${system.name} ${system.country} ${system.manufacturer} ${system.classLabel} ${battlefieldFunctions.join(" ")} ${autonomyModes.join(" ")}`.toLowerCase(),
                   card: <SystemCard system={system} />,
                 };
               })}
             />
           </div>
-        </div>
-      </section>
-
-      <section className="border-t border-line py-16">
-        <div className="relative border border-line bg-panel p-8 sm:p-10">
-          <RegistrationMarks />
-          <div className="grid gap-8 md:grid-cols-[1.6fr_1fr] md:items-center">
-            <div>
-              <h2 className="font-serif text-3xl leading-tight text-ink">
-                Comparer vaut mieux que décrire.
-              </h2>
-              <p className="mt-3 max-w-xl font-serif text-base leading-relaxed text-ink-dim">
-                Le comparateur confronte deux à trois systèmes côte à côte —
-                identité, paliers d'évaluation et lecture critique. La page
-                Méthodologie explique comment les paliers sont attribués et
-                comment lire le niveau de confiance des données.
-              </p>
-            </div>
-            <div className="flex flex-col gap-3">
-              <Link
-                href="/comparateur"
-                className="inline-flex h-11 items-center justify-center border border-accent px-5 font-mono text-xs uppercase tracking-[0.16em] text-accent transition-colors hover:bg-accent hover:text-bg"
-              >
-                Ouvrir le comparateur →
-              </Link>
-              <Link
-                href="/methodologie"
-                className="inline-flex h-11 items-center justify-center border border-line-bright px-5 font-mono text-xs uppercase tracking-[0.16em] text-ink-dim transition-colors hover:border-accent hover:text-accent"
-              >
-                Lire la méthodologie
-              </Link>
-            </div>
+          <div className="mt-8 flex flex-wrap gap-x-8 gap-y-2">
+            <Link href="/domaines" className={LINK_DIM}>
+              Parcourir par domaine
+            </Link>
+            <Link href="/comparateur" className={LINK_DIM}>
+              Comparer des dossiers
+            </Link>
+            <Link href="/methodologie" className={LINK_DIM}>
+              Lire la méthodologie
+            </Link>
           </div>
         </div>
       </section>

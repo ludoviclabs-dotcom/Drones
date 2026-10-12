@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useId, useMemo, useState, type ReactNode } from "react";
 import type {
   AutonomyMode,
   BattlefieldFunction,
@@ -48,8 +48,18 @@ export interface CatalogueEntry {
  * Filtre du catalogue — domaine et recherche type-ahead. Les cartes restent
  * montées (les non concordantes sont seulement masquées) pour préserver le
  * tracé des schématiques déjà révélées.
+ *
+ * `initialLimit` : n'en montre d'abord que ce nombre (aperçu) ; un bouton
+ * déplie le reste sur place, et toute recherche ou tout filtre déplie
+ * d'office — un résultat ne doit jamais rester caché derrière l'aperçu.
  */
-export function CatalogueFilter({ entries }: { entries: CatalogueEntry[] }) {
+export function CatalogueFilter({
+  entries,
+  initialLimit,
+}: {
+  entries: CatalogueEntry[];
+  initialLimit?: number;
+}) {
   const [query, setQuery] = useState("");
   const [domain, setDomain] = useState<DomainValue>("all");
   const [autonomy, setAutonomy] = useState<AutonomyMode | "all">("all");
@@ -57,26 +67,34 @@ export function CatalogueFilter({ entries }: { entries: CatalogueEntry[] }) {
     BattlefieldFunction | "all"
   >("all");
   const [counterUasOnly, setCounterUasOnly] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const gridId = useId();
   const norm = query.trim().toLowerCase();
+  const filtering =
+    norm !== "" ||
+    domain !== "all" ||
+    autonomy !== "all" ||
+    battlefieldFunction !== "all" ||
+    counterUasOnly;
 
-  const visible = useMemo(
+  const matching = useMemo(
     () =>
-      new Set(
-        entries
-          .filter(
-            (entry) =>
-              (domain === "all" || entry.category === domain) &&
-              (autonomy === "all" ||
-                entry.autonomyModes?.includes(autonomy)) &&
-              (battlefieldFunction === "all" ||
-                entry.battlefieldFunctions?.includes(battlefieldFunction)) &&
-              (!counterUasOnly || entry.hasCounterUas) &&
-              (norm === "" || entry.haystack.includes(norm)),
-          )
-          .map((entry) => entry.slug),
+      entries.filter(
+        (entry) =>
+          (domain === "all" || entry.category === domain) &&
+          (autonomy === "all" || entry.autonomyModes?.includes(autonomy)) &&
+          (battlefieldFunction === "all" ||
+            entry.battlefieldFunctions?.includes(battlefieldFunction)) &&
+          (!counterUasOnly || entry.hasCounterUas) &&
+          (norm === "" || entry.haystack.includes(norm)),
       ),
     [entries, norm, domain, autonomy, battlefieldFunction, counterUasOnly],
   );
+  const collapsed =
+    initialLimit !== undefined && !expanded && !filtering;
+  const shown = collapsed ? matching.slice(0, initialLimit) : matching;
+  const visible = new Set(shown.map((entry) => entry.slug));
+  const hiddenCount = matching.length - shown.length;
 
   const selectClass =
     "border border-line-bright bg-surface px-3 py-1.5 font-mono text-xs text-ink outline-none transition-colors hover:border-accent focus:border-accent";
@@ -145,11 +163,11 @@ export function CatalogueFilter({ entries }: { entries: CatalogueEntry[] }) {
           className="min-w-[200px] flex-1 border border-line-bright bg-surface px-3 py-1.5 font-mono text-xs text-ink placeholder:text-ink-faint focus:border-accent focus:outline-none"
         />
         <span className="font-mono text-[11px] text-ink-dim">
-          {visible.size} / {entries.length}
+          {matching.length} / {entries.length}
         </span>
       </div>
 
-      <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div id={gridId} className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {entries.map((entry) => (
           <div
             key={entry.slug}
@@ -164,6 +182,36 @@ export function CatalogueFilter({ entries }: { entries: CatalogueEntry[] }) {
         <p className="mt-6 border border-dashed border-line-bright bg-panel/40 px-6 py-12 text-center font-mono text-xs uppercase tracking-[0.16em] text-ink-faint">
           Aucun système ne correspond à ces filtres
         </p>
+      ) : null}
+
+      {hiddenCount > 0 ? (
+        <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3">
+          <button
+            type="button"
+            aria-expanded={false}
+            aria-controls={gridId}
+            onClick={() => setExpanded(true)}
+            className="inline-flex min-h-12 items-center justify-center border border-accent bg-accent px-6 font-mono text-xs uppercase tracking-[0.16em] text-bg transition-colors hover:border-ink hover:bg-ink"
+          >
+            Afficher les {hiddenCount} autres dossiers
+          </button>
+          <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
+            Aperçu · {shown.length} dossiers sur {matching.length}
+          </span>
+        </div>
+      ) : null}
+      {expanded && initialLimit !== undefined && !filtering ? (
+        <div className="mt-8">
+          <button
+            type="button"
+            aria-expanded={true}
+            aria-controls={gridId}
+            onClick={() => setExpanded(false)}
+            className="inline-flex min-h-11 items-center font-mono text-[11px] uppercase tracking-[0.16em] text-ink-dim transition-colors hover:text-accent"
+          >
+            Replier le catalogue ↑
+          </button>
+        </div>
       ) : null}
     </div>
   );

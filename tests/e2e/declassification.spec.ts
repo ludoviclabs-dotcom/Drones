@@ -1,13 +1,19 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 
 // Transition « Déclassification » : depuis le catalogue, la fiche s'ouvre en
 // surimpression (route interceptée), prend le focus, piège Tab, se referme à
 // Échap en rendant le focus à la carte ; l'accès direct sert la page complète.
 
+// L'accueil n'affiche d'abord qu'un aperçu du catalogue : le dépliage rend
+// chaque carte visible, sur place, sans changer d'ancre.
+const expandCatalogue = (page: Page) =>
+  page.getByRole("button", { name: /Afficher les \d+ autres dossiers/ }).click();
+
 test("catalogue → fiche en surimpression → Échap rend la carte", async ({
   page,
 }) => {
   await page.goto("/");
+  await expandCatalogue(page);
   const card = page.locator('#catalogue a[href="/systemes/rafale"]').first();
   await card.scrollIntoViewIfNeeded();
   const scrollBefore = await page.evaluate(() => window.scrollY);
@@ -46,6 +52,7 @@ test("fiche en surimpression : le bouton de fermeture ramène au catalogue", asy
   page,
 }) => {
   await page.goto("/");
+  await expandCatalogue(page);
   const card = page.locator('#catalogue a[href="/systemes/meteor"]').first();
   await card.scrollIntoViewIfNeeded();
   await card.click();

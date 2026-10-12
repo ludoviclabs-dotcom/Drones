@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   useEffect,
   useId,
@@ -32,16 +33,28 @@ export function SiteNav() {
     setMenuOpen(false);
   };
 
-  // Un clic hors de la barre referme le groupe ouvert au clic.
+  // Changement de route par un lien hors de la barre (logo) ou par
+  // l'historique : la barre, montée dans le layout racine, persiste — elle
+  // se referme en dérivant son état du chemin, sans effet ni rendu en cascade.
+  const pathname = usePathname();
+  const [seenPathname, setSeenPathname] = useState(pathname);
+  if (seenPathname !== pathname) {
+    setSeenPathname(pathname);
+    setOpenGroup(null);
+    setMenuOpen(false);
+  }
+
+  // Un clic hors de la barre referme le groupe ou le volet ouvert.
   useEffect(() => {
-    if (openGroup === null) return;
+    if (openGroup === null && !menuOpen) return;
     const onPointerDown = (event: PointerEvent) => {
       if (rootRef.current?.contains(event.target as Node)) return;
       setOpenGroup(null);
+      setMenuOpen(false);
     };
     document.addEventListener("pointerdown", onPointerDown);
     return () => document.removeEventListener("pointerdown", onPointerDown);
-  }, [openGroup]);
+  }, [openGroup, menuOpen]);
 
   return (
     <nav
@@ -57,9 +70,6 @@ export function SiteNav() {
             alignEnd={index >= NAV_GROUPS.length - 2}
             open={openGroup === group.id}
             onOpen={() => setOpenGroup(group.id)}
-            onToggle={() =>
-              setOpenGroup((current) => (current === group.id ? null : group.id))
-            }
             onClose={() => setOpenGroup(null)}
             onNavigate={closeAll}
           />
@@ -158,7 +168,6 @@ function DesktopGroup({
   alignEnd,
   open,
   onOpen,
-  onToggle,
   onClose,
   onNavigate,
 }: {
@@ -166,7 +175,6 @@ function DesktopGroup({
   alignEnd: boolean;
   open: boolean;
   onOpen: () => void;
-  onToggle: () => void;
   onClose: () => void;
   onNavigate: () => void;
 }) {

@@ -193,6 +193,26 @@ test.describe("Planches techniques — point d’entrée", () => {
     });
   }
 
+  test("375px — le volet mobile se referme quand la route change hors de la barre", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 375, height: 900 });
+    await page.goto("/hud");
+    const nav = page.getByRole("banner").getByRole("navigation");
+    const menu = nav.getByRole("button", { name: "Menu" });
+    await menu.click();
+    await expect(menu).toHaveAttribute("aria-expanded", "true");
+    // Le logo vit hors de la barre : la navigation doit quand même refermer.
+    await page.getByRole("banner").getByRole("link", { name: /^Panoplie/ }).click();
+    await expect(page).toHaveURL(/\/$/);
+    await expect(menu).toHaveAttribute("aria-expanded", "false");
+    await menu.click();
+    await expect(menu).toHaveAttribute("aria-expanded", "true");
+    await page.goBack();
+    await expect(page).toHaveURL(/\/hud$/);
+    await expect(menu).toHaveAttribute("aria-expanded", "false");
+  });
+
   test("l’accueil montre la planche de tête dès l’arrivée, et mène à chacune", async ({
     page,
   }) => {

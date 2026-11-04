@@ -187,7 +187,7 @@ function FilmChrome() {
         }}
       >
         <MonoLabel size={s.micro} style={{ letterSpacing: TRACKING.micro }}>
-          {formatTimecode(frame)} / {formatTimecode(FILM_DURATION)}
+          {formatTimecode(frame + 1)} / {formatTimecode(FILM_DURATION)}
         </MonoLabel>
         <MonoLabel size={s.micro} style={{ letterSpacing: TRACKING.micro }}>
           Sources ouvertes · aucun usage opérationnel

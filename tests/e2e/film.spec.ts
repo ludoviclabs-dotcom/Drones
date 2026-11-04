@@ -33,7 +33,7 @@ test.describe("Briefing vidéo", () => {
     await chapter3.click();
     await expect(player).toHaveAttribute("data-chapter", "preuve");
     await expect(chapter3).toHaveAttribute("aria-current", "step");
-    await expect(page.locator("[aria-live=polite]")).toContainText("source");
+    await expect(page.locator("[data-film-caption]")).toContainText("source");
 
     // Flèches : chapitre suivant ; pause sur le bouton dédié.
     await player.press("ArrowRight");

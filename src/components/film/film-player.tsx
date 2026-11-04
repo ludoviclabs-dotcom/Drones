@@ -180,40 +180,51 @@ export default function FilmPlayer({
   const current = chapterAt(frame);
   const currentIndex = CHAPTERS.indexOf(current);
 
+  /**
+   * Aller à une image et lire. Remotion reprend seul la lecture après un
+   * `seekTo()` lancé pendant la lecture : un `play()` en plus laisserait sa
+   * reprise en attente, et le film repartirait du début une fois terminé.
+   */
+  const seekAndPlay = useCallback((target: number) => {
+    const player = playerRef.current;
+    if (!player) return;
+    const wasPlaying = player.isPlaying();
+    player.seekTo(target);
+    if (!wasPlaying) player.play();
+  }, []);
+
+  /** Mouvement réduit : se poser sur une image fixe, sans lecture. */
+  const showStill = useCallback((target: number) => {
+    const player = playerRef.current;
+    if (!player) return;
+    player.pause();
+    player.seekTo(target);
+  }, []);
+
   const goTo = useCallback(
     (chapter: Chapter) => {
-      const player = playerRef.current;
-      if (!player) return;
       setEnded(false);
-      if (reduced) {
-        player.pause();
-        player.seekTo(chapter.from + chapter.keyFrame);
-      } else {
-        player.seekTo(chapter.from);
-        player.play();
-      }
+      if (reduced) showStill(chapter.from + chapter.keyFrame);
+      else seekAndPlay(chapter.from);
     },
-    [reduced],
+    [reduced, seekAndPlay, showStill],
   );
 
   const toggle = useCallback(() => {
     const player = playerRef.current;
     if (!player) return;
     if (ended) {
-      player.seekTo(0);
-      player.play();
+      seekAndPlay(0);
       return;
     }
     player.toggle();
-  }, [ended]);
+  }, [ended, seekAndPlay]);
 
   const replay = useCallback(() => {
-    const player = playerRef.current;
-    if (!player) return;
     setEnded(false);
-    player.seekTo(reduced ? CHAPTERS[0].keyFrame : 0);
-    if (!reduced) player.play();
-  }, [reduced]);
+    if (reduced) showStill(CHAPTERS[0].keyFrame);
+    else seekAndPlay(0);
+  }, [reduced, seekAndPlay, showStill]);
 
   const prev = CHAPTERS[currentIndex - 1];
   const next = CHAPTERS[currentIndex + 1];
@@ -385,7 +396,8 @@ export default function FilmPlayer({
           <StepIcon direction="next" />
         </button>
         <span className="ml-1 font-mono text-[11px] tabular-nums tracking-[0.12em] text-ink-faint">
-          {formatTimecode(frame)} / {formatTimecode(FILM_DURATION)}
+          {/* Images déjà montrées : la dernière affiche la durée totale. */}
+          {formatTimecode(frame + 1)} / {formatTimecode(FILM_DURATION)}
         </span>
         {reduced ? (
           <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
@@ -397,6 +409,7 @@ export default function FilmPlayer({
       {/* Sous-titre éditorial du chapitre — annoncé à chaque changement. */}
       <p
         aria-live="polite"
+        data-film-caption=""
         className="max-w-[72ch] border-l-2 border-accent pl-4 font-sans text-[15px] leading-relaxed text-ink-dim"
       >
         <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-accent">

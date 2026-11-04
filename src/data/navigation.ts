@@ -7,6 +7,8 @@
  * reste listé dans `FOOTER_LINKS`, le plan du site.
  */
 
+import { FILM_SECONDS } from "@/film/timeline";
+
 export interface NavLink {
   href: string;
   label: string;
@@ -28,6 +30,7 @@ export const NAV_GROUPS: readonly NavGroup[] = [
       { href: "/domaines", label: "Domaines", hint: "Onze domaines, une même grille" },
       { href: "/#catalogue", label: "Catalogue des dossiers", hint: "Recherche et filtres" },
       { href: "/eurosatory", label: "EuroSatory", hint: "Parcours salon 2026" },
+      { href: "/demo", label: "Briefing vidéo", hint: `Panoplie en ${FILM_SECONDS} secondes` },
     ],
   },
   {
@@ -71,6 +74,7 @@ export const SEARCH_HREF = "/#catalogue";
 /** Plan du site en pied de page — inchangé, c'est la garantie qu'aucune route ne se perd. */
 export const FOOTER_LINKS: readonly NavLink[] = [
   { href: "/eurosatory", label: "EuroSatory" },
+  { href: "/demo", label: "Briefing vidéo" },
   { href: "/domaines", label: "Domaines" },
   { href: "/hud", label: "Planches" },
   { href: "/comparateur", label: "Comparateur" },

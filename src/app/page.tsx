@@ -25,6 +25,8 @@ import {
 import { EvidencePanel } from "@/components/home/evidence-panel";
 import { getEvidenceStats } from "@/lib/claims";
 import { formatCount, formatDateFr } from "@/lib/format";
+import { FilmLauncher } from "@/components/film/film-launcher";
+import { buildFilmData } from "@/film/build-film-data";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -157,6 +159,8 @@ export default function Home() {
                 Voir les planches techniques →
               </Link>
             </div>
+            {/* Briefing vidéo : le film se charge à l'ouverture seulement. */}
+            <FilmLauncher data={buildFilmData()} invite />
             <p className="flex flex-wrap gap-x-5 gap-y-1 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint">
               <span>OSINT</span>
               <span aria-hidden="true">·</span>

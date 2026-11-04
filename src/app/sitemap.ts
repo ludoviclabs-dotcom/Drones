@@ -12,6 +12,7 @@ type ChangeFrequency = NonNullable<
 const STATIC_ROUTES: { path: string; priority: number; changeFrequency: ChangeFrequency }[] = [
   { path: "/", priority: 1, changeFrequency: "weekly" },
   { path: "/eurosatory", priority: 0.9, changeFrequency: "weekly" },
+  { path: "/demo", priority: 0.8, changeFrequency: "monthly" },
   { path: "/domaines", priority: 0.8, changeFrequency: "monthly" },
   { path: "/comparateur", priority: 0.8, changeFrequency: "monthly" },
   { path: "/matrice", priority: 0.7, changeFrequency: "monthly" },

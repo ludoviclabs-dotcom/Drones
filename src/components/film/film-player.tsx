@@ -394,9 +394,6 @@ export default function FilmPlayer({
           <Link href="/console" onClick={onClose} className={BTN}>
             Console OSINT
           </Link>
-          <button type="button" onClick={replay} className={BTN}>
-            Revoir
-          </button>
         </div>
       ) : null}
 

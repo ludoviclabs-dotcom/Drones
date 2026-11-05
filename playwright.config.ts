@@ -13,6 +13,10 @@ export default defineConfig({
   use: {
     baseURL: "http://localhost:3000",
     trace: "on-first-retry",
+    // L'invitation au briefing (première visite) est déjà « refusée » : elle ne
+    // vient pas couvrir les éléments que les autres tests manipulent. Le test
+    // du briefing repart d'un stockage vide pour la vérifier.
+    storageState: "tests/e2e/storage-state.json",
   },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   webServer: {

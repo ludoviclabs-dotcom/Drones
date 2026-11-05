@@ -124,10 +124,10 @@ function schedule(angles: FilmAngle[]): { from: number; to: number }[] {
  * démonstration d'accueil, rejoué sur un dossier réel, puis replié en
  * tableau de synthèse.
  *
- *   0–30     en-tête du dossier, titre, liste des angles, panneau
- *   32–344   les cinq angles se succèdent (durée selon la longueur du narratif)
- *   344–390  le panneau s'ouvre sur toute la largeur : synthèse des indicateurs
- *   420      image clé : synthèse complète, stable jusqu'à la fin
+ *   0–28     en-tête du dossier, titre, liste des angles, cadre du panneau
+ *   28–344   les cinq angles se succèdent (50 à 75 images selon le narratif)
+ *   344–394  le panneau cède la place au tableau de synthèse des indicateurs
+ *   394–450  synthèse figée ; image clé à 420
  */
 export function DossierScene({ data }: SceneProps) {
   const frame = useCurrentFrame();

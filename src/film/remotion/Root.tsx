@@ -1,7 +1,10 @@
 import "./fonts";
-import { Composition, Folder } from "remotion";
+import type { ComponentType } from "react";
+import { AbsoluteFill, Composition, Folder } from "remotion";
 import { PanoplieFilm, SCENES } from "../PanoplieFilm";
+import { C, FONT } from "../theme";
 import { buildFilmData } from "../build-film-data";
+import type { SceneProps } from "../types";
 import {
   CHAPTERS,
   FILM_DURATION,
@@ -18,6 +21,25 @@ import {
  * reprend toujours les chiffres du site au commit courant.
  */
 const data = buildFilmData();
+
+/**
+ * Un chapitre seul dans le Studio : sur le fond et la typographie du film
+ * (sinon l'export d'image d'un chapitre sort sur fond transparent).
+ */
+function onFilmGround(Scene: ComponentType<SceneProps>) {
+  function ChapterOnGround(props: SceneProps) {
+    return (
+      <AbsoluteFill style={{ background: C.bg, color: C.ink, fontFamily: FONT.sans }}>
+        <Scene {...props} />
+      </AbsoluteFill>
+    );
+  }
+  return ChapterOnGround;
+}
+
+const CHAPTER_COMPONENTS = Object.fromEntries(
+  CHAPTERS.map((chapter) => [chapter.id, onFilmGround(SCENES[chapter.id])]),
+);
 
 export function RemotionRoot() {
   return (
@@ -45,7 +67,7 @@ export function RemotionRoot() {
           <Composition
             key={chapter.id}
             id={`Chapitre-${chapter.num}-${chapter.id}`}
-            component={SCENES[chapter.id]}
+            component={CHAPTER_COMPONENTS[chapter.id]}
             width={FILM_WIDTH}
             height={FILM_HEIGHT}
             fps={FILM_FPS}

@@ -85,7 +85,9 @@ function FilmChrome() {
   const droneSize = portrait ? 50 : 44;
   // Le drone tient sa ligne de vol avec une légère respiration (Math.sin).
   const bob = Math.sin(frame / 14) * 3;
-  const droneX = railX0 + (railX1 - railX0) * progress;
+  // Le drone entier reste dans les marges, du début à la dernière image.
+  const droneX =
+    railX0 + droneSize / 2 + (railX1 - railX0 - droneSize) * progress;
 
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>

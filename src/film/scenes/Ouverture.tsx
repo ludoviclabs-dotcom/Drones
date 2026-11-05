@@ -101,7 +101,10 @@ export function OuvertureScene({ data }: SceneProps) {
       >
         <Reveal at={8} y={12}>
           <MonoLabel color={C.accent}>
-            Observatoire en sources ouvertes · {stats.domains} domaines
+            Observatoire en sources ouvertes
+            {/* En 9:16, deux lignes franches plutôt qu'un retour imposé. */}
+            {portrait ? <br /> : " · "}
+            {stats.domains} domaines
           </MonoLabel>
         </Reveal>
 

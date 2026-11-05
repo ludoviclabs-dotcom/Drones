@@ -84,7 +84,7 @@ export const CATEGORY_LABELS: Record<SystemCategory, string> = {
   "combat-system": "Systèmes de combat / C2",
   space: "Spatial militaire",
   artillery: "Artillerie & feux terrestres",
-  "armored-vehicle": "Blindes & chars de combat",
+  "armored-vehicle": "Blindés & chars de combat",
 };
 
 export const GENERATION_LABELS: Record<CombatAircraftClass, string> = {

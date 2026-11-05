@@ -92,7 +92,7 @@ export const DOMAINS: DomainInfo[] = [
   },
   {
     category: "armored-vehicle",
-    label: "Blindes & chars de combat",
+    label: "Blindés & chars de combat",
     href: "/blindes-chars-combat",
     cta: "Ouvrir le domaine",
     blurb:

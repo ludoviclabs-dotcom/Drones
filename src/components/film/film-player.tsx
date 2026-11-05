@@ -319,7 +319,7 @@ export default function FilmPlayer({
         </ol>
       </nav>
 
-      <div className="relative mx-auto w-full" style={{ maxWidth }}>
+      <div className="mx-auto w-full" style={{ maxWidth }}>
         <Player
           // Nouvelle instance si l'orientation change (dimensions de composition).
           key={portrait ? "portrait" : "paysage"}
@@ -345,27 +345,35 @@ export default function FilmPlayer({
           className="border border-line-bright bg-bg"
         />
 
-        {ended ? (
-          <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-center justify-center gap-3 border-t border-line-bright bg-bg/95 px-4 py-4">
-            <Link
-              href="/#catalogue"
-              onClick={onClose}
-              className="inline-flex min-h-11 items-center border border-accent bg-accent px-5 font-mono text-[11px] uppercase tracking-[0.16em] text-bg transition-colors hover:border-ink hover:bg-ink"
-            >
-              Ouvrir le recueil →
-            </Link>
-            <Link href="/comparateur" onClick={onClose} className={BTN}>
-              Comparer des dossiers
-            </Link>
-            <Link href="/console" onClick={onClose} className={BTN}>
-              Console OSINT
-            </Link>
-            <button type="button" onClick={replay} className={BTN}>
-              Revoir
-            </button>
-          </div>
-        ) : null}
       </div>
+
+      {/* Fin du film : les sorties s'ajoutent sous le carton final, sans le masquer. */}
+      {ended ? (
+        <div
+          className="flex flex-wrap items-center gap-3 border-y border-line-bright py-3"
+          data-film-end=""
+        >
+          <span className="mr-2 font-mono text-[10px] uppercase tracking-[0.16em] text-accent">
+            Fin du briefing
+          </span>
+          <Link
+            href="/#catalogue"
+            onClick={onClose}
+            className="inline-flex min-h-11 items-center border border-accent bg-accent px-5 font-mono text-[11px] uppercase tracking-[0.16em] text-bg transition-colors hover:border-ink hover:bg-ink"
+          >
+            Ouvrir le recueil →
+          </Link>
+          <Link href="/comparateur" onClick={onClose} className={BTN}>
+            Comparer des dossiers
+          </Link>
+          <Link href="/console" onClick={onClose} className={BTN}>
+            Console OSINT
+          </Link>
+          <button type="button" onClick={replay} className={BTN}>
+            Revoir
+          </button>
+        </div>
+      ) : null}
 
       <div className="flex flex-wrap items-center gap-2">
         <button

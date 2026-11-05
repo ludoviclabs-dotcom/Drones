@@ -1,6 +1,6 @@
 # Briefing vidéo Panoplie — état d'avancement (reprise de session)
 
-Branche : `claude/happy-turing-atl89i` (poussée). Dernier commit fonctionnel : `00c20b5`.
+Branche : `claude/happy-turing-atl89i` (poussée). Tout est commité et poussé ; la relecture de code indépendante est traitée.
 
 ## Fait
 - Film Remotion 76 s, 7 chapitres, 16:9 et 9:16, alimenté par le registre (`src/film/`).
@@ -12,8 +12,8 @@ Branche : `claude/happy-turing-atl89i` (poussée). Dernier commit fonctionnel : 
 - MP4 rendus (hors dépôt) : `npm run film:render` et `npm run film:render:portrait` → `out/`.
 
 ## Reste à faire
-1. Traiter la relecture de code indépendante (en cours au moment de l'arrêt) : relancer une revue
-   du diff `git diff fda986b` (lecteur, modale, déterminisme des scènes, honnêteté des données).
+1. Fait : relecture de code indépendante (12 points) corrigée ; E2E complets 183/183, build OK,
+   MP4 16:9 et 9:16 re-rendus.
 2. Décider : prop `acknowledgeRemotionLicense` sur `<Player>` (licence gratuite ≤ 3 personnes).
 3. Optionnel : insert vidéo « Trois Rafale » de PANOPLIE_LITTORAL (Dropbox) — nécessite un rendu
    sans titres incrustés depuis le `.blend` ; exclure les plans de frappe.

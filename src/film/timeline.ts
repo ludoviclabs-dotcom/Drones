@@ -61,7 +61,11 @@ const SPECS: readonly ChapterSpec[] = [
     title: "Chaque chiffre porte sa source",
     durationInFrames: 420,
     caption: (d) =>
-      `Chaque affirmation remonte à une source notée de A à D. Le registre en trace ${formatCount(d.stats.claims)}, dont ${formatCount(d.stats.verified)} vérifiées.`,
+      `Chaque affirmation sourcée remonte à une source notée de A à D. Le registre en trace ${formatCount(d.stats.claims)}, dont ${formatCount(d.stats.verified)} vérifiées${
+        d.stats.unsourced > 0
+          ? ` ; ${formatCount(d.stats.unsourced)} attendent encore leur source, et le registre le dit`
+          : ""
+      }.`,
   },
   {
     id: "comparer",

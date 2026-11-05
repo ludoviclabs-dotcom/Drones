@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useSyncExternalStore } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
 import type { FilmData } from "@/film/types";
 
 /**
@@ -33,7 +33,8 @@ function subscribeToLocation(onChange: () => void) {
 
 function readStartChapter(): string {
   const params = new URLSearchParams(window.location.search);
-  return params.get("chapitre") ?? window.location.hash.replace(/^#/, "");
+  // Le dernier lien suivi (ancre) prime sur le paramètre d'arrivée.
+  return window.location.hash.replace(/^#/, "") || params.get("chapitre") || "";
 }
 
 export function FilmStage({ data }: { data: FilmData }) {
@@ -43,8 +44,17 @@ export function FilmStage({ data }: { data: FilmData }) {
     readStartChapter,
     () => null,
   );
+  const stageRef = useRef<HTMLDivElement>(null);
+  // Un lien de chapitre de la transcription ramène le lecteur à l'écran.
+  useEffect(() => {
+    const onHash = () =>
+      stageRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
   if (start === null) return <StagePlaceholder />;
   return (
+    <div ref={stageRef} className="scroll-mt-24">
     <FilmPlayer
       // Un nouveau lien de chapitre relance le lecteur sur ce chapitre.
       key={start}
@@ -53,5 +63,6 @@ export function FilmStage({ data }: { data: FilmData }) {
       startChapter={start || undefined}
       source="page-demo"
     />
+    </div>
   );
 }

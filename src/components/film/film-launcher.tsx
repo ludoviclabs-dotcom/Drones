@@ -80,17 +80,19 @@ export function FilmLauncher({
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
-    if (open && !dialog.open) {
-      dialog.showModal();
-      document.documentElement.style.overflow = "hidden";
-    }
+    if (!open) return;
+    if (!dialog.open) dialog.showModal();
+    document.documentElement.style.overflow = "hidden";
+    // Libéré aussi si la page est quittée film ouvert (bouton Retour).
+    return () => {
+      document.documentElement.style.overflow = "";
+    };
   }, [open]);
 
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
     const onClose = () => {
-      document.documentElement.style.overflow = "";
       setOpen(false);
       // Retire ?demo=1 de l'adresse : un rechargement ne rouvre pas le film.
       const url = new URL(window.location.href);
@@ -118,7 +120,10 @@ export function FilmLauncher({
       return () => window.clearTimeout(timer);
     }
     if (!invite || readVisit()) return;
-    const timer = window.setTimeout(() => setShowInvite(true), INVITE_DELAY_MS);
+    // Relu à l'échéance : un film ouvert entre-temps annule l'invitation.
+    const timer = window.setTimeout(() => {
+      if (!readVisit()) setShowInvite(true);
+    }, INVITE_DELAY_MS);
     return () => window.clearTimeout(timer);
   }, [invite, openFilm]);
 

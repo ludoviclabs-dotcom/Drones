@@ -87,6 +87,8 @@ export interface FilmStats {
   sources: number;
   claims: number;
   verified: number;
+  /** Affirmations encore sans source au registre. */
+  unsourced: number;
   /** Date d'arrêté du registre, formatée (« 19 juin 2026 »). */
   updatedLabel: string;
 }

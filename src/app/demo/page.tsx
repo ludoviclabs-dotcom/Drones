@@ -71,13 +71,10 @@ export default function DemoPage() {
                 <p className="mt-1 max-w-[70ch] text-[15px] leading-relaxed text-ink-dim">
                   {chapter.caption(data)}
                 </p>
-                <Link
-                  href={`/demo?chapitre=${chapter.id}`}
-                  scroll={false}
-                  className={LINK_ACCENT}
-                >
+                {/* Lien d'ancre : déclenche hashchange, que le lecteur écoute. */}
+                <a href={`#${chapter.id}`} className={LINK_ACCENT}>
                   Lire depuis ce chapitre →
-                </Link>
+                </a>
               </div>
             </li>
           ))}

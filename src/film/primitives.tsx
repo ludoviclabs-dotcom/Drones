@@ -534,7 +534,7 @@ export function FilmDrone({
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
-      style={style}
+      style={{ display: "block", ...style }}
     >
       <line
         x1="120"

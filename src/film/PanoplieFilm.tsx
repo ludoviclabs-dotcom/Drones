@@ -207,6 +207,9 @@ export function PanoplieFilm({ data }: FilmProps) {
         background: C.bg,
         color: C.ink,
         fontFamily: FONT.sans,
+        // Mêmes métriques dans le lecteur du site et au rendu MP4.
+        lineHeight: 1.2,
+        fontSize: 16,
         overflow: "hidden",
       }}
     >

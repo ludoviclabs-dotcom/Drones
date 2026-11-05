@@ -80,7 +80,7 @@ function requireSystem(slug: string): DefenseSystem {
 }
 
 function buildAngles(system: DefenseSystem): FilmAngle[] {
-  return BRICK_ORDER.flatMap((key, i) => {
+  const angles = BRICK_ORDER.flatMap((key) => {
     const brick = system.bricks.find((b) => b.key === key);
     // L'indicateur affiché est le plus solide de la brique : le film montre
     // ce qui est établi, la confiance de chacun reste visible.
@@ -91,13 +91,15 @@ function buildAngles(system: DefenseSystem): FilmAngle[] {
     return [
       {
         key,
-        num: String(i + 1).padStart(2, "0"),
+        num: "",
         label: BRICK_ANGLE_LABELS[key],
         lede: firstSentence(brick.narrative),
         indicator: toFilmIndicator(indicator),
       },
     ];
   });
+  // Numérotation continue, même si une brique manque au dossier.
+  return angles.map((angle, i) => ({ ...angle, num: String(i + 1).padStart(2, "0") }));
 }
 
 function buildProof(system: DefenseSystem): FilmProof {
@@ -111,7 +113,11 @@ function buildProof(system: DefenseSystem): FilmProof {
       return source ? [{ key, indicator, source }] : [];
     });
   });
+  // Une source datée d'abord : la preuve montre alors source, date et confiance.
+  const dated = candidates.filter((c) => c.source.date);
   const pick =
+    dated.find((c) => c.indicator.label === PROOF_PREFERRED_LABEL) ??
+    dated.find((c) => c.indicator.confidence === "haute") ??
     candidates.find((c) => c.indicator.label === PROOF_PREFERRED_LABEL) ??
     candidates.find((c) => c.indicator.confidence === "haute") ??
     candidates[0];
@@ -170,6 +176,7 @@ export function buildFilmData(): FilmData {
       sources: stats.sources,
       claims: stats.claims,
       verified: stats.byStatus.verifie,
+      unsourced: stats.claimsWithoutSources,
       updatedLabel: formatDateFr(stats.updated),
     },
     domains: DOMAINS.map((domain) => domain.label),

@@ -422,7 +422,7 @@ export function PreuveScene({ data }: SceneProps) {
           ) : (
             // Honnêteté du registre : une date absente n'est jamais déduite.
             <span style={{ fontStyle: "italic", color: C.inkPaperDim }}>
-              date non publiée
+              non renseignée au registre — jamais déduite
             </span>
           )}
         </Field>
@@ -581,8 +581,16 @@ export function PreuveScene({ data }: SceneProps) {
                 color: C.inkPaper,
               }}
             >
-              Chaque chiffre porte <Underlined at={T.source + 4}>une source</Underlined>,{" "}
-              <Underlined at={T.date + 2}>une date</Underlined> et{" "}
+              {/* Le titre ne promet une date que si la source montrée en porte une. */}
+              Chaque chiffre porte <Underlined at={T.source + 4}>une source</Underlined>
+              {data.proof.source.dateLabel ? (
+                <>
+                  ,{" "}
+                  <Underlined at={T.date + 2}>une date</Underlined> et{" "}
+                </>
+              ) : (
+                " et "
+              )}
               <Underlined at={T.dashes}>un niveau de confiance</Underlined>.
             </h2>
           </Reveal>

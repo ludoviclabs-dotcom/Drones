@@ -38,7 +38,7 @@ test.describe("Briefing vidéo", () => {
     // Flèches : chapitre suivant ; pause sur le bouton dédié.
     await player.press("ArrowRight");
     await expect(player).toHaveAttribute("data-chapter", "comparer");
-    await page.getByRole("button", { name: "Mettre en pause" }).click();
+    await page.getByRole("button", { name: "Pause", exact: true }).click();
     await expect(player).toHaveAttribute("data-state", "paused");
 
     const results = await new AxeBuilder({ page })
@@ -129,6 +129,14 @@ test.describe("Page /demo", () => {
     );
     await expect(page.locator("[data-film-player]")).toBeVisible({ timeout: 30_000 });
     await expect(page.locator("ol li[id^=transcription-]")).toHaveCount(7);
+
+    // Les liens de la transcription repositionnent le lecteur (ancre).
+    await page.locator("#transcription-comparer").getByRole("link").click();
+    await expect(page.locator("[data-film-player]")).toHaveAttribute(
+      "data-chapter",
+      "comparer",
+      { timeout: 30_000 },
+    );
 
     await page.goto("/demo?chapitre=preuve");
     await expect(page.locator("[data-film-player]")).toHaveAttribute(

@@ -119,6 +119,15 @@ function schedule(angles: FilmAngle[]): { from: number; to: number }[] {
   return windows;
 }
 
+/** Nombre d'angles en toutes lettres (le titre suit les données). */
+const COUNT_WORDS: Record<number, string> = {
+  2: "deux",
+  3: "trois",
+  4: "quatre",
+  5: "cinq",
+  6: "six",
+};
+
 /**
  * 02 · Un dossier, cinq angles (15 s) — le parcours de lecture de la
  * démonstration d'accueil, rejoué sur un dossier réel, puis replié en
@@ -279,7 +288,7 @@ export function DossierScene({ data }: SceneProps) {
               color: C.ink,
             }}
           >
-            Un dossier, cinq angles.
+            Un dossier, {COUNT_WORDS[data.dossier.angles.length] ?? data.dossier.angles.length} angles.
           </h2>
         </Reveal>
         {dossier.updatedLabel ? (

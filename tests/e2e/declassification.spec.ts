@@ -39,6 +39,8 @@ test("catalogue → fiche en surimpression → Échap rend la carte", async ({
     ),
   ).toBe(true);
 
+  // Hors d'un renvoi de source (dont l'aperçu prendrait le premier Échap).
+  await page.locator("#dossier-titre").focus();
   await page.keyboard.press("Escape");
   await expect(dialog).toHaveCount(0);
   await expect(page).toHaveURL(/\/$/);
@@ -71,4 +73,30 @@ test("accès direct à une fiche : page complète, sans surimpression", async ({
     page.getByRole("heading", { level: 1, name: "Rafale" }),
   ).toBeVisible();
   await expect(page.getByRole("dialog")).toHaveCount(0);
+});
+
+test("fiche en surimpression : Échap ferme d'abord l'aperçu de source", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await expandCatalogue(page);
+  const card = page.locator('#catalogue a[href="/systemes/rafale"]').first();
+  await card.scrollIntoViewIfNeeded();
+  await card.click();
+  const dialog = page.getByRole("dialog", { name: "Rafale" });
+  await expect(dialog.locator("[data-dossier-panel]")).toHaveAttribute(
+    "aria-busy",
+    "false",
+  );
+  const mark = dialog.getByRole("link", { name: /^Source \d{2}$/ }).first();
+  const preview = page.locator(
+    `[id="${await mark.getAttribute("aria-describedby")}"]`,
+  );
+  await mark.focus();
+  await expect(preview).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(preview).toBeHidden();
+  await expect(dialog).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
 });

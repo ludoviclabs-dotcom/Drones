@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState, type KeyboardEvent } from "react";
+import { useEffect, useId, useState } from "react";
 import { formatNoteNumber, type SourceNote } from "@/lib/source-notes";
 import { ReliabilityMark } from "./primitives";
 
@@ -41,13 +41,20 @@ function SourceMark({
   const previewId = useId();
   const num = formatNoteNumber(note.n);
 
-  function onKeyDown(event: KeyboardEvent<HTMLAnchorElement>) {
-    if (event.key === "Escape" && open) {
-      // Échap referme l'aperçu seulement, pas la fiche en surimpression.
+  // Échap referme l'aperçu seulement. La fiche en surimpression écoute Échap
+  // en capture sur `document` : on l'intercepte plus tôt, en capture sur
+  // `window`, et seulement tant que l'aperçu est ouvert.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (event: globalThis.KeyboardEvent) => {
+      if (event.key !== "Escape") return;
       event.stopPropagation();
+      event.preventDefault();
       setOpen(false);
-    }
-  }
+    };
+    window.addEventListener("keydown", onKey, true);
+    return () => window.removeEventListener("keydown", onKey, true);
+  }, [open]);
 
   return (
     <span
@@ -61,7 +68,6 @@ function SourceMark({
         aria-describedby={previewId}
         onFocus={() => setOpen(true)}
         onBlur={() => setOpen(false)}
-        onKeyDown={onKeyDown}
         className="inline-flex min-w-[1.6rem] justify-center px-0.5 font-mono text-[10px] leading-5 tracking-[0.04em] text-accent underline decoration-accent/40 underline-offset-2 transition-colors hover:text-ink hover:decoration-ink"
       >
         {num}

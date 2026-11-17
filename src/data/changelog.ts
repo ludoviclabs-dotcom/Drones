@@ -3,6 +3,18 @@ import type { ChangelogEntry } from "./types";
 // Du plus récent au plus ancien.
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-11-17",
+    title: "Registre « Souveraineté industrielle » : acteurs, nouvelles fiches, corrections",
+    items: [
+      "Nouvelle section /acteurs — cinq dossiers de groupes et d'entreprises de défense tech : KNDS, Exail, Eurenco, Anduril, Palantir. Un acteur ne se note pas comme une arme : il se lit par son capital, ses chiffres, ses contrats, sa chaîne de valeur et ses jalons.",
+      "Treize fiches ajoutées — HYDIS, HYDEF, MdCN Mk2, Thundart, FLP-T 150, missile balistique terrestre de 2 500 km, DELUGE, Tomahawk, Typhon, Delco / Sonora, SMOKERS, UCUV et SLAM-F — et dix-sept fiches corrigées ou actualisées (Rafale, SAMP/T NG, F126, SCAF, CAESAR, PAC-3 MSE, AMRAAM, THAAD…).",
+      "Chaque chiffre repris du registre porte son metric_id, son statut — officiel, commande ferme, requête budgétaire, presse, source unique, calculé, plafond d'accord-cadre ou n.c. — et sa source. Un plafond n'est jamais présenté comme une commande ; une donnée absente s'écrit « non documenté ».",
+      "Nouvelles sections de fiche : structure du programme (parent / enfant), chaîne de valeur, souveraineté et contrôle, jalons à surveiller. Un test de traçabilité vérifie chaque chiffre contre le registre.",
+      "Correctif /couts : un coût n'est plus fabriqué à partir d'une année, d'un calibre ou d'un « 8x8 » — 33 faux montants retirés, 26 corrigés (dont 12 montants en dollars affichés en euros).",
+      "Journal complet — fiche, champ, ancienne valeur, nouvelle valeur, metric_id, source — dans docs/registre-2026-11/CHANGELOG.md et changelog.csv.",
+    ],
+  },
+  {
     date: "2026-06-08",
     title: "System X-Ray — lot 3 : cinq dossiers à fort levier comparatif",
     items: [

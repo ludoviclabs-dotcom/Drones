@@ -475,6 +475,8 @@ test("HUD drone : ordre de tabulation en ordre de lecture", async ({ page }) => 
 const A11Y_PAGES = [
   "/",
   "/systemes/fujian",
+  "/acteurs",
+  "/acteurs/knds",
   "/console",
   "/comparateur",
   "/hud",

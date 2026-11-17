@@ -1,4 +1,6 @@
 import { systems } from "@/data/systems";
+import { actors } from "@/data/actors";
+import { ACTOR_KIND_LABELS } from "@/data/labels";
 import { DOMAINS } from "@/data/domains";
 import { glossary } from "@/data/glossary";
 import { organisms } from "@/data/organisms";
@@ -43,6 +45,22 @@ export function buildSearchIndex(): SearchEntry[] {
       ]),
     };
   });
+
+  const actorEntries: SearchEntry[] = actors.map((actor) => ({
+    kind: "acteur",
+    title: actor.name,
+    subtitle: [actor.reference, ACTOR_KIND_LABELS[actor.kind], actor.country]
+      .filter(Boolean)
+      .join(" · "),
+    href: `/acteurs/${actor.slug}`,
+    keywords: keywords([
+      actor.reference,
+      ACTOR_KIND_LABELS[actor.kind],
+      actor.country,
+      actor.tagline,
+      actor.slug.replace(/-/g, " "),
+    ]),
+  }));
 
   const domainEntries: SearchEntry[] = DOMAINS.map((domain) => ({
     kind: "domaine",
@@ -108,5 +126,11 @@ export function buildSearchIndex(): SearchEntry[] {
     ),
   ];
 
-  return [...systemEntries, ...domainEntries, ...pageEntries, ...glossaryEntries];
+  return [
+    ...systemEntries,
+    ...actorEntries,
+    ...domainEntries,
+    ...pageEntries,
+    ...glossaryEntries,
+  ];
 }

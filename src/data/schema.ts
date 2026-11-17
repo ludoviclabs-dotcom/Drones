@@ -237,6 +237,18 @@ const SourceRef = z.object({
   url: z.string().url().optional(),
 });
 
+const FigureStatus = z.enum([
+  "officiel",
+  "commande-ferme",
+  "requete-budgetaire",
+  "presse",
+  "source-unique",
+  "calcule",
+  "non-communique",
+  "plafond-cadre",
+  "classifie",
+]);
+
 const Indicator = z.object({
   label: z.string().min(1),
   value: z.string().min(1),
@@ -244,7 +256,83 @@ const Indicator = z.object({
   status: ClaimStatus.optional(),
   note: z.string().optional(),
   sources: z.array(z.string()).optional(),
+  metricIds: z
+    .array(z.string().regex(/^MET-\d{4}$/, "metric_id attendu : MET-0000"))
+    .min(1)
+    .optional(),
+  figureStatus: FigureStatus.optional(),
 });
+
+const RegistryNodeType = z.enum([
+  "Plateforme_Vecteur",
+  "Acteur_Industriel",
+  "Programme_Cadre",
+  "Enveloppe_Financement",
+  "Munition_Effecteur",
+  "Sous_Systeme_Brique",
+]);
+
+const EntityId = z.string().regex(/^ENT-[A-Z0-9-]+$/, "entity_id attendu : ENT-XXX");
+
+const SovereigntyProfile = z.object({
+  entityId: EntityId,
+  scope: z.string().min(1).optional(),
+  localContentRule: z.enum([
+    "Souverain_National",
+    "Cooperation_Multinationale",
+    "Production_Locale_Client_Export",
+    "Regle_SAFE_65_pourcent_UE",
+    "Non_specifie",
+  ]),
+  thirdPartyLock: z.enum([
+    "Approbation_Parlementaire_Requise",
+    "Accord_Washington_Requis",
+    "Autorisation_Concurrence_Reglementaire",
+    "Aucun_Veto_Tiers",
+    "Non_specifie",
+  ]),
+  sourceCodeAccess: z.enum([
+    "Refus_Acces_Code_Source_ICD",
+    "Interfaces_Controlees",
+    "Propriete_Integrale",
+    "Non_specifie",
+  ]),
+  chokepoints: z.array(z.string().min(1)),
+});
+
+const IndustrialLink = z.object({
+  entityId: EntityId,
+  entityName: z.string().min(1).optional(),
+  actor: z.string().min(1),
+  role: z.string().min(1),
+  country: z.string().optional(),
+  scope: z.string().optional(),
+});
+
+const Watchpoint = z.object({
+  entityId: EntityId,
+  entityName: z.string().min(1).optional(),
+  horizon: z.string().min(1),
+  event: z.string().min(1),
+});
+
+interface ProgrammeNodeShape {
+  entityId: string;
+  name: string;
+  kind: z.infer<typeof RegistryNodeType>;
+  note?: string;
+  children?: ProgrammeNodeShape[];
+}
+
+const ProgrammeNode: z.ZodType<ProgrammeNodeShape> = z.lazy(() =>
+  z.object({
+    entityId: EntityId,
+    name: z.string().min(1),
+    kind: RegistryNodeType,
+    note: z.string().optional(),
+    children: z.array(ProgrammeNode).optional(),
+  }),
+);
 
 const Brick = z.object({
   key: BrickKey,
@@ -280,6 +368,10 @@ const TimelineEvent = z.object({
   date: z.string().min(1),
   label: z.string().min(1),
   kind: z.enum(["jalon", "emploi", "export", "debat"]),
+  metricIds: z
+    .array(z.string().regex(/^MET-\d{4}$/, "metric_id attendu : MET-0000"))
+    .min(1)
+    .optional(),
 });
 
 const NavalIndustrialSupplier = z.object({
@@ -516,7 +608,7 @@ export const DefenseSystemSchema = z.object({
   reference: z.string().min(1),
   category: SystemCategory,
   droneClass: z
-    .enum(["MALE", "HALE", "UCAV", "ISR", "munition-rodeuse", "kamikaze", "ravitailleur", "USV"])
+    .enum(["MALE", "HALE", "UCAV", "ISR", "munition-rodeuse", "kamikaze", "ravitailleur", "USV", "UUV"])
     .optional(),
   directedEnergyClass: z.enum(["HEL", "HPM", "SHORAD-hybride"]).optional(),
   combatAircraftClass: z.enum(["gen-4", "gen-4-5", "gen-5", "gen-6"]).optional(),
@@ -555,6 +647,11 @@ export const DefenseSystemSchema = z.object({
   scores: z.array(Score),
   editorial: EditorialBlocks,
   ccaReading: CCAReading.optional(),
+  registryEntityIds: z.array(EntityId).min(1).optional(),
+  sovereignty: z.array(SovereigntyProfile).optional(),
+  industrialChain: z.array(IndustrialLink).optional(),
+  watchpoints: z.array(Watchpoint).optional(),
+  programmeTree: z.array(ProgrammeNode).optional(),
   legalNote: z.string().optional(),
   operators: z.array(z.string()),
   theatres: z.array(z.string()),
@@ -564,3 +661,15 @@ export const DefenseSystemSchema = z.object({
 });
 
 export type DefenseSystemParsed = z.infer<typeof DefenseSystemSchema>;
+
+// Briques réutilisées par les autres modèles de données (dossiers d'acteurs).
+export {
+  Brick as BrickSchema,
+  Indicator as IndicatorSchema,
+  IndustrialLink as IndustrialLinkSchema,
+  ProgrammeNode as ProgrammeNodeSchema,
+  SourceRef as SourceRefSchema,
+  SovereigntyProfile as SovereigntyProfileSchema,
+  TimelineEvent as TimelineEventSchema,
+  Watchpoint as WatchpointSchema,
+};

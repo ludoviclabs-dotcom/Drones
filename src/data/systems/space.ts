@@ -937,7 +937,8 @@ export const sbirs = makeSpaceSystem({
 export const natoApssAquila = makeSpaceSystem({
   slug: "nato-apss-aquila",
   name: "NATO APSS / Aquila",
-  designation: "Alliance Persistent Surveillance from Space",
+  designation:
+    "Alliance Persistent Surveillance from Space · à ne pas confondre avec l'intercepteur Aquila (HYDIS) de MBDA",
   reference: "PNP-SP-008",
   classLabel: "ISR spatial allié fédéré",
   country: "OTAN",
@@ -950,7 +951,7 @@ export const natoApssAquila = makeSpaceSystem({
   tagline:
     "Une constellation virtuelle alliée : mutualiser l'accès ISR spatial sans prétendre posséder un seul système unique.",
   summary:
-    "APSS/Aquila est utile à Panoplie parce qu'il casse le réflexe fiche-satellite. Le sujet est une capacité fédérée : financement allié, accès aux données, contrats industriels, gouvernance et limites de preuve.",
+    "APSS/Aquila est utile à Panoplie parce qu'il casse le réflexe fiche-satellite. Le sujet est une capacité fédérée : financement allié, accès aux données, contrats industriels, gouvernance et limites de preuve.\n\nHomonymie : le nom « Aquila » désigne aussi, côté MBDA, l'intercepteur endo-atmosphérique HYDIS candidat à l'appel du Fonds européen de défense. Les deux objets n'ont aucun rapport : l'un est une capacité spatiale d'observation de l'OTAN, l'autre un missile antibalistique en développement.",
   missions: ["observation", "data-relay"],
   missionText: "ISR spatial allié fédéré",
   orbitClasses: ["multi-orbit"],

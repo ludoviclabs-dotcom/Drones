@@ -1,3 +1,4 @@
+import type { DefenseSystem, Indicator } from "../types";
 import { makeNavalSystem } from "./naval-multinational";
 
 // Pack naval Allemagne — spécialiste OTAN / export : défense aérienne, frégate
@@ -136,7 +137,7 @@ export const sachsenF124 = makeNavalSystem({
   },
 });
 
-export const f126Niedersachsen = makeNavalSystem({
+const f126Base = makeNavalSystem({
   slug: "f126-niedersachsen",
   name: "F126 Niedersachsen",
   designation: "F126 (ex-MKS 180) · frégate multi-missions allemande",
@@ -146,13 +147,14 @@ export const f126Niedersachsen = makeNavalSystem({
   country: "Allemagne",
   flag: "🇩🇪",
   manufacturer: "Damen Naval · Blohm+Voss · Peene-Werft (Lürssen)",
-  status: "En construction ; tête de série attendue vers 2028 — calendrier signalé comme glissant",
+  status:
+    "Programme arrêté par Berlin le 23 ou 24 juin 2026, remplacé par huit MEKO A-200 (4 + option de 4)",
   acquisitionModes: ["cooperatif", "DCS"],
-  updated: "2026-06-03",
+  updated: "2026-11-17",
   tagline:
-    "La F126 est la plus grande frégate allemande depuis 1945 : ≈ 10 000 t, conçue modulaire (mission modules) autour d'un design néerlandais Damen construit en Allemagne.",
+    "La F126 devait être la plus grande frégate allemande depuis 1945 : ≈ 10 000 t, conçue modulaire (mission modules) autour d'un design néerlandais Damen construit en Allemagne — programme arrêté en juin 2026.",
   summary:
-    "La F126 (ex-MKS 180) est une frégate multi-missions de ≈ 10 000 t et 166 m, conçue par Damen Naval et construite en Allemagne (Blohm+Voss, Peene-Werft). Pensée modulaire, elle doit accueillir des modules de mission interchangeables (ASM, drones, forces spéciales).\n\nPour Panoplie, elle illustre deux choses : une frégate « porteuse » de grande taille à équipage réduit, et un programme dont le calendrier et la gouvernance industrielle sont régulièrement signalés comme tendus — un cas d'école de risque de programme.",
+    "La F126 (ex-MKS 180) était une frégate multi-missions de ≈ 10 000 t et 166 m, conçue par Damen Naval et construite en Allemagne (Blohm+Voss, Peene-Werft). Pensée modulaire, elle devait accueillir des modules de mission interchangeables (ASM, drones, forces spéciales).\n\nBerlin a arrêté le programme les 23-24 juin 2026 et prévoit de le remplacer par huit MEKO A-200 de TKMS (quatre ferme, quatre en option).\n\nPour Panoplie, elle illustre deux choses : une frégate « porteuse » de grande taille à équipage réduit, et un programme dont le calendrier et la gouvernance industrielle étaient régulièrement signalés comme tendus — un cas d'école de risque de programme, jusqu'à son annulation.",
   profile: {
     platform: {
       missions: ["ASW", "AAW", "ASuW", "presence", "projection"],
@@ -198,8 +200,8 @@ export const f126Niedersachsen = makeNavalSystem({
       politicalConstraints: "Mk 41, ESSM et certains capteurs soumis à contrôles US/partenaires.",
     },
     sustainment: {
-      programCost: "Programme de plusieurs milliards d'euros — six frégates commandées (2024)",
-      industrialRiskNotes: "Calendrier et gouvernance régulièrement signalés comme tendus par la presse spécialisée (tête de série repoussée).",
+      programCost: "Prévision initiale d'environ 10 Md€ pour six frégates ; besoin total réévalué à plus de 18 Md€, prestations déjà fournies incluses — programme arrêté en juin 2026",
+      industrialRiskNotes: "Calendrier et gouvernance régulièrement signalés comme tendus par la presse spécialisée (tête de série repoussée) jusqu'à l'arrêt du programme.",
     },
   },
   keySpecs: [
@@ -208,7 +210,7 @@ export const f126Niedersachsen = makeNavalSystem({
     { label: "Équipage", value: "≈ 125 + module de mission", confidence: "moyenne", sources: ["mf-f126"] },
     { label: "Concept", value: "Frégate modulaire (mission modules)", confidence: "haute", sources: ["damen-f126"] },
     { label: "Artillerie", value: "127 mm Vulcano", confidence: "moyenne", sources: ["mf-f126"] },
-    { label: "Série", value: "6 frégates commandées (option 2024 levée)", confidence: "haute", status: "a-recouper", sources: ["damen-f126"] },
+    { label: "Série", value: "6 frégates F126 prévues — programme arrêté en juin 2026", confidence: "moyenne", note: "Aucune des six n'est admise au service.", metricIds: ["MET-0445"], figureStatus: "presse", sources: ["navalnews-f126"] },
   ],
   costNarrative:
     "La F126 porte le coût d'une frégate très grande et modulaire : coque, modules de mission, intégration et soutien long. Le calendrier glissant pèse sur le coût complet.",
@@ -233,8 +235,27 @@ export const f126Niedersachsen = makeNavalSystem({
   timeline: [
     { date: "2020", label: "Damen Naval remporte l'appel d'offres MKS 180 / F126.", kind: "jalon" },
     { date: "2024", label: "Commande de deux frégates F126 supplémentaires (série portée à six).", kind: "jalon" },
+    { date: "2026-06", label: "Berlin arrête le programme (23 ou 24 juin 2026) ; 8 MEKO A-200 (4 + option de 4) envisagés en remplacement.", kind: "jalon", metricIds: ["MET-0452", "MET-0458"] },
   ],
   sources: [
+    {
+      id: "navalnews-f126",
+      title: "Germany is cancelling the F126 frigate project and procuring eight MEKO frigates",
+      publisher: "Naval News",
+      type: "presse",
+      reliability: "C",
+      date: "2026-06-24",
+      url: "https://www.navalnews.com/naval-news/2026/06/germany-is-cancelling-the-f126-frigate-project-and-procuring-eight-meko-frigates/",
+    },
+    {
+      id: "euronews-f126",
+      title: "Rheinmetall sinks as Germany axes mega-warship project after spending €2.3bn",
+      publisher: "Euronews",
+      type: "presse",
+      reliability: "C",
+      date: "2026-06-24",
+      url: "https://www.euronews.com/business/2026/06/24/rheinmetall-sinks-as-germany-axes-mega-warship-project-after-spending-2bn",
+    },
     {
       id: "damen-f126",
       title: "German armed forces order two more F126 frigates from Damen Naval",
@@ -259,10 +280,129 @@ export const f126Niedersachsen = makeNavalSystem({
     survivabilite: ["B", "Taille, modularité et autodéfense ESSM/RAM correctes ; configuration capteurs à confirmer."],
     exportabilite: ["C", "Design Damen exportable, mais version allemande nationale et calendrier peu rassurant pour un client."],
     "risque-industriel": ["D", "Programme régulièrement signalé comme glissant : gouvernance Damen/chantiers allemands sous tension."],
-    maturite: ["D", "En construction ; aucune unité encore admise au service."],
-    "confiance-donnees": ["C", "Concept et commande bien documentés ; capteurs, propulsion et calendrier fin restent à recouper."],
+    maturite: ["D", "Programme arrêté en juin 2026 ; aucune unité n'a été admise au service."],
+    "confiance-donnees": ["C", "Concept et commande bien documentés ; chiffres de coût et calendrier rapportés par la presse spécialisée, capteurs et propulsion à recouper."],
   },
 });
+
+// Coût et statut tirés du registre « Souveraineté industrielle » : chaque
+// montant porte son metric_id, son statut de chiffre et sa source. Les
+// périmètres restent distincts — prévision initiale, besoin total réévalué,
+// dépense déjà engagée, offre de reprise : aucun n'est converti en surcoût.
+const f126CoutRegistre: Indicator[] = [
+  {
+    label: "Coût prévu — six frégates",
+    value: "Environ 10 Md€ pour six frégates (prévision initiale)",
+    confidence: "moyenne",
+    metricIds: ["MET-0446"],
+    figureStatus: "presse",
+    sources: ["navalnews-f126"],
+  },
+  {
+    label: "Besoin total réévalué",
+    value: "Plus de 18 Md€, prestations déjà fournies incluses",
+    confidence: "moyenne",
+    note: "Ne pas lire la hausse depuis 10 Md€ comme un surcoût pur : le chiffre inclut des prestations déjà fournies.",
+    metricIds: ["MET-0448"],
+    figureStatus: "presse",
+    sources: ["navalnews-f126"],
+  },
+  {
+    label: "Déjà dépensé avant l'arrêt",
+    value: "Environ 2,3 Md€ (Die Welt citant le ministère)",
+    confidence: "moyenne",
+    note: "Dépense engagée avant l'arrêt, pas un surcoût.",
+    metricIds: ["MET-0449"],
+    figureStatus: "presse",
+    sources: ["euronews-f126"],
+  },
+  {
+    label: "Offre de reprise NVL (Rheinmetall)",
+    value: "Environ 15,2 Md€ pour six navires — offre négociée, non conclue",
+    confidence: "moyenne",
+    metricIds: ["MET-0447"],
+    figureStatus: "presse",
+    sources: ["navalnews-f126"],
+  },
+  {
+    label: "Remplacement — MEKO A-200 (TKMS)",
+    value: "4 navires ≈ 6,3 Md€ + option de 4 navires ≈ 5,3 Md€",
+    confidence: "moyenne",
+    note: "Accord de la commission budgétaire du Bundestag requis ; option non exercée à la date de l'article ; navires différents de ceux de la F126.",
+    metricIds: ["MET-0456", "MET-0457"],
+    figureStatus: "presse",
+    sources: ["navalnews-f126"],
+  },
+  {
+    label: "Remplacement — total des huit MEKO A-200",
+    value: "≈ 11,6 Md€ (calc.) = 6,3 + 5,3",
+    confidence: "moyenne",
+    metricIds: ["MET-0459"],
+    figureStatus: "calcule",
+    sources: ["navalnews-f126"],
+  },
+];
+
+const f126CalendrierRegistre: Indicator[] = [
+  {
+    label: "Annulation du programme",
+    value: "Le 23 ou 24 juin 2026 (24 juin selon le communiqué de Thales)",
+    confidence: "moyenne",
+    metricIds: ["MET-0452"],
+    figureStatus: "presse",
+    sources: ["navalnews-f126"],
+  },
+  {
+    label: "Premier navire attendu",
+    value: "Mi-2028 selon le calendrier initial ; 2032 selon le calendrier actuel (porte-parole naval CDU/CSU)",
+    confidence: "moyenne",
+    metricIds: ["MET-0450", "MET-0451"],
+    figureStatus: "presse",
+    sources: ["navalnews-f126"],
+  },
+];
+
+export const f126Niedersachsen: DefenseSystem = {
+  ...f126Base,
+  registryEntityIds: ["ENT-F126", "ENT-MEKO-A200"],
+  industrialChain: [
+    { entityId: "ENT-F126", entityName: "Frégate F126", actor: "Damen Schelde Naval Shipbuilding", role: "Maitre_Oeuvre", country: "Pays-Bas", scope: "Maître d'œuvre des six frégates" },
+    { entityId: "ENT-F126", entityName: "Frégate F126", actor: "Thales", role: "Sous-traitant_Rang_1", country: "France", scope: "Système de combat : radars, capteurs, gestion de combat, conduite de tir, intégration (depuis nov. 2020)" },
+    { entityId: "ENT-F126", entityName: "Frégate F126", actor: "NVL (Rheinmetall)", role: "Partenaire", country: "Allemagne", scope: "Reprise négociée du programme (≈ 15,2 Md€), non conclue" },
+    { entityId: "ENT-MEKO-A200", entityName: "MEKO A-200", actor: "TKMS", role: "Maitre_Oeuvre", country: "Allemagne", scope: "Huit frégates MEKO A-200 (4 + option de 4)" },
+  ],
+  sovereignty: [
+    { entityId: "ENT-MEKO-A200", scope: "MEKO A-200 (remplacement envisagé)", localContentRule: "Non_specifie", thirdPartyLock: "Approbation_Parlementaire_Requise", sourceCodeAccess: "Non_specifie", chokepoints: [] },
+  ],
+  watchpoints: [
+    { entityId: "ENT-F126", entityName: "Frégate F126", horizon: "Examen en cours", event: "Indemnisation de la F126 : réclamations de Berlin contre Damen ; indemnité attendue par Thales." },
+  ],
+  bricks: f126Base.bricks.map((brick) => {
+    if (brick.key === "cout") {
+      return {
+        ...brick,
+        narrative:
+          "Le coût de la F126 se lit par périmètre : prévision initiale pour six frégates, besoin total réévalué prestations déjà fournies incluses, dépense déjà engagée avant l'arrêt, offre de reprise non conclue. Le remplacement par huit MEKO A-200 est un autre programme, chiffré à part.",
+        indicators: [
+          ...f126CoutRegistre,
+          ...brick.indicators.filter((i) => i.label !== "Coût public"),
+        ],
+      };
+    }
+    if (brick.key === "finance") {
+      return {
+        ...brick,
+        narrative:
+          "Six unités avaient fait de la F126 un investissement majeur de la Marine allemande. Berlin a arrêté le programme en juin 2026 et envisage huit MEKO A-200 en remplacement, dont quatre en option.",
+        indicators: [
+          ...f126CalendrierRegistre,
+          ...brick.indicators.filter((i) => i.label !== "Programme"),
+        ],
+      };
+    }
+    return brick;
+  }),
+};
 
 export const type212cd = makeNavalSystem({
   slug: "type-212cd",

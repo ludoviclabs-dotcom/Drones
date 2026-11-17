@@ -40,9 +40,12 @@ export const mirage2000: DefenseSystem = {
     },
     {
       label: "Flotte française",
-      value: "En réduction — environ 26 Mirage 2000-5F en 2025",
-      confidence: "moyenne",
-      sources: ["opex360"],
+      value: "En réduction — une vingtaine de Mirage 2000-5F en service en 2026 (environ 26 en 2025)",
+      confidence: "haute",
+      note: "Le chiffre de 2025 vient de la presse spécialisée ; celui de 2026 du projet de loi d'actualisation.",
+      metricIds: ["MET-1044"],
+      figureStatus: "officiel",
+      sources: ["an-pjl-actualisation", "opex360"],
     },
     {
       label: "Retrait visé",
@@ -326,6 +329,14 @@ export const mirage2000: DefenseSystem = {
       reliability: "C",
       url: "https://air-cosmos.com/article/l-armee-de-l-air-et-de-l-espace-cede-deux-mirage-2000-5-a-l-ukraine-70997",
     },
+    {
+      id: "an-pjl-actualisation",
+      title: "Projet de loi — texte adopté provisoire (Assemblée nationale, l17t0325) : nouveau calendrier de livraison",
+      publisher: "Assemblée nationale",
+      type: "officiel",
+      reliability: "A",
+      url: "https://www.assemblee-nationale.fr/dyn/17/textes/l17t0325_texte-adopte-provisoire.pdf",
+    },
   ],
-  updated: "2026-05-22",
+  updated: "2026-11-17",
 };

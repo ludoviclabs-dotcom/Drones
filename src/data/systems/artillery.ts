@@ -244,7 +244,7 @@ function makeArtillerySystem(input: ArtillerySystemInput): DefenseSystem {
   };
 }
 
-export const caesarMk2 = makeArtillerySystem({
+const caesarMk2Base = makeArtillerySystem({
   slug: "caesar-mk2",
   name: "CAESAR 6x6 / Mk2",
   designation: "Camion équipé d'un système d'artillerie · 155 mm / 52 calibres",
@@ -284,7 +284,7 @@ export const caesarMk2 = makeArtillerySystem({
   maintenanceNotes:
     "MCO à lire avec porteur routier, tube 155 mm, hydraulique, électronique et stocks de pièces.",
   productionNotes:
-    "KNDS France a augmenté ses cadences publiques après 2022 ; cadence exacte à suivre par sources ministérielles.",
+    "KNDS France a augmenté ses cadences publiques après 2022 : de 2 à 6 par mois selon l'audition de l'Assemblée nationale de novembre 2024 ; d'autres valeurs, moins sûres, sont signalées à part dans la chaîne d'approvisionnement.",
   industrialNotes:
     "Chaîne française centrée KNDS, avec dépendances porteur, tubes, viseurs, électronique et munitions.",
   costNotes:
@@ -333,6 +333,124 @@ export const caesarMk2 = makeArtillerySystem({
   },
   scores: scoreSet("B", "B", "A", "B"),
 });
+
+// Cadence de production tirée du registre « Souveraineté industrielle ». Trois
+// valeurs coexistent (variance interne au registre) : on affiche d'abord la plus
+// sûre — la parlementaire — puis chaque autre valeur à part, avec son statut de
+// source unique. Aucune n'est fusionnée avec une autre ; le « 6–8 par mois »
+// de l'analyse FR (erreur d'extraction à la vérification) n'est pas repris.
+const caesarFlotteRegistre: Indicator[] = [
+  {
+    label: "CAESAR NG / MkII — commande de 2023",
+    value: "109 CAESAR NG / MkII à cabine blindée et moteur de 460 ch, livrables dès 2026",
+    confidence: "haute",
+    metricIds: ["MET-0982", "MET-0984"],
+    figureStatus: "officiel",
+    sources: ["senat-lpm-actualisee"],
+  },
+  {
+    label: "Cible de la LPM actualisée",
+    value: "+11 CAESAR ; flotte mixte de 120 CAESAR MkI et MkII dès 2030",
+    confidence: "haute",
+    metricIds: ["MET-0981", "MET-0985"],
+    figureStatus: "officiel",
+    sources: ["senat-lpm-actualisee"],
+  },
+];
+
+export const caesarMk2: DefenseSystem = {
+  ...caesarMk2Base,
+  updated: "2026-11-17",
+  registryEntityIds: ["ENT-CAESAR", "ENT-CAESAR-MKII"],
+  programmeTree: [
+    { entityId: "ENT-CAESAR", name: "CAESAR", kind: "Plateforme_Vecteur", children: [
+      { entityId: "ENT-CAESAR-MKII", name: "CAESAR NG / MkII", kind: "Plateforme_Vecteur" },
+    ] },
+  ],
+  industrialChain: [
+    { entityId: "ENT-CAESAR", entityName: "CAESAR", actor: "Arquus", role: "Sous-traitant_Rang_1", country: "France", scope: "CAESAR" },
+    { entityId: "ENT-CAESAR", entityName: "CAESAR", actor: "Arquus", role: "Sous-traitant_Rang_1", country: "France", scope: "Châssis 6x6 Armis du CAESAR NG" },
+  ],
+  bricks: caesarMk2Base.bricks.map((brick) =>
+    brick.key === "finance"
+      ? { ...brick, indicators: [...caesarFlotteRegistre, ...brick.indicators] }
+      : brick.key === "supply-chain"
+      ? {
+          ...brick,
+          indicators: [
+            {
+              label: "Cadence de production — valeur retenue",
+              value: "6 par mois fin 2024, contre 2 par mois avant 2022",
+              confidence: "haute",
+              note: "Audition de KNDS France devant la commission de la défense de l'Assemblée nationale (27/11/2024) ; deux autres valeurs, moins sûres, figurent ci-dessous.",
+              metricIds: ["MET-0167", "MET-0168"],
+              figureStatus: "officiel",
+              sources: ["an-cion-def-2024-11-27"],
+            },
+            {
+              label: "Cadence — autre valeur (presse locale)",
+              value: "10 par mois selon la presse locale",
+              confidence: "faible",
+              note: "Article non daté, postérieur à mars 2026 ; chiffre non repris par KNDS.",
+              metricIds: ["MET-0169"],
+              figureStatus: "source-unique",
+              sources: ["lyon-capitale-roanne"],
+            },
+            {
+              label: "Cadence — objectif",
+              value: "12 par mois visés d'ici 2026",
+              confidence: "faible",
+              note: "Aucune confirmation que la cible a été atteinte.",
+              metricIds: ["MET-0170"],
+              figureStatus: "source-unique",
+              sources: ["army-recognition-caesar"],
+            },
+            ...brick.indicators,
+          ],
+        }
+      : brick,
+  ),
+  sources: [
+    ...caesarMk2Base.sources,
+    {
+      id: "senat-lpm-actualisee",
+      title: "L'essentiel sur l'actualisation de la LPM 2024-2030 (pjl25-635)",
+      publisher: "Sénat",
+      type: "institution",
+      reliability: "A",
+      date: "2026-05",
+      url: "https://www.senat.fr/lessentiel/pjl25-635.pdf",
+    },
+    {
+      id: "an-cion-def-2024-11-27",
+      title:
+        "Compte rendu n° 26 — audition de MBDA, KNDS France et Thales (commission de la défense)",
+      publisher: "Assemblée nationale",
+      type: "officiel",
+      reliability: "A",
+      date: "2024-11-27",
+      url: "https://www.assemblee-nationale.fr/dyn/17/comptes-rendus/cion_def/l17cion_def2425026_compte-rendu.pdf",
+    },
+    {
+      id: "lyon-capitale-roanne",
+      title: "Article sur l'usine KNDS de Roanne (production de blindés et réarmement)",
+      publisher: "Lyon Capitale",
+      type: "presse",
+      reliability: "C",
+      url: "https://www.lyoncapitale.fr/actualite/loire-roanne-usine-knds-production-blindes-rearmement",
+    },
+    {
+      id: "army-recognition-caesar",
+      title:
+        "Artillery production: KNDS France triples CAESAR output and aims to double it again by 2026",
+      publisher: "Army Recognition",
+      type: "presse",
+      reliability: "C",
+      date: "2025-04-09",
+      url: "https://www.armyrecognition.com/archives/archives-land-defense/defense-news-army-2025/artillery-production-knds-france-triples-caesar-output-and-aims-to-double-it-again-by-2026",
+    },
+  ],
+};
 
 export const caesar8x8 = makeArtillerySystem({
   slug: "caesar-8x8",

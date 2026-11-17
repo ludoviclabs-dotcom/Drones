@@ -18,23 +18,29 @@ import type {
   CombatAircraftClass,
   CombatSystemClass,
   Confidence,
+  FigureStatus,
   Grade,
+  LocalContentRule,
   MissileRole,
   NavalMission,
   NavalVesselClass,
   RadarRole,
   Recoverability,
   Reliability,
+  RegistryNodeType,
   RoadmapHorizon,
   ScoreKey,
+  SourceCodeAccess,
   SourceRef,
   SourceContext,
   SpaceMission,
   SpaceOrbitClass,
   SpacePayloadType,
   SystemCategory,
+  ThirdPartyLock,
   TimelineKind,
 } from "./types";
+import type { ActorKind } from "./actors/types";
 
 export const BRICK_LABELS: Record<BrickKey, string> = {
   finance: "Finance",
@@ -520,3 +526,114 @@ export const COMBAT_SYSTEM_BLURBS: Record<CombatSystemClass, string> = {
   c4isr: "Commandement, contrôle, communications, renseignement et surveillance.",
   collaboratif: "Engagement coopératif en réseau — partage de pistes entre plateformes.",
 };
+
+// ── Registre « Souveraineté industrielle » ──────────────────────────────────
+
+/**
+ * Marque visible d'un statut de chiffre. `tone: "alert"` = à lire avec
+ * prudence (source unique, plafond) ; `"quiet"` = information de nature ;
+ * `null` = statut nominal (chiffre officiel), qui n'appelle aucune marque.
+ */
+export const FIGURE_STATUS_META: Record<
+  FigureStatus,
+  { short: string; label: string; tone: "alert" | "quiet" } | null
+> = {
+  officiel: null,
+  "commande-ferme": {
+    short: "ferme",
+    label: "Commande ferme — contrat notifié",
+    tone: "quiet",
+  },
+  "requete-budgetaire": {
+    short: "requête",
+    label: "Requête budgétaire — non votée à la date du registre",
+    tone: "quiet",
+  },
+  presse: {
+    short: "presse",
+    label: "Chiffre rapporté par la presse spécialisée, sans communiqué officiel",
+    tone: "quiet",
+  },
+  "source-unique": {
+    short: "⚠ source unique",
+    label: "Source unique — non recoupée par une seconde source indépendante",
+    tone: "alert",
+  },
+  calcule: {
+    short: "(calc.)",
+    label: "Valeur calculée à partir d'autres chiffres du registre",
+    tone: "quiet",
+  },
+  "non-communique": {
+    short: "n.c.",
+    label: "Non communiqué — aucun montant ou quantité publié",
+    tone: "quiet",
+  },
+  "plafond-cadre": {
+    short: "plafond",
+    label: "Plafond d'accord-cadre — autorisation maximale, pas une commande ferme",
+    tone: "alert",
+  },
+  classifie: {
+    short: "classifié",
+    label: "Donnée classifiée — non publique",
+    tone: "quiet",
+  },
+};
+
+export const REGISTRY_NODE_LABELS: Record<RegistryNodeType, string> = {
+  Plateforme_Vecteur: "Plateforme",
+  Acteur_Industriel: "Acteur industriel",
+  Programme_Cadre: "Programme",
+  Enveloppe_Financement: "Enveloppe de financement",
+  Munition_Effecteur: "Munition / effecteur",
+  Sous_Systeme_Brique: "Sous-système",
+};
+
+export const LOCAL_CONTENT_LABELS: Record<LocalContentRule, string> = {
+  Souverain_National: "Souveraineté nationale",
+  Cooperation_Multinationale: "Coopération multinationale",
+  Production_Locale_Client_Export: "Production locale chez le client export",
+  Regle_SAFE_65_pourcent_UE: "Règle SAFE — 65 % de contenu UE",
+  Non_specifie: "non documenté",
+};
+
+export const THIRD_PARTY_LOCK_LABELS: Record<ThirdPartyLock, string> = {
+  Approbation_Parlementaire_Requise: "Approbation parlementaire requise",
+  Accord_Washington_Requis: "Accord de Washington requis",
+  Autorisation_Concurrence_Reglementaire: "Autorisation de la concurrence / du régulateur",
+  Aucun_Veto_Tiers: "Aucun veto d'un tiers",
+  Non_specifie: "non documenté",
+};
+
+export const SOURCE_CODE_ACCESS_LABELS: Record<SourceCodeAccess, string> = {
+  Refus_Acces_Code_Source_ICD: "Accès au code source refusé (ICD)",
+  Interfaces_Controlees: "Interfaces contrôlées",
+  Propriete_Integrale: "Propriété intégrale",
+  Non_specifie: "non documenté",
+};
+
+// ── Dossiers d'acteurs (/acteurs) ──────────────────────────────────────────
+
+export const ACTOR_KIND_LABELS: Record<ActorKind, string> = {
+  "groupe-industriel": "Groupe industriel",
+  "defense-tech": "Défense tech",
+};
+
+/** Les briques d'un dossier d'acteur : mêmes clés que les systèmes, autre angle. */
+export const ACTOR_BRICK_LABELS: Record<BrickKey, string> = {
+  finance: "Résultats & capital",
+  cout: "Opérations & contrats",
+  "supply-chain": "Empreinte industrielle",
+  geopolitique: "Gouvernance & État",
+  export: "Export & contrôle",
+};
+
+export const ACTOR_BRICK_BLURBS: Record<BrickKey, string> = {
+  finance: "Chiffre d'affaires, carnet, valorisation — ce que l'acteur publie et ce que la presse estime.",
+  cout: "Prix des opérations et montants des contrats — plafonds et commandes fermes toujours distingués.",
+  "supply-chain": "Sites, capacités, fournisseurs et partenaires : où l'acteur produit et de qui il dépend.",
+  geopolitique: "Actionnaires publics, accords entre États, gouvernance — ce qui engage plus que l'entreprise.",
+  export: "Régime de cession, autorisations et contrôles applicables.",
+};
+

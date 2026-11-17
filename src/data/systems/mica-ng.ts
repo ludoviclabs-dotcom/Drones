@@ -95,6 +95,15 @@ export const micaNg: DefenseSystem = {
         "Le programme est porté par la DGA française et notifié à MBDA dans le cadre d'une trajectoire de remplacement du MICA en service depuis le début des années 2000. Les premières livraisons sont prévues à partir de 2026, en concomitance avec la maturation du Rafale standard F4.\n\nLe financement est entièrement national, dans une logique cohérente avec la souveraineté capacitaire française : pas de partage de programme, pas de dépendance ITAR, autonomie complète de standard et d'export. C'est la même grille que pour Aster, SCALP, Exocet — la cohérence française du domaine missiles.",
       indicators: [
         {
+          label: "VL MICA — parc et livraisons",
+          value: "2 systèmes en service en 2024 ; 9 livrés d'ici fin 2030 ; 15 systèmes en 2035",
+          confidence: "haute",
+          note: "Nouveau calendrier de livraison du projet de loi d'actualisation de la programmation militaire.",
+          metricIds: ["MET-1103", "MET-1100", "MET-1101"],
+          figureStatus: "officiel",
+          sources: ["an-pjl-actualisation"],
+        },
+        {
           label: "Maîtrise programme",
           value:
             "DGA — programme national, MBDA maître d'œuvre industriel",
@@ -338,6 +347,14 @@ export const micaNg: DefenseSystem = {
       reliability: "A",
       url: "https://eur-lex.europa.eu/legal-content/FR/TXT/?uri=CELEX%3A32008E0944",
     },
+    {
+      id: "an-pjl-actualisation",
+      title: "Projet de loi — texte adopté provisoire (Assemblée nationale, l17t0325) : nouveau calendrier de livraison",
+      publisher: "Assemblée nationale",
+      type: "officiel",
+      reliability: "A",
+      url: "https://www.assemblee-nationale.fr/dyn/17/textes/l17t0325_texte-adopte-provisoire.pdf",
+    },
   ],
-  updated: "2026-05-26",
+  updated: "2026-11-17",
 };

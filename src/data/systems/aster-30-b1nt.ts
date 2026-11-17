@@ -13,7 +13,7 @@ export const aster30B1nt: DefenseSystem = {
   manufacturer: "Eurosam (MBDA + Thales)",
   introduced: "2026",
   status:
-    "Qualification finale ; production lancée pour SAMP/T NG (FR/IT) et marine",
+    "Qualification finale (tir de qualification du SAMP/T NG français le 15/12/2025) ; mise en service 2026 ; production lancée pour SAMP/T NG (FR/IT) et marine",
   acquisitionModes: ["cooperatif"],
   tagline:
     "Le pilier de la défense aérienne longue portée européenne — successeur direct de l'Aster 30 Block 1, optimisé contre missiles balistiques de courte portée nouvelle génération.",
@@ -111,6 +111,15 @@ export const aster30B1nt: DefenseSystem = {
             "Stocks réduits par dons à l'Ukraine ; reconstitution intégrée à la planification",
           confidence: "moyenne",
           sources: ["dga-aster-b1nt"],
+        },
+        {
+          label: "Commande commune France–Italie",
+          value: "700 missiles Aster 30 B1NT commandés en commun avec l'Italie (2026)",
+          confidence: "moyenne",
+          note: "Part française non précisée ; chiffre rapporté par un blog spécialisé (Forces Opérations).",
+          metricIds: ["MET-1090"],
+          figureStatus: "commande-ferme",
+          sources: ["fob-samptng"],
         },
       ],
     },
@@ -329,6 +338,19 @@ export const aster30B1nt: DefenseSystem = {
         "Qualification finale Aster 30 B1NT engagée — production lancée.",
       kind: "jalon",
     },
+    {
+      date: "2025-12",
+      label:
+        "Premier tir de qualification du SAMP/T NG de la version française le 15/12/2025 ; tir italien le 03/12/2025.",
+      kind: "jalon",
+    },
+    {
+      date: "2026",
+      label:
+        "700 missiles Aster 30 B1NT commandés en commun avec l'Italie.",
+      kind: "jalon",
+      metricIds: ["MET-1090"],
+    },
   ],
   sources: [
     {
@@ -373,6 +395,14 @@ export const aster30B1nt: DefenseSystem = {
       reliability: "A",
       url: "https://eur-lex.europa.eu/legal-content/FR/TXT/?uri=CELEX%3A32008E0944",
     },
+    {
+      id: "fob-samptng",
+      title: "Une rallonge de systèmes SAMP/T NG enfin actée par la France",
+      publisher: "Forces Opérations Blog",
+      type: "presse",
+      reliability: "C",
+      url: "https://forcesoperations.com/une-rallonge-de-systemes-samp-t-ng-enfin-actee-par-la-france/",
+    },
   ],
-  updated: "2026-05-26",
+  updated: "2026-11-17",
 };

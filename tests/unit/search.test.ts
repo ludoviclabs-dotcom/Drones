@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { actors } from "@/data/actors";
 import { systems } from "@/data/systems";
 import { glossary } from "@/data/glossary";
 import {
@@ -21,6 +22,14 @@ describe("palette ⌘K — recherche", () => {
     expect(entries.every((entry) => entry.href.startsWith("/systemes/"))).toBe(
       true,
     );
+  });
+
+  it("indexe chaque acteur une fois, avec son dossier", () => {
+    const entries = index.filter((entry) => entry.kind === "acteur");
+    expect(entries).toHaveLength(actors.length);
+    expect(entries.every((entry) => entry.href.startsWith("/acteurs/"))).toBe(true);
+    expect(searchEntries(index, "knds")[0].href).toBe("/acteurs/knds");
+    expect(searchEntries(index, "thales exail").length).toBeGreaterThan(0);
   });
 
   it("indexe domaines, pages et termes du glossaire", () => {

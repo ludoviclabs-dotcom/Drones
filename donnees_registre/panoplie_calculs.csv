@@ -1,0 +1,113 @@
+﻿fichier,calcul,valeur_affichee,recalcul,ecart,conforme,note,calcul_id
+note 10,"Valeur implicite juin : 7,2 ÷ 0,40 (Md€)",18,18.0,0.0,True,,CAL-001
+note 10,"Valeur implicite nov. : 6,5 ÷ 0,50 (Md€)",13,13.0,0.0,True,,CAL-002
+note 10,Prix du point de capital juin (M€),180,180.0,0.0,True,,CAL-003
+note 10,Prix du point de capital nov. (M€),130,130.0,0.0,True,,CAL-004
+note 10,Baisse du prix du point (%),28,27.7778,-0.2222,True,,CAL-005
+note 10,"Économie : 7,2 − 6,5 (Md€)",0.7,0.7,0.0,True,,CAL-006
+note 10,"Part Allemagne du CA 2025 : 2,5 ÷ 4,4 (%)",57,56.8182,-0.1818,True,,CAL-007
+note 10,"Part France du CA 2025 : 1,3 ÷ 4,4 (%)",30,29.5455,-0.4545,True,,CAL-008
+note 10,"Part Munitions : 0,61 ÷ 4,4 (%)",14,13.8636,-0.1364,True,,CAL-009
+note 10,"Carnet / CA : 33,1 ÷ 4,4 (années)",7.5,7.5227,0.0227,True,,CAL-010
+note 11,HYDIS phase 1 : 80 + 57 (M€),137,137,0,True,,CAL-011
+note 11,HYDEF phase 1 : 100 + 10 (M€),110,110,0,True,,CAL-012
+note 11,Total phase 1 ≈ 137 + 110 (M€),250,247,-3,True,,CAL-013
+note 11,Part des États HYDIS phase 1 : 57 ÷ 137 (%),42,41.6058,-0.3942,True,,CAL-014
+note 11,Part des États HYDEF phase 1 : 10 ÷ 110 (%),9,9.0909,0.0909,True,,CAL-015
+note 11,HYDIS phase 2 : 100 + 133 (M€),233,233,0,True,,CAL-016
+note 11,Part des États HYDIS phase 2 : 133 ÷ 233 (%),57,57.0815,0.0815,True,,CAL-017
+note 12,"Coût F5 déduit : 3,5 ÷ 0,70 (Md€)",5.0,5.0,0.0,True,,CAL-018
+note 12,Scénario deux tiers : part EAU 5 × 2/3 (Md€),3.3,3.3333,0.0333,True,,CAL-019
+note 12,Scénario deux tiers : part France (Md€),1.7,1.6667,-0.0333,True,,CAL-020
+note 12,"Scénario 70 % : part France 5 − 3,5 (Md€)",1.5,1.5,0.0,True,,CAL-021
+note 12,Part export du carnet : 165 ÷ 208 (%),79,79.3269,0.3269,True,,CAL-022
+note 12,Hausse du carnet avec 114 : 114 ÷ 208 (%),55,54.8077,-0.1923,True,,CAL-023
+note 13,Carnet / CA Thales : 53.3 ÷ 22.14,2.4,2.4074,0.0074,True,,CAL-024
+note 13,Carnet / CA Dassault : 46.6 ÷ 7.42,6.3,6.2803,-0.0197,True,,CAL-025
+note 13,Carnet / CA Naval Group : 32.0 ÷ 4.7,6.8,6.8085,0.0085,True,,CAL-026
+note 13,Carnet / CA KNDS : 33.1 ÷ 4.4,7.5,7.5227,0.0227,True,,CAL-027
+note 13,Carnet / CA MBDA : 44.4 ÷ 5.8,7.7,7.6552,-0.0448,True,,CAL-028
+note 13,"Somme des carnets : 46,6 + 53,3 + 44,4 + 32,0 + 33,1 (Md€)",209,209.4,0.4,True,,CAL-029
+note 13,"Somme des CA : 7,42 + 22,14 + 5,8 + 4,7 + 4,4 (Md€)",44.5,44.46,-0.04,True,,CAL-030
+note 13,"Ratio global : 209,4 ÷ 44,46 (années)",4.7,4.7099,0.0099,True,,CAL-031
+note 13,Commandes / CA Thales : 25.3 ÷ 22.1,1.1,1.1448,0.0448,True,,CAL-032
+note 13,Commandes / CA MBDA : 13.2 ÷ 5.8,2.3,2.2759,-0.0241,True,,CAL-033
+note 13,Commandes / CA KNDS : 13.5 ÷ 4.4,3.1,3.0682,-0.0318,True,,CAL-034
+note 13,Commandes / CA Naval Group : 18.9 ÷ 4.7,4.0,4.0213,0.0213,True,,CAL-035
+note 13,"Thales défense : 41,6 ÷ 12,2 (années)",3.4,3.4098,0.0098,True,,CAL-036
+note 13,"KNDS carnet 23,5 → 33,1 (%)",41,40.8511,-0.1489,True,,CAL-037
+note 13,Rafale 48 vs 28 par an (%),71,71.4286,0.4286,True,,CAL-038
+note 13,Rafale 4 par mois × 12,48,48,0,True,,CAL-039
+note 13,Rafale S1 2026 : 12 ÷ 6 (par mois),2,2.0,0.0,True,,CAL-040
+note 13,Rafale 2026 : 28 ÷ 12 (par mois),2.3,2.3333,0.0333,True,,CAL-041
+note 13,Carnet Rafale : 220 − 208 (livraisons S1),12,12,0,True,,CAL-042
+note 13,Années de livraison à 28/an : 208 ÷ 28,7.4,7.4286,0.0286,True,,CAL-043
+note 13,Années de livraison à 48/an : 208 ÷ 48,4.3,4.3333,0.0333,True,,CAL-044
+note 13,114 Rafale indiens à 48/an,2.4,2.375,-0.025,True,,CAL-045
+note 13,Aciers MBDA : 80 ÷ 5 (borne basse),16,16.0,0.0,True,,CAL-046
+note 13,Aciers MBDA : 80 ÷ 4 (borne haute),20,20.0,0.0,True,,CAL-047
+note 14,"SMOKERS HT : 36 ÷ 1,2 (M€)",30,30.0,0.0,True,,CAL-048
+note 14,"Nombre d'actions Exail : 6 052 645 ÷ 0,3551 (M)",17.04,17.0449,0.0049,True,,CAL-049
+note 14,100 % des actions à 134 € (Md€),2.3,2.284,-0.016,True,,CAL-050
+note 14,Bloc Gorgé à 134 € (Md€),0.81,0.8111,0.0011,True,,CAL-051
+note 14,"Prime : 134 ÷ 93,15 (%)",44,43.854,-0.146,True,,CAL-052
+note 14,Contrat 400 M€ ÷ CA 479 M€ (%),84,83.5073,-0.4927,True,,CAL-053
+note 14,"Écart valorisation 3,9 − 2,3 (Md€)",1.6,1.616,0.016,True,,CAL-054
+note 15,Cible MdCN 150 ÷ plus de 1 000 Tomahawk (%),15,15.0,0.0,True,borne supérieure : « moins de 15 % »,CAL-055
+note 15,"12 ÷ 1,3",9,9.2308,0.2308,True,,CAL-056
+note 15,"Composantes allemandes 9 + 1,8 (Md€)",10.8,10.8,0.0,True,,CAL-057
+note 16,6 000 ÷ 15 000 (%),40,40.0,0.0,True,,CAL-058
+note 16,"4,5 millions ÷ 6 000",750,750.0,0.0,True,,CAL-059
+note 16,"4,5 millions ÷ 365 (par jour)",12300,12328.7671,28.7671,True,,CAL-060
+note 16,6 000 en heures de production 2025,11.7,11.68,-0.02,True,note : « moins de douze heures »,CAL-061
+note 16,6 000 ÷ 332 (jours),18,18.0723,0.0723,True,,CAL-062
+note 16,6 473 ÷ 31 (par jour),209,208.8065,-0.1935,True,,CAL-063
+note 16,6 000 ÷ 209 (jours),29,28.7081,-0.2919,True,,CAL-064
+note 16,4 859 ÷ 6 473 (%),75,75.0657,0.0657,True,,CAL-065
+note 16,413 ÷ 181 jours,2.3,2.2818,-0.0182,True,,CAL-066
+note 16,5 000 ÷ 10 000 (mois),0.5,0.5,0.0,True,,CAL-067
+note 16,8 M€ ÷ 1 000 (€),8000,8000.0,0.0,True,,CAL-068
+note 16,5 000 × 8 000 € (M€),40,40.0,0.0,True,,CAL-069
+note 16,Commandes cumulées 1 000 + 5 000,6000,6000,0,True,,CAL-070
+note 17,"8 MEKO : 6,3 + 5,3 (Md€)",11.6,11.6,0.0,True,,CAL-071
+note 18,Somme trajectoire initiale 2024-2030 (Md€),400,400.0,0.0,True,,CAL-072
+note 18,Somme trajectoire actualisée 2024-2030 (Md€),435.7,435.9,0.2,True,"la loi affiche 435,7 ; la somme des annuités arrondies donne 435,9 (arrondis de la loi, signalés par l'auteur)",CAL-073
+note 18,Somme des surplus (Md€),36,36.0,0.0,True,,CAL-074
+note 18,Surplus 2024 : 47.2 − 47.2,0,0.0,0.0,True,écart d'un dixième = arrondis de la loi,CAL-075
+note 18,Surplus 2025 : 50.5 − 50.5,0,0.0,0.0,True,écart d'un dixième = arrondis de la loi,CAL-076
+note 18,Surplus 2026 : 57.1 − 53.7,3.5,3.4,-0.1,True,écart d'un dixième = arrondis de la loi,CAL-077
+note 18,Surplus 2027 : 63.3 − 56.9,6.5,6.4,-0.1,True,écart d'un dixième = arrondis de la loi,CAL-078
+note 18,Surplus 2028 : 69.5 − 60.4,9.1,9.1,0.0,True,écart d'un dixième = arrondis de la loi,CAL-079
+note 18,Surplus 2029 : 72.6 − 63.9,8.7,8.7,-0.0,True,écart d'un dixième = arrondis de la loi,CAL-080
+note 18,Surplus 2030 : 75.7 − 67.4,8.2,8.3,0.1,True,écart d'un dixième = arrondis de la loi,CAL-081
+note 18,Surplus relatif : 36 ÷ 400 (%),9,9.0,0.0,True,,CAL-082
+note 18,"Fonds à effet de levier : 2,3 ÷ 3,8 (%)",61,60.5263,-0.4737,True,,CAL-083
+note 18,Collecte Bpifrance : 150 ÷ 56,2.7,2.6786,-0.0214,True,,CAL-084
+note 18,"2,3 Md€ ÷ 150 M€",15,15.3333,0.3333,True,,CAL-085
+note 18,Rallonge détaillée : somme des 12 lignes (Md€),29.3,29.3,-0.0,True,,CAL-086
+note 18,Surtaxe Dassault S1 : 570 − 496 (M€),74,74,0,True,,CAL-087
+note 18,"PLF 2027 : +6,5 ÷ 56,9 (%) — base implicite",11.4,11.4236,0.0236,True,"la hausse de 6,5 Md€ et +11,4 % se rapportent à une base de 56,9 Md€ (LFI 2026), pas aux 57,1 Md€ de la trajectoire actualisée",CAL-088
+note 18,"PLF 2027 : 63,4 − 6,5 (base, Md€)",56.9,56.9,0.0,True,,CAL-089
+note 19,"6,9 ÷ 21,2 (%)",32.5,32.5472,0.0472,True,,CAL-090
+note 19,"Contrats > 200 M€ : 21,2 − 7 (Md€)",14.2,14.2,0.0,True,,CAL-091
+note 19,"6,9 ÷ 14,2 (%)",49,48.5915,-0.4085,True,,CAL-092
+note 19,"Autres contrats : 21,2 − 6,9 − 7 (Md€)",7.3,7.3,-0.0,True,,CAL-093
+note 19,Carnet export fin 2025 : 164 + 26 − 15,175,175,0,True,,CAL-094
+note 19,Carnet export juin 2026 : 175 − 10,165,165,0,True,,CAL-095
+note 19,Part de l'Inde avec les 114 : 140 ÷ 322 (%),43,43.4783,0.4783,True,,CAL-096
+PDF US,PAC-3 MSE volume FY27/FY26 : 3 203 ÷ 357,9,8.972,-0.028,True,,CAL-097
+PDF US,PAC-3 MSE coût unitaire FY27 : 13 960 ÷ 3 203 (M$),4.4,4.3584,-0.0416,True,,CAL-098
+PDF US,Tomahawk volume FY27/FY26 : 785 ÷ 55,14.2,14.2727,0.0727,False,"le recalcul donne 14,27, soit ×14,3 à l'arrondi : le PDF tronque",CAL-099
+PDF US,SM-6 : 540 ÷ 166,3.25,3.253,0.003,True,,CAL-100
+PDF US,SM-3 IIA : 136 ÷ 12,11.3,11.3333,0.0333,True,,CAL-101
+PDF US,"Golden Dome : 17,5 ÷ 17,9 (%)",95,97.7654,2.7654,False,"le PDF écrit « 95 % » ; le recalcul donne 97,8 %",CAL-102
+PDF US,Palantir TITAN unitaire : 127 ÷ 8 (M$),15.9,15.875,-0.025,True,,CAL-103
+PDF US,TITAN total synthèse : 127 + 65 (M$),192,192,0,True,,CAL-104
+PDF US,"Sentinel : dépassement Nunn-McCurdy +81 % (base implicite, Md$)",77.9,77.9006,0.0006,True,"base implicite déduite : 141 ÷ 1,81 = 77,9 Md$ (non publiée par le PDF)",CAL-105
+Tableau de bord,"A : Anduril 162,8 ÷ 20 000 (%)",0.8,0.814,0.014,True,,CAL-106
+Tableau de bord,"A : NGC2 162,8 ÷ 1 800 (%)",9.0,9.0444,0.0444,True,,CAL-107
+Tableau de bord,A : Palantir (127 + 178) ÷ 10 000 (%),3.1,3.05,-0.05,True,,CAL-108
+Tableau de bord,A : PAC-3 13 960 ÷ 1 646,8.5,8.4812,-0.0188,True,,CAL-109
+Tableau de bord,A : THAAD 11 435 ÷ 823,13.9,13.8943,-0.0057,True,,CAL-110
+Tableau de bord,A : Tomahawk 5 804 ÷ 1 036,5.6,5.6023,0.0023,True,,CAL-111
+Tableau de bord,D : HYDIS phase 2 100 + 133 (M€),233,233,0,True,,CAL-112

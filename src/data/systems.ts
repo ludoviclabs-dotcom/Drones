@@ -61,6 +61,19 @@ import { gmlrs } from "./systems/gmlrs";
 import { camm } from "./systems/camm";
 import { irisTSlm } from "./systems/iris-t-slm";
 import { thaad } from "./systems/thaad";
+import { hydis } from "./systems/hydis";
+import { hydef } from "./systems/hydef";
+import { mdcnMk2 } from "./systems/mdcn-mk2";
+import { thundart } from "./systems/thundart";
+import { flpT150 } from "./systems/flp-t-150";
+import { mbt2500 } from "./systems/mbt-2500-km";
+import { deluge } from "./systems/deluge";
+import { tomahawk } from "./systems/tomahawk";
+import { typhon } from "./systems/typhon";
+import { delcoSonora } from "./systems/delco-sonora";
+import { smokers } from "./systems/smokers";
+import { ucuv } from "./systems/ucuv";
+import { slamF } from "./systems/slam-f";
 import { gm200 } from "./systems/gm200";
 import { gm400Alpha } from "./systems/gm400-alpha";
 import { spy6 } from "./systems/spy-6";
@@ -184,6 +197,10 @@ export const systems: DefenseSystem[] = [
   jernasM,
   shadow3,
   strilaQuantumWiy,
+  delcoSonora,
+  smokers,
+  ucuv,
+  slamF,
   helmaP,
   ironBeam,
   dragonfire,
@@ -222,6 +239,15 @@ export const systems: DefenseSystem[] = [
   camm,
   irisTSlm,
   thaad,
+  hydis,
+  hydef,
+  mdcnMk2,
+  thundart,
+  flpT150,
+  mbt2500,
+  deluge,
+  tomahawk,
+  typhon,
   gm200,
   gm400Alpha,
   spy6,

@@ -96,6 +96,14 @@ export const mq9Reaper: DefenseSystem = {
         "Côté américain, le Reaper est financé sur le budget fédéral de l'US Air Force — un programme mature aux lignes bien identifiées. À l'export, l'acquisition passe quasi systématiquement par le canal FMS : l'État américain agit comme intermédiaire contractuel.\n\nCe canal sécurise l'acheteur, mais le place sous la dépendance des arbitrages budgétaires et politiques de Washington. Le financement d'un parc inclut un poste régulièrement sous-estimé : le soutien pluriannuel.",
       indicators: [
         {
+          label: "Flotte française — armée de l'Air et de l'Espace",
+          value: "12 MQ-9A Reaper en service, répartis en 4 systèmes (octobre 2026)",
+          confidence: "haute",
+          metricIds: ["MET-1238", "MET-1239"],
+          figureStatus: "officiel",
+          sources: ["senat-guerre-des-drones"],
+        },
+        {
           label: "Cadre de financement",
           value: "Budget fédéral US ; FMS à l'export",
           confidence: "haute",
@@ -321,6 +329,14 @@ export const mq9Reaper: DefenseSystem = {
       reliability: "B",
       url: "https://www.csis.org",
     },
+    {
+      id: "senat-guerre-des-drones",
+      title: "La guerre des drones : l'urgence d'un sursaut stratégique français",
+      publisher: "Sénat — rapport d'information",
+      type: "institution",
+      reliability: "A",
+      url: "https://www.senat.fr/rap/r25-861/r25-861_mono.html",
+    },
   ],
-  updated: "2026-05-20",
+  updated: "2026-11-17",
 };

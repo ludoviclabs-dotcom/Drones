@@ -15,7 +15,10 @@ export const metadata: Metadata = {
 export default function CostsPage() {
   const records = getCostRecords();
   const curated = records.filter((record) => record.curated).length;
-  const currencies = new Set(records.map((record) => record.currency)).size;
+  // « N/A » n'est pas une devise : c'est l'absence de montant normalisé.
+  const currencies = new Set(
+    records.map((record) => record.currency).filter((code) => code !== "N/A"),
+  ).size;
   const highUncertainty = records.filter(
     (record) => record.uncertainty === "high",
   ).length;

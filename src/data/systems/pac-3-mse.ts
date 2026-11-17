@@ -93,19 +93,55 @@ export const pac3Mse: DefenseSystem = {
     {
       key: "finance",
       narrative:
-        "Le financement PAC-3 MSE explose post-2022 : entre les demandes alliées, la reconstitution des stocks US et le soutien à l'Ukraine, le programme entre dans une trajectoire de production sans précédent depuis trente ans. Lockheed Martin annonce un objectif de cadence supérieur à 650 missiles par an à partir de 2027, contre environ 500 historiquement.\n\nL'effort de localisation accompagne le financement : un site de production complémentaire est engagé en Espagne pour les composants, et l'extension Camden / Troy aux États-Unis est lancée. C'est l'un des programmes munitionnaires les plus dynamiques du DoD à ce jour.",
+        "Le financement PAC-3 MSE explose post-2022 : entre les demandes alliées, la reconstitution des stocks US et le soutien à l'Ukraine, le programme entre dans une trajectoire de production sans précédent depuis trente ans. Lockheed Martin annonce un objectif de cadence supérieur à 650 missiles par an à partir de 2027, contre environ 500 historiquement.\n\nL'effort de localisation accompagne le financement : un site de production complémentaire est engagé en Espagne pour les composants, et l'extension Camden / Troy aux États-Unis est lancée. C'est l'un des programmes munitionnaires les plus dynamiques du DoD à ce jour.\n\nLa requête FY2027 (avril 2026) change d'échelle : 3 203 missiles pour 13 960 M$, Army et Navy. Et l'accord-cadre conclu avec Lockheed Martin le 6 janvier 2026 vise une cadence de ~600 à ~2 000 missiles par an — une capacité visée, soumise aux crédits, pas une commande ferme.",
       indicators: [
         {
           label: "Volume FY2026 demandé",
           value: "233 missiles — programme PAC-3 total",
           confidence: "haute",
+          note: "Requête FY2026 du DoD (P-1) ; les achats FY2026 l'ont dépassée, voir ci-dessous.",
           sources: ["dod-p1-fy26-pac3"],
+        },
+        {
+          label: "FY2026 — quantité achetée (Army)",
+          value: "357 missiles",
+          confidence: "haute",
+          metricIds: ["MET-1892"],
+          figureStatus: "officiel",
+          sources: ["breaking-fy27"],
+        },
+        {
+          label: "Requête FY2027 — volume",
+          value: "3 203 missiles (Army 2 798 + Navy 405)",
+          confidence: "haute",
+          note: "Total de la demande, mandatory 2 936 + discretionary 267 ; la requête n'est pas votée.",
+          metricIds: ["MET-1894"],
+          figureStatus: "requete-budgetaire",
+          sources: ["crs-r49023", "breaking-fy27"],
+        },
+        {
+          label: "Requête FY2027 — crédits",
+          value: "13 960 M$ — total de la demande, Army + Navy",
+          confidence: "haute",
+          note: "13 960,3 M$ = 12,56 + 1,40 Md$ (discrétionnaire + réconciliation, ≈ 90 % en mandatory). Moyenne calculée (calc.) : ≈ 4,36 M$ par missile, non comparable au net procurement FY2026 de 5,63 M$ : le périmètre de la demande diffère.",
+          metricIds: ["MET-1895"],
+          figureStatus: "requete-budgetaire",
+          sources: ["crs-r49023"],
+        },
+        {
+          label: "Accord-cadre de production du 06/01/2026",
+          value: "De ~600 à ~2 000 PAC-3 MSE par an — capacité visée sur 7 ans, soumise aux crédits",
+          confidence: "moyenne",
+          note: "Accord-cadre avec le ministère de la Guerre (DoW), pas une commande ferme ; l'atteinte des ~2 000 par an est située vers 2030 par le JINSA.",
+          figureStatus: "plafond-cadre",
+          sources: ["aviationist-pac3-2000", "jinsa-munitions-2026-07"],
         },
         {
           label: "Objectif de cadence 2027",
           value:
             "Supérieure à 650 missiles par an — annonce Lockheed Martin",
           confidence: "haute",
+          note: "Objectif antérieur, dépassé par l'accord-cadre du 06/01/2026.",
           sources: ["lm-pac3-cadence"],
         },
         {
@@ -321,6 +357,18 @@ export const pac3Mse: DefenseSystem = {
         "Site de localisation industrielle annoncé en Espagne — soulagement chaîne US.",
       kind: "jalon",
     },
+    {
+      date: "2026-01",
+      label:
+        "Accord-cadre de production Lockheed Martin / ministère de la Guerre du 06/01/2026 : de ~600 à ~2 000 PAC-3 MSE par an (capacité visée, pas une commande ferme).",
+      kind: "jalon",
+    },
+    {
+      date: "2026-04",
+      label: "Requête FY2027 : 3 203 PAC-3 MSE pour 13 960 M$ (Army + Navy).",
+      kind: "jalon",
+      metricIds: ["MET-1894", "MET-1895"],
+    },
   ],
   sources: [
     {
@@ -364,6 +412,42 @@ export const pac3Mse: DefenseSystem = {
       reliability: "A",
       url: "https://mtcr.info/",
     },
+    {
+      id: "crs-r49023",
+      title: "FY2027 Defense Budget: Funding for Selected Weapon Systems (CRS R49023)",
+      publisher: "Congressional Research Service",
+      type: "institution",
+      reliability: "A",
+      date: "2026-09-03",
+      url: "https://www.everycrsreport.com/reports/R49023.html",
+    },
+    {
+      id: "breaking-fy27",
+      title: "The Pentagon wants a 188 percent bump for missile procurement. Can industry deliver?",
+      publisher: "Breaking Defense",
+      type: "presse",
+      reliability: "C",
+      date: "2026-04-13",
+      url: "https://breakingdefense.com/2026/04/the-pentagon-wants-a-188-percent-bump-for-missile-procurement-can-industry-deliver/",
+    },
+    {
+      id: "aviationist-pac3-2000",
+      title: "Production de PAC-3 MSE portée à 2 000 par an — accord-cadre Lockheed Martin du 06/01/2026",
+      publisher: "The Aviationist",
+      type: "presse",
+      reliability: "C",
+      date: "2026-01-06",
+      url: "https://theaviationist.com/2026/01/06/lockheed-martin-pac-3-mse-production-2000-year/",
+    },
+    {
+      id: "jinsa-munitions-2026-07",
+      title: "July 2026 Munitions Report",
+      publisher: "JINSA",
+      type: "think-tank",
+      reliability: "B",
+      date: "2026-07",
+      url: "https://jinsa.org/wp-content/uploads/2026/07/July-2026-Munitions-Report-1.pdf",
+    },
   ],
-  updated: "2026-05-26",
+  updated: "2026-11-17",
 };

@@ -28,6 +28,12 @@ import {
   SourceList,
   SpecsPanel,
 } from "@/components/fiche-sections";
+import {
+  IndustrialChainPanel,
+  ProgrammeTreePanel,
+  SovereigntyPanel,
+  WatchpointsPanel,
+} from "@/components/registre-sections";
 import { Narrative } from "@/components/narrative";
 import { SectionMarker } from "@/components/primitives";
 import { SystemSchematic } from "@/components/system-schematic";
@@ -185,6 +191,11 @@ export function SystemDossier({
   const idxVariants = hasVariants ? nextIndex() : null;
   const brickBase = counter;
   counter += system.bricks.length;
+  // Blocs issus du registre « Souveraineté industrielle » (optionnels).
+  const idxProgrammeTree = system.programmeTree?.length ? nextIndex() : null;
+  const idxIndustrialChain = system.industrialChain?.length ? nextIndex() : null;
+  const idxSovereignty = system.sovereignty?.length ? nextIndex() : null;
+  const idxWatchpoints = system.watchpoints?.length ? nextIndex() : null;
   const idxConstraints = hasConstraints ? nextIndex() : null;
   const idxLegal = system.legalNote ? nextIndex() : null;
   const idxCCA = system.ccaReading ? nextIndex() : null;
@@ -494,6 +505,60 @@ export function SystemDossier({
           />
         ))}
       </div>
+
+      {idxProgrammeTree && system.programmeTree ? (
+        <section className="mt-16">
+          <SectionMarker
+            index={idxProgrammeTree}
+            label="Structure du programme"
+            blurb="Imbrication parent / enfant du registre : ce qui se loge sous quoi — standards, sous-systèmes, commandes export."
+          />
+          <div className="mt-6">
+            <ProgrammeTreePanel nodes={system.programmeTree} />
+          </div>
+        </section>
+      ) : null}
+
+      {idxIndustrialChain && system.industrialChain ? (
+        <section className="mt-16">
+          <SectionMarker
+            index={idxIndustrialChain}
+            label="Chaîne de valeur"
+            blurb="Qui fait quoi, avec son rôle et son périmètre — repris du registre, sans reclassement."
+          />
+          <div className="mt-6">
+            <IndustrialChainPanel links={system.industrialChain} />
+          </div>
+        </section>
+      ) : null}
+
+      {idxSovereignty && system.sovereignty ? (
+        <section className="mt-16">
+          <SectionMarker
+            index={idxSovereignty}
+            label="Souveraineté & contrôle"
+            blurb="Contenu local, verrou d'un tiers, accès au code source : lus dans le registre, jamais déduits. « Non documenté » signifie que les sources ne le disent pas."
+          />
+          <div className="mt-6 space-y-6">
+            {system.sovereignty.map((profile) => (
+              <SovereigntyPanel key={profile.entityId} profile={profile} />
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {idxWatchpoints && system.watchpoints ? (
+        <section className="mt-16">
+          <SectionMarker
+            index={idxWatchpoints}
+            label="Jalons à surveiller"
+            blurb="Échéances à venir ou non tranchées à la date du registre — rien ne les présente comme acquises."
+          />
+          <div className="mt-6">
+            <WatchpointsPanel items={system.watchpoints} />
+          </div>
+        </section>
+      ) : null}
 
       {idxConstraints && system.physicalConstraints ? (
         <section className="mt-16">

@@ -1,6 +1,12 @@
-import type { Confidence, Grade, Reliability } from "@/data/types";
+import type {
+  Confidence,
+  FigureStatus,
+  Grade,
+  Reliability,
+} from "@/data/types";
 import {
   CONFIDENCE_META,
+  FIGURE_STATUS_META,
   GRADE_META,
   RELIABILITY_LABELS,
 } from "@/data/labels";
@@ -80,6 +86,30 @@ export function ConfidenceMark({ confidence }: { confidence: Confidence }) {
           }}
         />
       ))}
+    </span>
+  );
+}
+
+/**
+ * Statut du chiffre au registre (source unique, presse, calculé, plafond…).
+ * Les chiffres officiels n'appellent aucune marque : seul ce qui demande une
+ * lecture prudente, ou une précision de nature, est signalé.
+ */
+export function FigureStatusMark({ status }: { status?: FigureStatus }) {
+  const meta = status ? FIGURE_STATUS_META[status] : null;
+  if (!meta) return null;
+  return (
+    <span
+      data-figure-status={status}
+      title={meta.label}
+      className={`inline-block border px-1.5 py-px font-mono text-[10px] leading-4 tracking-[0.06em] ${
+        meta.tone === "alert"
+          ? "border-accent/60 text-accent"
+          : "border-line-bright text-ink-dim"
+      }`}
+    >
+      <span aria-hidden="true">{meta.short}</span>
+      <span className="sr-only">{meta.label}</span>
     </span>
   );
 }

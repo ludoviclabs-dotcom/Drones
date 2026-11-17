@@ -4,7 +4,7 @@
  * n'arrive au navigateur qu'à la première ouverture de la palette.
  */
 
-export type SearchKind = "systeme" | "domaine" | "page" | "glossaire";
+export type SearchKind = "systeme" | "acteur" | "domaine" | "page" | "glossaire";
 
 export interface SearchEntry {
   kind: SearchKind;
@@ -18,6 +18,7 @@ export interface SearchEntry {
 
 export const SEARCH_KIND_LABELS: Record<SearchKind, string> = {
   systeme: "Systèmes",
+  acteur: "Acteurs",
   domaine: "Domaines",
   page: "Pages et outils",
   glossaire: "Glossaire",
@@ -25,6 +26,7 @@ export const SEARCH_KIND_LABELS: Record<SearchKind, string> = {
 
 export const SEARCH_KIND_ORDER: readonly SearchKind[] = [
   "systeme",
+  "acteur",
   "domaine",
   "page",
   "glossaire",

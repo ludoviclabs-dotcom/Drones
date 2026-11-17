@@ -143,6 +143,14 @@ export const aarok: DefenseSystem = {
         "La chaîne de l'Aarok est conçue comme une vitrine de l'industrie française. Turgis & Gaillard, maître d'œuvre, assure l'assemblage à Blois-Le Breuil dans le Loir-et-Cher, avec un sous-ensemble produit à Saint-Malo via sa filiale Gaillard ASA. Les capteurs sont français : la boule optronique Euroflir 410/610 et le nœud de communication ODIN de Safran, le radar AESA AirMaster S de Thales, crédité d'une portée supérieure à 100 km.\n\nUn point de dépendance subsiste néanmoins, et il est central pour le discours souverain : le moteur initial est d'origine américaine. Turgis & Gaillard annonce sa substitution pour garantir le statut ITAR-free de l'appareil — une opération de re-motorisation qui n'est ni triviale ni démontrée. Tant qu'elle n'est pas réalisée, la promesse de souveraineté capacitaire comporte un nœud critique non encore résolu.",
       indicators: [
         {
+          label: "Version embarquée",
+          value: "Accord avec Naval Group pour une version embarquée sur porte-aéronefs (janvier 2026)",
+          confidence: "moyenne",
+          metricIds: ["MET-1235"],
+          figureStatus: "presse",
+          sources: ["caia-138-drones"],
+        },
+        {
           label: "Maître d'œuvre et assemblage",
           value: "Turgis & Gaillard — Blois-Le Breuil ; sous-ensemble à Saint-Malo (Gaillard ASA)",
           confidence: "moyenne",
@@ -286,11 +294,16 @@ export const aarok: DefenseSystem = {
   operators: ["Aucun en service — cibles France, Inde, Ukraine"],
   theatres: ["Aucun — en essais (aérodrome de Blois-Le Breuil)"],
   timeline: [
+    { date: "2026-01", label: "Accord avec Naval Group pour une version embarquée de l'Aarok (janvier 2026).", kind: "jalon", metricIds: ["MET-1235"] },
     { date: "2020-06", label: "Lancement du développement en secret, sur fonds propres de Turgis & Gaillard.", kind: "jalon" },
     { date: "2023", label: "Accord avec Antonov (Ukraine) pour une variante consommable de l'Aarok.", kind: "export" },
     { date: "2025-06", label: "Signature d'un protocole d'accord avec Bharat Forge (Inde) au Salon du Bourget.", kind: "export" },
     { date: "2025-09", label: "Premier vol — pilote à bord — depuis l'aérodrome de Blois-Le Breuil.", kind: "jalon" },
     { date: "2025", label: "Appareil retenu par le ministère des Armées comme solution capacitaire rapide complémentaire de l'Eurodrone.", kind: "debat" },
+  ],
+  registryEntityIds: ["ENT-AAROK"],
+  industrialChain: [
+    { entityId: "ENT-AAROK", actor: "Naval Group", role: "Partenaire", country: "France", scope: "Version embarquée sur porte-aéronefs" },
   ],
   sources: [
     {
@@ -323,6 +336,14 @@ export const aarok: DefenseSystem = {
       type: "institution",
       reliability: "A",
     },
+    {
+      id: "caia-138-drones",
+      title: "Drones et lutte anti-drones (revue CAIA n° 138)",
+      publisher: "CAIA",
+      type: "presse",
+      reliability: "C",
+      url: "https://www.caia.net/revue/caia-138-tbd.pdf",
+    },
   ],
-  updated: "2026-05-21",
+  updated: "2026-11-17",
 };

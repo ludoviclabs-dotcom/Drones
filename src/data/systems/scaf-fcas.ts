@@ -301,6 +301,19 @@ export const scafFcas: DefenseSystem = {
       metricIds: ["MET-0442"],
     },
   ],
+  registryEntityIds: ["ENT-SCAF-NGF", "ENT-NGFE"],
+  programmeTree: [
+    { entityId: "ENT-SCAF-NGF", name: "SCAF – avion de combat (NGF)", kind: "Programme_Cadre", children: [
+      { entityId: "ENT-NGFE", name: "Moteur NGFE (Safran–MTU)", kind: "Sous_Systeme_Brique" },
+    ] },
+  ],
+  industrialChain: [
+    { entityId: "ENT-SCAF-NGF", entityName: "SCAF – avion de combat (NGF)", actor: "Dassault Aviation", role: "Partenaire", country: "France", scope: "Voulait la maîtrise d'œuvre du chasseur" },
+    { entityId: "ENT-SCAF-NGF", entityName: "SCAF – avion de combat (NGF)", actor: "Airbus", role: "Partenaire", country: "Allemagne", scope: "Voulait un partage égal" },
+  ],
+  sovereignty: [
+    { entityId: "ENT-SCAF-NGF", localContentRule: "Cooperation_Multinationale", thirdPartyLock: "Non_specifie", sourceCodeAccess: "Non_specifie", chokepoints: [] },
+  ],
   sources: [
     {
       id: "min-armees",

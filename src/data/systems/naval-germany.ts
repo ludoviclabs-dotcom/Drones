@@ -364,6 +364,19 @@ const f126CalendrierRegistre: Indicator[] = [
 
 export const f126Niedersachsen: DefenseSystem = {
   ...f126Base,
+  registryEntityIds: ["ENT-F126", "ENT-MEKO-A200"],
+  industrialChain: [
+    { entityId: "ENT-F126", entityName: "Frégate F126", actor: "Damen Schelde Naval Shipbuilding", role: "Maitre_Oeuvre", country: "Pays-Bas", scope: "Maître d'œuvre des six frégates" },
+    { entityId: "ENT-F126", entityName: "Frégate F126", actor: "Thales", role: "Sous-traitant_Rang_1", country: "France", scope: "Système de combat : radars, capteurs, gestion de combat, conduite de tir, intégration (depuis nov. 2020)" },
+    { entityId: "ENT-F126", entityName: "Frégate F126", actor: "NVL (Rheinmetall)", role: "Partenaire", country: "Allemagne", scope: "Reprise négociée du programme (≈ 15,2 Md€), non conclue" },
+    { entityId: "ENT-MEKO-A200", entityName: "MEKO A-200", actor: "TKMS", role: "Maitre_Oeuvre", country: "Allemagne", scope: "Huit frégates MEKO A-200 (4 + option de 4)" },
+  ],
+  sovereignty: [
+    { entityId: "ENT-MEKO-A200", scope: "MEKO A-200 (remplacement envisagé)", localContentRule: "Non_specifie", thirdPartyLock: "Approbation_Parlementaire_Requise", sourceCodeAccess: "Non_specifie", chokepoints: [] },
+  ],
+  watchpoints: [
+    { entityId: "ENT-F126", entityName: "Frégate F126", horizon: "Examen en cours", event: "Indemnisation de la F126 : réclamations de Berlin contre Damen ; indemnité attendue par Thales." },
+  ],
   bricks: f126Base.bricks.map((brick) => {
     if (brick.key === "cout") {
       return {

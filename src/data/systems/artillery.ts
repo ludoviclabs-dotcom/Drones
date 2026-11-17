@@ -339,11 +339,42 @@ const caesarMk2Base = makeArtillerySystem({
 // sûre — la parlementaire — puis chaque autre valeur à part, avec son statut de
 // source unique. Aucune n'est fusionnée avec une autre ; le « 6–8 par mois »
 // de l'analyse FR (erreur d'extraction à la vérification) n'est pas repris.
+const caesarFlotteRegistre: Indicator[] = [
+  {
+    label: "CAESAR NG / MkII — commande de 2023",
+    value: "109 CAESAR NG / MkII à cabine blindée et moteur de 460 ch, livrables dès 2026",
+    confidence: "haute",
+    metricIds: ["MET-0982", "MET-0984"],
+    figureStatus: "officiel",
+    sources: ["senat-lpm-actualisee"],
+  },
+  {
+    label: "Cible de la LPM actualisée",
+    value: "+11 CAESAR ; flotte mixte de 120 CAESAR MkI et MkII dès 2030",
+    confidence: "haute",
+    metricIds: ["MET-0981", "MET-0985"],
+    figureStatus: "officiel",
+    sources: ["senat-lpm-actualisee"],
+  },
+];
+
 export const caesarMk2: DefenseSystem = {
   ...caesarMk2Base,
   updated: "2026-11-17",
+  registryEntityIds: ["ENT-CAESAR", "ENT-CAESAR-MKII"],
+  programmeTree: [
+    { entityId: "ENT-CAESAR", name: "CAESAR", kind: "Plateforme_Vecteur", children: [
+      { entityId: "ENT-CAESAR-MKII", name: "CAESAR NG / MkII", kind: "Plateforme_Vecteur" },
+    ] },
+  ],
+  industrialChain: [
+    { entityId: "ENT-CAESAR", entityName: "CAESAR", actor: "Arquus", role: "Sous-traitant_Rang_1", country: "France", scope: "CAESAR" },
+    { entityId: "ENT-CAESAR", entityName: "CAESAR", actor: "Arquus", role: "Sous-traitant_Rang_1", country: "France", scope: "Châssis 6x6 Armis du CAESAR NG" },
+  ],
   bricks: caesarMk2Base.bricks.map((brick) =>
-    brick.key === "supply-chain"
+    brick.key === "finance"
+      ? { ...brick, indicators: [...caesarFlotteRegistre, ...brick.indicators] }
+      : brick.key === "supply-chain"
       ? {
           ...brick,
           indicators: [
@@ -381,6 +412,15 @@ export const caesarMk2: DefenseSystem = {
   ),
   sources: [
     ...caesarMk2Base.sources,
+    {
+      id: "senat-lpm-actualisee",
+      title: "L'essentiel sur l'actualisation de la LPM 2024-2030 (pjl25-635)",
+      publisher: "Sénat",
+      type: "institution",
+      reliability: "A",
+      date: "2026-05",
+      url: "https://www.senat.fr/lessentiel/pjl25-635.pdf",
+    },
     {
       id: "an-cion-def-2024-11-27",
       title:

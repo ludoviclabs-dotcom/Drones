@@ -27,7 +27,7 @@ export interface DossierTracable {
   timeline?: TimelineEvent[];
   sources: SourceRef[];
   registryEntityIds?: string[];
-  sovereignty?: SovereigntyProfile;
+  sovereignty?: SovereigntyProfile[];
   industrialChain?: IndustrialLink[];
   watchpoints?: Watchpoint[];
   programmeTree?: ProgrammeNode[];
@@ -273,8 +273,7 @@ export function verifierDossier(d: DossierTracable, registre: Registre): string[
   }
   const dansDossier = (eid: string) => entites.includes(eid);
 
-  if (d.sovereignty) {
-    const s = d.sovereignty;
+  for (const s of d.sovereignty ?? []) {
     const e = registre.entiteParId.get(s.entityId);
     if (!e) erreurs.push(quoi(`souveraineté : entité ${s.entityId} absente du registre`));
     else {
@@ -303,6 +302,9 @@ export function verifierDossier(d: DossierTracable, registre: Registre): string[
         (l.country === undefined || f.pays === l.country),
     );
     if (!ligne) erreurs.push(quoi(`chaîne de valeur : « ${l.actor} » (${l.role}) absent de ${l.entityId}`));
+    if (l.entityName && e && l.entityName !== e.nom_principal && !e.alias_et_designations.includes(l.entityName)) {
+      erreurs.push(quoi(`chaîne de valeur : « ${l.entityName} » n'est ni le nom ni un alias de ${l.entityId}`));
+    }
     if (!dansDossier(l.entityId)) erreurs.push(quoi(`chaîne de valeur : ${l.entityId} absente de registryEntityIds`));
   }
 
@@ -312,6 +314,9 @@ export function verifierDossier(d: DossierTracable, registre: Registre): string[
       (j) => j.date_ou_horizon === w.horizon && j.evenement === w.event,
     );
     if (!jalon) erreurs.push(quoi(`jalon « ${w.horizon} — ${w.event.slice(0, 40)}… » absent de ${w.entityId}`));
+    if (w.entityName && e && w.entityName !== e.nom_principal && !e.alias_et_designations.includes(w.entityName)) {
+      erreurs.push(quoi(`jalon : « ${w.entityName} » n'est ni le nom ni un alias de ${w.entityId}`));
+    }
     if (!dansDossier(w.entityId)) erreurs.push(quoi(`jalon : ${w.entityId} absente de registryEntityIds`));
   }
 

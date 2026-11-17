@@ -607,6 +607,8 @@ export type SourceCodeAccess =
 export interface SovereigntyProfile {
   /** Entité du registre dont le bloc est tiré. */
   entityId: string;
+  /** Périmètre lu quand une fiche porte plusieurs blocs (« Rafale pour l'Inde »). */
+  scope?: string;
   localContentRule: LocalContentRule;
   thirdPartyLock: ThirdPartyLock;
   sourceCodeAccess: SourceCodeAccess;
@@ -617,6 +619,8 @@ export interface SovereigntyProfile {
 export interface IndustrialLink {
   /** Entité du registre dont la ligne est tirée. */
   entityId: string;
+  /** Nom de l'entité, pour regrouper les lignes d'une fiche multi-entités. */
+  entityName?: string;
   actor: string;
   role: string;
   country?: string;
@@ -626,6 +630,8 @@ export interface IndustrialLink {
 /** Échéance à surveiller (`jalons_a_surveiller`) — événement à venir ou non tranché. */
 export interface Watchpoint {
   entityId: string;
+  /** Nom de l'entité, pour regrouper les échéances d'une fiche multi-entités. */
+  entityName?: string;
   horizon: string;
   event: string;
 }
@@ -752,8 +758,11 @@ export interface DefenseSystem {
    * `sovereignty`, `industrialChain` et `watchpoints`.
    */
   registryEntityIds?: string[];
-  /** Bloc souveraineté du registre (règle de contenu local, verrous, goulets). */
-  sovereignty?: SovereigntyProfile;
+  /**
+   * Blocs souveraineté du registre (règle de contenu local, verrous, goulets),
+   * un par entité documentée — le Rafale en porte un par commande export.
+   */
+  sovereignty?: SovereigntyProfile[];
   /** Chaîne de valeur du registre, avec le rôle de chaque acteur. */
   industrialChain?: IndustrialLink[];
   /** Échéances à surveiller issues du registre. */

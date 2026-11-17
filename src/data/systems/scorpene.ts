@@ -231,9 +231,12 @@ export const scorpene: DefenseSystem = {
         },
         {
           label: "Indonésie",
-          value: "Accord pour deux Scorpène construits localement",
+          value: "Commande de 2 sous-marins Scorpène Evolved par l'Indonésie",
           confidence: "haute",
-          sources: ["naval-indonesia"],
+          note: "Construction locale annoncée par Naval Indonesia ; commande portée au rapport 2026 du ministère des Armées au Parlement sur les exportations d'armement.",
+          metricIds: ["MET-1634"],
+          figureStatus: "commande-ferme",
+          sources: ["rapport-parlement-2026", "naval-indonesia"],
         },
         {
           label: "Risque long terme",
@@ -297,7 +300,7 @@ export const scorpene: DefenseSystem = {
     "Chili",
     "Malaisie",
     "Brésil",
-    "Indonésie — programme annoncé",
+    "Indonésie — 2 Scorpène Evolved commandés",
   ],
   theatres: ["Océan Indien", "Pacifique", "Atlantique Sud", "Zones littorales"],
   timeline: [
@@ -345,6 +348,15 @@ export const scorpene: DefenseSystem = {
       reliability: "C",
       url: "https://www.naval-technology.com/projects/scorpene/",
     },
+    {
+      id: "rapport-parlement-2026",
+      title: "Rapport au Parlement 2026 sur les exportations d'armement de la France",
+      publisher: "Ministère des Armées",
+      type: "officiel",
+      reliability: "A",
+      date: "2026-08-12",
+      url: "https://www.defense.gouv.fr/sites/default/files/ministere-armees/Rapport%20au%20Parlement%202026%20sur%20les%20exportations%20d%E2%80%99armement%20de%20la%20France%20%2812082026%29.pdf",
+    },
   ],
-  updated: "2026-05-31",
+  updated: "2026-11-17",
 };

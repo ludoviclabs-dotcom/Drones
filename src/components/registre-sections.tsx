@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import type {
   IndustrialLink,
   ProgrammeNode,
@@ -65,6 +66,11 @@ export function SovereigntyPanel({ profile }: { profile: SovereigntyProfile }) {
       className="border border-line bg-surface"
       data-registry-entity={profile.entityId}
     >
+      {profile.scope ? (
+        <p className="border-b border-line px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-faint">
+          {profile.scope}
+        </p>
+      ) : null}
       <dl className="grid gap-px bg-line sm:grid-cols-3">
         <Fact
           label="Règle de contenu local"
@@ -107,47 +113,87 @@ export function SovereigntyPanel({ profile }: { profile: SovereigntyProfile }) {
   );
 }
 
+/** Regroupe les lignes par entité, dans l'ordre de première apparition. */
+function groupByEntity<T extends { entityId: string; entityName?: string }>(
+  items: T[],
+): { entityId: string; entityName?: string; items: T[] }[] {
+  const groups: { entityId: string; entityName?: string; items: T[] }[] = [];
+  for (const item of items) {
+    let group = groups.find((g) => g.entityId === item.entityId);
+    if (!group) {
+      group = { entityId: item.entityId, entityName: item.entityName, items: [] };
+      groups.push(group);
+    }
+    group.items.push(item);
+  }
+  return groups;
+}
+
+function EntityHeading({ name }: { name?: string }) {
+  if (!name) return null;
+  return (
+    <li
+      aria-hidden="true"
+      className="border-b border-line bg-surface-2 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-accent"
+    >
+      {name}
+    </li>
+  );
+}
+
 export function IndustrialChainPanel({ links }: { links: IndustrialLink[] }) {
+  const groups = groupByEntity(links);
   return (
     <ul className="border border-line bg-surface">
-      {links.map((link) => (
-        <li
-          key={`${link.entityId}|${link.actor}|${link.role}|${link.scope ?? ""}`}
-          data-registry-entity={link.entityId}
-          className="grid gap-x-4 gap-y-1 border-b border-line px-4 py-3 last:border-0 sm:grid-cols-[minmax(0,1.2fr)_auto_minmax(0,1.6fr)]"
-        >
-          <span className="font-mono text-sm text-ink">{link.actor}</span>
-          <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-accent">
-            {roleLabel(link.role)}
-            {link.country ? (
-              <span className="text-ink-faint"> · {link.country}</span>
-            ) : null}
-          </span>
-          <span className="font-serif text-xs leading-snug text-ink-dim">
-            {link.scope ?? "périmètre non précisé"}
-          </span>
-        </li>
+      {groups.map((group) => (
+        <Fragment key={group.entityId}>
+          {groups.length > 1 ? <EntityHeading name={group.entityName} /> : null}
+          {group.items.map((link) => (
+            <li
+              key={`${link.entityId}|${link.actor}|${link.role}|${link.scope ?? ""}`}
+              data-registry-entity={link.entityId}
+              className="grid gap-x-4 gap-y-1 border-b border-line px-4 py-3 last:border-0 sm:grid-cols-[minmax(0,1.2fr)_auto_minmax(0,1.6fr)]"
+            >
+              <span className="font-mono text-sm text-ink">{link.actor}</span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-accent">
+                {roleLabel(link.role)}
+                {link.country ? (
+                  <span className="text-ink-faint"> · {link.country}</span>
+                ) : null}
+              </span>
+              <span className="font-serif text-xs leading-snug text-ink-dim">
+                {link.scope ?? "périmètre non précisé"}
+              </span>
+            </li>
+          ))}
+        </Fragment>
       ))}
     </ul>
   );
 }
 
 export function WatchpointsPanel({ items }: { items: Watchpoint[] }) {
+  const groups = groupByEntity(items);
   return (
-    <ol className="border border-line bg-surface">
-      {items.map((item) => (
-        <li
-          key={`${item.entityId}|${item.horizon}|${item.event}`}
-          data-registry-entity={item.entityId}
-          className="grid gap-x-4 gap-y-1 border-b border-line px-4 py-3 last:border-0 sm:grid-cols-[8rem_1fr]"
-        >
-          <span className="font-mono text-xs text-accent">{item.horizon}</span>
-          <span className="font-serif text-sm leading-snug text-ink-dim">
-            {item.event}
-          </span>
-        </li>
+    <ul className="border border-line bg-surface">
+      {groups.map((group) => (
+        <Fragment key={group.entityId}>
+          {groups.length > 1 ? <EntityHeading name={group.entityName} /> : null}
+          {group.items.map((item) => (
+            <li
+              key={`${item.entityId}|${item.horizon}|${item.event}`}
+              data-registry-entity={item.entityId}
+              className="grid gap-x-4 gap-y-1 border-b border-line px-4 py-3 last:border-0 sm:grid-cols-[8rem_1fr]"
+            >
+              <span className="font-mono text-xs text-accent">{item.horizon}</span>
+              <span className="font-serif text-sm leading-snug text-ink-dim">
+                {item.event}
+              </span>
+            </li>
+          ))}
+        </Fragment>
       ))}
-    </ol>
+    </ul>
   );
 }
 

@@ -27,7 +27,8 @@ export const sampTNg: DefenseSystem = {
     { label: "Intercepteur", value: "Aster 30 B1NT — plafond ≈ 25 km", confidence: "haute", sources: ["eurosam-b1nt", "nn-samptng"] },
     { label: "Portée (aérobie)", value: "≈ 150 km contre aéronefs et missiles de croisière", confidence: "moyenne", sources: ["at-samptng"] },
     { label: "Antibalistique", value: "Interception de balistiques de théâtre (classe ≈ 1 500 km)", confidence: "moyenne", status: "a-recouper", sources: ["eurosam-b1nt"] },
-    { label: "Radar", value: "Version française : Thales Ground Fire 300 · version italienne : Kronos Grand Mobile High Power (Leonardo) — détection > 350 km, ≈ 1 000 pistes (Kronos)", confidence: "moyenne", note: "Les caractéristiques de détection citées (> 350 km, ≈ 1 000 pistes) concernent le radar Kronos ; aucune valeur publique n'est retenue pour le Ground Fire 300.", sources: ["defence-industry-samptng", "clubic-samptng", "at-samptng"] },
+    { label: "Radar — version française", value: "Thales Ground Fire 300 — portée de 350 km, suivi de plus de 1 000 cibles", confidence: "moyenne", note: "Radar rotatif AESA GaN intégré à chaque SAMP/T NG français selon la presse spécialisée.", metricIds: ["MET-1092", "MET-1093"], figureStatus: "presse", sources: ["fob-samptng", "defence-industry-samptng", "clubic-samptng"] },
+    { label: "Radar — version italienne", value: "Kronos Grand Mobile High Power (Leonardo) — détection > 350 km, ≈ 1 000 pistes", confidence: "moyenne", sources: ["at-samptng"] },
     { label: "Architecture", value: "Module radar + module d'engagement + jusqu'à 6 lanceurs × 8", confidence: "moyenne", sources: ["at-samptng"] },
   ],
   bricks: [
@@ -110,6 +111,33 @@ export const sampTNg: DefenseSystem = {
     { date: "2026-04", label: "Danemark — commande de 8 batteries SAMP/T NG, pour plus de 7,7 Md€.", kind: "export", metricIds: ["MET-1602", "MET-1603"] },
     { date: "2026-10", label: "Commande de 4 sections supplémentaires par la DGA via l'OCCAR (21/10/2026) : 12 sections NG pour l'armée de l'Air et de l'Espace.", kind: "jalon", metricIds: ["MET-0079", "MET-0080"] },
   ],
+  registryEntityIds: ["ENT-SAMP-T-NG", "ENT-SAMP-T-NG-DANEMARK", "ENT-ASTER", "ENT-GROUND-FIRE-300", "ENT-VL-MICA"],
+  programmeTree: [
+    { entityId: "ENT-SAMP-T-NG", name: "SAMP/T NG", kind: "Plateforme_Vecteur", children: [
+      { entityId: "ENT-ASTER", name: "Aster", kind: "Munition_Effecteur" },
+      { entityId: "ENT-GROUND-FIRE-300", name: "Radar Ground Fire 300", kind: "Sous_Systeme_Brique" },
+      { entityId: "ENT-VL-MICA", name: "VL MICA / MICA NG", kind: "Plateforme_Vecteur" },
+      { entityId: "ENT-SAMP-T-NG-DANEMARK", name: "SAMP/T NG — commande du Danemark", kind: "Plateforme_Vecteur" },
+    ] },
+  ],
+  industrialChain: [
+    { entityId: "ENT-SAMP-T-NG", entityName: "SAMP/T NG", actor: "MBDA", role: "Co-traitant", country: "France", scope: "Eurosam" },
+    { entityId: "ENT-SAMP-T-NG", entityName: "SAMP/T NG", actor: "Thales", role: "Co-traitant", country: "France", scope: "Eurosam ; radar Ground Fire 300" },
+    { entityId: "ENT-SAMP-T-NG", entityName: "SAMP/T NG", actor: "Eurosam", role: "Maitre_Oeuvre", country: "France / Italie", scope: "Via OCCAr" },
+    { entityId: "ENT-SAMP-T-NG", entityName: "SAMP/T NG", actor: "Thales", role: "Sous-traitant_Rang_1", country: "France", scope: "Radar Ground Fire 300" },
+    { entityId: "ENT-SAMP-T-NG", entityName: "SAMP/T NG", actor: "MBDA", role: "Co-traitant", country: "Europe", scope: "Missile Aster 30 B1NT" },
+  ],
+  sovereignty: [
+    { entityId: "ENT-SAMP-T-NG", localContentRule: "Cooperation_Multinationale", thirdPartyLock: "Non_specifie", sourceCodeAccess: "Non_specifie", chokepoints: [] },
+  ],
+  watchpoints: [
+    { entityId: "ENT-SAMP-T-NG", entityName: "SAMP/T NG", horizon: "2027", event: "1re section opérationnelle" },
+    { entityId: "ENT-SAMP-T-NG", entityName: "SAMP/T NG", horizon: "2028", event: "3 à 4 sections livrées" },
+    { entityId: "ENT-SAMP-T-NG", entityName: "SAMP/T NG", horizon: "Fin 2029", event: "Fin des 8 premières sections" },
+    { entityId: "ENT-SAMP-T-NG", entityName: "SAMP/T NG", horizon: "Fin 2030", event: "10 SAMP/T NG et 9 VL MICA livrés" },
+    { entityId: "ENT-SAMP-T-NG", entityName: "SAMP/T NG", horizon: "Fin 2029", event: "Tranche initiale de 8 achevée" },
+    { entityId: "ENT-SAMP-T-NG", entityName: "SAMP/T NG", horizon: "2030", event: "10 SAMP/T NG livrés" },
+  ],
   sources: [
     { id: "eurosam-b1nt", title: "Successful Aster B1NT firing qualifying the long-range performance of the SAMP/T NG", publisher: "Eurosam", type: "constructeur", reliability: "B", date: "2025", url: "https://eurosam.com/successful-aster-b1nt-firing-qualifying-the-long-range-performance-of-the-missile-and-the-samp-t-ng-air-defence-system/" },
     { id: "nn-samptng", title: "Successful Aster B1NT firing, qualifying SAMP/T NG air defence system", publisher: "Naval News", type: "presse", reliability: "B", date: "2025", url: "https://www.navalnews.com/naval-news/2025/08/successful-aster-b1nt-firing-qalifying-long-range-performance-od-missile-and-samp-t-ng-air-defence-system/" },
@@ -119,6 +147,7 @@ export const sampTNg: DefenseSystem = {
     { id: "defence-industry-samptng", title: "Article sur la qualification du SAMP/T NG et le radar Ground Fire 300 (defence-industry.eu)", publisher: "defence-industry.eu", type: "presse", reliability: "C", date: "2025-12-22", url: "https://defence-industry.eu/?p=65555" },
     { id: "an-pjl-actualisation", title: "Projet de loi — texte adopté provisoire (Assemblée nationale, l17t0325) : nouveau calendrier de livraison", publisher: "Assemblée nationale", type: "officiel", reliability: "A", url: "https://www.assemblee-nationale.fr/dyn/17/textes/l17t0325_texte-adopte-provisoire.pdf" },
     { id: "wikipedia-samp-t", title: "Système sol-air moyenne portée/terrestre (SAMP/T) - Mamba", publisher: "Wikipédia", type: "presse", reliability: "C", date: "2026-04", url: "https://fr.wikipedia.org/wiki/Syst%C3%A8me_sol-air_moyenne_port%C3%A9e/terrestre_(SAMP/T)_-_Mamba" },
+    { id: "fob-samptng", title: "Une rallonge de systèmes SAMP/T NG enfin actée par la France", publisher: "Forces Opérations Blog", type: "presse", reliability: "C", url: "https://forcesoperations.com/une-rallonge-de-systemes-samp-t-ng-enfin-actee-par-la-france/" },
   ],
   updated: "2026-11-17",
 };

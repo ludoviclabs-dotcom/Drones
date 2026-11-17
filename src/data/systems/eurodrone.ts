@@ -102,6 +102,15 @@ export const eurodrone: DefenseSystem = {
         "Le financement de l'Eurodrone passe par l'OCCAr, qui contracte pour le compte de la DGA et de ses trois homologues nationales. Le montage est un cofinancement quadrinational classique, adossé à un besoin partagé : chaque État commande son volume d'appareils et contribue à proportion. La France a notifié 12 drones — 4 systèmes — avec 6 appareils en option et une cible affichée de 6 systèmes à terme.\n\nLa singularité financière du dossier tient à l'apport européen : une subvention de 100 M€ au titre du Programme européen de développement industriel pour la défense (PEDID). Le montant reste modeste au regard d'un contrat de 7,1 Md€, mais sa portée est politique — c'est l'un des premiers grands programmes d'armement où l'Union cofinance directement la phase de développement, signal d'une bascule vers une logique de défense communautaire.",
       indicators: [
         {
+          label: "Commande française — montant",
+          value: "n.c.",
+          confidence: "haute",
+          note: "Airbus affirme que la France reste engagée dans le programme ; aucun montant de la commande française n'est communiqué.",
+          metricIds: ["MET-0469"],
+          figureStatus: "non-communique",
+          sources: ["janes-eurodrone-ila-2026"],
+        },
+        {
           label: "Maître d'ouvrage",
           value: "OCCAr pour le compte de la DGA et de ses homologues",
           confidence: "haute",
@@ -131,8 +140,17 @@ export const eurodrone: DefenseSystem = {
     {
       key: "supply-chain",
       narrative:
-        "La chaîne de l'Eurodrone est une carte de l'industrie aéronautique de défense de quatre pays. Airbus DS Allemagne assure la maîtrise d'œuvre et l'intégration ; Dassault Aviation, Leonardo et Airbus DS Espagne se partagent les lots restants ; Safran apporte la boule optronique Euroflir 610 et les systèmes de freinage. L'architecture a été pensée ITAR-free, c'est-à-dire affranchie des composants soumis à la réglementation américaine sur les exportations d'armement.\n\nCet argument souffre toutefois d'une exception majeure : le moteur. Le bimoteur retenu en mars 2022 est le General Electric Catalyst, américain, préféré au Safran Ardiden 3TP. Une plateforme conçue ITAR-free mais propulsée par un turbopropulseur des États-Unis reste, pour la part motorisation, dépendante d'une autorisation d'exportation de Washington — contradiction que la communication du programme tend à minorer et qui constitue le véritable point faible de souveraineté de la chaîne.",
+        "La chaîne de l'Eurodrone est une carte de l'industrie aéronautique de défense de quatre pays. Airbus DS Allemagne assure la maîtrise d'œuvre et l'intégration ; Leonardo et Airbus DS Espagne se partagent les lots restants — Dassault Aviation, partenaire initial, a été évincé du programme (confirmation du 1er juillet 2026) ; Safran apporte la boule optronique Euroflir 610 et les systèmes de freinage. L'architecture a été pensée ITAR-free, c'est-à-dire affranchie des composants soumis à la réglementation américaine sur les exportations d'armement.\n\nCet argument souffre toutefois d'une exception majeure : le moteur. Le bimoteur retenu en mars 2022 est le General Electric Catalyst, américain, préféré au Safran Ardiden 3TP. Une plateforme conçue ITAR-free mais propulsée par un turbopropulseur des États-Unis reste, pour la part motorisation, dépendante d'une autorisation d'exportation de Washington — contradiction que la communication du programme tend à minorer et qui constitue le véritable point faible de souveraineté de la chaîne.",
       indicators: [
+        {
+          label: "Dassault Aviation — éviction",
+          value: "Éviction de Dassault Aviation du programme confirmée le 1er juillet 2026",
+          confidence: "moyenne",
+          note: "Information de presse spécialisée relayant la confirmation de l'industriel.",
+          metricIds: ["MET-1227"],
+          figureStatus: "presse",
+          sources: ["opex360-eurodrone-dassault"],
+        },
         {
           label: "Maître d'œuvre",
           value: "Airbus DS Allemagne — intégration système",
@@ -141,7 +159,7 @@ export const eurodrone: DefenseSystem = {
         },
         {
           label: "Partenaires industriels",
-          value: "Dassault Aviation · Leonardo · Airbus DS Espagne · Safran (optronique, freinage)",
+          value: "Leonardo · Airbus DS Espagne · Safran (optronique, freinage) — Dassault Aviation, partenaire initial, évincé",
           confidence: "haute",
           sources: ["airbus-eurodrone"],
         },
@@ -284,12 +302,20 @@ export const eurodrone: DefenseSystem = {
   ],
   theatres: ["Aucun — système en développement"],
   timeline: [
+    { date: "2026-07", label: "Dassault Aviation confirme son éviction du programme Eurodrone (1er juillet 2026).", kind: "debat", metricIds: ["MET-1227"] },
     { date: "2022-02", label: "Notification du contrat de l'Eurodrone à l'OCCAr — 7,1 Md€, 20 systèmes.", kind: "jalon" },
     { date: "2022-03", label: "Choix du moteur General Electric Catalyst face au Safran Ardiden 3TP.", kind: "jalon" },
     { date: "2023-11", label: "Le Japon rejoint le programme comme observateur.", kind: "debat" },
     { date: "2024-10", label: "Glissement du calendrier d'un an reconnu par le ministre Sébastien Lecornu.", kind: "debat" },
     { date: "2025-01", label: "L'Inde rejoint le programme comme observateur.", kind: "debat" },
     { date: "2027", label: "Premier vol de l'Eurodrone prévu (mi-2027).", kind: "jalon" },
+  ],
+  registryEntityIds: ["ENT-EURODRONE"],
+  sovereignty: [
+    { entityId: "ENT-EURODRONE", localContentRule: "Cooperation_Multinationale", thirdPartyLock: "Non_specifie", sourceCodeAccess: "Non_specifie", chokepoints: [] },
+  ],
+  watchpoints: [
+    { entityId: "ENT-EURODRONE", entityName: "Eurodrone", horizon: "Au-delà de 2031", event: "Livraisons glissées" },
   ],
   sources: [
     {
@@ -345,6 +371,24 @@ export const eurodrone: DefenseSystem = {
       type: "institution",
       reliability: "A",
     },
+    {
+      id: "opex360-eurodrone-dassault",
+      title: "Dassault Aviation confirme son éviction du programme de drone",
+      publisher: "Opex360",
+      type: "presse",
+      reliability: "C",
+      date: "2026-07-01",
+      url: "https://www.opex360.com/2026/07/01/dassault-aviation-confirme-son-eviction-du-programme-de-drone-male-europeen-par-airbus/",
+    },
+    {
+      id: "janes-eurodrone-ila-2026",
+      title: "ILA 2026: France “remains committed” to Eurodrone, Airbus says",
+      publisher: "Janes",
+      type: "presse",
+      reliability: "B",
+      date: "2026-06-11",
+      url: "https://www.janes.com/defence-intelligence-insights/defence-news/air/ila-2026-france-remains-committed-to-eurodrone-airbus-says",
+    },
   ],
-  updated: "2026-05-21",
+  updated: "2026-11-17",
 };

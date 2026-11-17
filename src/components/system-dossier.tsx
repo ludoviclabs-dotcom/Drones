@@ -194,7 +194,7 @@ export function SystemDossier({
   // Blocs issus du registre « Souveraineté industrielle » (optionnels).
   const idxProgrammeTree = system.programmeTree?.length ? nextIndex() : null;
   const idxIndustrialChain = system.industrialChain?.length ? nextIndex() : null;
-  const idxSovereignty = system.sovereignty ? nextIndex() : null;
+  const idxSovereignty = system.sovereignty?.length ? nextIndex() : null;
   const idxWatchpoints = system.watchpoints?.length ? nextIndex() : null;
   const idxConstraints = hasConstraints ? nextIndex() : null;
   const idxLegal = system.legalNote ? nextIndex() : null;
@@ -539,8 +539,10 @@ export function SystemDossier({
             label="Souveraineté & contrôle"
             blurb="Contenu local, verrou d'un tiers, accès au code source : lus dans le registre, jamais déduits. « Non documenté » signifie que les sources ne le disent pas."
           />
-          <div className="mt-6">
-            <SovereigntyPanel profile={system.sovereignty} />
+          <div className="mt-6 space-y-6">
+            {system.sovereignty.map((profile) => (
+              <SovereigntyPanel key={profile.entityId} profile={profile} />
+            ))}
           </div>
         </section>
       ) : null}

@@ -258,7 +258,7 @@ function makeArmoredSystem(input: ArmoredSystemInput): DefenseSystem {
   };
 }
 
-export const leclercXlr = makeArmoredSystem({
+const leclercXlrBase = makeArmoredSystem({
   slug: "leclerc-xlr",
   name: "Leclerc XLR",
   designation: "Standard renove Scorpion",
@@ -353,6 +353,82 @@ export const leclercXlr = makeArmoredSystem({
   },
   scores: scoreSet("B", "B", "C", "B"),
 });
+
+// Mise à jour du 17/11/2026 depuis le registre « Souveraineté industrielle » :
+// tranche commandée, cible, livraisons et échéance à surveiller, chacune avec
+// son metric_id, son statut de chiffre et sa source.
+export const leclercXlr: DefenseSystem = {
+  ...leclercXlrBase,
+  updated: "2026-11-17",
+  registryEntityIds: ["ENT-LECLERC-XLR"],
+  watchpoints: [
+    { entityId: "ENT-LECLERC-XLR", horizon: "2035", event: "Fin des livraisons (cible 200 XLR)" },
+  ],
+  bricks: leclercXlrBase.bricks.map((brick) =>
+    brick.key === "finance"
+      ? {
+          ...brick,
+          indicators: [
+            {
+              label: "Tranche commandée",
+              value: "Une tranche de 100 chars Leclerc XLR commandée le 29 janvier 2025",
+              confidence: "haute",
+              metricIds: ["MET-0945", "MET-1338"],
+              figureStatus: "commande-ferme",
+              sources: ["opex360-capint"],
+            },
+            {
+              label: "Montant de la tranche",
+              value: "n.c.",
+              confidence: "haute",
+              metricIds: ["MET-1336"],
+              figureStatus: "non-communique",
+              sources: ["opex360-capint"],
+            },
+            {
+              label: "Cible et livraisons",
+              value: "Cible de 200 XLR, livraisons échelonnées jusqu'en 2035 ; 34 livrés fin 2024, un char tous les 17 jours",
+              confidence: "moyenne",
+              metricIds: ["MET-0946", "MET-1337", "MET-0947", "MET-0948"],
+              figureStatus: "presse",
+              sources: ["opex360-capint"],
+            },
+            {
+              label: "Protection active",
+              value: "Intégration d'un système de protection active prévue en mars 2026",
+              confidence: "moyenne",
+              metricIds: ["MET-0949"],
+              figureStatus: "presse",
+              sources: ["opex360-capint"],
+            },
+            ...brick.indicators,
+          ],
+        }
+      : brick,
+  ),
+  timeline: [
+    ...(leclercXlrBase.timeline ?? []),
+    {
+      date: "2025-01",
+      label: "Commande d'une tranche de 100 Leclerc XLR le 29 janvier 2025.",
+      kind: "jalon",
+      metricIds: ["MET-0945", "MET-1338"],
+    },
+  ],
+  sources: [
+    ...leclercXlrBase.sources,
+    {
+      id: "opex360-capint",
+      title:
+        "Le successeur du Leclerc sera le CAPINT, un char doté d'une tourelle Ascalon et d'un châssis allemand",
+      publisher: "Opex360",
+      type: "presse",
+      reliability: "C",
+      date: "2026-06-15",
+      url: "https://www.opex360.com/2026/06/15/le-successeur-du-leclerc-sera-le-capint-un-char-dote-dune-tourelle-ascalon-et-dun-chassis-allemand/",
+    },
+  ],
+};
 
 export const leopard2A8 = makeArmoredSystem({
   slug: "leopard-2a8",

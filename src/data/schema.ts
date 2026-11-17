@@ -276,6 +276,7 @@ const EntityId = z.string().regex(/^ENT-[A-Z0-9-]+$/, "entity_id attendu : ENT-X
 
 const SovereigntyProfile = z.object({
   entityId: EntityId,
+  scope: z.string().min(1).optional(),
   localContentRule: z.enum([
     "Souverain_National",
     "Cooperation_Multinationale",
@@ -301,6 +302,7 @@ const SovereigntyProfile = z.object({
 
 const IndustrialLink = z.object({
   entityId: EntityId,
+  entityName: z.string().min(1).optional(),
   actor: z.string().min(1),
   role: z.string().min(1),
   country: z.string().optional(),
@@ -309,6 +311,7 @@ const IndustrialLink = z.object({
 
 const Watchpoint = z.object({
   entityId: EntityId,
+  entityName: z.string().min(1).optional(),
   horizon: z.string().min(1),
   event: z.string().min(1),
 });
@@ -645,7 +648,7 @@ export const DefenseSystemSchema = z.object({
   editorial: EditorialBlocks,
   ccaReading: CCAReading.optional(),
   registryEntityIds: z.array(EntityId).min(1).optional(),
-  sovereignty: SovereigntyProfile.optional(),
+  sovereignty: z.array(SovereigntyProfile).optional(),
   industrialChain: z.array(IndustrialLink).optional(),
   watchpoints: z.array(Watchpoint).optional(),
   programmeTree: z.array(ProgrammeNode).optional(),

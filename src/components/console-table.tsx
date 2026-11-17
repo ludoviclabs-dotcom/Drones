@@ -12,7 +12,7 @@ import {
 import { claimsToCsv, claimsToJson, downloadFile } from "@/lib/export";
 import type { ClaimStatus } from "@/data/types";
 import { CATEGORY_LABELS, STATUS_LABELS } from "@/data/labels";
-import { ConfidenceMark } from "./primitives";
+import { ConfidenceMark, ReliabilityMark } from "./primitives";
 import { SourceConfidenceBadge } from "./source-confidence-badge";
 
 const STATUS_TOKEN: Record<ClaimStatus, string> = {
@@ -140,11 +140,10 @@ function PagedClaims({ rows }: { rows: Claim[] }) {
                                 {source.publisher}
                               </span>
                             )}
-                            <span
-                              className="ml-1 text-ink-faint"
-                              title={`Fiabilité ${source.reliability}`}
-                            >
-                              · {source.reliability}
+                            <span className="ml-1.5 inline-flex align-middle">
+                              <ReliabilityMark
+                                reliability={source.reliability}
+                              />
                             </span>
                           </span>
                         </li>

@@ -45,6 +45,7 @@ import type { DefenseSystem } from "@/data/types";
 import { systemBreadcrumbLd, systemDatasetLd } from "@/lib/structured-data";
 import { buildPanoplieXrayScenario } from "@/data/decision-twin/panoplie-xray";
 import { isXrayEdited } from "@/data/decision-twin/coverage";
+import { buildSourceIndex } from "@/lib/source-notes";
 
 /**
  * Corps d'une fiche dossier, partagé entre la page `/systemes/[slug]` (rendu
@@ -63,6 +64,10 @@ export function SystemDossier({
   topBar?: ReactNode;
 }) {
   const modal = variant === "modal";
+  // Renvois numérotés : chaque indicateur pointe vers son entrée de la liste
+  // « Sources » (même numéro, même ordre).
+  const sourcePrefix = `fiche-${system.slug}`;
+  const sourceIndex = buildSourceIndex(system.sources, sourcePrefix);
   // Aperçu « points de preuve » : construit côté serveur uniquement pour les
   // dossiers à lecture éditoriale (`coverage === "edited"`), pour éviter de
   // promettre une curation qui n'existe pas en mode `auto`.
@@ -471,7 +476,7 @@ export function SystemDossier({
             blurb="Sous un même nom, des appareils distincts — variantes, standards logiciels, déclinaisons navales."
           />
           <div className="mt-6">
-            <SpecsPanel specs={system.variants} />
+            <SpecsPanel specs={system.variants} sourceIndex={sourceIndex} />
           </div>
         </section>
       ) : null}
@@ -485,6 +490,7 @@ export function SystemDossier({
             key={brick.key}
             brick={brick}
             index={String(brickBase + i + 1).padStart(2, "0")}
+            sourceIndex={sourceIndex}
           />
         ))}
       </div>
@@ -497,7 +503,10 @@ export function SystemDossier({
             blurb="Ce qui borne un effecteur à énergie dirigée — ligne de visée, atmosphère, refroidissement, énergie disponible."
           />
           <div className="mt-6">
-            <SpecsPanel specs={system.physicalConstraints} />
+            <SpecsPanel
+              specs={system.physicalConstraints}
+              sourceIndex={sourceIndex}
+            />
           </div>
         </section>
       ) : null}
@@ -568,7 +577,7 @@ export function SystemDossier({
           blurb="Données techniques de référence — en appui de l'analyse, non comme finalité."
         />
         <div className="mt-6">
-          <SpecsPanel specs={system.keySpecs} />
+          <SpecsPanel specs={system.keySpecs} sourceIndex={sourceIndex} />
         </div>
       </section>
 
@@ -618,10 +627,10 @@ export function SystemDossier({
         <SectionMarker
           index={idxSources}
           label="Sources"
-          blurb="Chaque source est notée de A (fiable) à D (douteuse). Les données restent des estimations open source."
+          blurb="Chaque source est notée de A (fiable) à D (douteuse) — pastille ronde « Fiab. », à ne pas confondre avec les paliers carrés de l'évaluation. Les numéros renvoient aux indicateurs du dossier ; les données restent des estimations open source."
         />
         <div className="mt-6">
-          <SourceList sources={system.sources} />
+          <SourceList sources={system.sources} anchorPrefix={sourcePrefix} />
         </div>
       </section>
 

@@ -6,7 +6,6 @@ import {
   BRICK_ANGLE_LABELS,
   BRICK_ORDER,
   SCORE_LABELS,
-  SOURCE_TYPE_LABELS,
 } from "@/data/labels";
 import { HUD_BOARDS, HUD_INDEX_PATH } from "@/data/hud/boards";
 import { INDUSTRIAL_GRAPH_PILOT } from "@/data/panoplie-workflows";
@@ -16,6 +15,7 @@ import { CatalogueFilter } from "@/components/catalogue-filter";
 import { SectionMarker } from "@/components/primitives";
 import { HeroPlate, heroCallouts } from "@/components/home/hero-plate";
 import { DossierDemo, type DemoAngle } from "@/components/home/dossier-demo";
+import { notesFor, numberCitedSources } from "@/lib/source-notes";
 import { DomainIndex } from "@/components/home/domain-index";
 import {
   HudBoardRow,
@@ -69,10 +69,16 @@ export default function Home() {
     systems[0];
   const compareSystem = SYSTEMS_BY_SLUG[COMPARE_SLUG];
 
-  const sourceById = new Map(demoSystem.sources.map((s) => [s.id, s] as const));
   const angles: DemoAngle[] = BRICK_ORDER.flatMap((key, i) => {
     const brick = demoSystem.bricks.find((b) => b.key === key);
     if (!brick) return [];
+    // Numérotation propre à l'angle : 01, 02… dans l'ordre de citation, avec
+    // une liste « Sources citées » en pied de panneau.
+    const { cited, index } = numberCitedSources(
+      brick.indicators.map((indicator) => indicator.sources),
+      demoSystem.sources,
+      `demo-${key}`,
+    );
     return [
       {
         key,
@@ -80,6 +86,7 @@ export default function Home() {
         label: BRICK_ANGLE_LABELS[key],
         lede: firstSentence(brick.narrative),
         narrative: brick.narrative,
+        sources: cited,
         indicators: brick.indicators.map((indicator) => ({
           label: indicator.label,
           value: indicator.value,
@@ -89,18 +96,7 @@ export default function Home() {
             indicator.status ??
             (indicator.confidence === "haute" ? "verifie" : "a-recouper"),
           note: indicator.note,
-          sources: (indicator.sources ?? []).flatMap((id) => {
-            const source = sourceById.get(id);
-            return source
-              ? [
-                  {
-                    publisher: source.publisher,
-                    type: SOURCE_TYPE_LABELS[source.type].toLowerCase(),
-                    reliability: source.reliability,
-                  },
-                ]
-              : [];
-          }),
+          notes: notesFor(indicator.sources, index),
         })),
       },
     ];

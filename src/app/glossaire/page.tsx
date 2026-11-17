@@ -3,6 +3,7 @@ import type { GlossaryTerm } from "@/data/types";
 import { glossary } from "@/data/glossary";
 import { organisms } from "@/data/organisms";
 import { SectionMarker } from "@/components/primitives";
+import { glossaryTermAnchor } from "@/lib/search";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/glossaire" },
@@ -56,7 +57,8 @@ export default function GlossairePage() {
                   {terms.map((term) => (
                     <div
                       key={term.slug}
-                      className="border-b border-line px-5 py-4 last:border-0"
+                      id={glossaryTermAnchor(term.slug)}
+                      className="border-b border-line px-5 py-4 transition-colors last:border-0 target:bg-surface-2"
                     >
                       <dt className="flex items-baseline gap-2">
                         <span className="font-serif text-lg text-ink">
@@ -91,7 +93,7 @@ export default function GlossairePage() {
             <div
               key={org.slug}
               id={`org-${org.slug}`}
-              className="border-b border-line px-5 py-4 last:border-0"
+              className="border-b border-line px-5 py-4 transition-colors last:border-0 target:bg-surface-2"
             >
               <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                 <span className="font-serif text-lg text-ink">{org.name}</span>

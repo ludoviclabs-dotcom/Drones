@@ -34,6 +34,14 @@ export const glossary: GlossaryTerm[] = [
       "Unmanned Surface Vehicle. Engin naval sans équipage évoluant à la surface de l'eau. Employé pour la reconnaissance ou, sous forme de USV explosif, la frappe contre des navires et des infrastructures.",
   },
   {
+    slug: "uuv",
+    term: "Drone sous-marin",
+    acronym: "UUV",
+    category: "technique",
+    definition:
+      "Unmanned Underwater Vehicle. Engin sous-marin sans équipage, autonome ou téléopéré. Employé pour la guerre des mines, la reconnaissance ou, en démonstrateur de drone de combat, des missions sous la surface.",
+  },
+  {
     slug: "ravitaillement-en-vol",
     term: "Ravitaillement en vol",
     category: "technique",

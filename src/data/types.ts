@@ -24,7 +24,8 @@ export type DroneClass =
   | "munition-rodeuse"
   | "kamikaze"
   | "ravitailleur"
-  | "USV";
+  | "USV"
+  | "UUV";
 
 /** Classe d'un système d'énergie dirigée. */
 export type DirectedEnergyClass = "HEL" | "HPM" | "SHORAD-hybride";

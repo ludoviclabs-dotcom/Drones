@@ -169,7 +169,7 @@ test.describe("Accueil — six séquences", () => {
     const expand = page.getByRole("button", { name: /Afficher les \d+ autres dossiers/ });
     await expect(expand).toHaveAttribute("aria-expanded", "false");
     await expand.click();
-    await expect(cards).toHaveCount(153);
+    await expect(cards).toHaveCount(166);
     await expect(expand).toHaveCount(0);
     await page.getByRole("button", { name: "Replier le catalogue ↑" }).click();
     await expect(cards).toHaveCount(6);

@@ -144,7 +144,7 @@ describe("traçabilité — le garde-fou détecte les dérives", () => {
       indic({ label: "F126", value: "environ 10 Md€", metricIds: ["MET-0449"], figureStatus: "presse" }),
       [{ ...SRC_PRESSE, reliability: "A" }],
     );
-    expect(sortie).toMatch(/fiabilité de source supérieure à C/);
+    expect(sortie).toMatch(/fiabilité d'un article de presse supérieure à C/);
   });
 
   it("refuse un nombre qui s'écarte du registre (MET-0446 : 10 Md€)", () => {

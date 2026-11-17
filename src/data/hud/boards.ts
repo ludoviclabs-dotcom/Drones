@@ -128,6 +128,7 @@ export const HUD_BOARDS: readonly HudBoard[] = [
       width: 1280,
       height: 720,
     },
+    systemSlugs: ["thundart"],
   },
   {
     slug: "drone-airframe",

@@ -187,16 +187,19 @@ export function verifierIndicateur(
       erreurs.push(`${id} : ${mid} — aucune source citée ne porte une URL du registre (${urls[0]}…)`);
     }
 
-    // Une source de presse ou à source unique, non recoupée par une source
-    // primaire, ne peut pas être notée A ou B.
+    // Un article de presse ou à source unique, non recoupé par une source
+    // primaire, ne peut pas être noté A ou B. La règle vise les sources typées
+    // « presse » : une page officielle ou un rapport d'institution cité à
+    // l'appui garde sa propre note.
+    const articles = sourcesCitees.filter((s) => s.type === "presse");
     if (
       ["presse", "source-unique"].includes(statut) &&
       verif?.verdict !== "confirme_source_primaire" &&
-      sourcesCitees.length > 0
+      articles.length > 0
     ) {
-      const meilleure = Math.max(...sourcesCitees.map((s) => RANG_FIABILITE[s.reliability]));
+      const meilleure = Math.max(...articles.map((s) => RANG_FIABILITE[s.reliability]));
       if (meilleure > RANG_FIABILITE.C) {
-        erreurs.push(`${id} : ${mid} (${statut}) — fiabilité de source supérieure à C sans source primaire`);
+        erreurs.push(`${id} : ${mid} (${statut}) — fiabilité d'un article de presse supérieure à C sans source primaire`);
       }
     }
   }

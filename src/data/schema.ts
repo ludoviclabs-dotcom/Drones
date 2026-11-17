@@ -608,7 +608,7 @@ export const DefenseSystemSchema = z.object({
   reference: z.string().min(1),
   category: SystemCategory,
   droneClass: z
-    .enum(["MALE", "HALE", "UCAV", "ISR", "munition-rodeuse", "kamikaze", "ravitailleur", "USV"])
+    .enum(["MALE", "HALE", "UCAV", "ISR", "munition-rodeuse", "kamikaze", "ravitailleur", "USV", "UUV"])
     .optional(),
   directedEnergyClass: z.enum(["HEL", "HPM", "SHORAD-hybride"]).optional(),
   combatAircraftClass: z.enum(["gen-4", "gen-4-5", "gen-5", "gen-6"]).optional(),

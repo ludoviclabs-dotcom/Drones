@@ -10,13 +10,13 @@ import type {
   ScoreKey,
 } from "@/data/types";
 import { CONFIDENCE_META, STATUS_LABELS } from "@/data/labels";
-import { ConfidenceMark, GradeBadge } from "@/components/primitives";
-
-export interface DemoSource {
-  publisher: string;
-  type: string;
-  reliability: string;
-}
+import {
+  ConfidenceMark,
+  GradeBadge,
+  ReliabilityMark,
+} from "@/components/primitives";
+import { SourceMarks } from "@/components/source-notes";
+import { formatNoteNumber, type SourceNote } from "@/lib/source-notes";
 
 export interface DemoIndicator {
   label: string;
@@ -24,7 +24,8 @@ export interface DemoIndicator {
   confidence: Confidence;
   status: ClaimStatus;
   note?: string;
-  sources: DemoSource[];
+  /** Renvois vers les sources citées de l'angle. */
+  notes: SourceNote[];
 }
 
 export interface DemoAngle {
@@ -35,6 +36,8 @@ export interface DemoAngle {
   lede: string;
   narrative: string;
   indicators: DemoIndicator[];
+  /** Sources citées dans l'angle, numérotées dans l'ordre de citation. */
+  sources: SourceNote[];
 }
 
 export interface DemoScore {
@@ -194,15 +197,10 @@ export function DossierDemo({ system, angles, scores }: DossierDemoProps) {
                     {indicator.note}
                   </span>
                 ) : null}
-                {indicator.sources.length ? (
-                  <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-faint">
-                    Source :{" "}
-                    {indicator.sources
-                      .map(
-                        (source) =>
-                          `${source.publisher} · ${source.type} · fiabilité ${source.reliability}`,
-                      )
-                      .join(" ; ")}
+                {indicator.notes.length ? (
+                  <span className="flex items-baseline gap-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-faint">
+                    <span aria-hidden="true">Sources</span>
+                    <SourceMarks notes={indicator.notes} />
                   </span>
                 ) : null}
               </dd>
@@ -228,6 +226,37 @@ export function DossierDemo({ system, angles, scores }: DossierDemoProps) {
             </div>
           ))}
         </dl>
+
+        {angle.sources.length ? (
+          <div className="border-b border-line px-6 py-4">
+            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-faint">
+              Sources citées dans cet angle
+            </p>
+            <ol className="mt-2.5 flex flex-col gap-1.5">
+              {angle.sources.map((source) => (
+                <li
+                  key={source.anchor}
+                  id={source.anchor}
+                  className="flex flex-wrap items-baseline gap-x-3 gap-y-1 px-1 py-0.5 transition-colors target:bg-surface-2 target:shadow-[inset_2px_0_0_var(--color-accent)]"
+                >
+                  <span className="w-5 shrink-0 font-mono text-[10px] text-accent">
+                    {formatNoteNumber(source.n)}
+                  </span>
+                  <span className="min-w-0 flex-1 font-sans text-[13px] leading-snug text-ink-dim">
+                    <span className="text-ink">{source.publisher}</span> —{" "}
+                    {source.title}
+                    <span className="text-ink-faint">
+                      {" "}
+                      · {source.typeLabel}
+                      {source.date ? ` · ${source.date}` : ""}
+                    </span>
+                  </span>
+                  <ReliabilityMark reliability={source.reliability} />
+                </li>
+              ))}
+            </ol>
+          </div>
+        ) : null}
 
         <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 px-6 py-4">
           <ul

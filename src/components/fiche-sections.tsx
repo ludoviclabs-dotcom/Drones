@@ -27,7 +27,6 @@ import {
   BRICK_BLURBS,
   BRICK_LABELS,
   NAVAL_MISSION_LABELS,
-  RELIABILITY_LABELS,
   RECOVERABILITY_LABELS,
   SCORE_LABELS,
   SOURCE_CONTEXT_LABELS,
@@ -37,17 +36,34 @@ import {
   SOURCE_TYPE_LABELS,
 } from "@/data/labels";
 import { ORGANISMS_BY_SLUG } from "@/data/organisms";
-import { ConfidenceMark, GradeBadge, SectionMarker } from "./primitives";
+import {
+  ConfidenceMark,
+  GradeBadge,
+  ReliabilityMark,
+  SectionMarker,
+} from "./primitives";
 import { Narrative } from "./narrative";
 import { SourceConfidenceBadge } from "./source-confidence-badge";
 import { SourceConfidenceDetails } from "./source-confidence-panel";
+import { SourceMarks } from "./source-notes";
+import {
+  formatNoteNumber,
+  notesFor,
+  sourceAnchor,
+  type SourceNote,
+} from "@/lib/source-notes";
+
+/** Index des sources du dossier, pour poser les renvois numérotés. */
+export type SourceIndex = Map<string, SourceNote>;
 
 export function IndicatorPanel({
   indicators,
   title = "Indicateurs",
+  sourceIndex,
 }: {
   indicators: Indicator[];
   title?: string;
+  sourceIndex?: SourceIndex;
 }) {
   return (
     <div className="border border-line bg-surface">
@@ -64,7 +80,15 @@ export function IndicatorPanel({
           >
             <div className="flex items-baseline justify-between gap-3">
               <span className="font-mono text-xs text-ink-dim">{ind.label}</span>
-              <ConfidenceMark confidence={ind.confidence} />
+              <span className="flex shrink-0 items-baseline gap-2">
+                {sourceIndex ? (
+                  <SourceMarks
+                    notes={notesFor(ind.sources, sourceIndex)}
+                    align="end"
+                  />
+                ) : null}
+                <ConfidenceMark confidence={ind.confidence} />
+              </span>
             </div>
             <div className="mt-1 font-mono text-sm text-ink">{ind.value}</div>
             {ind.note ? (
@@ -115,9 +139,11 @@ function OrganismRefs({ slugs }: { slugs: string[] }) {
 export function BrickSection({
   brick,
   index,
+  sourceIndex,
 }: {
   brick: Brick;
   index: string;
+  sourceIndex?: SourceIndex;
 }) {
   return (
     <section className="border-t border-line pt-8">
@@ -129,7 +155,10 @@ export function BrickSection({
       <div className="mt-6 grid gap-8 lg:grid-cols-[1.55fr_1fr]">
         <Narrative text={brick.narrative} />
         <div>
-          <IndicatorPanel indicators={brick.indicators} />
+          <IndicatorPanel
+            indicators={brick.indicators}
+            sourceIndex={sourceIndex}
+          />
           {brick.organisms && brick.organisms.length > 0 ? (
             <OrganismRefs slugs={brick.organisms} />
           ) : null}
@@ -288,7 +317,13 @@ export function LegalNote({ note }: { note: string }) {
   );
 }
 
-export function SpecsPanel({ specs }: { specs: Indicator[] }) {
+export function SpecsPanel({
+  specs,
+  sourceIndex,
+}: {
+  specs: Indicator[];
+  sourceIndex?: SourceIndex;
+}) {
   return (
     <div className="grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
       {specs.map((spec) => (
@@ -297,7 +332,15 @@ export function SpecsPanel({ specs }: { specs: Indicator[] }) {
             <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
               {spec.label}
             </span>
-            <ConfidenceMark confidence={spec.confidence} />
+            <span className="flex shrink-0 items-baseline gap-2">
+              {sourceIndex ? (
+                <SourceMarks
+                  notes={notesFor(spec.sources, sourceIndex)}
+                  align="end"
+                />
+              ) : null}
+              <ConfidenceMark confidence={spec.confidence} />
+            </span>
           </div>
           <p className="mt-1.5 font-mono text-sm text-ink">{spec.value}</p>
           {spec.note ? (
@@ -702,16 +745,24 @@ export function ArmoredArchitecturePanel({
   );
 }
 
-export function SourceList({ sources }: { sources: SourceRef[] }) {
+export function SourceList({
+  sources,
+  anchorPrefix,
+}: {
+  sources: SourceRef[];
+  /** Préfixe des `id` d'entrée, cibles des renvois numérotés. */
+  anchorPrefix?: string;
+}) {
   return (
     <ol className="border border-line">
       {sources.map((src, i) => (
         <li
           key={src.id}
-          className="flex items-start gap-4 border-b border-line px-4 py-3 last:border-0"
+          id={anchorPrefix ? sourceAnchor(anchorPrefix, src.id) : undefined}
+          className="flex items-start gap-4 border-b border-line px-4 py-3 transition-colors last:border-0 target:bg-surface-2 target:shadow-[inset_2px_0_0_var(--color-accent)]"
         >
           <span className="font-mono text-xs text-ink-faint">
-            {String(i + 1).padStart(2, "0")}
+            {formatNoteNumber(i + 1)}
           </span>
           <div className="flex-1">
             <p className="font-serif text-sm text-ink">{src.title}</p>
@@ -723,12 +774,7 @@ export function SourceList({ sources }: { sources: SourceRef[] }) {
           </div>
           <div className="flex shrink-0 items-center gap-2">
             <SourceConfidenceBadge source={src} />
-            <span
-              className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-dim"
-              title={`Fiabilité ${src.reliability} — ${RELIABILITY_LABELS[src.reliability]}`}
-            >
-              Fiab. {src.reliability}
-            </span>
+            <ReliabilityMark reliability={src.reliability} />
           </div>
           {src.url ? (
             <a

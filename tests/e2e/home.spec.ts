@@ -75,7 +75,13 @@ test.describe("Accueil — six séquences", () => {
     const panel = page.getByRole("tabpanel");
     await expect(panel).toContainText("Angle 01 — Coût");
     await expect(panel).toContainText("Coût d'acquisition unitaire");
-    await expect(panel).toContainText("Source : Air & Cosmos");
+    // Sources : renvois numérotés, liste « Sources citées » en pied de panneau.
+    await expect(panel).toContainText("Sources citées dans cet angle");
+    await expect(panel.locator("ol li").first()).toContainText("Air & Cosmos");
+    const mark = panel.getByRole("link", { name: "Source 01" }).first();
+    await mark.hover();
+    await expect(panel.getByRole("tooltip").first()).toBeVisible();
+    await expect(panel.getByRole("tooltip").first()).toContainText("Fiab.");
 
     await tabs.getByRole("tab", { name: /Export/ }).click();
     await expect(panel).toContainText("Angle 05 — Export");

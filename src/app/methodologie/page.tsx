@@ -10,7 +10,12 @@ import {
   RELIABILITY_LABELS,
   SCORE_LABELS,
 } from "@/data/labels";
-import { ConfidenceMark, GradeBadge, SectionMarker } from "@/components/primitives";
+import {
+  ConfidenceMark,
+  GradeBadge,
+  ReliabilityMark,
+  SectionMarker,
+} from "@/components/primitives";
 import { SafetyBoundaryBanner } from "@/components/safety-boundary-banner";
 
 export const metadata: Metadata = {
@@ -205,15 +210,28 @@ export default function MethodologiePage() {
         <ul className="mt-5 grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
           {RELIABILITIES.map((reliability) => (
             <li key={reliability} className="bg-panel p-4">
-              <span className="font-mono text-lg text-accent">
-                {reliability}
-              </span>
-              <p className="mt-1 font-mono text-xs text-ink-dim">
+              <ReliabilityMark reliability={reliability} />
+              <p className="mt-2 font-mono text-xs text-ink-dim">
                 {RELIABILITY_LABELS[reliability]}
               </p>
             </li>
           ))}
         </ul>
+        <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-3 border border-line bg-surface px-4 py-3">
+          <span className="inline-flex items-center gap-2 font-mono text-[11px] text-ink-dim">
+            <GradeBadge grade="B" size="sm" /> palier d&apos;évaluation d&apos;un
+            système
+          </span>
+          <span className="inline-flex items-center gap-2 font-mono text-[11px] text-ink-dim">
+            <ReliabilityMark reliability="B" /> fiabilité d&apos;une source
+          </span>
+          <p className="basis-full font-serif text-sm italic leading-relaxed text-ink-faint">
+            Deux échelles, mêmes lettres, sens distincts : un palier B juge un
+            système (« solide »), une fiabilité B qualifie une source
+            (« généralement fiable »). Le palier est un carré teinté, la
+            fiabilité une pastille ronde toujours préfixée « Fiab. ».
+          </p>
+        </div>
       </section>
 
       <section className="mt-14">

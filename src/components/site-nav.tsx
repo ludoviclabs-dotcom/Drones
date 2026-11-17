@@ -10,7 +10,8 @@ import {
   type FocusEvent,
   type KeyboardEvent,
 } from "react";
-import { NAV_GROUPS, SEARCH_HREF, type NavGroup } from "@/data/navigation";
+import { NAV_GROUPS, type NavGroup } from "@/data/navigation";
+import { CommandPalette } from "./command-palette";
 
 /**
  * Navigation principale — quatre groupes en en-tête.
@@ -76,26 +77,7 @@ export function SiteNav() {
         ))}
       </ul>
 
-      <Link
-        href={SEARCH_HREF}
-        onClick={closeAll}
-        className="ml-2 inline-flex min-h-11 items-center gap-2 border border-line-bright px-3 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-dim transition-colors hover:border-accent hover:text-accent"
-      >
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          aria-hidden="true"
-        >
-          <circle cx="11" cy="11" r="7" />
-          <line x1="16.5" y1="16.5" x2="21" y2="21" />
-        </svg>
-        <span className="sr-only sm:not-sr-only">Rechercher</span>
-      </Link>
+      <CommandPalette onOpen={closeAll} />
 
       <button
         type="button"

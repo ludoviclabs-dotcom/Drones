@@ -1,5 +1,9 @@
-import type { Confidence, Grade } from "@/data/types";
-import { CONFIDENCE_META, GRADE_META } from "@/data/labels";
+import type { Confidence, Grade, Reliability } from "@/data/types";
+import {
+  CONFIDENCE_META,
+  GRADE_META,
+  RELIABILITY_LABELS,
+} from "@/data/labels";
 
 export function GradeBadge({
   grade,
@@ -25,6 +29,32 @@ export function GradeBadge({
       title={`Palier ${grade} — ${meta.label}`}
     >
       {grade}
+    </span>
+  );
+}
+
+/**
+ * Fiabilité d'une source (A → D). Deux échelles du site partagent les mêmes
+ * lettres : le palier d'évaluation d'un système (A → E, `GradeBadge`) et la
+ * fiabilité d'une source. Elles ne se lisent jamais l'une pour l'autre :
+ * le palier est un carré teinté de la rampe A–E, porté seul ; la fiabilité
+ * est une pastille ronde à l'encre du tampon, toujours préfixée « Fiab. ».
+ */
+export function ReliabilityMark({ reliability }: { reliability: Reliability }) {
+  const label = RELIABILITY_LABELS[reliability];
+  return (
+    <span
+      className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-stamp/60 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-dim"
+      title={`Fiabilité de la source ${reliability} — ${label}`}
+    >
+      <span
+        aria-hidden="true"
+        className="h-1.5 w-1.5 rounded-full bg-stamp"
+      />
+      <span aria-hidden="true">Fiab. {reliability}</span>
+      <span className="sr-only">
+        Fiabilité de la source {reliability} — {label}
+      </span>
     </span>
   );
 }

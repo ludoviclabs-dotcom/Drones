@@ -12,6 +12,7 @@ import type {
   Reliability,
   SourceRef,
   SovereigntyProfile,
+  TimelineEvent,
   Watchpoint,
 } from "@/data/types";
 import {
@@ -23,6 +24,7 @@ import {
 export interface DossierTracable {
   slug: string;
   indicators: Indicator[];
+  timeline?: TimelineEvent[];
   sources: SourceRef[];
   registryEntityIds?: string[];
   sovereignty?: SovereigntyProfile;
@@ -66,13 +68,22 @@ function manque(attendus: string[], texte: string): string[] {
   return attendus.filter((n) => !presents.has(n));
 }
 
+/** Retire la ponctuation de fin de phrase, et une parenthèse fermante non appariée. */
+function nettoyerUrl(brute: string): string {
+  let u = brute.replace(/[.,;:]+$/, "");
+  while (u.endsWith(")") && (u.match(/\)/g) ?? []).length > (u.match(/\(/g) ?? []).length) {
+    u = u.slice(0, -1).replace(/[.,;:]+$/, "");
+  }
+  return u;
+}
+
 function urlsDe(m: RegistreMetrique): string[] {
   const ref = m.tracabilite.reference_source_complete ?? "";
-  const dansRef = ref.match(/https?:\/\/[^\s;)\]]+/g) ?? [];
+  const dansRef = ref.match(/https?:\/\/\S+/g) ?? [];
   const verif = m.verification_externe?.source_url
     ? [m.verification_externe.source_url]
     : [];
-  return [...verif, ...dansRef].map((u) => u.replace(/[.,]+$/, ""));
+  return [...verif, ...dansRef].map(nettoyerUrl);
 }
 
 export function verifierIndicateur(
@@ -171,7 +182,7 @@ export function verifierIndicateur(
       !["calcule", "non-communique"].includes(statut) &&
       urls.length > 0 &&
       sourcesCitees.length > 0 &&
-      !sourcesCitees.some((s) => s.url && urls.includes(s.url.replace(/[.,]+$/, "")))
+      !sourcesCitees.some((s) => s.url && urls.includes(nettoyerUrl(s.url)))
     ) {
       erreurs.push(`${id} : ${mid} — aucune source citée ne porte une URL du registre (${urls[0]}…)`);
     }
@@ -205,12 +216,55 @@ export function verifierIndicateur(
   return erreurs;
 }
 
+/**
+ * Repère de frise : le nombre ou la date repris du registre figure dans le
+ * libellé, sans conversion de devise. Pas de source ni de statut propres : la
+ * frise renvoie aux indicateurs du dossier pour cela.
+ */
+export function verifierEvenement(ev: TimelineEvent, registre: Registre): string[] {
+  const erreurs: string[] = [];
+  const id = `frise ${ev.date} « ${ev.label.slice(0, 40)}… »`;
+  for (const mid of ev.metricIds ?? []) {
+    const m = registre.metriqueParId.get(mid);
+    if (!m) {
+      erreurs.push(`${id} : ${mid} est absent du registre`);
+      continue;
+    }
+    if (m.est_lecture_analytique) {
+      erreurs.push(`${id} : ${mid} est une lecture analytique de l'auteur`);
+      continue;
+    }
+    const verif = m.verification_externe;
+    const aCorriger = verif && ["divergent", "erreur_extraction"].includes(verif.verdict);
+    const attendus = nombres(aCorriger && verif ? (verif.valeur_trouvee ?? "") : (m.valeur_texte_originale ?? ""));
+    if (aCorriger && attendus.length === 0) {
+      erreurs.push(`${id} : ${mid} est « ${verif?.verdict} » sans valeur de remplacement — ne pas le citer`);
+      continue;
+    }
+    const absents = manque(attendus, ev.label);
+    if (absents.length > 0) {
+      erreurs.push(`${id} : ${mid} — nombre(s) absent(s) du libellé : ${absents.join(", ")}`);
+    }
+    if (m.devise && MARQUEURS_DEVISE[m.devise] && nombres(ev.label).length > 0) {
+      for (const [code, regle] of Object.entries(MARQUEURS_DEVISE)) {
+        if (code !== m.devise && regle.test(ev.label)) {
+          erreurs.push(`${id} : « ${code} » écrit, le registre indique ${m.devise} (aucune conversion)`);
+        }
+      }
+    }
+  }
+  return erreurs;
+}
+
 export function verifierDossier(d: DossierTracable, registre: Registre): string[] {
   const erreurs: string[] = [];
   const quoi = (e: string) => `[${d.slug}] ${e}`;
 
   for (const ind of d.indicators) {
     for (const e of verifierIndicateur(ind, d.sources, registre)) erreurs.push(quoi(e));
+  }
+  for (const ev of d.timeline ?? []) {
+    for (const e of verifierEvenement(ev, registre)) erreurs.push(quoi(e));
   }
 
   const entites = d.registryEntityIds ?? [];

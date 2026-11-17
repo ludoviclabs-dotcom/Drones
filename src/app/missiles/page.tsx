@@ -196,8 +196,10 @@ export default function MissilesPage() {
         <p className="mt-6 max-w-3xl font-serif text-[0.95rem] leading-relaxed text-ink-dim">
           Les chiffres publiés dans les fiches précisent toujours le type de
           coût — flyaway, net procurement, gross weapon system ou enveloppe —
-          parce qu'un PAC-3 MSE à 5,6 M$ (net procurement) n'est pas comparable
-          tel quel à un Meteor non publié.
+          parce qu'un PAC-3 MSE à 5,6 M$ (net procurement, demande FY2026)
+          n'est pas comparable tel quel à un Meteor non publié, ni à la
+          moyenne de la requête FY2027 — 13 960 M$ pour 3 203 missiles, soit
+          ≈ 4,4 M$ (calc.) sur un périmètre de demande différent.
         </p>
       </section>
 

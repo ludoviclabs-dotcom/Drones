@@ -365,6 +365,10 @@ const TimelineEvent = z.object({
   date: z.string().min(1),
   label: z.string().min(1),
   kind: z.enum(["jalon", "emploi", "export", "debat"]),
+  metricIds: z
+    .array(z.string().regex(/^MET-\d{4}$/, "metric_id attendu : MET-0000"))
+    .min(1)
+    .optional(),
 });
 
 const NavalIndustrialSupplier = z.object({

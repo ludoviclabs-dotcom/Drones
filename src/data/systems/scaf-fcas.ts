@@ -11,18 +11,18 @@ export const scafFcas: DefenseSystem = {
   country: "Europe — France, Allemagne, Espagne",
   flag: "🇪🇺",
   manufacturer: "Dassault Aviation · Airbus · Indra",
-  status: "Programme futur — crise de gouvernance, avenir incertain",
+  status: "Programme arrêté — arrêt du SCAF/NGF acté par Dassault le 22/07/2026",
   naval:
     "À confirmer — la France souhaite une déclinaison navalisable ; non figé.",
   acquisitionModes: ["cooperatif"],
   tagline:
-    "L'ambition européenne de 6e génération — un système de systèmes, et une crise de gouvernance qui en menace l'existence.",
+    "L'ambition européenne de 6e génération — un système de systèmes arrêté en 2026, au terme d'une crise de gouvernance.",
   summary:
-    "Le SCAF — Système de combat aérien du futur, FCAS en anglais — est le programme par lequel la France, l'Allemagne et l'Espagne entendent doter l'Europe d'une capacité de combat aérien de 6e génération. Ce n'est pas qu'un avion : c'est un système de systèmes — un chasseur habité de nouvelle génération, des drones associés, un cloud de combat —, porté par Dassault Aviation, Airbus et Indra.\n\nMais sa fiche, en 2026, est d'abord celle d'une crise. Le partage du travail et le leadership industriel — en particulier sur le chasseur habité — opposent durement Dassault et Airbus. Les médiations ont échoué, des responsables allemands ont menacé d'y mettre fin, et l'avenir du programme dépend désormais d'arbitrages politiques. Le SCAF est l'illustration, en temps réel, de la difficulté de la coopération européenne.",
+    "Le SCAF — Système de combat aérien du futur, FCAS en anglais — est le programme par lequel la France, l'Allemagne et l'Espagne entendent doter l'Europe d'une capacité de combat aérien de 6e génération. Ce n'est pas qu'un avion : c'est un système de systèmes — un chasseur habité de nouvelle génération, des drones associés, un cloud de combat —, porté par Dassault Aviation, Airbus et Indra.\n\nMais sa fiche, en 2026, est celle d'un arrêt. Le partage du travail et le leadership industriel — en particulier sur le chasseur habité — opposaient durement Dassault et Airbus. Les médiations ont échoué, des responsables allemands ont menacé d'y mettre fin et, dans son communiqué financier du 22 juillet 2026, Dassault a acté la décision de Paris et de Berlin d'arrêter le SCAF/NGF. Le SCAF reste l'illustration de la difficulté de la coopération européenne.",
   keySpecs: [
     {
       label: "Génération",
-      value: "6e génération — programme futur",
+      value: "6e génération — programme arrêté (ce n'est plus un programme futur)",
       confidence: "haute",
       sources: ["min-armees"],
     },
@@ -46,16 +46,19 @@ export const scafFcas: DefenseSystem = {
     },
     {
       label: "Calendrier visé",
-      value: "Démonstrateur vers 2027, entrée en service vers 2040",
+      value: "Démonstrateur vers 2027, entrée en service vers 2040 — calendrier caduc avec l'arrêt du programme",
       confidence: "faible",
       status: "a-recouper",
       sources: ["euro-sd"],
     },
     {
       label: "Statut 2026",
-      value: "Crise de gouvernance — avenir suspendu à des arbitrages politiques",
+      value: "Arrêt du SCAF/NGF acté par Dassault dans son communiqué du 22/07/2026",
       confidence: "haute",
-      sources: ["breaking-def"],
+      note: "La date de la décision n'est pas donnée par les sources lues ; la presse évoque le 8 juin 2026.",
+      metricIds: ["MET-0442"],
+      figureStatus: "officiel",
+      sources: ["dassault-s1-2026"],
     },
   ],
   bricks: [
@@ -71,14 +74,22 @@ export const scafFcas: DefenseSystem = {
           sources: ["euro-sd"],
         },
         {
+          label: "Coût engagé avant l'arrêt",
+          value: "2,5 Md€ investis côté français (ministre des Armées, via l'AFP)",
+          confidence: "moyenne",
+          metricIds: ["MET-0439"],
+          figureStatus: "presse",
+          sources: ["lalibre-scaf"],
+        },
+        {
           label: "Coût caché",
-          value: "Le blocage de gouvernance prolonge des dépenses sans avancée",
+          value: "Le blocage de gouvernance a prolongé des dépenses sans avancée",
           confidence: "moyenne",
           sources: ["breaking-def"],
         },
         {
           label: "Coût complet",
-          value: "Indéterminé tant que le partage du travail n'est pas réglé",
+          value: "Non établi — le partage du travail n'a jamais été réglé avant l'arrêt",
           confidence: "faible",
           status: "a-recouper",
           sources: ["euro-sd"],
@@ -104,9 +115,11 @@ export const scafFcas: DefenseSystem = {
         },
         {
           label: "Phase suivante",
-          value: "Suspendue à une décision politique commune",
-          confidence: "moyenne",
-          sources: ["euro-sd"],
+          value: "Aucune — le SCAF/NGF est arrêté (communiqué de Dassault du 22/07/2026)",
+          confidence: "haute",
+          metricIds: ["MET-0442"],
+          figureStatus: "officiel",
+          sources: ["dassault-s1-2026"],
         },
       ],
     },
@@ -212,7 +225,7 @@ export const scafFcas: DefenseSystem = {
       key: "efficacite-cout",
       grade: "D",
       rationale:
-        "Évaluation indicative — programme futur : aucun appareil, et un coût complet indéterminé tant que la gouvernance n'est pas réglée.",
+        "Évaluation indicative — programme arrêté : aucun appareil, et un coût complet jamais établi faute d'accord sur la gouvernance.",
     },
     {
       key: "survivabilite",
@@ -230,13 +243,13 @@ export const scafFcas: DefenseSystem = {
       key: "risque-industriel",
       grade: "E",
       rationale:
-        "Le risque s'est matérialisé : conflit de partage du travail, médiations échouées, programme menacé d'arrêt — un risque industriel et politique critique.",
+        "Le risque s'est matérialisé : conflit de partage du travail, médiations échouées, programme arrêté en 2026 — un risque industriel et politique critique.",
     },
     {
       key: "maturite",
       grade: "D",
       rationale:
-        "Programme futur — démonstrateur visé vers 2027, service envisagé vers 2040, et phase suivante non engagée.",
+        "Programme arrêté en 2026 — démonstrateur (visé vers 2027) et service (envisagé vers 2040) jamais atteints.",
     },
     {
       key: "confiance-donnees",
@@ -247,15 +260,15 @@ export const scafFcas: DefenseSystem = {
   ],
   editorial: {
     mythVsReality:
-      "Le mythe : le futur chasseur européen est lancé. La réalité : un programme de 6e génération paralysé par un conflit de gouvernance industrielle, dont l'existence même dépend d'arbitrages politiques à venir.",
+      "Le mythe : le futur chasseur européen est lancé. La réalité : un programme de 6e génération paralysé par un conflit de gouvernance industrielle, dont l'arrêt a été acté en juillet 2026.",
     bestUseCase:
-      "À terme, doter l'Europe continentale d'une capacité de combat aérien de 6e génération souveraine — si les trois nations parviennent à s'accorder.",
+      "L'ambition initiale : doter l'Europe continentale d'une capacité de combat aérien de 6e génération souveraine — objectif non atteint, le programme étant arrêté.",
     weakPoint:
-      "La gouvernance : le partage du travail et le leadership sur le chasseur habité opposent les industriels et les États — c'est le programme, plus que la technologie, qui est en péril.",
+      "La gouvernance : le partage du travail et le leadership sur le chasseur habité ont opposé les industriels et les États — c'est le programme, plus que la technologie, qui a été interrompu.",
     analystNote:
-      "Le SCAF est, en 2026, moins un avion qu'un cas d'école de la coopération européenne en crise. Panoplie le classe en programme futur à risque industriel critique : l'enjeu n'est pas de savoir s'il serait un bon chasseur, mais s'il existera. Sa fiche est à suivre comme un baromètre de la défense européenne.",
+      "Le SCAF est, en 2026, moins un avion qu'un cas d'école de la coopération européenne en échec. Panoplie l'avait classé en programme futur à risque industriel critique : l'enjeu n'était pas de savoir s'il serait un bon chasseur, mais s'il existerait — l'arrêt de 2026 y répond. Sa fiche reste un baromètre de la défense européenne.",
   },
-  operators: ["Europe — programme futur (France, Allemagne, Espagne)"],
+  operators: ["Europe — programme arrêté (France, Allemagne, Espagne)"],
   theatres: ["Europe — phases d'études"],
   timeline: [
     {
@@ -274,6 +287,18 @@ export const scafFcas: DefenseSystem = {
       label:
         "Échec des médiations industrielles ; l'avenir du programme renvoyé au politique.",
       kind: "debat",
+    },
+    {
+      date: "2026-06",
+      label: "Abandon du chasseur NGF du SCAF évoqué dès le 8 juin 2026 selon la presse.",
+      kind: "debat",
+      metricIds: ["MET-1076"],
+    },
+    {
+      date: "2026-07",
+      label: "Communiqué financier de Dassault du 22/07/2026 actant l'arrêt du SCAF/NGF.",
+      kind: "jalon",
+      metricIds: ["MET-0442"],
     },
   ],
   sources: [
@@ -302,6 +327,25 @@ export const scafFcas: DefenseSystem = {
       reliability: "C",
       url: "https://breakingdefense.com/2025/12/france-spain-reassert-faith-in-europes-next-gen-future-fighter-but-germany-stays-mum/",
     },
+    {
+      id: "dassault-s1-2026",
+      title:
+        "Résultats Dassault Aviation, données consolidées — 1er semestre 2026 (communiqué financier)",
+      publisher: "Dassault Aviation",
+      type: "constructeur",
+      reliability: "B",
+      date: "2026-07-22",
+      url: "https://www.dassault-aviation.com/wp-content/blogs.dir/1/files/2026/07/Communique-Financier-Resultats-du-1er-semestre-2026.pdf",
+    },
+    {
+      id: "lalibre-scaf",
+      title: "Avion de combat européen : le Scaf est mort, et après ?",
+      publisher: "AFP via La Libre Belgique",
+      type: "presse",
+      reliability: "C",
+      date: "2026-06-11",
+      url: "https://www.lalibre.be/dernieres-depeches/2026/06/11/avion-de-combat-europeen-le-scaf-est-mort-et-apres-I4WVHNQQRVDZHC2ABKJ7SERW4A/",
+    },
   ],
-  updated: "2026-05-22",
+  updated: "2026-11-17",
 };

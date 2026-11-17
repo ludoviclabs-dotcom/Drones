@@ -15,19 +15,19 @@ export const sampTNg: DefenseSystem = {
   country: "France · Italie",
   flag: "🇫🇷",
   manufacturer: "Eurosam (MBDA · Thales · Leonardo)",
-  introduced: "2025 (qualification NG)",
+  introduced: "2026 (qualification fin 2025)",
   status:
-    "Tir de qualification Aster 30 B1NT réussi en 2025 ; montée en service FR/IT et candidat longue portée pour plusieurs pays européens",
+    "Qualifié fin 2025 (premier tir de la version française le 15/12/2025) ; mise en service et premières livraisons en 2026 ; 12 sections NG commandées pour l'armée de l'Air et de l'Espace ; Danemark et Ukraine parmi les clients",
   acquisitionModes: ["cooperatif"],
   tagline:
-    "La réponse européenne au Patriot : Aster 30 B1NT, radar Kronos à panneaux tournants et C2 souverain, capable de défense de zone et d'interception balistique de théâtre.",
+    "La réponse européenne au Patriot : Aster 30 B1NT, radars Thales Ground Fire 300 (France) et Leonardo Kronos (Italie) et C2 souverain, capable de défense de zone et d'interception balistique de théâtre.",
   summary:
-    "Le SAMP/T NG (Next Generation) est la montée en gamme du seul système sol-air de premier rang entièrement européen. Il associe l'intercepteur Aster 30 B1NT (portée ≈ 150 km contre cibles aérobies, plafond ≈ 25 km, capacité antibalistique étendue), un nouveau radar rotatif Kronos Grand Mobile (Leonardo, détection > 350 km, suivi de ≈ 1 000 pistes) et un module d'engagement modernisé.\n\nPour Panoplie, c'est le cas d'école de l'autonomie stratégique : à mission comparable au Patriot PAC-3 MSE, il offre une chaîne souveraine FR/IT sans dépendance ITAR sur le cœur du système — un argument central dans les arbitrages européens post-2022.",
+    "Le SAMP/T NG (Next Generation) est la montée en gamme du seul système sol-air de premier rang entièrement européen. Il associe l'intercepteur Aster 30 B1NT (portée ≈ 150 km contre cibles aérobies, plafond ≈ 25 km, capacité antibalistique étendue), un radar rotatif de nouvelle génération — Ground Fire 300 de Thales sur la version française, Kronos Grand Mobile High Power de Leonardo (détection > 350 km, suivi de ≈ 1 000 pistes) sur la version italienne — et un module d'engagement modernisé.\n\nPour Panoplie, c'est le cas d'école de l'autonomie stratégique : à mission comparable au Patriot PAC-3 MSE, il offre une chaîne souveraine FR/IT sans dépendance ITAR sur le cœur du système — un argument central dans les arbitrages européens post-2022.",
   keySpecs: [
     { label: "Intercepteur", value: "Aster 30 B1NT — plafond ≈ 25 km", confidence: "haute", sources: ["eurosam-b1nt", "nn-samptng"] },
     { label: "Portée (aérobie)", value: "≈ 150 km contre aéronefs et missiles de croisière", confidence: "moyenne", sources: ["at-samptng"] },
     { label: "Antibalistique", value: "Interception de balistiques de théâtre (classe ≈ 1 500 km)", confidence: "moyenne", status: "a-recouper", sources: ["eurosam-b1nt"] },
-    { label: "Radar", value: "Kronos Grand Mobile — détection > 350 km, ≈ 1 000 pistes", confidence: "moyenne", sources: ["at-samptng"] },
+    { label: "Radar", value: "Version française : Thales Ground Fire 300 · version italienne : Kronos Grand Mobile High Power (Leonardo) — détection > 350 km, ≈ 1 000 pistes (Kronos)", confidence: "moyenne", note: "Les caractéristiques de détection citées (> 350 km, ≈ 1 000 pistes) concernent le radar Kronos ; aucune valeur publique n'est retenue pour le Ground Fire 300.", sources: ["defence-industry-samptng", "clubic-samptng", "at-samptng"] },
     { label: "Architecture", value: "Module radar + module d'engagement + jusqu'à 6 lanceurs × 8", confidence: "moyenne", sources: ["at-samptng"] },
   ],
   bricks: [
@@ -46,6 +46,9 @@ export const sampTNg: DefenseSystem = {
         "Le programme est franco-italien via Eurosam et l'OCCAR, avec un effort de modernisation NG soutenu par la demande européenne post-2022 (remplacement ou complément des Patriot).",
       indicators: [
         { label: "Maîtrise programme", value: "Eurosam (MBDA / Thales / Leonardo), coordination OCCAR", confidence: "haute", sources: ["eurosam-b1nt"] },
+        { label: "Commande du 21/10/2026", value: "4 sections supplémentaires commandées via l'OCCAR à Eurosam — 12 sections NG pour l'armée de l'Air et de l'Espace", confidence: "haute", metricIds: ["MET-0079", "MET-0080"], figureStatus: "commande-ferme", sources: ["dga-samptng-4"] },
+        { label: "Livraisons à l'armée de l'Air et de l'Espace", value: "10 SAMP/T NG livrés d'ici fin 2030 ; 1re section opérationnelle en 2027", confidence: "haute", note: "Calendrier du projet de loi d'actualisation ; 1re section évaluée début 2026 à Mont-de-Marsan, livraisons initiales prévues en 2026 selon la presse spécialisée.", metricIds: ["MET-1095", "MET-1096"], figureStatus: "officiel", sources: ["an-pjl-actualisation"] },
+        { label: "Danemark — commande", value: "8 batteries commandées, pour plus de 7,7 Md€ (avril 2026)", confidence: "moyenne", note: "Source du registre : Wikipédia ; le registre signale l'article d'Opex360 du 21/04/2026 comme renvoi plus pertinent.", metricIds: ["MET-1602", "MET-1603"], figureStatus: "commande-ferme", sources: ["wikipedia-samp-t"] },
         { label: "Dynamique", value: "Demande européenne forte de longue portée souveraine", confidence: "moyenne", sources: ["nn-samptng"] },
       ],
     },
@@ -93,18 +96,31 @@ export const sampTNg: DefenseSystem = {
     analystNote:
       "SAMP/T NG et Patriot PAC-3 MSE sont le duel structurant de la défense aérienne européenne : même mission, deux logiques de souveraineté.",
   },
-  operators: ["France — Armée de l'air et de l'espace", "Italie — Esercito / Aeronautica", "Ukraine (SAMP/T livrés)"],
+  operators: [
+    "France — Armée de l'air et de l'espace",
+    "Italie — Esercito / Aeronautica",
+    "Ukraine (SAMP/T livrés, standard antérieur ; a fait le choix du SAMP/T NG)",
+    "Danemark (8 batteries commandées en avril 2026)",
+  ],
   theatres: ["Europe — défense de zone", "Ukraine — emploi documenté"],
   timeline: [
     { date: "2025", label: "Tir de qualification longue portée de l'Aster 30 B1NT pour le SAMP/T NG.", kind: "jalon" },
     { date: "2023", label: "Livraison de systèmes SAMP/T à l'Ukraine (standard antérieur).", kind: "emploi" },
+    { date: "2025-12", label: "Premier tir de qualification de la version française le 15/12/2025 (Biscarrosse), tir italien le 03/12/2025.", kind: "jalon" },
+    { date: "2026-04", label: "Danemark — commande de 8 batteries SAMP/T NG, pour plus de 7,7 Md€.", kind: "export", metricIds: ["MET-1602", "MET-1603"] },
+    { date: "2026-10", label: "Commande de 4 sections supplémentaires par la DGA via l'OCCAR (21/10/2026) : 12 sections NG pour l'armée de l'Air et de l'Espace.", kind: "jalon", metricIds: ["MET-0079", "MET-0080"] },
   ],
   sources: [
     { id: "eurosam-b1nt", title: "Successful Aster B1NT firing qualifying the long-range performance of the SAMP/T NG", publisher: "Eurosam", type: "constructeur", reliability: "B", date: "2025", url: "https://eurosam.com/successful-aster-b1nt-firing-qualifying-the-long-range-performance-of-the-missile-and-the-samp-t-ng-air-defence-system/" },
     { id: "nn-samptng", title: "Successful Aster B1NT firing, qualifying SAMP/T NG air defence system", publisher: "Naval News", type: "presse", reliability: "B", date: "2025", url: "https://www.navalnews.com/naval-news/2025/08/successful-aster-b1nt-firing-qalifying-long-range-performance-od-missile-and-samp-t-ng-air-defence-system/" },
     { id: "at-samptng", title: "SAMP/T NG Surface-to-Air Missile Defence System, Europe", publisher: "Army Technology", type: "presse", reliability: "B", url: "https://www.army-technology.com/projects/samp-t-ng-surface-to-air-missile-defence-system-europe/" },
+    { id: "dga-samptng-4", title: "La DGA commande quatre systèmes supplémentaires de défense sol-air SAMP/T NG", publisher: "Ministère des Armées — DGA", type: "officiel", reliability: "A", date: "2026-10-21", url: "https://www.defense.gouv.fr/dga/actualites/dga-commande-quatre-systemes-supplementaires-defense-sol-air-sampt-ng" },
+    { id: "clubic-samptng", title: "La France commande quatre nouveaux SAMP/T NG, seul bouclier contre les menaces hypersoniques", publisher: "Clubic (relayant la DGA)", type: "presse", reliability: "C", date: "2026-10-21", url: "https://www.clubic.com/actualite-635314-la-france-commande-quatre-nouveaux-samp-t-ng-seul-bouclier-contre-les-menaces-hypersoniques.html" },
+    { id: "defence-industry-samptng", title: "Article sur la qualification du SAMP/T NG et le radar Ground Fire 300 (defence-industry.eu)", publisher: "defence-industry.eu", type: "presse", reliability: "C", date: "2025-12-22", url: "https://defence-industry.eu/?p=65555" },
+    { id: "an-pjl-actualisation", title: "Projet de loi — texte adopté provisoire (Assemblée nationale, l17t0325) : nouveau calendrier de livraison", publisher: "Assemblée nationale", type: "officiel", reliability: "A", url: "https://www.assemblee-nationale.fr/dyn/17/textes/l17t0325_texte-adopte-provisoire.pdf" },
+    { id: "wikipedia-samp-t", title: "Système sol-air moyenne portée/terrestre (SAMP/T) - Mamba", publisher: "Wikipédia", type: "presse", reliability: "C", date: "2026-04", url: "https://fr.wikipedia.org/wiki/Syst%C3%A8me_sol-air_moyenne_port%C3%A9e/terrestre_(SAMP/T)_-_Mamba" },
   ],
-  updated: "2026-06-03",
+  updated: "2026-11-17",
 };
 
 export const patriotPac3Mse: DefenseSystem = {

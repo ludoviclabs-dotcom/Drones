@@ -100,8 +100,12 @@ describe("film — données du registre", () => {
 
   it("cite une source réelle du dossier, sans date inventée", () => {
     const system = SYSTEMS_BY_SLUG[FILM_DOSSIER_SLUG];
+    // Un même éditeur peut figurer plusieurs fois (Dassault : communiqués
+    // 2025, S1 2026…) : la source citée se reconnaît à son éditeur et son titre.
     const source = system.sources.find(
-      (s) => s.publisher === data.proof.source.publisher,
+      (s) =>
+        s.publisher === data.proof.source.publisher &&
+        s.title === data.proof.source.title,
     );
     expect(source).toBeDefined();
     expect(source!.reliability).toBe(data.proof.source.reliability);

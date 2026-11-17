@@ -25,6 +25,7 @@ function dossiers(): DossierTracable[] {
       ...(s.physicalConstraints ?? []),
       ...(s.variants ?? []),
     ],
+    timeline: s.timeline,
     sources: s.sources,
     registryEntityIds: s.registryEntityIds,
     sovereignty: s.sovereignty,
@@ -114,7 +115,7 @@ describe("traçabilité — le garde-fou détecte les dérives", () => {
     const sortie = ecarts(
       indic({ label: "Prix", value: "≈ 6,5 Md€", metricIds: ["MET-0002"], figureStatus: "source-unique" }),
     );
-    expect(sortie).toMatch(/divergent.*doit être appliquée/s);
+    expect(sortie).toMatch(/divergent[\s\S]*doit être appliquée/);
   });
 
   it("interdit de citer un « erreur_extraction » sans valeur de remplacement (MET-0986, cadence CAESAR)", () => {

@@ -19,6 +19,7 @@ export function Timeline({ events }: { events: TimelineEvent[] }) {
       {sorted.map((event, i) => (
         <li
           key={`${event.date}-${i}`}
+          data-metric-ids={event.metricIds?.join(" ")}
           className="relative border-l border-line-bright pb-7 pl-6 last:pb-1"
         >
           <span

@@ -37,9 +37,21 @@ describe("/couts — les cinq cas relevés en production", () => {
   });
 
   it("F126 : l'année 2024 n'est pas un montant (« 2024.0 Md EUR »)", () => {
-    for (const r of lignes("f126-niedersachsen", "plusieurs milliards")) {
-      expect(r.amount, r.rawValue).toBeNull();
+    // La ligne d'origine (« plusieurs milliards d'euros — six frégates
+    // commandées (2024) ») est couverte, texte à l'appui, par
+    // cost-extraction.test.ts ; ici, aucune ligne F126 ne peut valoir un
+    // montant de plusieurs milliers de milliards, et les montants du registre
+    // sont repris tels quels, en euros.
+    const f126 = records.filter((r) => r.systemId === "f126-niedersachsen");
+    expect(f126.length).toBeGreaterThan(0);
+    for (const r of f126) {
+      if (r.amount !== null) expect(r.amount, r.rawValue).toBeLessThan(100e9);
     }
+    const prevu = lignes("f126-niedersachsen", "Environ 10 Md€ pour six frégates")[0];
+    expect(prevu.amount).toBe(10e9);
+    expect(prevu.currency).toBe("EUR");
+    const besoin = lignes("f126-niedersachsen", "Plus de 18 Md€")[0];
+    expect(besoin.amount).toBe(18e9);
   });
 });
 

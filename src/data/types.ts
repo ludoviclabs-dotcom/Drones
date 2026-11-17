@@ -683,6 +683,8 @@ export interface TimelineEvent {
   date: string;
   label: string;
   kind: TimelineKind;
+  /** `metric_id` du registre dont le repère reprend un chiffre ou une date. */
+  metricIds?: string[];
 }
 
 export interface DefenseSystem {

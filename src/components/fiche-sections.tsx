@@ -38,6 +38,7 @@ import {
 import { ORGANISMS_BY_SLUG } from "@/data/organisms";
 import {
   ConfidenceMark,
+  FigureStatusMark,
   GradeBadge,
   ReliabilityMark,
   SectionMarker,
@@ -76,11 +77,13 @@ export function IndicatorPanel({
         {indicators.map((ind) => (
           <div
             key={ind.label}
+            data-metric-ids={ind.metricIds?.join(" ")}
             className="border-b border-line px-4 py-3 last:border-0"
           >
             <div className="flex items-baseline justify-between gap-3">
               <span className="font-mono text-xs text-ink-dim">{ind.label}</span>
               <span className="flex shrink-0 items-baseline gap-2">
+                <FigureStatusMark status={ind.figureStatus} />
                 {sourceIndex ? (
                   <SourceMarks
                     notes={notesFor(ind.sources, sourceIndex)}
@@ -327,12 +330,17 @@ export function SpecsPanel({
   return (
     <div className="grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
       {specs.map((spec) => (
-        <div key={spec.label} className="bg-panel p-4">
+        <div
+          key={spec.label}
+          data-metric-ids={spec.metricIds?.join(" ")}
+          className="bg-panel p-4"
+        >
           <div className="flex items-baseline justify-between gap-2">
             <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
               {spec.label}
             </span>
             <span className="flex shrink-0 items-baseline gap-2">
+              <FigureStatusMark status={spec.figureStatus} />
               {sourceIndex ? (
                 <SourceMarks
                   notes={notesFor(spec.sources, sourceIndex)}

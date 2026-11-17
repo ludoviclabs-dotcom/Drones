@@ -533,6 +533,22 @@ export interface SourceRef {
   url?: string;
 }
 
+/**
+ * Statut d'un chiffre au registre « Souveraineté industrielle » — ce que la
+ * source permet d'affirmer, pas la confiance qu'on lui accorde. Un plafond
+ * d'accord-cadre (`plafond-cadre`) ne se lit jamais comme une commande ferme.
+ */
+export type FigureStatus =
+  | "officiel"
+  | "commande-ferme"
+  | "requete-budgetaire"
+  | "presse"
+  | "source-unique"
+  | "calcule"
+  | "non-communique"
+  | "plafond-cadre"
+  | "classifie";
+
 /** Un chiffre ou un fait, toujours accompagné de son niveau de confiance. */
 export interface Indicator {
   label: string;
@@ -542,6 +558,85 @@ export interface Indicator {
   status?: ClaimStatus;
   note?: string;
   sources?: string[];
+  /**
+   * `metric_id` du registre dont le chiffre est tiré — donnée cachée, posée en
+   * `data-metric-ids` sur l'indicateur. Chaque chiffre affiché qui vient du
+   * registre en porte au moins un (vérifié par `tests/data/registre-tracabilite`).
+   */
+  metricIds?: string[];
+  /** Statut du chiffre au registre : source unique, presse, calculé, plafond… */
+  figureStatus?: FigureStatus;
+}
+
+/** Nature d'un nœud du registre (`type_noeud`). */
+export type RegistryNodeType =
+  | "Plateforme_Vecteur"
+  | "Acteur_Industriel"
+  | "Programme_Cadre"
+  | "Enveloppe_Financement"
+  | "Munition_Effecteur"
+  | "Sous_Systeme_Brique";
+
+/** Règle de contenu local — vocabulaire du registre ; `Non_specifie` = non documenté. */
+export type LocalContentRule =
+  | "Souverain_National"
+  | "Cooperation_Multinationale"
+  | "Production_Locale_Client_Export"
+  | "Regle_SAFE_65_pourcent_UE"
+  | "Non_specifie";
+
+/** Verrou d'autorisation d'un tiers (veto, approbation) — vocabulaire du registre. */
+export type ThirdPartyLock =
+  | "Approbation_Parlementaire_Requise"
+  | "Accord_Washington_Requis"
+  | "Autorisation_Concurrence_Reglementaire"
+  | "Aucun_Veto_Tiers"
+  | "Non_specifie";
+
+/** Accès au code source et à la propriété intellectuelle — vocabulaire du registre. */
+export type SourceCodeAccess =
+  | "Refus_Acces_Code_Source_ICD"
+  | "Interfaces_Controlees"
+  | "Propriete_Integrale"
+  | "Non_specifie";
+
+/**
+ * Bloc souveraineté d'une entité du registre. Les trois règles sont reprises
+ * telles quelles ; `Non_specifie` s'affiche « non documenté » — jamais déduit.
+ */
+export interface SovereigntyProfile {
+  /** Entité du registre dont le bloc est tiré. */
+  entityId: string;
+  localContentRule: LocalContentRule;
+  thirdPartyLock: ThirdPartyLock;
+  sourceCodeAccess: SourceCodeAccess;
+  chokepoints: string[];
+}
+
+/** Maillon de la chaîne de valeur (`chaine_valeur_fournisseurs`) avec son rôle. */
+export interface IndustrialLink {
+  /** Entité du registre dont la ligne est tirée. */
+  entityId: string;
+  actor: string;
+  role: string;
+  country?: string;
+  scope?: string;
+}
+
+/** Échéance à surveiller (`jalons_a_surveiller`) — événement à venir ou non tranché. */
+export interface Watchpoint {
+  entityId: string;
+  horizon: string;
+  event: string;
+}
+
+/** Nœud de l'arbre parent / enfant du registre (`parent_id`). */
+export interface ProgrammeNode {
+  entityId: string;
+  name: string;
+  kind: RegistryNodeType;
+  note?: string;
+  children?: ProgrammeNode[];
 }
 
 export interface Brick {
@@ -649,6 +744,20 @@ export interface DefenseSystem {
   editorial: EditorialBlocks;
   /** Lecture CCA optionnelle — synthèse de contrôle de gestion par système. */
   ccaReading?: CCAReading;
+  /**
+   * Entités du registre « Souveraineté industrielle » couvertes par la fiche.
+   * La première est l'entité principale : c'est elle qui alimente
+   * `sovereignty`, `industrialChain` et `watchpoints`.
+   */
+  registryEntityIds?: string[];
+  /** Bloc souveraineté du registre (règle de contenu local, verrous, goulets). */
+  sovereignty?: SovereigntyProfile;
+  /** Chaîne de valeur du registre, avec le rôle de chaque acteur. */
+  industrialChain?: IndustrialLink[];
+  /** Échéances à surveiller issues du registre. */
+  watchpoints?: Watchpoint[];
+  /** Imbrication parent / enfant du registre (ex. Rafale F5 et ses briques). */
+  programmeTree?: ProgrammeNode[];
   /** Encadré juridique permanent — ex. Protocole IV de la CCW pour les lasers. */
   legalNote?: string;
   operators: string[];

@@ -1,6 +1,7 @@
 import type { Confidence, Indicator, SourceRef } from "@/data/types";
 import { CURATED_COST_RECORDS } from "@/data/curated-cost-records";
 import { systems } from "@/data/systems";
+import { extractMonetaryAmount } from "@/lib/cost-extraction";
 
 export type CostType =
   | "acquisition"
@@ -44,38 +45,12 @@ function costTypeOf(label: string, value: string): CostType {
   return "acquisition";
 }
 
-function currencyOf(value: string): string {
-  if (/cad|c\$/i.test(value)) return "CAD";
-  if (/£|gbp/i.test(value)) return "GBP";
-  if (/€|eur/i.test(value)) return "EUR";
-  if (/\$|usd|us\$/i.test(value)) return "USD";
-  return "N/A";
-}
-
 function extractYear(...values: (string | undefined)[]): number | null {
   for (const value of values) {
     const match = value?.match(/\b(20\d{2}|19\d{2})\b/);
     if (match) return Number(match[1]);
   }
   return null;
-}
-
-function extractAmount(value: string): number | null {
-  if (!/[€$£]|eur|usd|cad|gbp|milliard|million|gross weapon|coût|cost/i.test(value)) {
-    return null;
-  }
-
-  const match = value.match(/([0-9]+(?:[,.][0-9]+)?)/);
-  if (!match) return null;
-
-  const numeric = Number(match[1].replace(",", "."));
-  if (!Number.isFinite(numeric)) return null;
-
-  if (/md|milliard|billion|bn/i.test(value)) return numeric * 1_000_000_000;
-  if (/m€|m\$|million|gross weapon| M\b/i.test(value)) {
-    return numeric * 1_000_000;
-  }
-  return numeric;
 }
 
 function isCostIndicator(indicator: Indicator, brickKey?: string): boolean {
@@ -123,14 +98,17 @@ export function getExtractedCostRecords(): CostRecord[] {
         .map((id) => byId.get(id))
         .filter((source): source is SourceRef => Boolean(source));
       const firstSourceYear = extractYear(...sources.map((source) => source.date));
+      // Montant et devise viennent d'une même mention monétaire explicite ;
+      // sans elle, ni l'un ni l'autre — la page affiche « Non normalisé ».
+      const money = extractMonetaryAmount(indicator.value);
 
       records.push({
         recordId: `${system.slug}:${brickKey ?? "spec"}:${indicator.label}`,
         systemId: system.slug,
         systemName: system.name,
         costType: costTypeOf(indicator.label, indicator.value),
-        amount: extractAmount(indicator.value),
-        currency: currencyOf(indicator.value),
+        amount: money?.amount ?? null,
+        currency: money?.currency ?? "N/A",
         year: firstSourceYear ?? extractYear(system.updated),
         perimeter: indicator.label,
         rawValue: indicator.value,

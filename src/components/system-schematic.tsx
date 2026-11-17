@@ -773,6 +773,22 @@ const DRONE_SCHEMATIC: ReactNode = (
   </>
 );
 
+// Repli pour un drone sous-marin (UUV) : coque fuselée horizontale, dérive,
+// barres de plongée et hélice — une silhouette immergée, pas un aéronef.
+const UUV_SCHEMATIC: ReactNode = (
+  <>
+    <line x1="14" y1="120" x2="226" y2="120" strokeWidth="1" strokeDasharray="2 5" />
+    <path d="M24 120 C32 104 60 98 96 98 L170 98 C196 98 212 108 218 120 C212 132 196 142 170 142 L96 142 C60 142 32 136 24 120 Z" />
+    <path d="M176 98 L196 80 L206 80 L194 98" />
+    <path d="M176 142 L196 160 L206 160 L194 142" />
+    <path d="M104 98 L116 84 L132 84 L126 98" />
+    <path d="M104 142 L116 156 L132 156 L126 142" />
+    <circle cx="222" cy="120" r="3" />
+    <path d="M216 108 L228 114 M216 132 L228 126" strokeWidth="1" />
+    <circle cx="50" cy="120" r="5" />
+  </>
+);
+
 // Repli générique pour un missile sans schématique dédiée : corps, ogive,
 // ailerons et tuyère — l'allure d'un missile, pas la géométrie d'un modèle.
 const MISSILE_SCHEMATIC: ReactNode = (
@@ -1101,7 +1117,7 @@ export function SystemSchematic({
     if (system?.category === "radar" && system.radarRole) {
       content = RADAR_ROLE_SCHEMATICS[system.radarRole];
     } else if (system?.category === "drone") {
-      content = DRONE_SCHEMATIC;
+      content = system.droneClass === "UUV" ? UUV_SCHEMATIC : DRONE_SCHEMATIC;
     } else if (system?.category === "missile") {
       content = MISSILE_SCHEMATIC;
     } else if (system?.category === "naval-vessel" && system.navalVesselClass) {

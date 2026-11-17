@@ -1,0 +1,179 @@
+﻿jalon_id,entity_id,nom_entite,categorie_panoply,date_ou_horizon,evenement,source_fichier
+JAL-001,ENT-KNDS,KNDS,Terrestre_Artillerie,Nov. 2026,Signature du contrat d'achat : prix définitif et éventuelle approbation de la commission du budget du Bundestag.,10_KNDS_de_la_Bourse_a_l_Etat.html
+JAL-002,ENT-KNDS,KNDS,Terrestre_Artillerie,Déc. 2026,Finalisation de l'opération : KNDS devient détenue à 100 % par les deux États.,10_KNDS_de_la_Bourse_a_l_Etat.html
+JAL-003,ENT-KNDS,KNDS,Terrestre_Artillerie,Après le printemps 2027,Position officielle de Paris : maintien ou abandon de la cession de 10 % envisagée par chaque État.,10_KNDS_de_la_Bourse_a_l_Etat.html
+JAL-004,ENT-KNDS,KNDS,Terrestre_Artillerie,Ouvert,Gouvernance capitalistique après la suspension de l'IPO du 1er juillet 2026 (§12),Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-005,ENT-LECLERC,Char Leclerc,Terrestre_Artillerie,2037–2038,Retrait du service actif,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-006,ENT-MGCS,MGCS (char du futur),Terrestre_Artillerie,À suivre,MGCS et LORAS : répartition des charges de travail entre la France et l'Allemagne.,10_KNDS_de_la_Bourse_a_l_Etat.html
+JAL-007,ENT-MGCS,MGCS (char du futur),Terrestre_Artillerie,À suivre,"MGCS : clarification de la position allemande, calendrier et financement.",17_Cooperer_ou_sarmer_seul.html
+JAL-008,ENT-MGCS,MGCS (char du futur),Terrestre_Artillerie,2040–2045,Horizon après décalage,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-009,ENT-LORAS,LORAS,Terrestre_Artillerie,À suivre,MGCS et LORAS : répartition des charges de travail entre la France et l'Allemagne.,10_KNDS_de_la_Bourse_a_l_Etat.html
+JAL-010,ENT-THALES,Thales,C2_IA_DefenseTech,T3 2027 à début 2028,"Thales-Exail : attestation d'équité, autorisations de concurrence, transfert du bloc Gorgé et offre publique.",14_Guerre_navale_robotique.html
+JAL-011,ENT-FED-INTERCEPTEUR-ENDO,Appel FED « Endo-Atmospheric Interceptor » (intercepteur endo-atmosphérique),Defense_Anti_Aerienne,30 nov. 2026,Décision de la Commission : choix du projet financé par l'enveloppe de 100 M€ ; sort du projet écarté.,11_HYDIS_contre_HYDEF.html
+JAL-012,ENT-FED-INTERCEPTEUR-ENDO,Appel FED « Endo-Atmospheric Interceptor » (intercepteur endo-atmosphérique),Defense_Anti_Aerienne,Avant mi-2027,"Engagements fermes des États : les 133 M€ annoncés par MBDA, et la contribution des États de HYDEF (n.c.).",11_HYDIS_contre_HYDEF.html
+JAL-013,ENT-FED-INTERCEPTEUR-ENDO,Appel FED « Endo-Atmospheric Interceptor » (intercepteur endo-atmosphérique),Defense_Anti_Aerienne,Phase 2,Place de l'Allemagne : départ de HYDIS ou maintien dans les deux projets.,11_HYDIS_contre_HYDEF.html
+JAL-014,ENT-FED-INTERCEPTEUR-ENDO,Appel FED « Endo-Atmospheric Interceptor » (intercepteur endo-atmosphérique),Defense_Anti_Aerienne,2029-2030,Premier vol à pleine échelle : démonstrateur annoncé avant fin 2029 par MBDA ; niveau TRL 6 visé en 2030 par la Commission.,11_HYDIS_contre_HYDEF.html
+JAL-015,ENT-HYDIS,HYDIS,Defense_Anti_Aerienne,Avant mi-2027,Engagements fermes des États : les 133 M€ annoncés par MBDA.,11_HYDIS_contre_HYDEF.html
+JAL-016,ENT-HYDIS,HYDIS,Defense_Anti_Aerienne,Phase 2,Place de l'Allemagne : départ de HYDIS ou maintien dans les deux projets.,11_HYDIS_contre_HYDEF.html
+JAL-017,ENT-HYDIS,HYDIS,Defense_Anti_Aerienne,2029-2030,Premier vol à pleine échelle : démonstrateur annoncé avant fin 2029 par MBDA ; niveau TRL 6 visé en 2030 par la Commission.,11_HYDIS_contre_HYDEF.html
+JAL-018,ENT-HYDEF,HYDEF,Defense_Anti_Aerienne,Avant mi-2027,Engagements fermes des États : contribution des États de HYDEF (n.c.).,11_HYDIS_contre_HYDEF.html
+JAL-019,ENT-MBDA,MBDA,Frappe_Profondeur_Missiles,2026–2030,5 Md€ d'investissements,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-020,ENT-MBDA,MBDA,Frappe_Profondeur_Missiles,2026,Hausse de production de +40 %,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-021,ENT-SAMP-T-NG,SAMP/T NG,Defense_Anti_Aerienne,2027,1re section opérationnelle,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-022,ENT-SAMP-T-NG,SAMP/T NG,Defense_Anti_Aerienne,2028,3 à 4 sections livrées,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-023,ENT-SAMP-T-NG,SAMP/T NG,Defense_Anti_Aerienne,Fin 2029,Fin des 8 premières sections,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-024,ENT-SAMP-T-NG,SAMP/T NG,Defense_Anti_Aerienne,Fin 2030,10 SAMP/T NG et 9 VL MICA livrés,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-025,ENT-SAMP-T-NG,SAMP/T NG,Defense_Anti_Aerienne,Fin 2029,Tranche initiale de 8 achevée,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-026,ENT-SAMP-T-NG,SAMP/T NG,Defense_Anti_Aerienne,2030,10 SAMP/T NG livrés,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-027,ENT-DASSAULT,Dassault Aviation,Aeronautique_Combat,43 % si signé (calc.),Carnet de Dassault : part de l'Inde dans le carnet aux prochains résultats.,19_Inde_premier_client_premier_risque.html
+JAL-028,ENT-DASSAULT,Dassault Aviation,Aeronautique_Combat,D'ici deux ans (≈2028),Montée vers une cadence de 4 Rafale/mois,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-029,ENT-DASSAULT,Dassault Aviation,Aeronautique_Combat,2026,"Cible de 28 Rafale livrés et ~8,5 Md€ de CA",Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-030,ENT-SAFRAN,Safran,Aeronautique_Combat,2030,Doublement visé du CA militaire,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-031,ENT-RAFALE,Rafale,Aeronautique_Combat,Début 2027,"Cadence du Rafale : livraisons 2026 face aux 28 prévus, et décision éventuelle sur cinq avions par mois.",13_Mur_des_cadences.html
+JAL-032,ENT-RAFALE-F5,Rafale F5,Aeronautique_Combat,Fin 2026,"Contrat de lancement en réalisation : montant, périmètre, et part de la phase de développement couverte.",12_Rafale_F5_qui_paie.html
+JAL-033,ENT-RAFALE-F5,Rafale F5,Aeronautique_Combat,À suivre,Termes financiers France-Émirats : part émirienne et contreparties technologiques de l'accord du 21 octobre.,12_Rafale_F5_qui_paie.html
+JAL-034,ENT-RAFALE-F5,Rafale F5,Aeronautique_Combat,2027-2028,Banc d'essais du F5 : interfaces de vol et version logicielle pour le radar RBE2-XG.,12_Rafale_F5_qui_paie.html
+JAL-035,ENT-RAFALE-F5,Rafale F5,Aeronautique_Combat,Fin 2026,Lancement complet en réalisation,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-036,ENT-RAFALE-F5,Rafale F5,Aeronautique_Combat,2028,Commande de la 6e tranche (45 F5),Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-037,ENT-RAFALE-F5,Rafale F5,Aeronautique_Combat,2033–2034,Premières livraisons F5,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-038,ENT-RAFALE-F5,Rafale F5,Aeronautique_Combat,2035,Au moins 47 F5 livrés,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-039,ENT-RAFALE-F5,Rafale F5,Aeronautique_Combat,23/10/2026 et suivants,Négociations France–EAU sur le partage des coûts de développement,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-040,ENT-RAFALE-F5,Rafale F5,Aeronautique_Combat,2028,Commande de la 6e tranche de 45 Rafale F5,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-041,ENT-RAFALE-F5,Rafale F5,Aeronautique_Combat,2033–2035,Livraisons,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-042,ENT-RAFALE-F5,Rafale F5,Aeronautique_Combat,Ouvert,Choix du drone collaboratif (CCA) et partage éventuel des coûts F5/ACF avec les EAU et l'Inde (§12),Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-043,ENT-RBE2-XG,Radar RBE2-XG,Aeronautique_Combat,2027-2028,Banc d'essais du F5 : interfaces de vol et version logicielle pour le radar RBE2-XG.,12_Rafale_F5_qui_paie.html
+JAL-044,ENT-ASN4G,ASN4G,Frappe_Profondeur_Missiles,2035,Mise en service sur Rafale F5,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-045,ENT-ASN4G,ASN4G,Frappe_Profondeur_Missiles,Vers 2050,Emport par l'ACF,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-046,ENT-ASN4G,ASN4G,Frappe_Profondeur_Missiles,2035,Mise en service,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-047,ENT-RAFALE-INDE-114,Rafale pour l'Inde (114 avions),Aeronautique_Combat,Déc. 2026 - mars 2027,"Décision indienne : contrat des 114 Rafale, standard F4 ou F5, et règle sur les codes sources.",12_Rafale_F5_qui_paie.html
+JAL-048,ENT-RAFALE-INDE-114,Rafale pour l'Inde (114 avions),Aeronautique_Combat,Déc. 2026 - mars 2027,Décision indienne : conclusion annoncée « avant la fin de l'année » ; signature espérée avant mars 2027.,19_Inde_premier_client_premier_risque.html
+JAL-049,ENT-RAFALE-INDE-114,Rafale pour l'Inde (114 avions),Aeronautique_Combat,n.c.,"Accès au logiciel : texte officiel sur le périmètre des interfaces, des données et des transferts.",19_Inde_premier_client_premier_risque.html
+JAL-050,ENT-RAFALE-INDE-114,Rafale pour l'Inde (114 avions),Aeronautique_Combat,En cours,Négociations de gré à gré autorisées par le DAC en février 2026,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-051,ENT-ACF,Démonstrateur alternatif d'avion de combat (après le SCAF),Aeronautique_Combat,Chasseur attendu vers 2040,Alternative au SCAF : discussions entre Dassault et l'État sur une alternative « en franco-français ou en coopération ».,17_Cooperer_ou_sarmer_seul.html
+JAL-052,ENT-ACF,Démonstrateur alternatif d'avion de combat (après le SCAF),Aeronautique_Combat,2035,Démonstrateur,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-053,ENT-ACF,Démonstrateur alternatif d'avion de combat (après le SCAF),Aeronautique_Combat,2040,Mise en service conventionnelle,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-054,ENT-ACF,Démonstrateur alternatif d'avion de combat (après le SCAF),Aeronautique_Combat,Vers 2050,Capacité nucléaire ASN4G,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-055,ENT-ACF,Démonstrateur alternatif d'avion de combat (après le SCAF),Aeronautique_Combat,2040,Mise en service,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-056,ENT-LPM-2024-2030,LPM 2024-2030 (et son actualisation),Transverse_Financement_BITD,Janvier 2027,Lancement du nouveau Livre blanc sur la défense et la sécurité nationale (article 4 bis),Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-057,ENT-LPM-2024-2030,LPM 2024-2030 (et son actualisation),Transverse_Financement_BITD,2028–2029,Nouvelle LPM après l'élection présidentielle,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-058,ENT-LPM-2024-2030,LPM 2024-2030 (et son actualisation),Transverse_Financement_BITD,2029–2030,"Décélération de la hausse annuelle des CP à +3,1 Md€",Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-059,ENT-LPM-2024-2030,LPM 2024-2030 (et son actualisation),Transverse_Financement_BITD,Après 2027,Trajectoire 2028–2030 non contraignante ; dépend du futur Livre blanc (§12),Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-060,ENT-BITD-FRANCE,BITD française (agrégats filière),Transverse_Financement_BITD,2026-2030,"Fonds propres et trésorerie : 4 à 6 Md€ à lever d'ici 2030, et application du principe « cash neutral » de la DGA.",13_Mur_des_cadences.html
+JAL-061,ENT-BITD-FRANCE,BITD française (agrégats filière),Transverse_Financement_BITD,n.c.,Part des PME : chiffre officiel de la part des commandes revenant aux PME.,18_Qui_paie_le_rearmement.html
+JAL-062,ENT-OBUS-155,Obus de 155 mm,Terrestre_Artillerie,À suivre,Commandes pluriannuelles d'obus : conversion de la capacité de plus de 100 000 obus par an en commandes fermes.,13_Mur_des_cadences.html
+JAL-063,ENT-AUBERT-DUVAL,Aubert & Duval,Transverse_Financement_BITD,À suivre,Aubert & Duval : autorisations réglementaires de la reprise par Airbus et Safran.,13_Mur_des_cadences.html
+JAL-064,ENT-EURENCO,Eurenco,Terrestre_Artillerie,2027,"Bergerac : 1,2 million de charges modulaires/an",Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-065,ENT-EURENCO,Eurenco,Terrestre_Artillerie,2028,"CA visé 1,0 Md€",Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-066,ENT-EURENCO,Eurenco,Terrestre_Artillerie,2030,"CA visé 1,5 Md€",Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-067,ENT-SLAM-F,SLAM-F (Système de lutte anti-mines futur),Naval,2026-2030,"SLAM-F : prix et livraisons de la douzaine de drones commandée en juillet 2026, et livraisons des drones sous-marins commandés en 2024 (premières au premier semestre 2028).",14_Guerre_navale_robotique.html
+JAL-068,ENT-EXAIL,Exail,Drones_et_Robotique,T3 2027 à début 2028,"Thales-Exail : attestation d'équité, autorisations de concurrence, transfert du bloc Gorgé et offre publique.",14_Guerre_navale_robotique.html
+JAL-069,ENT-EXAIL,Exail,Drones_et_Robotique,Début 2027,Résultats d'Exail : carnet de commandes (1 001 M€ fin septembre) et prises de commandes 2026.,14_Guerre_navale_robotique.html
+JAL-070,ENT-SMOKERS,SMOKERS,Drones_et_Robotique,À suivre,"Attribution du SMOKERS : industriel retenu, nombre d'exemplaires et calendrier de livraison.",14_Guerre_navale_robotique.html
+JAL-071,ENT-UCUV,UCUV (drone sous-marin de combat),Drones_et_Robotique,2028,"UCUV : montant du financement, nouveaux marchés et premiers essais en mer.",14_Guerre_navale_robotique.html
+JAL-072,ENT-PLAN-OTAN-FRAPPES-PROFONDEUR,Plan de défense de l'OTAN (frappes en profondeur sur le territoire russe),Frappe_Profondeur_Missiles,À suivre,Plan de l'OTAN : texte du plan et rôle des moyens européens.,15_Frappe_dans_la_profondeur.html
+JAL-073,ENT-MDCN-MK2,MdCN Mk2,Frappe_Profondeur_Missiles,Annoncée « prochaine »,"Signature du MdCN Mk2 : montant, nombre de missiles et porteurs.",15_Frappe_dans_la_profondeur.html
+JAL-074,ENT-THUNDART,Thundart,Frappe_Profondeur_Missiles,Fin 2026,"Contrat du Thundart : montant, quantités et premières livraisons du marché notifié en septembre ; capacité à livrer 26 lanceurs, instruite d'ici fin 2026.",15_Frappe_dans_la_profondeur.html
+JAL-075,ENT-THUNDART,Thundart,Frappe_Profondeur_Missiles,2030–2035,Premières capacités (26 lanceurs),Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-076,ENT-MISSILE-BALISTIQUE-SOL-SOL,Missile balistique conventionnel sol-sol,Frappe_Profondeur_Missiles,2026-2036,"Missile balistique conventionnel : études de levée de risques, contrat de réalisation et tenue des objectifs de capacité initiale et de série.",15_Frappe_dans_la_profondeur.html
+JAL-077,ENT-MISSILE-BALISTIQUE-SOL-SOL,Missile balistique conventionnel sol-sol,Frappe_Profondeur_Missiles,Automne 2026,Notification de l'étude de levée de risques,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-078,ENT-MISSILE-BALISTIQUE-SOL-SOL,Missile balistique conventionnel sol-sol,Frappe_Profondeur_Missiles,2028,Lancement en réalisation et organisation industrielle définitive,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-079,ENT-MISSILE-BALISTIQUE-SOL-SOL,Missile balistique conventionnel sol-sol,Frappe_Profondeur_Missiles,2030–2031,Capacité opérationnelle initiale,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-080,ENT-MISSILE-BALISTIQUE-SOL-SOL,Missile balistique conventionnel sol-sol,Frappe_Profondeur_Missiles,2035–2036,Production en série,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-081,ENT-MISSILE-BALISTIQUE-SOL-SOL,Missile balistique conventionnel sol-sol,Frappe_Profondeur_Missiles,2028,Lancement en réalisation et arrêt de l'organisation industrielle,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-082,ENT-MISSILE-BALISTIQUE-SOL-SOL,Missile balistique conventionnel sol-sol,Frappe_Profondeur_Missiles,2030–2031,Capacité initiale,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-083,ENT-MISSILE-BALISTIQUE-SOL-SOL,Missile balistique conventionnel sol-sol,Frappe_Profondeur_Missiles,2035–2036,Série,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-084,ENT-DE-FRAPPE-LONGUE-PORTEE,Programme allemand de missiles longue portée,Frappe_Profondeur_Missiles,À suivre,"Vote du Bundestag : les 12 Md€ et les 3,4 Md€ de Tomahawk et de Typhon.",15_Frappe_dans_la_profondeur.html
+JAL-085,ENT-DE-TOMAHAWK-TYPHON,Achat allemand de Tomahawk et de lanceurs Typhon,Frappe_Profondeur_Missiles,À suivre,"Vote du Bundestag : les 12 Md€ et les 3,4 Md€ de Tomahawk et de Typhon.",15_Frappe_dans_la_profondeur.html
+JAL-086,ENT-HARMATTAN-AI,Harmattan AI,Drones_et_Robotique,Non daté,Cible de production de 10 000 drones/mois,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-087,ENT-DELCO-SONORA,Delco,Drones_et_Robotique,Début 2027,Livraison des 5 000 Delco : respect de l'échéance et cadence mensuelle observée.,16_Drones_de_masse.html
+JAL-088,ENT-DELCO-SONORA,Delco,Drones_et_Robotique,n.c.,Montant du contrat et prix unitaire : publication par la DGA ou comptes d'Harmattan AI.,16_Drones_de_masse.html
+JAL-089,ENT-DELCO-SONORA,Delco,Drones_et_Robotique,Début 2027,Livraison des Delco,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-090,ENT-LPM-DRONES,Programmation drones de la LPM actualisée,Drones_et_Robotique,À suivre,Consommation des crédits drones : constat de 28 % rapporté en juillet 2026 ; attendre une exécution annuelle arrêtée.,16_Drones_de_masse.html
+JAL-091,ENT-PROGRAMME-ROBOTIQUE-SENAT,Programme robotique d'au moins 1 Md€ recommandé par le Sénat (inspiré d'Asgard),Drones_et_Robotique,À suivre,Programme robotique d'au moins 1 Md€ : recommandation du Sénat ; aucune décision lue.,16_Drones_de_masse.html
+JAL-092,ENT-DRONE-DEAL-UE-UKRAINE,Drone Deal UE-Ukraine (partenariat industriel de défense),Drones_et_Robotique,"Septembre 2026, non lu","Drone Deal UE-Ukraine : première réunion des 18 membres fondateurs, premières coentreprises.",16_Drones_de_masse.html
+JAL-093,ENT-F126,Frégate F126,Naval,Examen en cours,Indemnisation de la F126 : réclamations de Berlin contre Damen ; indemnité attendue par Thales.,17_Cooperer_ou_sarmer_seul.html
+JAL-094,ENT-CORVETTE-EUROPEENNE,Corvette européenne,Naval,À suivre,"Corvette européenne : décision française de rester ou non, après la phase 2.",17_Cooperer_ou_sarmer_seul.html
+JAL-095,ENT-EURODRONE,Eurodrone,Drones_et_Robotique,Au-delà de 2031,Livraisons glissées,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-096,ENT-AKERON-MP,Akeron MP (achat conjoint),Frappe_Profondeur_Missiles,n.c.,"Akeron MP : quantités, valeur et ralliement d'autres pays.",17_Cooperer_ou_sarmer_seul.html
+JAL-097,ENT-PLF-2027,Projet de loi de finances 2027 (mission Défense),Transverse_Financement_BITD,17 déc.,"Budget 2027 : rejeté en première lecture à l'Assemblée le 4 novembre ; vote du Sénat, puis adoption ou ordonnance ; reprise ou non des commandes nouvelles.",18_Qui_paie_le_rearmement.html
+JAL-098,ENT-PLF-2027,Projet de loi de finances 2027 (mission Défense),Transverse_Financement_BITD,Novembre 2026 et suivants,Suite de l'examen après le rejet de la 1re partie le 4 novembre 2026 ; risque de loi spéciale (services votés),Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-099,ENT-PLF-2027,Projet de loi de finances 2027 (mission Défense),Transverse_Financement_BITD,Fin 2026,"Vecteur d'adoption du budget 2027 (compromis, 49.3, ordonnances ou loi spéciale) (§12)",Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-100,ENT-FONDS-EFFET-LEVIER-DEFENSE,Fonds à effet de levier (dialogue de place),Transverse_Financement_BITD,61 % (calc.),"Fonds à effet de levier : passage de 2,3 Md€ levés à la cible de 3,8 Md€, puis investissements réels.",18_Qui_paie_le_rearmement.html
+JAL-101,ENT-BPIFRANCE-DEFENSE,Fonds Bpifrance Défense,Transverse_Financement_BITD,> 150 M€,"Bpifrance Défense : collecte face à la taille cible de 450 M€, et part investie (environ 34 M€ à la mi-juin).",18_Qui_paie_le_rearmement.html
+JAL-102,ENT-AVANCE-DEFENSE-PLUS,Avance Défense +,Transverse_Financement_BITD,n.c.,Avance Défense + : montants réellement versés aux fournisseurs sur l'enveloppe de 500 M€.,18_Qui_paie_le_rearmement.html
+JAL-103,ENT-RAFALE-MARINE-INDE-26,26 Rafale Marine pour l'Inde,Aeronautique_Combat,Date n.c.,Astra Mk1 sur Rafale : campagne d'essais sur un Rafale de l'armée de l'air indienne converti en banc d'essai.,19_Inde_premier_client_premier_risque.html
+JAL-104,ENT-AMCA-MOTEUR,Moteur du chasseur AMCA (coentreprise Safran-GTRE),Aeronautique_Combat,Non confirmée après août,Moteur AMCA : approbation de la coentreprise Safran-GTRE par le comité de sécurité indien.,19_Inde_premier_client_premier_risque.html
+JAL-105,ENT-ASTRA-MK1,Astra Mk1,Frappe_Profondeur_Missiles,Date n.c.,Astra Mk1 sur Rafale : campagne d'essais sur un Rafale de l'armée de l'air indienne converti en banc d'essai.,19_Inde_premier_client_premier_risque.html
+JAL-106,ENT-SERVICE-NATIONAL-VOLONTAIRE,Service national volontaire (loi du 16 août 2026),Transverse_Financement_BITD,2027,4 000 appelés,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-107,ENT-SERVICE-NATIONAL-VOLONTAIRE,Service national volontaire (loi du 16 août 2026),Transverse_Financement_BITD,2030,10 000 appelés par an,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-108,ENT-SNLE-3G,SNLE 3G classe L'Invincible,Naval,2036–2037,Livraison du premier SNLE 3G,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-109,ENT-SNLE-3G,SNLE 3G classe L'Invincible,Naval,2050,Fin des livraisons (un sous-marin tous les 5 ans),Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-110,ENT-SNLE-3G,SNLE 3G classe L'Invincible,Naval,2036–2037,1re livraison / admission au service actif,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-111,ENT-SNLE-3G,SNLE 3G classe L'Invincible,Naval,2050,4e unité,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-112,ENT-ASMPA-R,ASMPA-R (missile air-sol moyenne portée amélioré rénové) / TNA,Frappe_Profondeur_Missiles,Après 2026,Livraison du troisième et dernier lot,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-113,ENT-SCORPION,Programme SCORPION,Terrestre_Artillerie,2035,Achèvement du programme,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-114,ENT-TITAN,TITAN (combat collaboratif multi-milieux),Terrestre_Artillerie,2027 – Janv. 2028,8 TITAN série (Figure 4),Analyse_Stratégique_Forces_Armées_des_États-Unis__28_Octobre_2026_.pdf
+JAL-115,ENT-SERVAL,VBMR-L Serval,Terrestre_Artillerie,2027–2028,Livraisons des Serval LAD,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-116,ENT-SERVAL-LAD,"Serval LAD (lutte anti-drones, 30 mm)",Defense_Anti_Aerienne,2027–2028,Premières livraisons,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-117,ENT-LECLERC-XLR,Leclerc XLR (rénové),Terrestre_Artillerie,2035,Fin des livraisons (cible 200 XLR),Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-118,ENT-CAPINT,"CAPINT (capacité intermédiaire, successeur du Leclerc)",Terrestre_Artillerie,Fin 2026,Lancement des études sur la capacité succédant au Leclerc,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-119,ENT-CAPINT,"CAPINT (capacité intermédiaire, successeur du Leclerc)",Terrestre_Artillerie,Décennie 2030,Premières livraisons,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-120,ENT-CAPINT,"CAPINT (capacité intermédiaire, successeur du Leclerc)",Terrestre_Artillerie,Fin 2026,Lancement des études,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-121,ENT-HYPAIRION,Programme expérimental HypAIRion,C2_IA_DefenseTech,Fin 2026,Deux Mirage 2000 bancs d'essais à Mont-de-Marsan,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-122,ENT-HYPAIRION,Programme expérimental HypAIRion,C2_IA_DefenseTech,2028,Premier vol collaboratif chasseur-drone,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-123,ENT-CCA,Drone de combat accompagnateur du Rafale F5 (UCAV / CCA),Drones_et_Robotique,Ouvert,Choix du CCA (Helsing CA-1 Europa candidat),Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-124,ENT-CCA,Drone de combat accompagnateur du Rafale F5 (UCAV / CCA),Drones_et_Robotique,2029–2031,CCA (Figure 4),Analyse_Stratégique_Forces_Armées_des_États-Unis__28_Octobre_2026_.pdf
+JAL-125,ENT-SYDERAL,Démonstrateur laser Syderal,Defense_Anti_Aerienne,~2030,Démonstrateur disponible,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-126,ENT-GLOBALEYE,Saab GlobalEye,Aeronautique_Combat,2030 et 2031,Livraisons des 2 GlobalEye,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-127,ENT-GLOBALEYE,Saab GlobalEye,Aeronautique_Combat,2030 et 2031,Livraisons,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-128,ENT-FALCON-8X-ARCHANGE,Falcon 8X Archange,Aeronautique_Combat,2027,Entrée en service,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-129,ENT-FALCON-8X-ARCHANGE,Falcon 8X Archange,Aeronautique_Combat,2027,Entrée en service de 3 appareils,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-130,ENT-PA-NG,PA-NG France Libre,Naval,2031,Découpe des premières tôles de coque,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-131,ENT-PA-NG,PA-NG France Libre,Naval,2038,Admission au service actif,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-132,ENT-PA-NG,PA-NG France Libre,Naval,2031,Découpe des tôles,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-133,ENT-PA-NG,PA-NG France Libre,Naval,2038,Mise en service,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-134,ENT-SNA-SUFFREN,SNA classe Suffren (Barracuda),Naval,2030,Livraison des 5e et 6e Barracuda,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-135,ENT-SNA-RUBIS,SNA classe Rubis,Naval,2027,Retrait de l'Améthyste,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-136,ENT-PATROUILLEUR-HAUTURIER,Patrouilleurs hauturiers (PH),Naval,Fin 2026–2027,Livraison du premier PH,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-137,ENT-BRF,Bâtiment ravitailleur de forces (BRF classe Jacques Chevallier),Naval,2029,Livraison des deux derniers BRF,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-138,ENT-BGDM,Bâtiments de guerre des mines (BGDM),Naval,2032,Premières livraisons BGDM,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-139,ENT-BGDM,Bâtiments de guerre des mines (BGDM),Naval,2035,4 BGDM livrés,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-140,ENT-PMGM,"Plateforme modulaire de guerre des mines (PMGM, navires affrétés)",Naval,Avant 2030,Affrètement de deux navires civils modifiés,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-141,ENT-ATL2,Atlantique 2 (Standard 6),Aeronautique_Combat,2040,Retrait des ATL2,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-142,ENT-TEKEVER-AR3,Tekever AR3 EVO,Drones_et_Robotique,Fin 2026,Livraison au 61e RA,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-143,ENT-ELISA-INTERCEPTEURS,Partenariat d'innovation ELISA (intercepteurs anti-Shahed),Defense_Anti_Aerienne,Début 2027,Livraison de ~1 000 intercepteurs,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-144,ENT-CELESTE,Programme Céleste,C2_IA_DefenseTech,2029,Relève des CERES,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-145,ENT-EGIDE,Constellation Egide,C2_IA_DefenseTech,2030,Constellation visée,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-146,ENT-TOUTATIS,Démonstrateur Toutatis,C2_IA_DefenseTech,2026,Lancement en orbite basse,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-147,ENT-YODA,Nano-satellites Yoda,C2_IA_DefenseTech,2026–2027,Lancement,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-148,ENT-ALTA-ARES,Alta Ares,Drones_et_Robotique,Fin 2026,Usine de Toulouse : cible 1 000 drones,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-149,ENT-ALTA-ARES,Alta Ares,Drones_et_Robotique,Début 2027,ELISA : plusieurs centaines d'intercepteurs/mois,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-150,ENT-DELAIR,Delair,Drones_et_Robotique,Fin 2026,Production de 100 drones/jour (30 000/an) avec Schaeffler,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-151,ENT-DELAIR,Delair,Drones_et_Robotique,2030,Effectif visé de 700 salariés,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-152,ENT-SAFRAN-AI,Safran.AI,C2_IA_DefenseTech,2027,Intégration de l'IA dans la nacelle TALIOS du Rafale,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-153,ENT-HELSING,Helsing,C2_IA_DefenseTech,Ouvert,CA-1 Europa parmi les candidats CCA du Rafale F5,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-154,ENT-ELISA,Partenariat d'innovation ELISA (drones intercepteurs),Defense_Anti_Aerienne,Début 2027,Livraisons ; plusieurs centaines d'intercepteurs/mois,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-155,ENT-XL-UUV,Drone sous-marin XL UUV,Naval,2030,Première capacité,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-156,ENT-FORCES-ARMEES-FRANCE,Forces armées françaises (format et budget),Transverse_Financement_BITD,Janvier 2027,Rédaction du nouveau Livre blanc,Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-157,ENT-FORCES-ARMEES-FRANCE,Forces armées françaises (format et budget),Transverse_Financement_BITD,2030,"275 000 ETP d'active, 80 000 réservistes, 10 000 appelés",Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-158,ENT-FORCES-ARMEES-FRANCE,Forces armées françaises (format et budget),Transverse_Financement_BITD,2035,"Cible OTAN 3,5 % du PIB + 1,5 % sécurité/résilience",Analyse_Forces_Armees_Francaises_corrigee_2026-11-11.md
+JAL-159,ENT-DOW-DOD,Department of War / Department of Defense (États-Unis),Transverse_Financement_BITD,03/11/2026,Élections de mi-mandat : sort des 350 Md$ de Réconciliation 2.0,Analyse_Stratégique_Forces_Armées_des_États-Unis__28_Octobre_2026_.pdf
+JAL-160,ENT-DOW-DOD,Department of War / Department of Defense (États-Unis),Transverse_Financement_BITD,Nov.–Déc. 2026,Session lame-duck : conférence NDAA FY27 (H.R. 8800 / S. 4784),Analyse_Stratégique_Forces_Armées_des_États-Unis__28_Octobre_2026_.pdf
+JAL-161,ENT-DOW-DOD,Department of War / Department of Defense (États-Unis),Transverse_Financement_BITD,11/12/2026,"Fin de la CR P.L. 119-103 : omnibus, nouvelle CR ou shutdown partiel",Analyse_Stratégique_Forces_Armées_des_États-Unis__28_Octobre_2026_.pdf
+JAL-162,ENT-BUDGET-US-FY2027,Requête budgétaire de défense nationale FY 2027 (Fonction 050 : DoW + NNSA),Transverse_Financement_BITD,03/11/2026,Midterms : maintien ou non de la majorité conditionnant la réconciliation,Analyse_Stratégique_Forces_Armées_des_États-Unis__28_Octobre_2026_.pdf
+JAL-163,ENT-BUDGET-US-FY2027,Requête budgétaire de défense nationale FY 2027 (Fonction 050 : DoW + NNSA),Transverse_Financement_BITD,11/12/2026,"Échéance CR : vote omnibus, nouvelle CR ou shutdown",Analyse_Stratégique_Forces_Armées_des_États-Unis__28_Octobre_2026_.pdf
+JAL-164,ENT-RECONCILIATION-2-0,Réconciliation 2.0 (volet obligatoire DoW FY 2027),Transverse_Financement_BITD,03/11/2026,Élections de mi-mandat : sort des 350 Md$,Analyse_Stratégique_Forces_Armées_des_États-Unis__28_Octobre_2026_.pdf
+JAL-165,ENT-CR-PL-119-103,Continuing Resolution H.R. 6500 / P.L. 119-103,Transverse_Financement_BITD,11/12/2026,"Expiration de la CR : omnibus, nouvelle CR ou shutdown partiel",Analyse_Stratégique_Forces_Armées_des_États-Unis__28_Octobre_2026_.pdf
+JAL-166,ENT-NDAA-FY2027,NDAA FY 2027 (H.R. 8800 / S. 4784),Transverse_Financement_BITD,Nov.–Déc. 2026,Conférence bicamérale NDAA FY27 en session lame-duck,Analyse_Stratégique_Forces_Armées_des_États-Unis__28_Octobre_2026_.pdf
+JAL-167,ENT-COLUMBIA,SSBN classe Columbia,Naval,2029–2031,1er Columbia (Figure 4),Analyse_Stratégique_Forces_Armées_des_États-Unis__28_Octobre_2026_.pdf
+JAL-168,ENT-SENTINEL,ICBM LGM-35A Sentinel,Frappe_Profondeur_Missiles,2032–2035+,"ICBM Sentinel (Figure 4, Triade & Naval futur)",Analyse_Stratégique_Forces_Armées_des_États-Unis__28_Octobre_2026_.pdf
+JAL-169,ENT-B-21,Bombardier B-21 Raider,Aeronautique_Combat,2029–2031,Bascule 6e génération : B-21 (Figure 4),Analyse_Stratégique_Forces_Armées_des_États-Unis__28_Octobre_2026_.pdf
+JAL-170,ENT-LRSO,Missile de croisière nucléaire LRSO,Frappe_Profondeur_Missiles,2032–2035+,LRSO (Figure 4),Analyse_Stratégique_Forces_Armées_des_États-Unis__28_Octobre_2026_.pdf
+JAL-171,ENT-M1E3,Char M1E3 Abrams,Terrestre_Artillerie,2032–2035+,M1E3 (Figure 4),Analyse_Stratégique_Forces_Armées_des_États-Unis__28_Octobre_2026_.pdf
+JAL-172,ENT-MV-75,MV-75,Aeronautique_Combat,2027 – Janv. 2028,MV-75 LRIP (Figure 4),Analyse_Stratégique_Forces_Armées_des_États-Unis__28_Octobre_2026_.pdf
+JAL-173,ENT-MV-75,MV-75,Aeronautique_Combat,2030,IOC MV-75 (Figure 4),Analyse_Stratégique_Forces_Armées_des_États-Unis__28_Octobre_2026_.pdf
+JAL-174,ENT-F-47,Chasseur de 6e génération F-47 (NGAD),Aeronautique_Combat,2029–2031,Bascule 6e génération : F-47 (Figure 4),Analyse_Stratégique_Forces_Armées_des_États-Unis__28_Octobre_2026_.pdf
+JAL-175,ENT-F-A-XX,Chasseur embarqué de 6e génération F/A-XX,Aeronautique_Combat,2032–2035+,F/A-XX (Figure 4),Analyse_Stratégique_Forces_Armées_des_États-Unis__28_Octobre_2026_.pdf
+JAL-176,ENT-GOLDEN-DOME,Golden Dome for America,Defense_Anti_Aerienne,03/11/2026,"Midterms : 17,5 Md$ dépendent de la réconciliation",Analyse_Stratégique_Forces_Armées_des_États-Unis__28_Octobre_2026_.pdf
+JAL-177,ENT-GOLDEN-DOME,Golden Dome for America,Defense_Anti_Aerienne,2032–2035+,Golden Dome (Figure 4),Analyse_Stratégique_Forces_Armées_des_États-Unis__28_Octobre_2026_.pdf
+JAL-178,ENT-DRONE-DOMINANCE,Initiative Drone Dominance (drones & C-UXS),Drones_et_Robotique,Janv. 2028,340 000 drones armés,Analyse_Stratégique_Forces_Armées_des_États-Unis__28_Octobre_2026_.pdf

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { actors } from "@/data/actors";
 import { systems } from "@/data/systems";
 import type { Indicator, SourceRef } from "@/data/types";
 import { chargerRegistre } from "../support/registre";
@@ -16,7 +17,25 @@ import {
 
 const registre = chargerRegistre();
 
+function dossiersActeurs(): DossierTracable[] {
+  return actors.map((a) => ({
+    slug: `acteur ${a.slug}`,
+    indicators: [...a.keyFigures, ...a.bricks.flatMap((b) => b.indicators)],
+    timeline: a.timeline,
+    sources: a.sources,
+    registryEntityIds: a.registryEntityIds,
+    sovereignty: a.sovereignty,
+    industrialChain: a.industrialChain,
+    watchpoints: a.watchpoints,
+    programmeTree: a.programmeTree,
+  }));
+}
+
 function dossiers(): DossierTracable[] {
+  return [...dossiersSystemes(), ...dossiersActeurs()];
+}
+
+function dossiersSystemes(): DossierTracable[] {
   return systems.map((s) => ({
     slug: s.slug,
     indicators: [
@@ -36,6 +55,13 @@ function dossiers(): DossierTracable[] {
 }
 
 describe("traçabilité — dossiers réels", () => {
+  it("les dossiers d'acteurs sont soumis au même contrôle que les systèmes", () => {
+    const slugs = dossiers().map((d) => d.slug);
+    for (const actor of actors) expect(slugs).toContain(`acteur ${actor.slug}`);
+    const chiffres = dossiersActeurs().flatMap((d) => d.indicators.filter((i) => i.metricIds?.length));
+    expect(chiffres.length).toBeGreaterThan(60);
+  });
+
   it("chaque chiffre du registre affiché est conforme au registre", () => {
     const erreurs = dossiers().flatMap((d) => verifierDossier(d, registre));
     expect(erreurs, erreurs.join("\n")).toEqual([]);

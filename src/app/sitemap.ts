@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/site";
 import { SYSTEMS_BY_SLUG, getSystemSlugs } from "@/data/systems";
+import { actors } from "@/data/actors";
 import { getEvidenceStats } from "@/lib/claims";
 import { HUD_BOARDS, HUD_INDEX_PATH } from "@/data/hud/boards";
 
@@ -14,6 +15,7 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: ChangeFr
   { path: "/eurosatory", priority: 0.9, changeFrequency: "weekly" },
   { path: "/demo", priority: 0.8, changeFrequency: "monthly" },
   { path: "/domaines", priority: 0.8, changeFrequency: "monthly" },
+  { path: "/acteurs", priority: 0.8, changeFrequency: "weekly" },
   { path: "/comparateur", priority: 0.8, changeFrequency: "monthly" },
   { path: "/matrice", priority: 0.7, changeFrequency: "monthly" },
   { path: "/simulateur", priority: 0.7, changeFrequency: "monthly" },
@@ -79,5 +81,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   );
 
-  return [...staticEntries, ...systemEntries];
+  const actorEntries: MetadataRoute.Sitemap = actors.map((actor) => ({
+    url: `${SITE_URL}/acteurs/${actor.slug}`,
+    lastModified: actor.updated || siteUpdated,
+    changeFrequency: "weekly" as const,
+    priority: 0.7,
+  }));
+
+  return [...staticEntries, ...systemEntries, ...actorEntries];
 }

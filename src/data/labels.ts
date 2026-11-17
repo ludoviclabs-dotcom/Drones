@@ -40,6 +40,7 @@ import type {
   ThirdPartyLock,
   TimelineKind,
 } from "./types";
+import type { ActorKind } from "./actors/types";
 
 export const BRICK_LABELS: Record<BrickKey, string> = {
   finance: "Finance",
@@ -611,3 +612,28 @@ export const SOURCE_CODE_ACCESS_LABELS: Record<SourceCodeAccess, string> = {
   Propriete_Integrale: "Propriété intégrale",
   Non_specifie: "non documenté",
 };
+
+// ── Dossiers d'acteurs (/acteurs) ──────────────────────────────────────────
+
+export const ACTOR_KIND_LABELS: Record<ActorKind, string> = {
+  "groupe-industriel": "Groupe industriel",
+  "defense-tech": "Défense tech",
+};
+
+/** Les briques d'un dossier d'acteur : mêmes clés que les systèmes, autre angle. */
+export const ACTOR_BRICK_LABELS: Record<BrickKey, string> = {
+  finance: "Résultats & capital",
+  cout: "Opérations & contrats",
+  "supply-chain": "Empreinte industrielle",
+  geopolitique: "Gouvernance & État",
+  export: "Export & contrôle",
+};
+
+export const ACTOR_BRICK_BLURBS: Record<BrickKey, string> = {
+  finance: "Chiffre d'affaires, carnet, valorisation — ce que l'acteur publie et ce que la presse estime.",
+  cout: "Prix des opérations et montants des contrats — plafonds et commandes fermes toujours distingués.",
+  "supply-chain": "Sites, capacités, fournisseurs et partenaires : où l'acteur produit et de qui il dépend.",
+  geopolitique: "Actionnaires publics, accords entre États, gouvernance — ce qui engage plus que l'entreprise.",
+  export: "Régime de cession, autorisations et contrôles applicables.",
+};
+

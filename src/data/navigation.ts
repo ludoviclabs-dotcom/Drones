@@ -29,6 +29,7 @@ export const NAV_GROUPS: readonly NavGroup[] = [
     links: [
       { href: "/domaines", label: "Domaines", hint: "Onze domaines, une même grille" },
       { href: "/#catalogue", label: "Catalogue des dossiers", hint: "Recherche et filtres" },
+      { href: "/acteurs", label: "Acteurs", hint: "Groupes industriels et défense tech" },
       { href: "/eurosatory", label: "EuroSatory", hint: "Parcours salon 2026" },
       { href: "/demo", label: "Briefing vidéo", hint: `Panoplie en ${FILM_SECONDS} secondes` },
     ],
@@ -76,6 +77,7 @@ export const FOOTER_LINKS: readonly NavLink[] = [
   { href: "/eurosatory", label: "EuroSatory" },
   { href: "/demo", label: "Briefing vidéo" },
   { href: "/domaines", label: "Domaines" },
+  { href: "/acteurs", label: "Acteurs" },
   { href: "/hud", label: "Planches" },
   { href: "/comparateur", label: "Comparateur" },
   { href: "/matrice", label: "Matrice" },
